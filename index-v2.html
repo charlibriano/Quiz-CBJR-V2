@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz CBJR V2 | Universo Charlie Brown Jr.</title>
+
+  <style>
+    @font-face {
+      font-family: 'Elektrix';
+      src: url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/Elektrix-Bold.woff2') format('woff2'),
+           url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/Elektrix-Bold.woff') format('woff'),
+           url('https://cdn.jsdelivr.net/gh/charlibriano/Quiz-CBJR-V2/Elektrix%20Bold.ttf') format('truetype');
+      font-weight: bold;
+      font-display: swap;
+    }
+
+    :root {
+      --yellow: #f1c40f;
+      --green: #1ed760;
+      --dark: #060606;
+      --white: #ffffff;
+      --muted: rgba(255,255,255,.74);
+      --glass: rgba(8, 8, 8, .58);
+      --border: rgba(255,255,255,.16);
+      --danger: #e74c3c;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--white);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(241,196,15,.20), transparent 28%),
+        radial-gradient(circle at 80% 10%, rgba(30,215,96,.16), transparent 25%),
+        linear-gradient(135deg, rgba(0,0,0,.74), rgba(0,0,0,.92)),
+        url('https://charlibriano.github.io/Quiz-CBJR-V2/cbjr.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom, black, transparent 85%);
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255,255,255,.035) 0,
+          rgba(255,255,255,.035) 1px,
+          transparent 1px,
+          transparent 5px
+        );
+      opacity: .16;
+      mix-blend-mode: screen;
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      opacity: .11;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,.45) 0 1px, transparent 1px),
+        radial-gradient(circle at 80% 70%, rgba(255,255,255,.35) 0 1px, transparent 1px),
+        radial-gradient(circle at 40% 80%, rgba(255,255,255,.25) 0 1px, transparent 1px);
+      background-size: 38px 38px, 52px 52px, 73px 73px;
+      animation: noiseMove 7s steps(5) infinite;
+    }
+
+    @keyframes noiseMove {
+      0% { transform: translate(0,0); }
+      25% { transform: translate(-2%,1%); }
+      50% { transform: translate(1%,-2%); }
+      75% { transform: translate(2%,2%); }
+      100% { transform: translate(0,0); }
+    }
+
+    .page {
+      position: relative;
+      z-index: 4;
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 36px 0;
+    }
+
+    .topbar {
+      position: fixed;
+      z-index: 20;
+      left: 50%;
+      top: 18px;
+      transform: translateX(-50%);
+      width: min(1180px, calc(100% - 28px));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(0,0,0,.38);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 12px 40px rgba(0,0,0,.35);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #000;
+      background: var(--yellow);
+      font-weight: 900;
+      box-shadow: 0 0 22px rgba(241,196,15,.55);
+      flex: 0 0 auto;
+    }
+
+    .brand-text {
+      font-family: 'Elektrix', Arial, sans-serif;
+      color: var(--yellow);
+      letter-spacing: .05em;
+      font-size: clamp(.95rem, 2vw, 1.18rem);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-shadow: 0 0 14px rgba(241,196,15,.55);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: .25s ease;
+    }
+
+    .icon-btn:hover {
+      transform: translateY(-2px);
+      background: rgba(241,196,15,.18);
+      border-color: rgba(241,196,15,.55);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.02fr .98fr;
+      gap: 34px;
+      align-items: center;
+      padding-top: 72px;
+    }
+
+    .hero-copy {
+      padding: 28px 0;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 13px;
+      border-radius: 999px;
+      border: 1px solid rgba(241,196,15,.32);
+      background: rgba(241,196,15,.09);
+      color: rgba(255,255,255,.86);
+      font-size: .84rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 16px var(--green);
+    }
+
+    h1 {
+      margin: 0;
+      font-family: 'Elektrix', Arial, sans-serif;
+      color: var(--yellow);
+      font-size: clamp(3.3rem, 9vw, 7.8rem);
+      line-height: .88;
+      letter-spacing: .03em;
+      text-shadow:
+        0 0 14px rgba(241,196,15,.62),
+        0 0 46px rgba(241,196,15,.24),
+        6px 8px 0 rgba(0,0,0,.55);
+    }
+
+    .subtitle {
+      margin: 22px 0 0;
+      max-width: 680px;
+      font-size: clamp(1rem, 2vw, 1.22rem);
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    .subtitle strong {
+      color: #fff;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .btn {
+      border: 0;
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 52px;
+      padding: 15px 20px;
+      border-radius: 14px;
+      font-weight: 900;
+      letter-spacing: .02em;
+      transition: .25s ease;
+      color: #070707;
+      background: var(--yellow);
+      box-shadow: 0 12px 30px rgba(241,196,15,.22);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px) scale(1.01);
+      box-shadow: 0 18px 45px rgba(241,196,15,.28);
+    }
+
+    .btn.secondary {
+      color: #fff;
+      background: rgba(255,255,255,.09);
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: none;
+    }
+
+    .btn.secondary:hover {
+      border-color: rgba(255,255,255,.42);
+      background: rgba(255,255,255,.14);
+    }
+
+    .stage {
+      position: relative;
+      min-height: 560px;
+      border-radius: 34px;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,.15);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.12), rgba(255,255,255,.04)),
+        rgba(0,0,0,.38);
+      box-shadow: 0 28px 90px rgba(0,0,0,.62);
+      overflow: hidden;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .stage::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        conic-gradient(from 120deg, transparent, rgba(241,196,15,.16), transparent, rgba(30,215,96,.13), transparent);
+      animation: spin 14s linear infinite;
+      opacity: .8;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .stage-inner {
+      position: relative;
+      z-index: 2;
+      min-height: 524px;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.14);
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,.08), rgba(0,0,0,.88)),
+        url('https://charlibriano.github.io/Quiz-CBJR-V2/cbjr.png');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 24px;
+    }
+
+    .stage-inner::after {
+      content: "Charlie Brown Jr.";
+      position: absolute;
+      top: 30px;
+      left: 22px;
+      right: 22px;
+      font-family: 'Elektrix', Arial, sans-serif;
+      color: rgba(255,255,255,.06);
+      font-size: clamp(3rem, 8vw, 5.9rem);
+      line-height: .9;
+      z-index: -1;
+      text-transform: uppercase;
+    }
+
+    .live-card {
+      width: 100%;
+      padding: 20px;
+      border-radius: 22px;
+      background: rgba(0,0,0,.58);
+      border: 1px solid rgba(255,255,255,.17);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .live-card small {
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-weight: 900;
+    }
+
+    .live-card h2 {
+      margin: 10px 0 8px;
+      font-family: 'Elektrix', Arial, sans-serif;
+      color: var(--yellow);
+      font-size: clamp(1.7rem, 4vw, 2.5rem);
+      line-height: 1.08;
+    }
+
+    .live-card p {
+      margin: 0;
+      color: rgba(255,255,255,.74);
+      line-height: 1.55;
+    }
+
+    .equalizer {
+      display: flex;
+      align-items: end;
+      gap: 5px;
+      height: 46px;
+      margin-top: 18px;
+    }
+
+    .equalizer i {
+      width: 8px;
+      border-radius: 999px;
+      background: var(--green);
+      box-shadow: 0 0 14px rgba(30,215,96,.55);
+      animation: eq 1s ease-in-out infinite;
+    }
+
+    .equalizer i:nth-child(1) { height: 18px; animation-delay: .1s; }
+    .equalizer i:nth-child(2) { height: 34px; animation-delay: .35s; }
+    .equalizer i:nth-child(3) { height: 24px; animation-delay: .2s; }
+    .equalizer i:nth-child(4) { height: 42px; animation-delay: .55s; }
+    .equalizer i:nth-child(5) { height: 20px; animation-delay: .05s; }
+    .equalizer i:nth-child(6) { height: 32px; animation-delay: .44s; }
+
+    @keyframes eq {
+      0%, 100% { transform: scaleY(.45); opacity: .55; }
+      50% { transform: scaleY(1); opacity: 1; }
+    }
+
+    .modes-section {
+      padding: 24px 0 56px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-family: 'Elektrix', Arial, sans-serif;
+      color: var(--yellow);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      text-shadow: 0 0 20px rgba(241,196,15,.28);
+    }
+
+    .section-title p {
+      margin: 0;
+      color: rgba(255,255,255,.68);
+      max-width: 470px;
+      line-height: 1.5;
+      text-align: right;
+    }
+
+    .mode-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .mode-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 260px;
+      border-radius: 28px;
+      padding: 22px;
+      text-decoration: none;
+      color: #fff;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 60px rgba(0,0,0,.38);
+      transition: .28s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .mode-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: .28;
+      background:
+        radial-gradient(circle at 20% 10%, var(--accent), transparent 34%),
+        linear-gradient(145deg, rgba(255,255,255,.1), transparent);
+      transition: .28s ease;
+    }
+
+    .mode-card::after {
+      content: "";
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      right: -60px;
+      top: -60px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.2);
+      background: rgba(255,255,255,.04);
+    }
+
+    .mode-card:hover {
+      transform: translateY(-7px);
+      border-color: rgba(255,255,255,.34);
+    }
+
+    .mode-card:hover::before {
+      opacity: .45;
+    }
+
+    .mode-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .mode-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,.11);
+      border: 1px solid rgba(255,255,255,.17);
+      font-size: 1.5rem;
+      margin-bottom: 18px;
+    }
+
+    .mode-card h3 {
+      margin: 0 0 10px;
+      font-family: 'Elektrix', Arial, sans-serif;
+      color: var(--yellow);
+      font-size: clamp(1.45rem, 3vw, 2rem);
+    }
+
+    .mode-card p {
+      margin: 0;
+      color: rgba(255,255,255,.72);
+      line-height: 1.55;
+    }
+
+    .mode-footer {
+      position: relative;
+      z-index: 2;
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: rgba(255,255,255,.82);
+      font-weight: 800;
+    }
+
+    .tag {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.09);
+      border: 1px solid rgba(255,255,255,.14);
+      font-size: .8rem;
+    }
+
+    .quote-strip {
+      margin-top: 18px;
+      border-radius: 24px;
+      padding: 18px 20px;
+      background: rgba(0,0,0,.46);
+      border: 1px solid rgba(255,255,255,.13);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      overflow: hidden;
+    }
+
+    .quote-strip strong {
+      font-family: 'Elektrix', Arial, sans-serif;
+      color: var(--yellow);
+      white-space: nowrap;
+    }
+
+    .quote-strip p {
+      margin: 0;
+      color: rgba(255,255,255,.78);
+      line-height: 1.5;
+    }
+
+    .footer {
+      padding: 20px 0 34px;
+      color: rgba(255,255,255,.52);
+      text-align: center;
+      font-size: .9rem;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      place-items: center;
+      padding: 18px;
+      background: rgba(0,0,0,.72);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .modal.show {
+      display: grid;
+    }
+
+    .modal-card {
+      width: min(680px, 100%);
+      border-radius: 28px;
+      padding: 26px;
+      background: rgba(8,8,8,.9);
+      border: 1px solid rgba(255,255,255,.16);
+      box-shadow: 0 28px 90px rgba(0,0,0,.72);
+      animation: modalIn .24s ease;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(18px) scale(.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal-card h2 {
+      margin: 0 0 10px;
+      color: var(--yellow);
+      font-family: 'Elektrix', Arial, sans-serif;
+      font-size: 2rem;
+    }
+
+    .modal-card p {
+      color: rgba(255,255,255,.78);
+      line-height: 1.65;
+      margin: 0 0 18px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(22px);
+      animation: fadeUp .8s ease forwards;
+    }
+
+    .delay-1 { animation-delay: .12s; }
+    .delay-2 { animation-delay: .24s; }
+    .delay-3 { animation-delay: .36s; }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 940px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 92px;
+      }
+
+      .stage {
+        min-height: 430px;
+      }
+
+      .stage-inner {
+        min-height: 392px;
+      }
+
+      .section-title {
+        display: block;
+      }
+
+      .section-title p {
+        text-align: left;
+        margin-top: 8px;
+      }
+
+      .mode-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mode-card {
+        min-height: 210px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      body {
+        background-attachment: scroll;
+      }
+
+      .page {
+        width: min(100% - 22px, 1180px);
+        padding: 20px 0;
+      }
+
+      .topbar {
+        top: 10px;
+        width: calc(100% - 18px);
+        padding: 9px;
+      }
+
+      .brand-text {
+        max-width: 190px;
+      }
+
+      .icon-btn {
+        width: 34px;
+        height: 34px;
+      }
+
+      .hero {
+        padding-top: 86px;
+        gap: 18px;
+      }
+
+      .eyebrow {
+        font-size: .72rem;
+        letter-spacing: .08em;
+      }
+
+      h1 {
+        font-size: clamp(3rem, 17vw, 5rem);
+      }
+
+      .subtitle {
+        font-size: .98rem;
+        line-height: 1.58;
+      }
+
+      .hero-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .stage {
+        min-height: 390px;
+        border-radius: 24px;
+        padding: 10px;
+      }
+
+      .stage-inner {
+        min-height: 368px;
+        border-radius: 18px;
+        padding: 16px;
+      }
+
+      .live-card {
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      .quote-strip {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .quote-strip strong {
+        white-space: normal;
+      }
+
+      .modal-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="noise"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">CB</div>
+      <div class="brand-text">Quiz CBJR V2</div>
+    </div>
+
+    <div class="top-actions">
+      <button class="icon-btn" id="soundBtn" title="Som ambiente" aria-label="Som ambiente">♪</button>
+      <button class="icon-btn" id="infoBtn" title="Sobre" aria-label="Sobre">?</button>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow fade-up">
+          <span></span>
+          universo interativo
+        </div>
+
+        <h1 class="fade-up delay-1">Charlie<br>Brown Jr.</h1>
+
+        <p class="subtitle fade-up delay-2">
+          Uma nova entrada para o seu projeto: mais cinematográfica, mais organizada e pronta para transformar o quiz em uma experiência por modos.
+          <strong>O projeto antigo continua intacto.</strong>
+        </p>
+
+        <div class="hero-actions fade-up delay-3">
+          <a class="btn" href="#modos">Entrar no universo CBJR</a>
+          <a class="btn secondary" href="index.html">Abrir versão atual</a>
+        </div>
+      </div>
+
+      <div class="stage fade-up delay-2">
+        <div class="stage-inner">
+          <div class="live-card">
+            <small>V2 em construção</small>
+            <h2>Da tela inicial ao jogo completo.</h2>
+            <p>
+              Primeiro criamos uma home forte. Depois separamos Quiz, Rádio e Letras em páginas com identidade própria.
+            </p>
+
+            <div class="equalizer" aria-hidden="true">
+              <i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="modes-section" id="modos">
+      <div class="section-title">
+        <h2>Escolha o modo</h2>
+        <p>Por enquanto, os cards apontam para a versão atual. Depois vamos ligar cada um à sua própria página.</p>
+      </div>
+
+      <div class="mode-grid">
+        <a class="mode-card" style="--accent:#f1c40f" href="index.html">
+          <div class="mode-content">
+            <div class="mode-icon">?</div>
+            <h3>Quiz Clássico</h3>
+            <p>Perguntas, curiosidades, vidas, power-ups e conquistas para testar quem conhece a história da banda.</p>
+          </div>
+          <div class="mode-footer">
+            <span class="tag">Atual</span>
+            <span>Começar →</span>
+          </div>
+        </a>
+
+        <a class="mode-card" style="--accent:#1ed760" href="index.html">
+          <div class="mode-content">
+            <div class="mode-icon">♪</div>
+            <h3>Rádio CBJR</h3>
+            <p>Ouça o trecho, reconheça a música e avance pelos álbuns. Esse modo merece uma página própria.</p>
+          </div>
+          <div class="mode-footer">
+            <span class="tag">Próxima fase</span>
+            <span>Entrar →</span>
+          </div>
+        </a>
+
+        <a class="mode-card" style="--accent:#e74c3c" href="index.html">
+          <div class="mode-content">
+            <div class="mode-icon">”</div>
+            <h3>Modo Letras</h3>
+            <p>Trechos marcantes, alternativas e pressão no tempo. Aqui dá para criar uma experiência bem diferente.</p>
+          </div>
+          <div class="mode-footer">
+            <span class="tag">Planejado</span>
+            <span>Ver →</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="quote-strip">
+        <strong>Plano seguro:</strong>
+        <p>Testar essa home como <b>index-v2.html</b>. Quando estiver aprovada, ela vira o novo <b>index.html</b>.</p>
+      </div>
+    </section>
+
+    <footer class="footer">
+      Quiz CBJR V2 • Projeto duplicado com segurança para evoluir sem perder a versão original.
+    </footer>
+  </main>
+
+  <div class="modal" id="infoModal" aria-hidden="true">
+    <div class="modal-card">
+      <h2>Como usar esta página</h2>
+      <p>
+        Este arquivo foi feito para ser salvo como <strong>index-v2.html</strong>. Ele usa os arquivos que já estão no GitHub e mantém tudo em um único HTML, com CSS e JS embutidos.
+      </p>
+      <p>
+        Depois que a home ficar do jeito certo, trocamos o index principal com segurança.
+      </p>
+      <div class="modal-actions">
+        <button class="btn secondary" id="closeModal">Fechar</button>
+        <a class="btn" href="index.html">Abrir versão atual</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const infoBtn = document.getElementById('infoBtn');
+    const infoModal = document.getElementById('infoModal');
+    const closeModal = document.getElementById('closeModal');
+    const soundBtn = document.getElementById('soundBtn');
+
+    infoBtn.addEventListener('click', () => {
+      infoModal.classList.add('show');
+      infoModal.setAttribute('aria-hidden', 'false');
+    });
+
+    closeModal.addEventListener('click', () => {
+      infoModal.classList.remove('show');
+      infoModal.setAttribute('aria-hidden', 'true');
+    });
+
+    infoModal.addEventListener('click', (event) => {
+      if (event.target === infoModal) {
+        infoModal.classList.remove('show');
+        infoModal.setAttribute('aria-hidden', 'true');
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        infoModal.classList.remove('show');
+        infoModal.setAttribute('aria-hidden', 'true');
+      }
+    });
+
+    let audioCtx;
+    let isPlaying = false;
+    let oscillator;
+    let gainNode;
+
+    function startAmbientSound() {
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      oscillator = audioCtx.createOscillator();
+      gainNode = audioCtx.createGain();
+
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(82.41, audioCtx.currentTime);
+      gainNode.gain.setValueAtTime(0.025, audioCtx.currentTime);
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      oscillator.start();
+
+      isPlaying = true;
+      soundBtn.textContent = '■';
+      soundBtn.title = 'Parar som ambiente';
+    }
+
+    function stopAmbientSound() {
+      if (oscillator) {
+        oscillator.stop();
+        oscillator.disconnect();
+      }
+      if (gainNode) {
+        gainNode.disconnect();
+      }
+
+      isPlaying = false;
+      soundBtn.textContent = '♪';
+      soundBtn.title = 'Som ambiente';
+    }
+
+    soundBtn.addEventListener('click', () => {
+      if (!isPlaying) {
+        startAmbientSound();
+      } else {
+        stopAmbientSound();
+      }
+    });
+
+    const cards = document.querySelectorAll('.mode-card');
+
+    cards.forEach((card) => {
+      card.addEventListener('mousemove', (event) => {
+        const rect = card.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        const rotateY = ((x / rect.width) - 0.5) * 6;
+        const rotateX = ((0.5 - (y / rect.height)) * 6);
+        card.style.transform = `translateY(-7px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+  </script>
+</body>
+</html>
