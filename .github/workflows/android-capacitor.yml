@@ -1,0 +1,59 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # --- CORREÇÃO FUNDAMENTAL APLICADA AQUI ---
+      - name: Configurar Java (JDK 21)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Configurar Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Inicializar Projeto Node.js e Instalar Capacitor
+        run: |
+          npm init -y
+          npm install @capacitor/core@latest @capacitor/cli@latest @capacitor/android@latest
+
+      - name: Inicializar Capacitor no Projeto
+        run: npx cap init "Quiz CBJR" "br.com.quizcbjr" --web-dir "www"
+
+      - name: Copiar Arquivos Web para o Diretório www
+        run: |
+          mkdir -p www
+          cp -r assets css img js *.html *.htm www/ 2>/dev/null || true
+
+      - name: Adicionar Plataforma Android
+        run: npx cap add android
+
+      - name: Conceder Permissão de Execução ao Gradlew
+        run: chmod +x android/gradlew
+
+      - name: Limpar e Construir o APK de Debug
+        working-directory: ./android
+        run: ./gradlew clean assembleDebug --stacktrace
+
+      - name: Fazer Upload do Artefato APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: QuizCBJR-debug.apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
