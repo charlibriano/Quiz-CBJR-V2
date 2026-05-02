@@ -2466,6 +2466,244 @@
     }
 
 
+
+
+    /* =============================================================
+       PATCH FELIPE — IMAGENS DE FUNDO COMPLETAS, SEM CORTAR
+       Ajuste cirúrgico: reduz o cenário para aparecer inteiro e
+       reposiciona as áreas clicáveis/conteúdo sem mexer na lógica.
+       ============================================================= */
+
+    /* Seleção de nível: a imagem do amplificador aparece inteira */
+    body.tela-dificuldade {
+      background-image: url('https://charlibriano.github.io/Quiz-CBJR-V2/quiz-bg.jpg') !important;
+      background-repeat: no-repeat !important;
+      background-size: contain !important;
+      background-position: center center !important;
+      background-color: #000 !important;
+      overflow: hidden !important;
+    }
+
+    body.tela-dificuldade #difficultyScreen.active,
+    body.tela-dificuldade .difficulty-screen.active,
+    body.tela-dificuldade .difficulty-shell {
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+
+    /* Botões por cima dos botões desenhados na imagem do amp */
+    body.tela-dificuldade .difficulty-actions {
+      position: fixed !important;
+      left: 21.5vw !important;
+      right: 21.5vw !important;
+      top: auto !important;
+      bottom: 8.3vh !important;
+      height: clamp(42px, 5.8vh, 62px) !important;
+      display: grid !important;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      gap: 4.9vw !important;
+      z-index: 70 !important;
+    }
+
+    body.tela-dificuldade .level-card {
+      border-radius: 999px !important;
+      background: rgba(0,0,0,.34) !important;
+      border: 2px solid var(--accent) !important;
+      box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 45%, transparent), inset 0 0 18px rgba(0,0,0,.35) !important;
+      color: transparent !important;
+      backdrop-filter: blur(2px) !important;
+      -webkit-backdrop-filter: blur(2px) !important;
+    }
+
+    body.tela-dificuldade .level-card::after {
+      font-size: clamp(.62rem, .95vw, .92rem) !important;
+      letter-spacing: .11em !important;
+    }
+
+    body.tela-dificuldade .level-card::before {
+      width: 10px !important;
+      height: 10px !important;
+      left: 13px !important;
+    }
+
+    /* Tela de pergunta: imagem do Chorão + moldura aparece completa */
+    body.tela-pergunta {
+      background-image: url('https://charlibriano.github.io/Quiz-CBJR-V2/quiz-pergunta.jpg') !important;
+      background-repeat: no-repeat !important;
+      background-size: contain !important;
+      background-position: center center !important;
+      background-color: #000 !important;
+      overflow: hidden !important;
+    }
+
+    /* Desktop: conteúdo dentro da moldura branca com a imagem completa */
+    body.tela-pergunta .quiz-panel {
+      left: 36.2vw !important;
+      right: 9.5vw !important;
+      top: 14.5vh !important;
+      bottom: 12.5vh !important;
+      padding: clamp(18px, 1.9vw, 30px) clamp(40px, 4.2vw, 78px) !important;
+      background: transparent !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+    }
+
+    body.tela-pergunta .question-text {
+      font-size: clamp(1.15rem, 1.9vw, 2.35rem) !important;
+      line-height: 1.08 !important;
+      max-height: 18vh !important;
+      margin-bottom: clamp(12px, 1.8vh, 20px) !important;
+    }
+
+    body.tela-pergunta .answers-grid {
+      width: min(82%, 780px) !important;
+      gap: clamp(8px, 1.1vh, 13px) !important;
+    }
+
+    body.tela-pergunta .answer-btn {
+      min-height: clamp(42px, 6vh, 60px) !important;
+      font-size: clamp(.86rem, 1.12vw, 1.08rem) !important;
+    }
+
+    body.tela-pergunta .feedback-box {
+      width: min(82%, 780px) !important;
+      font-size: clamp(.72rem, .9vw, .88rem) !important;
+    }
+
+    /* Mobile: mostrar a imagem inteira na largura, sem cortar skate/box */
+    @media (max-width: 760px) and (orientation: portrait) {
+      body.tela-dificuldade {
+        background-size: 100vw auto !important;
+        background-position: center top !important;
+        overflow: hidden !important;
+      }
+
+      body.tela-dificuldade .difficulty-actions {
+        left: 11vw !important;
+        right: 11vw !important;
+        top: 58vw !important;
+        bottom: auto !important;
+        height: 36px !important;
+        gap: 3vw !important;
+      }
+
+      body.tela-dificuldade .level-card {
+        border-radius: 999px !important;
+        border-width: 1.5px !important;
+        background: rgba(0,0,0,.42) !important;
+      }
+
+      body.tela-dificuldade .level-card::before {
+        display: none !important;
+      }
+
+      body.tela-dificuldade .level-card::after {
+        font-size: .46rem !important;
+        letter-spacing: .045em !important;
+        padding: 0 !important;
+      }
+
+      body.tela-pergunta {
+        height: 100svh !important;
+        min-height: 100svh !important;
+        overflow: hidden !important;
+        background-size: 100vw auto !important;
+        background-position: center top !important;
+      }
+
+      body.tela-pergunta #quizScreen.active {
+        position: fixed !important;
+        inset: 0 !important;
+        overflow: hidden !important;
+      }
+
+      body.tela-pergunta .topbar {
+        top: calc(env(safe-area-inset-top, 0px) + 8px) !important;
+        left: 10px !important;
+        right: 10px !important;
+      }
+
+      body.tela-pergunta .topbar .menu-btn,
+      body.tela-pergunta .topbar .power-btn {
+        min-height: 34px !important;
+        height: 34px !important;
+        padding: 0 10px !important;
+        font-size: .72rem !important;
+      }
+
+      /* Área branca no mobile quando a imagem está 100% visível na largura */
+      body.tela-pergunta .quiz-panel {
+        position: fixed !important;
+        left: 33vw !important;
+        right: 3vw !important;
+        top: 12.5vw !important;
+        bottom: auto !important;
+        height: 54vw !important;
+        min-height: 0 !important;
+        padding: 6px 7px !important;
+        background: transparent !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        overflow: hidden !important;
+      }
+
+      body.tela-pergunta .question-kicker {
+        font-size: .48rem !important;
+        letter-spacing: .11em !important;
+        margin-bottom: 4px !important;
+      }
+
+      body.tela-pergunta .question-text {
+        font-size: clamp(.54rem, 2.95vw, .82rem) !important;
+        line-height: 1.04 !important;
+        margin: 0 0 5px !important;
+        padding: 0 2px !important;
+        max-height: 13vw !important;
+        overflow: hidden !important;
+      }
+
+      body.tela-pergunta .answers-grid {
+        width: 100% !important;
+        gap: 4px !important;
+        margin: 0 !important;
+      }
+
+      body.tela-pergunta .answer-btn {
+        min-height: 25px !important;
+        max-height: 32px !important;
+        padding: 3px 6px !important;
+        grid-template-columns: 20px 1fr !important;
+        gap: 5px !important;
+        font-size: clamp(.48rem, 2.35vw, .66rem) !important;
+        line-height: 1.02 !important;
+        border-radius: 999px !important;
+      }
+
+      body.tela-pergunta .answer-letter {
+        width: 18px !important;
+        height: 18px !important;
+        min-width: 18px !important;
+        font-size: .5rem !important;
+        border-width: 1.5px !important;
+      }
+
+      body.tela-pergunta .feedback-box {
+        width: 100% !important;
+        margin-top: 4px !important;
+        padding: 5px 6px !important;
+        font-size: .5rem !important;
+        line-height: 1.12 !important;
+        max-height: 10vw !important;
+        overflow: hidden !important;
+      }
+    }
+
 </style>
 </head>
 
