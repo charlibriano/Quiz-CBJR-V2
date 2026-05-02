@@ -2815,6 +2815,230 @@
       }
     }
 
+
+
+    /* =============================================================
+       AJUSTE FINO FINAL FELIPE — REDUZIR FONTE SEM ALTERAR FLUXO
+       ============================================================= */
+    body.tela-pergunta .question-kicker {
+      font-size: 0.76rem !important;
+      line-height: 1.1 !important;
+      margin-bottom: 8px !important;
+      letter-spacing: .18em !important;
+    }
+
+    body.tela-pergunta .question-text {
+      font-size: clamp(1.05rem, 2.05vw, 2.15rem) !important;
+      line-height: 1.08 !important;
+      min-height: 72px !important;
+      max-height: 17vh !important;
+      max-width: 86% !important;
+      margin: 0 auto 8px !important;
+      padding: 0 8px !important;
+      overflow: hidden !important;
+      word-break: normal !important;
+      overflow-wrap: break-word !important;
+    }
+
+    body.tela-pergunta .answers-grid {
+      width: min(70%, 760px) !important;
+      gap: 9px !important;
+      margin-top: 10px !important;
+    }
+
+    body.tela-pergunta .answer-btn {
+      min-height: 46px !important;
+      max-height: 54px !important;
+      padding: 7px 18px !important;
+      font-size: clamp(.78rem, 1vw, .98rem) !important;
+      line-height: 1.12 !important;
+      grid-template-columns: 34px 1fr !important;
+      gap: 10px !important;
+    }
+
+    body.tela-pergunta .answer-letter {
+      width: 28px !important;
+      height: 28px !important;
+      min-width: 28px !important;
+      font-size: .78rem !important;
+    }
+
+    body.tela-pergunta .feedback-box {
+      font-size: .78rem !important;
+      line-height: 1.25 !important;
+      padding: 9px 13px !important;
+      max-width: 72% !important;
+    }
+
+    @media (max-width: 900px) {
+      body.tela-pergunta .question-kicker {
+        font-size: .62rem !important;
+        margin-bottom: 5px !important;
+      }
+      body.tela-pergunta .question-text {
+        font-size: clamp(.95rem, 4.2vw, 1.28rem) !important;
+        line-height: 1.08 !important;
+        min-height: 54px !important;
+        max-height: 92px !important;
+        max-width: 92% !important;
+        margin-bottom: 8px !important;
+      }
+      body.tela-pergunta .answers-grid {
+        width: 92% !important;
+        gap: 8px !important;
+        margin-top: 8px !important;
+      }
+      body.tela-pergunta .answer-btn {
+        min-height: 42px !important;
+        max-height: none !important;
+        padding: 7px 10px !important;
+        font-size: .78rem !important;
+        line-height: 1.12 !important;
+        grid-template-columns: 28px 1fr !important;
+        gap: 8px !important;
+      }
+      body.tela-pergunta .answer-letter {
+        width: 24px !important;
+        height: 24px !important;
+        min-width: 24px !important;
+        font-size: .68rem !important;
+      }
+      body.tela-pergunta .feedback-box {
+        font-size: .72rem !important;
+        line-height: 1.22 !important;
+        padding: 8px 10px !important;
+        max-width: 90% !important;
+      }
+    }
+
+    /* =============================================================
+       AJUSTE CIRÚRGICO FINAL FELIPE — REDUZIR FONTES E ESPAÇOS
+       Só mexe em pergunta, alternativas e curiosidade.
+       Mantém fundo, botões, níveis, JSON e fluxo intactos.
+       ============================================================= */
+    body.tela-pergunta .question-kicker {
+      font-size: 0.72rem !important;
+      line-height: 1 !important;
+      letter-spacing: .18em !important;
+      margin: 0 0 8px !important;
+    }
+
+    body.tela-pergunta .question-text {
+      font-size: clamp(1rem, 1.25vw, 1.38rem) !important;
+      line-height: 1.16 !important;
+      font-weight: 950 !important;
+      max-width: 82% !important;
+      min-height: 0 !important;
+      max-height: 88px !important;
+      margin: 0 auto 12px !important;
+      padding: 0 !important;
+      overflow: hidden !important;
+      display: block !important;
+      word-break: normal !important;
+      overflow-wrap: anywhere !important;
+    }
+
+    body.tela-pergunta .answers-grid {
+      width: min(64%, 690px) !important;
+      gap: 8px !important;
+      margin: 0 auto !important;
+    }
+
+    body.tela-pergunta .answer-btn {
+      min-height: 38px !important;
+      grid-template-columns: 28px 1fr !important;
+      gap: 8px !important;
+      padding: 7px 14px !important;
+      font-size: clamp(.72rem, .85vw, .92rem) !important;
+      line-height: 1.12 !important;
+      font-weight: 800 !important;
+      border-radius: 999px !important;
+    }
+
+    body.tela-pergunta .answer-letter {
+      width: 24px !important;
+      height: 24px !important;
+      font-size: .7rem !important;
+      line-height: 1 !important;
+    }
+
+    body.tela-pergunta .feedback-box {
+      width: min(64%, 690px) !important;
+      margin: 8px auto 0 !important;
+      padding: 7px 12px !important;
+      font-size: .72rem !important;
+      line-height: 1.22 !important;
+      border-radius: 10px !important;
+    }
+
+    body.tela-pergunta .feedback-box strong {
+      font-size: .76rem !important;
+      margin-bottom: 2px !important;
+    }
+
+    @media (max-width: 1100px) {
+      body.tela-pergunta .question-text {
+        font-size: clamp(.9rem, 2.1vw, 1.25rem) !important;
+        max-height: 74px !important;
+        margin-bottom: 10px !important;
+      }
+
+      body.tela-pergunta .answers-grid,
+      body.tela-pergunta .feedback-box {
+        width: 78% !important;
+      }
+
+      body.tela-pergunta .answer-btn {
+        min-height: 34px !important;
+        font-size: .76rem !important;
+        padding: 6px 10px !important;
+      }
+    }
+
+    @media (max-width: 760px) {
+      body.tela-pergunta .question-kicker {
+        font-size: .52rem !important;
+        letter-spacing: .12em !important;
+        margin-bottom: 5px !important;
+      }
+
+      body.tela-pergunta .question-text {
+        font-size: clamp(.72rem, 3.15vw, 1rem) !important;
+        line-height: 1.12 !important;
+        max-width: 94% !important;
+        max-height: 62px !important;
+        margin-bottom: 7px !important;
+      }
+
+      body.tela-pergunta .answers-grid {
+        width: 100% !important;
+        gap: 6px !important;
+      }
+
+      body.tela-pergunta .answer-btn {
+        min-height: 32px !important;
+        grid-template-columns: 22px 1fr !important;
+        gap: 6px !important;
+        padding: 5px 8px !important;
+        font-size: .62rem !important;
+        line-height: 1.1 !important;
+      }
+
+      body.tela-pergunta .answer-letter {
+        width: 20px !important;
+        height: 20px !important;
+        font-size: .58rem !important;
+      }
+
+      body.tela-pergunta .feedback-box {
+        width: 100% !important;
+        margin-top: 6px !important;
+        padding: 6px 8px !important;
+        font-size: .58rem !important;
+        line-height: 1.15 !important;
+      }
+    }
+
 </style>
 </head>
 
