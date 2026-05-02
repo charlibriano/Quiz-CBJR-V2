@@ -2911,98 +2911,288 @@
       }
     }
 
-    /* ==========================================================
-       AJUSTE FINAL — CURIOSIDADE COMO BALÃO DO CHORÃO
-       Somente visual da curiosidade + tempo controlado no JS.
-       ========================================================== */
-    body.tela-pergunta .feedback-box {
-      position: relative !important;
-      display: none !important;
-      width: min(52%, 520px) !important;
-      margin: 10px auto 0 !important;
-      padding: 9px 14px !important;
-      background: rgba(255,255,255,.96) !important;
-      color: #111 !important;
-      border: 2px solid rgba(0,0,0,.18) !important;
-      border-radius: 18px 18px 18px 6px !important;
-      box-shadow: 0 8px 20px rgba(0,0,0,.28) !important;
-      font-family: Arial, Helvetica, sans-serif !important;
-      font-size: .68rem !important;
-      line-height: 1.25 !important;
-      text-align: center !important;
-      max-height: none !important;
-      overflow: visible !important;
-      opacity: 0 !important;
-      transform: translateY(6px) scale(.98) !important;
-      z-index: 50 !important;
+    /* =============================================================
+       AJUSTE CIRÚRGICO FINAL FELIPE — REDUZIR FONTES E ESPAÇOS
+       Só mexe em pergunta, alternativas e curiosidade.
+       Mantém fundo, botões, níveis, JSON e fluxo intactos.
+       ============================================================= */
+    body.tela-pergunta .question-kicker {
+      font-size: 0.72rem !important;
+      line-height: 1 !important;
+      letter-spacing: .18em !important;
+      margin: 0 0 8px !important;
     }
 
-    body.tela-pergunta .feedback-box.show {
+    body.tela-pergunta .question-text {
+      font-size: clamp(1rem, 1.25vw, 1.38rem) !important;
+      line-height: 1.16 !important;
+      font-weight: 950 !important;
+      max-width: 82% !important;
+      min-height: 0 !important;
+      max-height: 88px !important;
+      margin: 0 auto 12px !important;
+      padding: 0 !important;
+      overflow: hidden !important;
       display: block !important;
-      opacity: 1 !important;
-      transform: translateY(0) scale(1) !important;
-      animation: speechBubbleIn .32s ease forwards !important;
+      word-break: normal !important;
+      overflow-wrap: anywhere !important;
     }
 
-    body.tela-pergunta .feedback-box::before {
-      content: "" !important;
-      position: absolute !important;
-      left: -15px !important;
-      top: 18px !important;
-      width: 0 !important;
-      height: 0 !important;
-      border-top: 9px solid transparent !important;
-      border-bottom: 9px solid transparent !important;
-      border-right: 16px solid rgba(255,255,255,.96) !important;
-      filter: drop-shadow(-2px 2px 2px rgba(0,0,0,.18)) !important;
+    body.tela-pergunta .answers-grid {
+      width: min(64%, 690px) !important;
+      gap: 8px !important;
+      margin: 0 auto !important;
+    }
+
+    body.tela-pergunta .answer-btn {
+      min-height: 38px !important;
+      grid-template-columns: 28px 1fr !important;
+      gap: 8px !important;
+      padding: 7px 14px !important;
+      font-size: clamp(.72rem, .85vw, .92rem) !important;
+      line-height: 1.12 !important;
+      font-weight: 800 !important;
+      border-radius: 999px !important;
+    }
+
+    body.tela-pergunta .answer-letter {
+      width: 24px !important;
+      height: 24px !important;
+      font-size: .7rem !important;
+      line-height: 1 !important;
+    }
+
+    body.tela-pergunta .feedback-box {
+      width: min(64%, 690px) !important;
+      margin: 8px auto 0 !important;
+      padding: 7px 12px !important;
+      font-size: .72rem !important;
+      line-height: 1.22 !important;
+      border-radius: 10px !important;
     }
 
     body.tela-pergunta .feedback-box strong {
-      display: block !important;
-      margin-bottom: 3px !important;
-      font-family: 'Elektrix', Arial, sans-serif !important;
-      color: #050505 !important;
-      font-size: .72rem !important;
-      line-height: 1.05 !important;
+      font-size: .76rem !important;
+      margin-bottom: 2px !important;
     }
 
-    body.tela-pergunta .feedback-box span {
-      display: block !important;
-      font-size: .68rem !important;
-      line-height: 1.25 !important;
-      font-weight: 700 !important;
+    @media (max-width: 1100px) {
+      body.tela-pergunta .question-text {
+        font-size: clamp(.9rem, 2.1vw, 1.25rem) !important;
+        max-height: 74px !important;
+        margin-bottom: 10px !important;
+      }
+
+      body.tela-pergunta .answers-grid,
+      body.tela-pergunta .feedback-box {
+        width: 78% !important;
+      }
+
+      body.tela-pergunta .answer-btn {
+        min-height: 34px !important;
+        font-size: .76rem !important;
+        padding: 6px 10px !important;
+      }
     }
 
-    @keyframes speechBubbleIn {
-      from { opacity: 0; transform: translateY(8px) scale(.96); }
+    @media (max-width: 760px) {
+      body.tela-pergunta .question-kicker {
+        font-size: .52rem !important;
+        letter-spacing: .12em !important;
+        margin-bottom: 5px !important;
+      }
+
+      body.tela-pergunta .question-text {
+        font-size: clamp(.72rem, 3.15vw, 1rem) !important;
+        line-height: 1.12 !important;
+        max-width: 94% !important;
+        max-height: 62px !important;
+        margin-bottom: 7px !important;
+      }
+
+      body.tela-pergunta .answers-grid {
+        width: 100% !important;
+        gap: 6px !important;
+      }
+
+      body.tela-pergunta .answer-btn {
+        min-height: 32px !important;
+        grid-template-columns: 22px 1fr !important;
+        gap: 6px !important;
+        padding: 5px 8px !important;
+        font-size: .62rem !important;
+        line-height: 1.1 !important;
+      }
+
+      body.tela-pergunta .answer-letter {
+        width: 20px !important;
+        height: 20px !important;
+        font-size: .58rem !important;
+      }
+
+      body.tela-pergunta .feedback-box {
+        width: 100% !important;
+        margin-top: 6px !important;
+        padding: 6px 8px !important;
+        font-size: .58rem !important;
+        line-height: 1.15 !important;
+      }
+    }
+
+
+
+    /* =============================================================
+       AJUSTE FINAL SOLICITADO — BALÃO PRÓXIMO À MÃO DO CHORÃO + FONTES MENORES
+       Mantém todo o arquivo original e sobrescreve apenas a tela de perguntas.
+       ============================================================= */
+    body.tela-pergunta .question-text {
+      font-size: clamp(.92rem, 1.08vw, 1.22rem) !important;
+      line-height: 1.16 !important;
+      font-family: Arial, Helvetica, sans-serif !important;
+      font-weight: 950 !important;
+      letter-spacing: .01em !important;
+      max-width: 80% !important;
+      max-height: 84px !important;
+      margin: 0 auto 10px !important;
+      padding: 0 !important;
+      overflow: hidden !important;
+      text-transform: uppercase !important;
+      text-align: center !important;
+    }
+
+    body.tela-pergunta .answer-btn {
+      font-size: clamp(.68rem, .78vw, .86rem) !important;
+      min-height: 36px !important;
+      max-height: 48px !important;
+      padding: 6px 13px !important;
+      line-height: 1.1 !important;
+      grid-template-columns: 26px 1fr !important;
+      gap: 8px !important;
+    }
+
+    body.tela-pergunta .answer-letter {
+      width: 23px !important;
+      height: 23px !important;
+      min-width: 23px !important;
+      font-size: .66rem !important;
+    }
+
+    body.tela-pergunta .feedback-box {
+      display: none !important;
+    }
+
+    .chorao-balloon {
+      position: fixed !important;
+      /* Ajuste final: balão mais baixo, próximo da mão/microfone, sem cobrir o rosto */
+      left: clamp(64px, 8vw, 128px) !important;
+      top: clamp(278px, 52vh, 382px) !important;
+      width: clamp(190px, 19vw, 285px) !important;
+      max-height: 150px !important;
+      padding: clamp(9px, .85vw, 12px) clamp(12px, 1vw, 15px) !important;
+      border-radius: 15px 15px 15px 6px !important;
+      background: rgba(255,255,255,.92) !important;
+      color: #111 !important;
+      border: 1px solid rgba(0,0,0,.18) !important;
+      box-shadow: 0 12px 30px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.85) !important;
+      font-family: Arial, Helvetica, sans-serif !important;
+      font-size: clamp(.62rem, .74vw, .82rem) !important;
+      font-weight: 800 !important;
+      line-height: 1.24 !important;
+      text-align: left !important;
+      z-index: 55 !important;
+      opacity: 0 !important;
+      transform: translateY(8px) scale(.98) !important;
+      pointer-events: none !important;
+      overflow: hidden !important;
+    }
+
+    .chorao-balloon.show {
+      opacity: 1 !important;
+      transform: translateY(0) scale(1) !important;
+      animation: choraoBalloonIn .28s ease forwards !important;
+    }
+
+    .chorao-balloon strong {
+      display: block !important;
+      margin-bottom: 4px !important;
+      color: #000 !important;
+      font-family: Arial, Helvetica, sans-serif !important;
+      font-size: .84em !important;
+      font-weight: 950 !important;
+      letter-spacing: .08em !important;
+      text-transform: uppercase !important;
+    }
+
+    .chorao-balloon::after {
+      content: "";
+      position: absolute;
+      left: 42px;
+      bottom: -10px;
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 11px solid rgba(255,255,255,.92);
+      filter: drop-shadow(0 5px 3px rgba(0,0,0,.12));
+    }
+
+    @keyframes choraoBalloonIn {
+      from { opacity: 0; transform: translateY(10px) scale(.98); }
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    @media (max-width: 768px) {
-      body.tela-pergunta .feedback-box {
-        width: 64% !important;
-        margin-top: 7px !important;
-        padding: 7px 10px !important;
-        font-size: .52rem !important;
-        line-height: 1.16 !important;
-        border-radius: 14px 14px 14px 5px !important;
+    @media (max-width: 900px) {
+      body.tela-pergunta .question-text {
+        font-size: clamp(.72rem, 3.25vw, 1.02rem) !important;
+        line-height: 1.1 !important;
+        max-width: 92% !important;
+        max-height: 72px !important;
+        margin-bottom: 7px !important;
       }
 
-      body.tela-pergunta .feedback-box::before {
-        left: -11px !important;
-        top: 14px !important;
-        border-top-width: 7px !important;
-        border-bottom-width: 7px !important;
-        border-right-width: 12px !important;
+      body.tela-pergunta .answer-btn {
+        font-size: clamp(.54rem, 2.55vw, .68rem) !important;
+        min-height: 32px !important;
+        padding: 5px 7px !important;
+        grid-template-columns: 22px 1fr !important;
+        gap: 6px !important;
       }
 
-      body.tela-pergunta .feedback-box strong {
+      body.tela-pergunta .answer-letter {
+        width: 20px !important;
+        height: 20px !important;
+        min-width: 20px !important;
         font-size: .56rem !important;
       }
 
-      body.tela-pergunta .feedback-box span {
-        font-size: .52rem !important;
+      .chorao-balloon {
+        left: clamp(18px, 6vw, 44px) !important;
+        top: clamp(245px, 48vh, 340px) !important;
+        width: clamp(150px, 34vw, 220px) !important;
+        max-height: 118px !important;
+        padding: 7px 9px !important;
+        border-radius: 12px 12px 12px 5px !important;
+        font-size: clamp(.48rem, 1.9vw, .6rem) !important;
         line-height: 1.16 !important;
+      }
+
+      .chorao-balloon::after {
+        left: 22px;
+        bottom: -9px;
+        border-left-width: 9px;
+        border-right-width: 9px;
+        border-top-width: 10px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .chorao-balloon {
+        left: 12px !important;
+        top: 43vh !important;
+        width: 142px !important;
+        max-height: 104px !important;
+        font-size: .46rem !important;
+        padding: 6px 7px !important;
       }
     }
 
@@ -3051,6 +3241,7 @@
     </section>
 
     <section id="quizScreen" class="screen quiz-screen" aria-label="Perguntas do quiz">
+      <div id="choraoBalloon" class="chorao-balloon" aria-live="polite" aria-hidden="true"></div>
       <div class="quiz-hud" aria-label="Progresso do nível">
         <div class="hud-card">
           <small>Pergunta</small>
@@ -3164,6 +3355,7 @@
       quoteLine: document.getElementById('quoteLine'),
       answersGrid: document.getElementById('answersGrid'),
       feedbackBox: document.getElementById('feedbackBox'),
+      choraoBalloon: document.getElementById('choraoBalloon'),
       nextQuestionBtn: document.getElementById('nextQuestionBtn'),
       hudPergunta: document.getElementById('hudPergunta'),
       hudPontos: document.getElementById('hudPontos'),
@@ -3323,6 +3515,7 @@
       state.answered = false;
       els.feedbackBox.classList.remove('show');
       els.feedbackBox.innerHTML = '';
+      hideChoraoBalloon();
       els.nextQuestionBtn.classList.remove('show');
       els.answersGrid.innerHTML = '';
 
@@ -3411,7 +3604,7 @@
       updatePowerupButtons();
 
       // Avança automaticamente sem exibir botão de próxima pergunta.
-      const delay = isCorrect ? 5200 : 2200;
+      const delay = isCorrect ? 4200 : 1150;
       window.clearTimeout(answerQuestion._autoTimer);
       answerQuestion._autoTimer = window.setTimeout(() => {
         nextQuestion();
@@ -3419,19 +3612,35 @@
     }
 
     function showCorrectFeedback(curiosity) {
+      showChoraoBalloon(curiosity || 'Mandou bem nessa.');
+    }
+
+    function showWrongFeedback() {
+      hideChoraoBalloon();
       els.feedbackBox.innerHTML = `
-        <strong>Chorão diz:</strong>
-        <span>${curiosity ? escapeHtml(curiosity) : 'Boa! Você acertou. Segue firme.'}</span>
+        <strong>Não foi dessa vez.</strong>
+        A resposta certa não será revelada. Segue o jogo.
       `;
       els.feedbackBox.classList.add('show');
     }
 
-    function showWrongFeedback() {
-      els.feedbackBox.innerHTML = `
+    function showChoraoBalloon(message) {
+      if (!els.choraoBalloon) return;
+
+      els.choraoBalloon.innerHTML = `
         <strong>Chorão diz:</strong>
-        <span>Não foi dessa vez. A resposta certa não será revelada. Segue o jogo.</span>
+        ${escapeHtml(message)}
       `;
-      els.feedbackBox.classList.add('show');
+      els.choraoBalloon.setAttribute('aria-hidden', 'false');
+      els.choraoBalloon.classList.add('show');
+    }
+
+    function hideChoraoBalloon() {
+      if (!els.choraoBalloon) return;
+
+      els.choraoBalloon.classList.remove('show');
+      els.choraoBalloon.setAttribute('aria-hidden', 'true');
+      els.choraoBalloon.innerHTML = '';
     }
 
     function disableAnswerButtons() {
