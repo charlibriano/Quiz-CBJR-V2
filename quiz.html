@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Modo Quiz - CBJR</title>
-  <link rel="preconnect" href="https://raw.githubusercontent.com" />
+
   <style>
     @font-face {
       font-family: 'Elektrix';
-      src: url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR/main/Elektrix-Bold.woff2') format('woff2'),
-           url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR/main/Elektrix-Bold.woff') format('woff'),
-           url('https://cdn.jsdelivr.net/gh/charlibriano/Quiz-CBJR/Elektrix%20Bold.ttf') format('truetype');
+      src: url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/Elektrix-Bold.woff2') format('woff2'),
+           url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/Elektrix-Bold.woff') format('woff'),
+           url('https://cdn.jsdelivr.net/gh/charlibriano/Quiz-CBJR-V2/Elektrix%20Bold.ttf') format('truetype');
       font-weight: bold;
       font-display: swap;
     }
@@ -18,12 +18,12 @@
     :root {
       --yellow: #f1c40f;
       --green: #1ed760;
-      --red: #ff3b30;
-      --blue: #7a78ff;
-      --white: #fff;
-      --glass: rgba(0, 0, 0, .72);
-      --glass-strong: rgba(0, 0, 0, .86);
-      --line: rgba(255, 255, 255, .16);
+      --red: #ff3b32;
+      --blue: #3498db;
+      --bg: #030303;
+      --glass: rgba(0,0,0,.68);
+      --line: rgba(255,255,255,.16);
+      --soft: rgba(255,255,255,.76);
     }
 
     * { box-sizing: border-box; }
@@ -31,69 +31,101 @@
     html, body {
       margin: 0;
       min-height: 100%;
+      background: var(--bg);
+      color: #fff;
       font-family: Arial, Helvetica, sans-serif;
-      color: var(--white);
-      background: #030303 url('quiz-bg.jpg') center center / cover no-repeat fixed;
       overflow-x: hidden;
     }
 
-    body::before {
+    body.mode-select {
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.36)),
+        url('quiz-bg.jpg') center top / cover no-repeat fixed,
+        #050505;
+    }
+
+    body.mode-game {
+      background:
+        radial-gradient(circle at 20% 20%, rgba(241,196,15,.16), transparent 28%),
+        radial-gradient(circle at 82% 16%, rgba(30,215,96,.10), transparent 26%),
+        linear-gradient(135deg, rgba(0,0,0,.62), rgba(0,0,0,.94)),
+        url('cbjr.png') center center / cover no-repeat fixed,
+        #050505;
+    }
+
+    body.mode-game::before {
       content: "";
       position: fixed;
       inset: 0;
-      z-index: -1;
-      background: linear-gradient(180deg, rgba(0,0,0,.34), rgba(0,0,0,.78));
       pointer-events: none;
+      z-index: 0;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 34px 34px;
+      opacity: .32;
     }
 
-    button { font: inherit; }
-
     .topbar {
-      position: sticky;
-      top: 0;
+      position: fixed;
+      top: 12px;
+      left: 14px;
+      right: 14px;
+      height: 58px;
       z-index: 20;
-      width: min(1180px, calc(100% - 22px));
-      margin: 10px auto 0;
-      min-height: 54px;
-      border-radius: 999px;
-      border: 1px solid rgba(241,196,15,.32);
-      background: rgba(0,0,0,.74);
-      backdrop-filter: blur(12px);
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
       padding: 8px 10px;
-      box-shadow: 0 0 28px rgba(0,0,0,.65);
-    }
-
-    .back-btn, .power-btn, .primary-btn {
-      border: 1px solid rgba(241,196,15,.45);
-      background: rgba(0,0,0,.72);
-      color: #fff;
       border-radius: 999px;
-      min-height: 38px;
-      padding: 8px 15px;
-      cursor: pointer;
-      font-weight: 900;
-      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+      border: 1px solid rgba(241,196,15,.28);
+      background: rgba(0,0,0,.72);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 16px 42px rgba(0,0,0,.55);
     }
 
-    .back-btn { color: var(--yellow); }
-    .back-btn:hover, .power-btn:hover, .primary-btn:hover {
+    .back-btn,
+    .power-btn {
+      border: 1px solid rgba(255,255,255,.18);
+      color: #fff;
+      background: rgba(255,255,255,.08);
+      min-height: 40px;
+      padding: 0 18px;
+      border-radius: 999px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: .2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+    }
+
+    .back-btn {
+      border-color: rgba(241,196,15,.75);
+      color: var(--yellow);
+      box-shadow: 0 0 18px rgba(241,196,15,.12);
+    }
+
+    .back-btn:hover,
+    .power-btn:hover:not(:disabled) {
       transform: translateY(-1px);
-      box-shadow: 0 0 18px rgba(241,196,15,.34);
+      box-shadow: 0 0 22px rgba(241,196,15,.26);
     }
 
     .top-title {
-      min-width: 0;
-      display: flex;
+      font-family: 'Elektrix', Arial, sans-serif;
+      color: var(--yellow);
+      letter-spacing: .08em;
+      text-shadow: 0 0 16px rgba(241,196,15,.45);
+      display: inline-flex;
       align-items: center;
       gap: 8px;
-      color: var(--yellow);
-      font-family: 'Elektrix', Arial, sans-serif;
-      letter-spacing: .06em;
-      text-shadow: 0 0 12px rgba(241,196,15,.7);
+      font-size: 1rem;
+      min-width: 0;
     }
 
     .top-title::before {
@@ -102,464 +134,607 @@
       height: 10px;
       border-radius: 50%;
       background: var(--green);
-      box-shadow: 0 0 14px var(--green);
+      box-shadow: 0 0 12px var(--green);
+      flex: 0 0 auto;
     }
 
-    .top-actions { display: flex; align-items: center; gap: 8px; }
-    .power-btn:disabled { opacity: .38; cursor: not-allowed; transform: none; box-shadow: none; }
+    .top-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .power-btn {
+      font-size: .95rem;
+      background: rgba(255,255,255,.10);
+    }
+
+    .power-btn:disabled {
+      opacity: .38;
+      cursor: not-allowed;
+    }
 
     .screen {
-      width: min(1180px, calc(100% - 22px));
-      margin: 16px auto 34px;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
     }
 
     .hidden { display: none !important; }
 
-    .difficulty-screen {
-      min-height: calc(100svh - 95px);
-      display: grid;
-      place-items: center;
-      padding: 18px 0 34px;
+    /* TELA DE DIFICULDADE */
+    #difficulty-screen {
+      min-height: 100svh;
+      padding-top: 90px;
     }
 
-    .amp-panel {
-      width: min(1080px, 100%);
-      border-radius: 28px;
-      padding: clamp(20px, 4vw, 42px);
-      background: linear-gradient(180deg, rgba(0,0,0,.70), rgba(0,0,0,.90));
-      border: 1px solid rgba(241,196,15,.22);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.11), 0 30px 90px rgba(0,0,0,.72);
-      text-align: center;
-    }
-
-    .amp-kicker {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 7px 12px;
-      border-radius: 999px;
-      background: rgba(0,0,0,.62);
-      border: 1px solid rgba(255,255,255,.18);
-      font-size: .72rem;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,.78);
-    }
-
-    .amp-kicker::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 12px var(--green);
-    }
-
-    .amp-panel h1 {
-      margin: 18px 0 10px;
-      font-family: 'Elektrix', Arial, sans-serif;
-      color: var(--yellow);
-      font-size: clamp(2.4rem, 8vw, 5.2rem);
-      line-height: .9;
-      text-shadow: 0 0 18px rgba(241,196,15,.65), 4px 5px 0 rgba(0,0,0,.72);
-    }
-
-    .amp-panel p {
-      max-width: 760px;
-      margin: 0 auto 24px;
-      color: rgba(255,255,255,.75);
-      line-height: 1.5;
-      font-weight: 700;
-    }
-
-    .difficulty-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-top: 20px;
-    }
-
-    .difficulty-card {
-      position: relative;
-      min-height: 265px;
-      border: 1px solid color-mix(in srgb, var(--accent) 58%, rgba(255,255,255,.18));
-      border-radius: 22px;
-      padding: 20px;
-      overflow: hidden;
+    .difficulty-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
       background:
-        radial-gradient(circle at 50% 28%, color-mix(in srgb, var(--accent) 28%, transparent), transparent 40%),
-        linear-gradient(180deg, rgba(255,255,255,.055), rgba(0,0,0,.78));
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.11), 0 18px 40px rgba(0,0,0,.55);
-      cursor: pointer;
-      transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
-      color: white;
-      text-align: left;
+        linear-gradient(180deg, rgba(0,0,0,.04), rgba(0,0,0,.18) 45%, rgba(0,0,0,.26));
+      z-index: 0;
     }
 
-    .difficulty-card:hover {
-      transform: translateY(-5px) scale(1.01);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 0 30px color-mix(in srgb, var(--accent) 34%, transparent), 0 22px 48px rgba(0,0,0,.62);
-      border-color: var(--accent);
+    .difficulty-buttons {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: clamp(40px, 8vh, 95px);
+      z-index: 3;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(170px, 1fr));
+      gap: clamp(22px, 3vw, 46px);
+      width: min(1120px, 88vw);
+      margin: 0 auto;
+      pointer-events: auto;
     }
 
-    .difficulty-card .led {
-      width: 13px;
-      height: 13px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 10px var(--accent), 0 0 28px var(--accent);
-      margin-bottom: 18px;
-    }
-
-    .difficulty-card h2 {
-      margin: 0;
-      font-family: 'Elektrix', Arial, sans-serif;
-      font-size: clamp(1.6rem, 4vw, 2.6rem);
-      color: var(--accent);
-      text-shadow: 0 0 18px color-mix(in srgb, var(--accent) 70%, transparent);
-    }
-
-    .difficulty-card small {
-      display: inline-block;
-      margin: 8px 0 26px;
-      color: rgba(255,255,255,.72);
-      text-transform: uppercase;
-      letter-spacing: .12em;
-      font-weight: 900;
-    }
-
-    .difficulty-card p { text-align: left; margin: 0 0 22px; font-weight: 700; }
-
-    .difficulty-card .start-label {
-      position: absolute;
-      left: 20px;
-      right: 20px;
-      bottom: 18px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 42px;
+    .difficulty-btn {
+      min-height: 58px;
       border-radius: 999px;
-      border: 1px solid var(--accent);
-      color: var(--accent);
-      background: rgba(0,0,0,.58);
+      border: 2px solid currentColor;
+      background: rgba(0,0,0,.50);
+      color: #fff;
       font-weight: 950;
-      letter-spacing: .04em;
-      box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 20%, transparent);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      backdrop-filter: blur(7px);
+      -webkit-backdrop-filter: blur(7px);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.12),
+        0 18px 40px rgba(0,0,0,.58);
+      transition: .22s ease;
     }
 
-    .hud-grid {
+    .difficulty-btn.easy { color: var(--green); }
+    .difficulty-btn.normal { color: var(--yellow); }
+    .difficulty-btn.hard { color: var(--red); }
+
+    .difficulty-btn:hover {
+      transform: translateY(-4px) scale(1.035);
+      box-shadow: 0 0 26px currentColor, 0 20px 42px rgba(0,0,0,.72);
+      background: rgba(0,0,0,.68);
+    }
+
+    .difficulty-hint {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      z-index: 3;
+      color: rgba(255,255,255,.70);
+      font-size: .85rem;
+      text-align: center;
+      letter-spacing: .03em;
+      text-shadow: 0 2px 12px rgba(0,0,0,.9);
+    }
+
+    /* QUIZ */
+    #quiz-screen {
+      padding: 92px 18px 26px;
+    }
+
+    .hud {
+      width: min(1180px, 100%);
+      margin: 0 auto 14px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 10px;
-      margin-bottom: 12px;
     }
 
     .hud-card {
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.76);
-      padding: 12px 14px;
-      min-height: 72px;
-      box-shadow: 0 10px 28px rgba(0,0,0,.42);
+      min-height: 70px;
+      border-radius: 18px;
+      padding: 13px 15px;
+      background: rgba(0,0,0,.60);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 16px 38px rgba(0,0,0,.42);
     }
 
-    .hud-card span {
+    .hud-card small {
       display: block;
-      color: rgba(255,255,255,.58);
+      color: rgba(255,255,255,.60);
       text-transform: uppercase;
-      letter-spacing: .13em;
+      letter-spacing: .14em;
       font-weight: 950;
-      font-size: .78rem;
       margin-bottom: 8px;
     }
 
     .hud-card strong {
-      display: block;
-      color: var(--yellow);
       font-family: 'Elektrix', Arial, sans-serif;
-      font-size: 1.45rem;
-      text-shadow: 0 0 14px rgba(241,196,15,.52);
+      color: var(--yellow);
+      font-size: 1.15rem;
+      text-shadow: 0 0 12px rgba(241,196,15,.35);
     }
 
-    .quiz-card {
-      border: 1px solid rgba(241,196,15,.20);
+    .quiz-panel {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      min-height: 520px;
+      padding: clamp(20px, 4vw, 38px);
       border-radius: 28px;
-      padding: clamp(22px, 4vw, 38px);
-      background: linear-gradient(145deg, rgba(0,0,0,.86), rgba(0,0,0,.72));
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.10), 0 28px 75px rgba(0,0,0,.72);
+      background:
+        linear-gradient(180deg, rgba(8,8,8,.82), rgba(0,0,0,.86)),
+        radial-gradient(circle at 50% 0%, rgba(241,196,15,.12), transparent 42%);
+      border: 1px solid rgba(241,196,15,.22);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.10),
+        0 26px 82px rgba(0,0,0,.66);
       overflow: hidden;
+      position: relative;
+    }
+
+    .quiz-panel::before {
+      content: "Modo Quiz";
+      position: absolute;
+      left: 28px;
+      top: 24px;
+      font-family: 'Elektrix', Arial, sans-serif;
+      color: rgba(241,196,15,.18);
+      font-size: clamp(2.8rem, 8vw, 7rem);
+      pointer-events: none;
+      line-height: 1;
+      filter: blur(.2px);
     }
 
     .quote {
+      position: relative;
+      z-index: 2;
       color: rgba(255,255,255,.72);
       font-style: italic;
-      font-weight: 800;
-      margin: 0 0 22px;
-      text-shadow: 0 0 14px rgba(255,255,255,.16);
+      font-weight: 700;
+      font-size: clamp(.95rem, 1.3vw, 1.08rem);
+      margin: 10px 0 28px;
     }
 
-    .question-title {
-      margin: 0 0 28px;
-      min-height: 2.7em;
+    .question-text {
+      position: relative;
+      z-index: 2;
+      min-height: 130px;
+      display: flex;
+      align-items: center;
+      color: #fff;
       font-family: 'Elektrix', Arial, sans-serif;
-      font-size: clamp(2rem, 6vw, 4.2rem);
+      font-size: clamp(2.2rem, 5vw, 4.9rem);
       line-height: 1.08;
-      color: white;
-      text-shadow: 0 0 16px rgba(255,255,255,.48), 0 0 28px rgba(241,196,15,.38);
-      word-break: break-word;
+      letter-spacing: .015em;
+      text-shadow:
+        0 0 12px rgba(255,255,255,.55),
+        0 0 26px rgba(241,196,15,.30),
+        4px 5px 0 rgba(0,0,0,.62);
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity .4s ease, transform .4s ease;
+    }
+
+    .question-text.is-visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .answers {
+      position: relative;
+      z-index: 2;
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px;
+      margin-top: 24px;
     }
 
     .answer-btn {
-      min-height: 86px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.64));
-      color: white;
-      font-size: 1.2rem;
+      min-height: 84px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.20);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02)),
+        rgba(12,12,20,.76);
+      color: #fff;
+      font-size: clamp(1rem, 1.35vw, 1.35rem);
       font-weight: 900;
       cursor: pointer;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.10), 0 12px 30px rgba(0,0,0,.34);
+      transition: .22s ease;
+      position: relative;
+      overflow: hidden;
       opacity: 0;
       transform: translateY(18px);
-      animation: answerIn .42s ease forwards;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 12px 26px rgba(0,0,0,.42);
-      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .answer-btn.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .answer-btn::before {
+      content: attr(data-key);
+      position: absolute;
+      left: 16px;
+      top: 12px;
+      color: rgba(255,255,255,.46);
+      font-size: .78rem;
+      font-weight: 950;
     }
 
     .answer-btn:hover:not(:disabled) {
-      transform: translateY(-2px);
-      border-color: rgba(241,196,15,.65);
-      box-shadow: 0 0 24px rgba(241,196,15,.20), 0 14px 28px rgba(0,0,0,.46);
+      transform: translateY(-3px);
+      border-color: rgba(241,196,15,.58);
+      box-shadow: 0 0 22px rgba(241,196,15,.18), 0 14px 34px rgba(0,0,0,.46);
     }
 
-    .answer-btn:disabled { cursor: not-allowed; }
-    .answer-btn.correct { border-color: var(--green); background: linear-gradient(180deg, rgba(30,215,96,.34), rgba(0,0,0,.68)); box-shadow: 0 0 28px rgba(30,215,96,.34); }
-    .answer-btn.wrong { border-color: var(--red); background: linear-gradient(180deg, rgba(255,59,48,.28), rgba(0,0,0,.68)); box-shadow: 0 0 24px rgba(255,59,48,.28); }
+    .answer-btn:disabled {
+      cursor: not-allowed;
+    }
 
-    @keyframes answerIn { to { opacity: 1; transform: translateY(0); } }
+    .answer-btn.correct {
+      background: linear-gradient(180deg, rgba(30,215,96,.92), rgba(10,126,55,.88));
+      border-color: rgba(30,215,96,.96);
+      box-shadow: 0 0 28px rgba(30,215,96,.52);
+    }
+
+    .answer-btn.wrong {
+      background: linear-gradient(180deg, rgba(255,59,50,.92), rgba(145,19,16,.88));
+      border-color: rgba(255,59,50,.96);
+      box-shadow: 0 0 28px rgba(255,59,50,.45);
+      animation: shake .42s ease;
+    }
+
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25% { transform: translateX(-7px); }
+      50% { transform: translateX(7px); }
+      75% { transform: translateX(-4px); }
+    }
 
     .feedback {
-      min-height: 64px;
+      position: relative;
+      z-index: 2;
       margin-top: 18px;
-      padding: 15px 18px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.62);
+      min-height: 54px;
+      color: rgba(255,255,255,.78);
+      line-height: 1.45;
+      font-size: 1rem;
+      display: none;
+    }
+
+    .feedback.show {
+      display: block;
+    }
+
+    .feedback strong {
+      color: var(--yellow);
+      font-family: 'Elektrix', Arial, sans-serif;
+      font-size: 1.25rem;
+    }
+
+    .next-btn {
+      margin-top: 16px;
+      min-height: 48px;
+      min-width: 180px;
+      border-radius: 999px;
+      border: 0;
+      background: var(--yellow);
+      color: #050505;
+      font-weight: 950;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(241,196,15,.25);
+    }
+
+    .message-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      display: none;
+      place-items: center;
+      padding: 20px;
+      background: rgba(0,0,0,.76);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .message-screen.show {
+      display: grid;
+    }
+
+    .message-card {
+      width: min(760px, 100%);
+      border-radius: 30px;
+      padding: clamp(24px, 5vw, 44px);
+      text-align: center;
+      background:
+        linear-gradient(180deg, rgba(8,8,8,.92), rgba(0,0,0,.86)),
+        radial-gradient(circle at 50% 0%, rgba(241,196,15,.16), transparent 52%);
+      border: 1px solid rgba(241,196,15,.34);
+      box-shadow: 0 30px 90px rgba(0,0,0,.78), 0 0 38px rgba(241,196,15,.12);
+    }
+
+    .message-card h2 {
+      margin: 0 0 12px;
+      font-family: 'Elektrix', Arial, sans-serif;
+      color: var(--yellow);
+      font-size: clamp(2.3rem, 7vw, 5rem);
+      line-height: .95;
+      text-shadow: 0 0 24px rgba(241,196,15,.38), 4px 5px 0 rgba(0,0,0,.58);
+    }
+
+    .message-card p {
       color: rgba(255,255,255,.82);
       font-weight: 800;
       line-height: 1.45;
+      font-size: clamp(1rem, 1.8vw, 1.18rem);
     }
 
-    .feedback.good { border-color: rgba(30,215,96,.35); box-shadow: 0 0 22px rgba(30,215,96,.13); }
-    .feedback.bad { border-color: rgba(255,59,48,.35); box-shadow: 0 0 22px rgba(255,59,48,.13); }
-
-    .center-card {
-      width: min(760px, 100%);
-      margin: 40px auto;
-      padding: clamp(24px, 5vw, 42px);
-      border-radius: 28px;
-      text-align: center;
-      border: 1px solid rgba(241,196,15,.25);
-      background: rgba(0,0,0,.82);
-      box-shadow: 0 28px 80px rgba(0,0,0,.72);
+    .chorao-line {
+      margin: 22px auto 20px;
+      padding: 18px 20px;
+      border-radius: 20px;
+      border: 1px solid rgba(241,196,15,.26);
+      background: rgba(0,0,0,.36);
+      color: #fff;
+      font-style: italic;
+      text-shadow: 0 0 12px rgba(255,255,255,.25);
     }
 
-    .center-card h2 {
-      margin: 0 0 14px;
-      font-family: 'Elektrix', Arial, sans-serif;
-      color: var(--yellow);
-      font-size: clamp(2rem, 6vw, 4rem);
-      line-height: 1;
-      text-shadow: 0 0 18px rgba(241,196,15,.55);
-    }
-
-    .center-card p { color: rgba(255,255,255,.78); line-height: 1.55; font-weight: 800; }
-
-    .result-actions {
+    .message-actions {
       display: flex;
       justify-content: center;
       gap: 12px;
       flex-wrap: wrap;
-      margin-top: 20px;
+      margin-top: 22px;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+      min-height: 54px;
+      min-width: 190px;
+      padding: 0 24px;
+      border-radius: 999px;
+      font-weight: 950;
+      cursor: pointer;
     }
 
     .primary-btn {
+      border: 0;
       background: var(--yellow);
       color: #050505;
-      border-color: rgba(255,255,255,.15);
-      min-height: 46px;
-      padding-inline: 22px;
+    }
+
+    .secondary-btn {
+      border: 1px solid rgba(241,196,15,.56);
+      background: rgba(0,0,0,.26);
+      color: #fff;
     }
 
     @media (max-width: 780px) {
-      body { background-attachment: scroll; }
-      .topbar { border-radius: 22px; flex-wrap: wrap; justify-content: center; }
-      .top-title { order: 3; width: 100%; justify-content: center; font-size: .9rem; }
-      .back-btn, .power-btn { min-height: 34px; padding: 7px 11px; font-size: .88rem; }
-      .difficulty-grid { grid-template-columns: 1fr; }
-      .difficulty-card { min-height: 210px; }
-      .hud-grid { grid-template-columns: repeat(2, 1fr); }
-      .answers { grid-template-columns: 1fr; }
-      .question-title { font-size: clamp(1.8rem, 10vw, 3.2rem); }
-      .answer-btn { min-height: 72px; }
+      .topbar {
+        height: auto;
+        min-height: 54px;
+        top: 8px;
+        left: 8px;
+        right: 8px;
+        padding: 7px;
+      }
+
+      .top-title {
+        font-size: .75rem;
+        letter-spacing: .05em;
+      }
+
+      .back-btn, .power-btn {
+        min-height: 36px;
+        padding: 0 12px;
+        font-size: .82rem;
+      }
+
+      .top-actions {
+        gap: 5px;
+      }
+
+      body.mode-select {
+        background-size: cover;
+        background-position: center top;
+      }
+
+      .difficulty-buttons {
+        grid-template-columns: 1fr;
+        width: min(320px, 76vw);
+        gap: 12px;
+        bottom: 34px;
+      }
+
+      .difficulty-btn {
+        min-height: 46px;
+        font-size: .78rem;
+      }
+
+      .difficulty-hint {
+        display: none;
+      }
+
+      #quiz-screen {
+        padding: 82px 8px 18px;
+      }
+
+      .hud {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 7px;
+      }
+
+      .hud-card {
+        min-height: 56px;
+        padding: 9px 10px;
+        border-radius: 13px;
+      }
+
+      .hud-card small {
+        font-size: .62rem;
+        margin-bottom: 5px;
+      }
+
+      .hud-card strong {
+        font-size: .9rem;
+      }
+
+      .quiz-panel {
+        min-height: 480px;
+        padding: 18px 14px;
+        border-radius: 22px;
+      }
+
+      .quote {
+        margin-top: 8px;
+        font-size: .84rem;
+      }
+
+      .question-text {
+        min-height: 120px;
+        font-size: clamp(1.9rem, 9vw, 3.2rem);
+        text-align: center;
+        justify-content: center;
+      }
+
+      .answers {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .answer-btn {
+        min-height: 62px;
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .top-title {
+        display: none;
+      }
+      .power-btn {
+        padding: 0 10px;
+      }
+      .back-btn {
+        max-width: 150px;
+      }
     }
   </style>
 </head>
-<body>
+
+<body class="mode-select">
   <header class="topbar">
-    <button class="back-btn" type="button" onclick="location.href='index.html'">← Menu principal</button>
+    <a class="back-btn" href="index.html">← Menu principal</a>
     <div class="top-title">Modo Quiz</div>
     <div class="top-actions">
-      <button class="power-btn" id="fiftyBtn" type="button">50/50</button>
-      <button class="power-btn" id="skipBtn" type="button">Pular</button>
+      <button id="fiftyBtn" class="power-btn" type="button">50/50 <span id="fiftyCount">0</span></button>
+      <button id="skipBtn" class="power-btn" type="button">Pular <span id="skipCount">0</span></button>
     </div>
   </header>
 
   <main>
-    <section id="difficultyScreen" class="screen difficulty-screen">
-      <div class="amp-panel">
-        <div class="amp-kicker">Quiz por níveis</div>
-        <h1>Escolha a<br>Dificuldade</h1>
-        <p>O quiz tem 8 níveis e usa a regra de aprovação: você precisa acertar pelo menos 90% das perguntas do nível para avançar.</p>
-        <div class="difficulty-grid">
-          <button class="difficulty-card" style="--accent: var(--green)" data-difficulty="easy" type="button">
-            <div class="led"></div>
-            <h2>Fácil</h2>
-            <small>Aquecimento</small>
-            <p>Mais tempo, mais ajuda e uma entrada mais tranquila no universo CBJR.</p>
-            <span class="start-label">TOCAR AGORA</span>
-          </button>
-          <button class="difficulty-card" style="--accent: var(--yellow)" data-difficulty="normal" type="button">
-            <div class="led"></div>
-            <h2>Normal</h2>
-            <small>Equilíbrio</small>
-            <p>O modo principal: ritmo firme, pontuação melhor e desafio na medida certa.</p>
-            <span class="start-label">LIGAR GUITARRA</span>
-          </button>
-          <button class="difficulty-card" style="--accent: var(--red)" data-difficulty="hard" type="button">
-            <div class="led"></div>
-            <h2>Difícil</h2>
-            <small>Sem pausa</small>
-            <p>Menos margem de erro, menos ajuda e pressão máxima no amplificador.</p>
-            <span class="start-label">DISTORCER</span>
-          </button>
-        </div>
+    <section id="difficulty-screen" class="screen">
+      <div class="difficulty-overlay"></div>
+      <div class="difficulty-buttons" aria-label="Escolha a dificuldade">
+        <button class="difficulty-btn easy" type="button" data-difficulty="facil">Tocar agora</button>
+        <button class="difficulty-btn normal" type="button" data-difficulty="normal">Ligar guitarra</button>
+        <button class="difficulty-btn hard" type="button" data-difficulty="dificil">Distorcer</button>
       </div>
+      <div class="difficulty-hint">A imagem define os níveis. O botão só inicia o jogo.</div>
     </section>
 
-    <section id="quizScreen" class="screen hidden">
-      <div class="hud-grid">
-        <div class="hud-card"><span>Pergunta</span><strong id="questionCount">0/0</strong></div>
-        <div class="hud-card"><span>Pontos</span><strong id="scoreCount">0</strong></div>
-        <div class="hud-card"><span>Acertos</span><strong id="correctCount">0</strong></div>
-        <div class="hud-card"><span>Nível</span><strong id="levelCount">1/8</strong></div>
+    <section id="quiz-screen" class="screen hidden">
+      <div class="hud">
+        <div class="hud-card"><small>Pergunta</small><strong id="hudQuestion">0/0</strong></div>
+        <div class="hud-card"><small>Pontos</small><strong id="hudScore">0</strong></div>
+        <div class="hud-card"><small>Acertos</small><strong id="hudCorrect">0</strong></div>
+        <div class="hud-card"><small>Nível</small><strong id="hudLevel">1/8</strong></div>
       </div>
-      <article class="quiz-card">
-        <p class="quote" id="levelQuote"></p>
-        <h2 class="question-title" id="questionText"></h2>
-        <div class="answers" id="answers"></div>
-        <div class="feedback" id="feedback">Escolha uma resposta para continuar.</div>
+
+      <article class="quiz-panel">
+        <p id="levelQuote" class="quote"></p>
+        <h1 id="questionText" class="question-text"></h1>
+        <div id="answers" class="answers"></div>
+        <div id="feedback" class="feedback"></div>
       </article>
-    </section>
-
-    <section id="resultScreen" class="screen hidden">
-      <div class="center-card">
-        <h2 id="resultTitle">Resultado</h2>
-        <p id="resultText"></p>
-        <div class="result-actions" id="resultActions"></div>
-      </div>
     </section>
   </main>
 
+  <section id="levelMessage" class="message-screen">
+    <div class="message-card">
+      <h2 id="messageTitle">Nível completo</h2>
+      <p id="messageResult"></p>
+      <div id="messageQuote" class="chorao-line"></div>
+      <div class="message-actions">
+        <button id="messagePrimary" class="primary-btn" type="button">Próximo nível</button>
+        <button class="secondary-btn" type="button" onclick="window.location.href='index.html'">Menu principal</button>
+      </div>
+    </div>
+  </section>
+
   <script>
-    const PASS_RATE = 0.90;
-    const settings = {
-      easy: { label: 'Fácil', points: 10, helps: 2, skips: 2 },
-      normal: { label: 'Normal', points: 15, helps: 1, skips: 1 },
-      hard: { label: 'Difícil', points: 20, helps: 1, skips: 0 }
-    };
-
-    const els = {
-      difficulty: document.getElementById('difficultyScreen'),
-      quiz: document.getElementById('quizScreen'),
-      result: document.getElementById('resultScreen'),
-      questionText: document.getElementById('questionText'),
-      answers: document.getElementById('answers'),
-      feedback: document.getElementById('feedback'),
-      questionCount: document.getElementById('questionCount'),
-      scoreCount: document.getElementById('scoreCount'),
-      correctCount: document.getElementById('correctCount'),
-      levelCount: document.getElementById('levelCount'),
-      levelQuote: document.getElementById('levelQuote'),
-      fiftyBtn: document.getElementById('fiftyBtn'),
-      skipBtn: document.getElementById('skipBtn'),
-      resultTitle: document.getElementById('resultTitle'),
-      resultText: document.getElementById('resultText'),
-      resultActions: document.getElementById('resultActions')
-    };
-
     const state = {
-      levels: [],
-      difficulty: null,
+      data: [],
+      difficulty: 'normal',
       levelIndex: 0,
       questionIndex: 0,
       score: 0,
+      correct: 0,
       levelCorrect: 0,
-      totalCorrect: 0,
-      usedFifty: 0,
-      usedSkip: 0,
-      locked: false,
-      currentQuestions: []
+      answered: false,
+      fifty: 1,
+      skip: 1,
+      approvalRate: 0.9,
+      typingTimer: null
     };
 
-    function shuffle(array) {
-      const copy = [...array];
-      for (let i = copy.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [copy[i], copy[j]] = [copy[j], copy[i]];
-      }
-      return copy;
-    }
+    const els = {
+      difficultyScreen: document.getElementById('difficulty-screen'),
+      quizScreen: document.getElementById('quiz-screen'),
+      questionText: document.getElementById('questionText'),
+      answers: document.getElementById('answers'),
+      feedback: document.getElementById('feedback'),
+      levelQuote: document.getElementById('levelQuote'),
+      hudQuestion: document.getElementById('hudQuestion'),
+      hudScore: document.getElementById('hudScore'),
+      hudCorrect: document.getElementById('hudCorrect'),
+      hudLevel: document.getElementById('hudLevel'),
+      fiftyBtn: document.getElementById('fiftyBtn'),
+      skipBtn: document.getElementById('skipBtn'),
+      fiftyCount: document.getElementById('fiftyCount'),
+      skipCount: document.getElementById('skipCount'),
+      levelMessage: document.getElementById('levelMessage'),
+      messageTitle: document.getElementById('messageTitle'),
+      messageResult: document.getElementById('messageResult'),
+      messageQuote: document.getElementById('messageQuote'),
+      messagePrimary: document.getElementById('messagePrimary')
+    };
 
-    function escapeHtml(text) {
-      return String(text ?? '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
-
-    function formatQuestion(text) {
-      return escapeHtml(text)
-        .replace(/&quot;\s*br\s*&quot;/gi, '<br>')
-        .replace(/&#039;\s*br\s*&#039;/gi, '<br>')
-        .replace(/&lt;br\s*\/?&gt;/gi, '<br>');
-    }
-
-    let typingTimer = null;
-    function typeQuestion(html) {
-      clearTimeout(typingTimer);
-      els.questionText.innerHTML = '';
-      let i = 0;
-      function step() {
-        if (i >= html.length) return;
-        if (html.slice(i, i + 4).toLowerCase() === '<br>') {
-          els.questionText.innerHTML += '<br>';
-          i += 4;
-        } else {
-          els.questionText.innerHTML += html[i];
-          i++;
-        }
-        typingTimer = setTimeout(step, 15);
-      }
-      step();
+    function sanitizeText(value) {
+      return String(value || '')
+        .replace(/<br\s*\/?>/gi, '\n')
+        .replace(/"\s*br\s*"/gi, '\n')
+        .replace(/\s+br\s+/gi, '\n')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
     }
 
     async function loadQuestions() {
@@ -567,193 +742,244 @@
         const res = await fetch('perguntas.json', { cache: 'no-store' });
         if (!res.ok) throw new Error('Não foi possível carregar perguntas.json');
         const data = await res.json();
-        state.levels = normalizeLevels(data);
-        if (!state.levels.length) throw new Error('perguntas.json vazio ou em formato inválido');
-      } catch (err) {
-        els.difficulty.innerHTML = `<div class="center-card"><h2>Erro</h2><p>${escapeHtml(err.message)}. Confirme se perguntas.json está na raiz junto com quiz.html.</p></div>`;
-      }
-    }
 
-    function normalizeLevels(data) {
-      if (!Array.isArray(data)) return [];
-      if (data.length && data[0].perguntas) {
-        return data.map((level, idx) => ({
-          nivel: level.nivel || idx + 1,
-          fraseChorao: level.fraseChorao || '',
-          perguntas: (level.perguntas || []).map(normalizeQuestion).filter(Boolean)
+        if (!Array.isArray(data) || !data.length) {
+          throw new Error('perguntas.json vazio ou em formato inválido');
+        }
+
+        state.data = data.map((level, i) => ({
+          fraseChorao: sanitizeText(level.fraseChorao || `Nível ${i + 1}`),
+          perguntas: (level.perguntas || []).map(q => ({
+            pergunta: sanitizeText(q.pergunta),
+            respostas: Array.isArray(q.respostas) ? q.respostas.map(sanitizeText) : [],
+            correta: sanitizeText(q.correta),
+            curiosidade: sanitizeText(q.curiosidade)
+          }))
         })).filter(level => level.perguntas.length);
+
+      } catch (error) {
+        els.difficultyScreen.innerHTML = `
+          <div style="min-height:100vh;display:grid;place-items:center;padding:20px;text-align:center;">
+            <div style="max-width:620px;background:rgba(0,0,0,.75);border:1px solid rgba(241,196,15,.35);border-radius:24px;padding:28px;">
+              <h1 style="color:#f1c40f;font-family:Elektrix,Arial,sans-serif;">Erro ao carregar o quiz</h1>
+              <p>${error.message}</p>
+              <p>Confirme se <strong>perguntas.json</strong> está na raiz do GitHub junto com o quiz.html.</p>
+            </div>
+          </div>`;
       }
-      return [{ nivel: 1, fraseChorao: '', perguntas: data.map(normalizeQuestion).filter(Boolean) }];
     }
 
-    function normalizeQuestion(q) {
-      const pergunta = q.pergunta || q.question || '';
-      const opcoes = q.opcoes || q.respostas || q.options || [];
-      const resposta = q.resposta || q.correta || q.answer || '';
-      if (!pergunta || !Array.isArray(opcoes) || !opcoes.length || !resposta) return null;
-      return { pergunta, opcoes, resposta, curiosidade: q.curiosidade || '' };
-    }
-
-    function showOnly(screen) {
-      [els.difficulty, els.quiz, els.result].forEach(el => el.classList.add('hidden'));
-      screen.classList.remove('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function startGame(difficulty) {
-      if (!state.levels.length) return;
+    function setDifficulty(difficulty) {
       state.difficulty = difficulty;
+
+      if (difficulty === 'facil') {
+        state.fifty = 2;
+        state.skip = 2;
+      } else if (difficulty === 'normal') {
+        state.fifty = 1;
+        state.skip = 1;
+      } else {
+        state.fifty = 0;
+        state.skip = 0;
+      }
+
       state.levelIndex = 0;
       state.questionIndex = 0;
       state.score = 0;
-      state.totalCorrect = 0;
-      state.usedFifty = 0;
-      state.usedSkip = 0;
-      startLevel(0);
+      state.correct = 0;
+      state.levelCorrect = 0;
+      startGame();
     }
 
-    function startLevel(index) {
-      state.levelIndex = index;
-      state.questionIndex = 0;
-      state.levelCorrect = 0;
-      state.locked = false;
-      state.currentQuestions = shuffle(state.levels[index].perguntas);
-      showOnly(els.quiz);
+    function startGame() {
+      if (!state.data.length) return;
+
+      document.body.classList.remove('mode-select');
+      document.body.classList.add('mode-game');
+
+      els.difficultyScreen.classList.add('hidden');
+      els.quizScreen.classList.remove('hidden');
       renderQuestion();
     }
 
+    function currentLevel() {
+      return state.data[state.levelIndex];
+    }
+
+    function currentQuestion() {
+      return currentLevel().perguntas[state.questionIndex];
+    }
+
+    function updateHud() {
+      const level = currentLevel();
+      els.hudQuestion.textContent = `${state.questionIndex + 1}/${level.perguntas.length}`;
+      els.hudScore.textContent = state.score;
+      els.hudCorrect.textContent = state.levelCorrect;
+      els.hudLevel.textContent = `${state.levelIndex + 1}/${state.data.length}`;
+      els.fiftyCount.textContent = state.fifty;
+      els.skipCount.textContent = state.skip;
+      els.fiftyBtn.disabled = state.fifty <= 0 || state.answered;
+      els.skipBtn.disabled = state.skip <= 0 || state.answered;
+    }
+
+    function typeQuestion(text) {
+      clearTimeout(state.typingTimer);
+      els.questionText.classList.remove('is-visible');
+      els.questionText.textContent = '';
+
+      const normalized = sanitizeText(text);
+      let i = 0;
+
+      setTimeout(() => {
+        els.questionText.classList.add('is-visible');
+        const step = () => {
+          if (i <= normalized.length) {
+            els.questionText.textContent = normalized.slice(0, i);
+            i++;
+            state.typingTimer = setTimeout(step, 16);
+          }
+        };
+        step();
+      }, 100);
+    }
+
+    function shuffle(array) {
+      return [...array].sort(() => Math.random() - 0.5);
+    }
+
     function renderQuestion() {
-      state.locked = false;
-      const level = state.levels[state.levelIndex];
-      const q = state.currentQuestions[state.questionIndex];
-      els.levelQuote.textContent = level.fraseChorao ? `“${level.fraseChorao}”` : '';
+      state.answered = false;
+      const level = currentLevel();
+      const q = currentQuestion();
+
       els.feedback.className = 'feedback';
-      els.feedback.textContent = 'Escolha uma resposta para continuar.';
-      els.questionCount.textContent = `${state.questionIndex + 1}/${state.currentQuestions.length}`;
-      els.scoreCount.textContent = state.score;
-      els.correctCount.textContent = state.levelCorrect;
-      els.levelCount.textContent = `${state.levelIndex + 1}/${state.levels.length}`;
-      els.fiftyBtn.disabled = state.usedFifty >= settings[state.difficulty].helps;
-      els.skipBtn.disabled = state.usedSkip >= settings[state.difficulty].skips;
-      els.fiftyBtn.textContent = `50/50 ${Math.max(0, settings[state.difficulty].helps - state.usedFifty)}`;
-      els.skipBtn.textContent = `Pular ${Math.max(0, settings[state.difficulty].skips - state.usedSkip)}`;
-      typeQuestion(formatQuestion(q.pergunta));
-      renderAnswers(q);
-    }
-
-    function renderAnswers(q) {
+      els.feedback.innerHTML = '';
+      els.levelQuote.textContent = `“${level.fraseChorao}”`;
+      typeQuestion(q.pergunta);
       els.answers.innerHTML = '';
-      shuffle(q.opcoes).forEach((option, index) => {
+
+      const respostas = shuffle(q.respostas);
+      respostas.forEach((answer, index) => {
         const btn = document.createElement('button');
-        btn.type = 'button';
         btn.className = 'answer-btn';
-        btn.style.animationDelay = `${index * 85}ms`;
-        btn.textContent = option;
-        btn.addEventListener('click', () => answerQuestion(option, btn));
+        btn.type = 'button';
+        btn.dataset.key = index + 1;
+        btn.textContent = answer;
+        btn.addEventListener('click', () => answerQuestion(answer, btn));
         els.answers.appendChild(btn);
+
+        setTimeout(() => btn.classList.add('show'), 260 + index * 140);
       });
+
+      updateHud();
     }
 
-    function answerQuestion(option, btn) {
-      if (state.locked) return;
-      state.locked = true;
-      const q = state.currentQuestions[state.questionIndex];
-      const correct = option === q.resposta;
-      [...els.answers.children].forEach(b => b.disabled = true);
-      if (correct) {
-        btn.classList.add('correct');
+    function answerQuestion(answer, clickedBtn) {
+      if (state.answered) return;
+      state.answered = true;
+
+      const q = currentQuestion();
+      const isCorrect = answer === q.correta;
+
+      Array.from(els.answers.children).forEach(btn => btn.disabled = true);
+
+      if (isCorrect) {
+        clickedBtn.classList.add('correct');
+        state.correct++;
         state.levelCorrect++;
-        state.totalCorrect++;
-        state.score += settings[state.difficulty].points;
-        els.feedback.className = 'feedback good';
-        els.feedback.innerHTML = `<strong>Mandou bem!</strong>${q.curiosidade ? '<br>' + escapeHtml(q.curiosidade) : ''}`;
+        state.score += state.difficulty === 'dificil' ? 20 : state.difficulty === 'normal' ? 15 : 10;
+
+        els.feedback.innerHTML = `<strong>Boa!</strong><br>${q.curiosidade || 'Resposta correta.'}<br><button class="next-btn" type="button">Continuar</button>`;
       } else {
-        btn.classList.add('wrong');
-        els.feedback.className = 'feedback bad';
-        els.feedback.textContent = 'Não foi dessa vez. A resposta certa não será revelada.';
+        clickedBtn.classList.add('wrong');
+        els.feedback.innerHTML = `<strong>Não foi dessa vez.</strong><br>A resposta certa não será revelada. Bora pra próxima sem perder o ritmo.<br><button class="next-btn" type="button">Continuar</button>`;
       }
-      setTimeout(nextQuestion, correct ? 2300 : 1500);
+
+      els.feedback.classList.add('show');
+      els.feedback.querySelector('.next-btn').addEventListener('click', nextQuestion);
+      updateHud();
     }
 
     function nextQuestion() {
-      state.questionIndex++;
-      if (state.questionIndex >= state.currentQuestions.length) {
-        finishLevel();
-      } else {
+      const level = currentLevel();
+
+      if (state.questionIndex < level.perguntas.length - 1) {
+        state.questionIndex++;
         renderQuestion();
+      } else {
+        finishLevel();
       }
     }
 
     function finishLevel() {
-      const total = state.currentQuestions.length;
-      const needed = Math.ceil(total * PASS_RATE);
-      const passed = state.levelCorrect >= needed;
-      const levelNumber = state.levelIndex + 1;
-      showOnly(els.result);
-      els.resultActions.innerHTML = '';
-      if (passed) {
-        els.resultTitle.textContent = `Nível ${levelNumber} completo`;
-        els.resultText.innerHTML = `Você acertou <strong>${state.levelCorrect}/${total}</strong>. Mínimo para passar: <strong>${needed}/${total}</strong>.`;
-        const nextBtn = document.createElement('button');
-        nextBtn.className = 'primary-btn';
-        nextBtn.textContent = state.levelIndex + 1 >= state.levels.length ? 'Ver resultado final' : 'Próximo nível';
-        nextBtn.onclick = () => {
-          if (state.levelIndex + 1 >= state.levels.length) finishGame();
-          else startLevel(state.levelIndex + 1);
+      const level = currentLevel();
+      const total = level.perguntas.length;
+      const minimum = Math.ceil(total * state.approvalRate);
+      const passed = state.levelCorrect >= minimum;
+      const isLast = state.levelIndex >= state.data.length - 1;
+
+      els.levelMessage.classList.add('show');
+      els.messageQuote.textContent = `“${level.fraseChorao}”`;
+
+      if (passed && !isLast) {
+        els.messageTitle.textContent = `Nível ${state.levelIndex + 1} completo`;
+        els.messageResult.textContent = `Você acertou ${state.levelCorrect}/${total}. Mínimo para passar: ${minimum}/${total}.`;
+        els.messagePrimary.textContent = `Próximo nível`;
+        els.messagePrimary.onclick = () => {
+          els.levelMessage.classList.remove('show');
+          state.levelIndex++;
+          state.questionIndex = 0;
+          state.levelCorrect = 0;
+          renderQuestion();
         };
-        els.resultActions.appendChild(nextBtn);
+      } else if (passed && isLast) {
+        els.messageTitle.textContent = `Quiz finalizado`;
+        els.messageResult.textContent = `Você concluiu todos os ${state.data.length} níveis. Pontuação final: ${state.score}.`;
+        els.messagePrimary.textContent = `Jogar novamente`;
+        els.messagePrimary.onclick = () => location.reload();
       } else {
-        els.resultTitle.textContent = `Nível ${levelNumber} não liberado`;
-        els.resultText.innerHTML = `Você acertou <strong>${state.levelCorrect}/${total}</strong>. Para avançar precisa de <strong>${needed}/${total}</strong>. Refaça este nível para continuar.`;
-        const retryBtn = document.createElement('button');
-        retryBtn.className = 'primary-btn';
-        retryBtn.textContent = 'Refazer nível';
-        retryBtn.onclick = () => startLevel(state.levelIndex);
-        els.resultActions.appendChild(retryBtn);
+        els.messageTitle.textContent = `Nível não concluído`;
+        els.messageResult.textContent = `Você acertou ${state.levelCorrect}/${total}. Para avançar precisa de pelo menos ${minimum}/${total}.`;
+        els.messagePrimary.textContent = `Tentar nível novamente`;
+        els.messagePrimary.onclick = () => {
+          els.levelMessage.classList.remove('show');
+          state.questionIndex = 0;
+          state.levelCorrect = 0;
+          renderQuestion();
+        };
       }
-      const menuBtn = document.createElement('button');
-      menuBtn.className = 'power-btn';
-      menuBtn.textContent = 'Menu principal';
-      menuBtn.onclick = () => location.href = 'index.html';
-      els.resultActions.appendChild(menuBtn);
     }
 
-    function finishGame() {
-      showOnly(els.result);
-      els.resultTitle.textContent = 'Quiz finalizado';
-      els.resultText.innerHTML = `Você concluiu os <strong>${state.levels.length}</strong> níveis. Pontuação final: <strong>${state.score}</strong>.`;
-      els.resultActions.innerHTML = '';
-      const againBtn = document.createElement('button');
-      againBtn.className = 'primary-btn';
-      againBtn.textContent = 'Jogar de novo';
-      againBtn.onclick = () => showOnly(els.difficulty);
-      els.resultActions.appendChild(againBtn);
-    }
+    function useFifty() {
+      if (state.fifty <= 0 || state.answered) return;
 
-    function useFiftyFifty() {
-      if (state.locked || state.usedFifty >= settings[state.difficulty].helps) return;
-      const q = state.currentQuestions[state.questionIndex];
-      const wrongButtons = [...els.answers.children].filter(btn => btn.textContent !== q.resposta && !btn.disabled);
+      const q = currentQuestion();
+      const wrongButtons = Array.from(els.answers.children)
+        .filter(btn => btn.textContent !== q.correta && !btn.disabled);
+
       shuffle(wrongButtons).slice(0, 2).forEach(btn => {
         btn.disabled = true;
-        btn.style.opacity = '.25';
+        btn.style.opacity = '.22';
+        btn.style.pointerEvents = 'none';
       });
-      state.usedFifty++;
-      els.fiftyBtn.disabled = state.usedFifty >= settings[state.difficulty].helps;
-      els.fiftyBtn.textContent = `50/50 ${Math.max(0, settings[state.difficulty].helps - state.usedFifty)}`;
+
+      state.fifty--;
+      updateHud();
     }
 
-    function skipQuestion() {
-      if (state.locked || state.usedSkip >= settings[state.difficulty].skips) return;
-      state.usedSkip++;
+    function useSkip() {
+      if (state.skip <= 0 || state.answered) return;
+      state.skip--;
+      updateHud();
       nextQuestion();
     }
 
-    document.querySelectorAll('.difficulty-card').forEach(card => {
-      card.addEventListener('click', () => startGame(card.dataset.difficulty));
+    document.querySelectorAll('.difficulty-btn').forEach(btn => {
+      btn.addEventListener('click', () => setDifficulty(btn.dataset.difficulty));
     });
-    els.fiftyBtn.addEventListener('click', useFiftyFifty);
-    els.skipBtn.addEventListener('click', skipQuestion);
+
+    els.fiftyBtn.addEventListener('click', useFifty);
+    els.skipBtn.addEventListener('click', useSkip);
 
     loadQuestions();
   </script>
