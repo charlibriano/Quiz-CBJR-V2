@@ -1870,6 +1870,144 @@
       }
     }
 
+
+    /* =============================================================
+       CORREÇÃO FELIPE — TELA DE DIFICULDADE SEM TEXTO DUPLICADO
+       A imagem quiz-bg.jpg já contém título, descrição e nomes dos níveis.
+       Aqui ficam apenas áreas clicáveis transparentes sobre os amps.
+       ============================================================= */
+    .sr-only {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    body.tela-dificuldade {
+      width: 100vw !important;
+      min-height: 100svh !important;
+      overflow: hidden !important;
+      background-image: url('quiz-bg.jpg') !important;
+      background-repeat: no-repeat !important;
+      background-position: center center !important;
+      background-size: cover !important;
+      background-color: #000 !important;
+    }
+
+    body.tela-dificuldade .topbar-center,
+    body.tela-dificuldade .topbar-actions,
+    body.tela-dificuldade .difficulty-title,
+    body.tela-dificuldade .difficulty-title *,
+    body.tela-dificuldade .quiz-hud,
+    body.tela-dificuldade .quiz-panel {
+      display: none !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    body.tela-dificuldade #difficultyScreen.active,
+    body.tela-dificuldade .difficulty-screen.active {
+      position: fixed !important;
+      inset: 0 !important;
+      display: block !important;
+      width: 100vw !important;
+      height: 100svh !important;
+      min-height: 100svh !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      overflow: hidden !important;
+      background: transparent !important;
+    }
+
+    body.tela-dificuldade .difficulty-shell {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100svh !important;
+      min-height: 100svh !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      display: block !important;
+    }
+
+    body.tela-dificuldade .difficulty-actions {
+      position: fixed !important;
+      left: 10.8vw !important;
+      right: 10.8vw !important;
+      top: 52.5vh !important;
+      bottom: 7.5vh !important;
+      width: auto !important;
+      height: auto !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      display: grid !important;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      gap: 4.1vw !important;
+      z-index: 22 !important;
+      align-items: stretch !important;
+    }
+
+    body.tela-dificuldade .level-card {
+      min-height: 0 !important;
+      height: 100% !important;
+      border-radius: 22px !important;
+      border: 2px solid transparent !important;
+      background: transparent !important;
+      color: transparent !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      overflow: hidden !important;
+      opacity: 1 !important;
+      cursor: pointer !important;
+    }
+
+    body.tela-dificuldade .level-card::before,
+    body.tela-dificuldade .level-card::after,
+    body.tela-dificuldade .level-card strong,
+    body.tela-dificuldade .level-card span:not(.sr-only) {
+      display: none !important;
+      content: none !important;
+    }
+
+    body.tela-dificuldade .level-card:hover,
+    body.tela-dificuldade .level-card:focus-visible {
+      transform: translateY(-3px) scale(1.01) !important;
+      border-color: var(--accent) !important;
+      box-shadow: 0 0 26px color-mix(in srgb, var(--accent) 62%, transparent), inset 0 0 40px color-mix(in srgb, var(--accent) 16%, transparent) !important;
+      outline: none !important;
+      background: color-mix(in srgb, var(--accent) 7%, transparent) !important;
+    }
+
+    body.tela-dificuldade .level-card.is-pressed {
+      transform: translateY(4px) scale(.99) !important;
+      border-color: var(--accent) !important;
+      box-shadow: 0 0 34px color-mix(in srgb, var(--accent) 70%, transparent), inset 0 0 48px color-mix(in srgb, var(--accent) 22%, transparent) !important;
+    }
+
+    @media (max-width: 760px) {
+      body.tela-dificuldade {
+        overflow-y: auto !important;
+        background-size: auto 100svh !important;
+      }
+      body.tela-dificuldade .difficulty-actions {
+        left: 7vw !important;
+        right: 7vw !important;
+        top: 50svh !important;
+        bottom: 5svh !important;
+        gap: 3vw !important;
+      }
+    }
+
   </style>
 </head>
 
@@ -1899,19 +2037,16 @@
         </div>
 
         <div class="difficulty-actions">
-          <button class="level-card level-easy" type="button" data-difficulty="facil">
-            <strong>Fácil</strong>
-            <span>Tocar agora</span>
+          <button class="level-card level-easy" type="button" data-difficulty="facil" aria-label="Selecionar nível fácil">
+            <span class="sr-only">Selecionar nível fácil</span>
           </button>
 
-          <button class="level-card level-normal" type="button" data-difficulty="normal">
-            <strong>Normal</strong>
-            <span>Ligar guitarra</span>
+          <button class="level-card level-normal" type="button" data-difficulty="normal" aria-label="Selecionar nível normal">
+            <span class="sr-only">Selecionar nível normal</span>
           </button>
 
-          <button class="level-card level-hard" type="button" data-difficulty="dificil">
-            <strong>Difícil</strong>
-            <span>Distorcer</span>
+          <button class="level-card level-hard" type="button" data-difficulty="dificil" aria-label="Selecionar nível difícil">
+            <span class="sr-only">Selecionar nível difícil</span>
           </button>
         </div>
       </div>
