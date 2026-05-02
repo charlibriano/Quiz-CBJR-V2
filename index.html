@@ -2451,7 +2451,7 @@
         </div>
 
         <div class="channels">
-          <a class="channel" style="--accent: var(--yellow)" href="quiz.html" data-tone="164.81">
+          <a id="canal-quiz" class="channel" style="--accent: var(--yellow)" href="./quiz.html" data-tone="164.81" data-page="quiz.html" onclick="event.preventDefault(); window.location.assign('./quiz.html'); return false;">
             <div class="ch-top"><span>CH 01</span><span class="led" title="Ligar canal"></span></div>
             <div class="knobs"><span></span><span></span><span></span></div>
             <div class="ch-label">GAIN • LEVEL • FX</div>
@@ -3168,5 +3168,31 @@
     setupOriginalHomePlayer();
 
   </script>
+
+<script>
+  // CORREÇÃO DE NAVEGAÇÃO — garante que o canal Modo Quiz sempre abra quiz.html
+  (function () {
+    function abrirQuizPage(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      window.location.assign('./quiz.html');
+      return false;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const quizChannel = document.getElementById('canal-quiz');
+      if (quizChannel) {
+        quizChannel.setAttribute('href', './quiz.html');
+        quizChannel.addEventListener('click', abrirQuizPage, true);
+      }
+
+      document.querySelectorAll('[data-page="quiz.html"], a[href="quiz.html"], a[href="./quiz.html"]').forEach(function (el) {
+        el.addEventListener('click', abrirQuizPage, true);
+      });
+    });
+  })();
+</script>
 </body>
 </html>
