@@ -426,8 +426,42 @@
       font-family: 'Elektrix', Arial, sans-serif;
       color: #fff;
       font-size: clamp(1.65rem, 4vw, 3rem);
-      line-height: 1.12;
-      text-shadow: 0 0 15px rgba(255,255,255,.35), 0 0 24px rgba(241,196,15,.35);
+      line-height: 1.16;
+      min-height: 2.4em;
+      letter-spacing: .025em;
+      text-shadow:
+        0 0 12px rgba(255,255,255,.35),
+        0 0 26px rgba(241,196,15,.42),
+        0 0 46px rgba(241,196,15,.18);
+      opacity: 0;
+      transform: translateY(16px) scale(.985);
+      filter: blur(6px);
+    }
+
+    .question-title.is-typing {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+      transition: opacity .55s ease, transform .55s ease, filter .55s ease;
+    }
+
+    .question-title::after {
+      content: "";
+      display: inline-block;
+      width: .08em;
+      height: .9em;
+      margin-left: .12em;
+      transform: translateY(.12em);
+      background: rgba(241,196,15,.9);
+      box-shadow: 0 0 14px rgba(241,196,15,.72);
+      animation: cursorBlink .8s steps(2, start) infinite;
+    }
+
+    .question-title.done-typing::after { display: none; }
+
+    @keyframes cursorBlink {
+      0%, 45% { opacity: 1; }
+      46%, 100% { opacity: 0; }
     }
 
     .answers {
@@ -449,8 +483,16 @@
       font-weight: 900;
       font-size: 1rem;
       cursor: pointer;
-      transition: .2s ease;
+      transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease, background .22s ease, opacity .22s ease;
       box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 12px 30px rgba(0,0,0,.28);
+      opacity: 0;
+      transform: translateY(18px) scale(.98);
+      animation: answerEntrance .52s ease forwards;
+      animation-delay: var(--answer-delay, 0ms);
+    }
+
+    @keyframes answerEntrance {
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .answer-btn:hover:not(:disabled) {
@@ -463,7 +505,8 @@
       background: rgba(46,204,113,.78);
       border-color: var(--easy);
       color: #fff;
-      box-shadow: 0 0 26px rgba(46,204,113,.45);
+      box-shadow: 0 0 26px rgba(46,204,113,.45), 0 0 52px rgba(46,204,113,.18);
+      animation: correctPulse .78s ease both;
     }
 
     .answer-btn.wrong {
@@ -471,9 +514,29 @@
       border-color: var(--red);
       color: #fff;
       box-shadow: 0 0 26px rgba(231,76,60,.42);
+      animation: wrongShake .42s ease both;
+    }
+
+    .answer-btn.dimmed {
+      opacity: .28 !important;
+      filter: grayscale(.8);
     }
 
     .answer-btn:disabled { cursor: default; }
+
+    @keyframes correctPulse {
+      0% { transform: scale(1); }
+      45% { transform: scale(1.035); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes wrongShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-7px); }
+      40% { transform: translateX(7px); }
+      60% { transform: translateX(-5px); }
+      80% { transform: translateX(5px); }
+    }
 
     .feedback-card {
       display: none;
@@ -794,9 +857,41 @@
 
     function cleanText(value) {
       return String(value)
+        .replace(/<\s*br\s*\/?>/gi, '<br>')
         .replace(/\s+/g, ' ')
+        .replace(/\s*<br>\s*/gi, '<br>')
         .replace(/\s+([?.!,;:])/g, '$1')
         .trim();
+    }
+
+    function stripHTML(value) {
+      return String(value).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    }
+
+    function cinematicQuestion(text) {
+      const target = el('questionText');
+      target.innerHTML = '';
+      target.classList.remove('is-typing', 'done-typing');
+
+      const source = cleanText(text);
+      const tokens = source.match(/<br>|[^<]/gi) || [];
+      let index = 0;
+
+      requestAnimationFrame(() => target.classList.add('is-typing'));
+
+      function typeNext() {
+        if (index >= tokens.length) {
+          target.classList.add('done-typing');
+          return;
+        }
+
+        const token = tokens[index];
+        target.innerHTML += token.toLowerCase() === '<br>' ? '<br>' : token;
+        index++;
+        setTimeout(typeNext, token.toLowerCase() === '<br>' ? 110 : 18);
+      }
+
+      typeNext();
     }
 
     function shuffle(array) {
@@ -858,17 +953,18 @@
       el('scoreText').textContent = score;
       el('correctText').textContent = correct;
       el('quoteText').textContent = question.fraseChorao ? `“${question.fraseChorao}”` : '';
-      el('questionText').textContent = question.pergunta;
+      cinematicQuestion(question.pergunta);
 
       const answers = el('answers');
       answers.innerHTML = '';
       el('feedback').classList.remove('show');
       el('feedback').innerHTML = '';
 
-      shuffle(question.respostas).forEach(answer => {
+      shuffle(question.respostas).forEach((answer, idx) => {
         const btn = document.createElement('button');
         btn.className = 'answer-btn';
-        btn.textContent = answer;
+        btn.style.setProperty('--answer-delay', `${260 + idx * 120}ms`);
+        btn.textContent = stripHTML(answer);
         btn.onclick = () => answerQuestion(answer, btn);
         answers.appendChild(btn);
       });
@@ -879,35 +975,44 @@
       locked = true;
 
       const question = quizQuestions[currentIndex];
-      const isCorrect = answer === question.correta;
+      const isCorrect = cleanText(answer) === cleanText(question.correta);
       const buttons = [...document.querySelectorAll('.answer-btn')];
 
       buttons.forEach(btn => {
         btn.disabled = true;
-        if (btn.textContent === question.correta) btn.classList.add('correct');
+        if (btn !== selectedBtn) btn.classList.add('dimmed');
       });
 
-      if (!isCorrect) selectedBtn.classList.add('wrong');
-
       if (isCorrect) {
+        selectedBtn.classList.add('correct');
         correct++;
         score += difficultyConfig[selectedDifficulty].points;
+      } else {
+        selectedBtn.classList.add('wrong');
       }
 
       el('scoreText').textContent = score;
       el('correctText').textContent = correct;
 
       const feedback = el('feedback');
-      feedback.innerHTML = `
-        <strong>${isCorrect ? 'Boa! Resposta certa.' : 'Quase! A resposta certa era: ' + question.correta}</strong>
-        ${question.curiosidade || 'Sem curiosidade cadastrada para esta pergunta.'}
-      `;
-      feedback.classList.add('show');
+      if (isCorrect) {
+        feedback.innerHTML = `
+          <strong>Boa! Resposta certa.</strong>
+          ${question.curiosidade || 'Sem curiosidade cadastrada para esta pergunta.'}
+        `;
+        feedback.classList.add('show');
+      } else {
+        feedback.innerHTML = `
+          <strong>Não foi dessa vez.</strong>
+          A resposta correta não será revelada agora. Continue no jogo e tente recuperar na próxima.
+        `;
+        feedback.classList.add('show');
+      }
 
       setTimeout(() => {
         currentIndex++;
         renderQuestion();
-      }, 2600);
+      }, isCorrect ? 2500 : 1900);
     }
 
     function useFiftyFifty() {
@@ -917,7 +1022,7 @@
 
       const question = quizQuestions[currentIndex];
       const wrongButtons = [...document.querySelectorAll('.answer-btn')]
-        .filter(btn => btn.textContent !== question.correta);
+        .filter(btn => cleanText(btn.textContent) !== cleanText(question.correta));
 
       shuffle(wrongButtons).slice(0, 2).forEach(btn => {
         btn.disabled = true;
