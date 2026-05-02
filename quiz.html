@@ -2704,6 +2704,117 @@
       }
     }
 
+
+
+    /* ==========================================================
+       AJUSTE CIRÚRGICO — PRÓXIMO NÍVEL
+       - reduz fontes para caber na moldura
+       - curiosidade visível sem cobrir alternativas
+       - não altera fluxo, fundo, botões nem níveis
+       ========================================================== */
+    body.tela-pergunta .question-text {
+      font-size: clamp(1.25rem, 2.35vw, 2.65rem) !important;
+      line-height: 1.08 !important;
+      letter-spacing: .025em !important;
+      max-width: 92% !important;
+      max-height: none !important;
+      overflow: visible !important;
+      margin: 0 auto clamp(12px, 1.6vh, 20px) !important;
+      text-wrap: balance;
+    }
+
+    body.tela-pergunta .answer-btn {
+      font-size: clamp(.82rem, 1.15vw, 1.05rem) !important;
+      line-height: 1.08 !important;
+      min-height: clamp(46px, 6.8vh, 64px) !important;
+      padding-top: 8px !important;
+      padding-bottom: 8px !important;
+    }
+
+    body.tela-pergunta .answer-btn span:last-child {
+      min-width: 0 !important;
+      overflow-wrap: anywhere !important;
+      word-break: normal !important;
+    }
+
+    body.tela-pergunta .feedback-box {
+      position: relative !important;
+      display: none !important;
+      width: min(88%, 760px) !important;
+      margin: clamp(8px, 1.2vh, 12px) auto 0 !important;
+      padding: 10px 16px !important;
+      background: rgba(255,255,255,.94) !important;
+      color: #101010 !important;
+      border: 1px solid rgba(0,0,0,.18) !important;
+      border-radius: 14px !important;
+      box-shadow: 0 10px 28px rgba(0,0,0,.22) !important;
+      font-family: Arial, Helvetica, sans-serif !important;
+      font-size: clamp(.68rem, .95vw, .9rem) !important;
+      line-height: 1.28 !important;
+      text-align: center !important;
+      max-height: 92px !important;
+      overflow: hidden !important;
+      opacity: 0 !important;
+      transform: translateY(6px) scale(.98) !important;
+      z-index: 30 !important;
+    }
+
+    body.tela-pergunta .feedback-box.show {
+      display: block !important;
+      opacity: 1 !important;
+      transform: translateY(0) scale(1) !important;
+      animation: feedbackCinema .35s ease forwards !important;
+    }
+
+    body.tela-pergunta .feedback-box strong {
+      display: block !important;
+      margin-bottom: 4px !important;
+      font-family: 'Elektrix', Arial, sans-serif !important;
+      color: #050505 !important;
+      font-size: .92em !important;
+    }
+
+    @keyframes feedbackCinema {
+      from { opacity: 0; transform: translateY(8px) scale(.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @media (max-width: 768px) {
+      body.tela-pergunta .question-text {
+        font-size: clamp(.82rem, 4.15vw, 1.18rem) !important;
+        line-height: 1.06 !important;
+        max-width: 94% !important;
+        margin-bottom: 8px !important;
+      }
+
+      body.tela-pergunta .answer-btn {
+        font-size: clamp(.62rem, 3vw, .82rem) !important;
+        line-height: 1.05 !important;
+        min-height: 36px !important;
+        max-height: none !important;
+        padding: 6px 8px !important;
+        grid-template-columns: 24px 1fr !important;
+        gap: 7px !important;
+      }
+
+      body.tela-pergunta .answer-letter {
+        width: 22px !important;
+        height: 22px !important;
+        min-width: 22px !important;
+        font-size: .62rem !important;
+      }
+
+      body.tela-pergunta .feedback-box {
+        width: 94% !important;
+        padding: 6px 8px !important;
+        font-size: clamp(.5rem, 2.15vw, .64rem) !important;
+        line-height: 1.16 !important;
+        max-height: 54px !important;
+        margin-top: 5px !important;
+        border-radius: 10px !important;
+      }
+    }
+
 </style>
 </head>
 
@@ -3109,7 +3220,7 @@
       updatePowerupButtons();
 
       // Avança automaticamente sem exibir botão de próxima pergunta.
-      const delay = isCorrect ? 1850 : 1150;
+      const delay = isCorrect ? 2600 : 1150;
       window.clearTimeout(answerQuestion._autoTimer);
       answerQuestion._autoTimer = window.setTimeout(() => {
         nextQuestion();
