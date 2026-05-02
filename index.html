@@ -3083,10 +3083,10 @@
 
     .chorao-balloon {
       position: fixed !important;
-      /* Ajuste final: balão mais baixo, próximo da mão/microfone, sem cobrir o rosto */
-      left: clamp(64px, 8vw, 128px) !important;
-      top: clamp(278px, 52vh, 382px) !important;
-      width: clamp(190px, 19vw, 285px) !important;
+      /* Ajuste final: balão centralizado no corpo do Chorão, sem cobrir o rosto */
+      left: clamp(128px, 13vw, 250px) !important;
+      top: clamp(325px, 50vh, 430px) !important;
+      width: clamp(210px, 20vw, 300px) !important;
       max-height: 150px !important;
       padding: clamp(9px, .85vw, 12px) clamp(12px, 1vw, 15px) !important;
       border-radius: 15px 15px 15px 6px !important;
@@ -3166,8 +3166,8 @@
       }
 
       .chorao-balloon {
-        left: clamp(18px, 6vw, 44px) !important;
-        top: clamp(245px, 48vh, 340px) !important;
+        left: clamp(44px, 14vw, 110px) !important;
+        top: clamp(245px, 47vh, 340px) !important;
         width: clamp(150px, 34vw, 220px) !important;
         max-height: 118px !important;
         padding: 7px 9px !important;
@@ -3187,7 +3187,7 @@
 
     @media (max-width: 520px) {
       .chorao-balloon {
-        left: 12px !important;
+        left: 18vw !important;
         top: 43vh !important;
         width: 142px !important;
         max-height: 104px !important;
@@ -3627,10 +3627,7 @@
     function showChoraoBalloon(message) {
       if (!els.choraoBalloon) return;
 
-      els.choraoBalloon.innerHTML = `
-        <strong>Chorão diz:</strong>
-        ${escapeHtml(message)}
-      `;
+      els.choraoBalloon.innerHTML = escapeHtml(message);
       els.choraoBalloon.setAttribute('aria-hidden', 'false');
       els.choraoBalloon.classList.add('show');
     }
