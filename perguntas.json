@@ -1,524 +1,532 @@
 [
   {
+    "nivel": 1,
     "fraseChorao": "Não busco a perfeição em ninguém, não quero que busquem isso em mim.",
     "perguntas": [
       {
         "pergunta": "Quem é vocalista da banda <br><br> Charlie Brown Jr.?",
-        "respostas": [
+        "opcoes": [
           "Chorão",
           "Champignon",
           "Marcão",
           "Pelado"
         ],
-        "correta": "Chorão",
+        "resposta": "Chorão",
         "curiosidade": "Chorão, cujo nome verdadeiro era Alexandre Magno Abrão, foi a voz icônica do Charlie Brown Jr. e um verdadeiro poeta do rock nacional."
       },
       {
         "pergunta": "Em que ano a banda <br><br> Charlie Brown Jr. foi formada?",
-        "respostas": [
+        "opcoes": [
           "1990",
           "1992",
           "1994",
           "1996"
         ],
-        "correta": "1992",
+        "resposta": "1992",
         "curiosidade": "A banda foi formada em Santos, litoral de São Paulo, em 1992, e logo conquistou o Brasil com seu som único."
       },
       {
         "pergunta": "Que instrumento Champignon tocava?",
-        "respostas": [
+        "opcoes": [
           "Guitarra",
           "Bateria",
           "Baixo",
           "Teclado"
         ],
-        "correta": "Baixo",
+        "resposta": "Baixo",
         "curiosidade": "Champignon, ou Luiz Carlos Leão Duarte Júnior, era o baixista e backing vocal da banda, conhecido por sua energia no palco."
       },
       {
         "pergunta": "O que significa CBJR?",
-        "respostas": [
+        "opcoes": [
           "Coletivo Brasileiro de Juventude Revolucionária",
           "Clube Brasileiro de Jovens Rebeldes",
           "Charlie Brown Jr",
           "Cultura Brasileira Jovem de Rua"
         ],
-        "correta": "Charlie Brown Jr",
+        "resposta": "Charlie Brown Jr",
         "curiosidade": "CBJR é a abreviação do nome da própria banda, 'Charlie Brown Jr.', que se tornou um símbolo de uma geração."
       },
       {
         "pergunta": "Onde nasceu o Chorão?",
-        "respostas": [
+        "opcoes": [
           "Santos",
           "São Vicente",
           "São Paulo",
           "Campinas"
         ],
-        "correta": "São Paulo",
+        "resposta": "São Paulo",
         "curiosidade": "Embora muito ligado a Santos, Chorão nasceu na capital paulista, São Paulo."
       }
     ]
   },
   {
+    "nivel": 2,
     "fraseChorao": "Quem é de verdade sabe quem é de mentira.",
     "perguntas": [
       {
         "pergunta": "Qual álbum tem a música <br><br> Zóio de Lula?",
-        "respostas": [
+        "opcoes": [
           "Nadando com os Tubarões",
           "Preço Curto... Prazo Longo",
           "Tamo Aí na Atividade",
           "Imunidade Musical"
         ],
-        "correta": "Preço Curto... Prazo Longo",
+        "resposta": "Preço Curto... Prazo Longo",
         "curiosidade": "Lançado em 1999, 'Preço Curto... Prazo Longo' trouxe hits como 'Zóio de Lula' e 'Não Deixe o Mar Te Engolir'."
       },
       {
         "pergunta": "Qual dessas músicas é um lado B do <br><br> Charlie Brown Jr.?",
-        "respostas": [
+        "opcoes": [
           "Te Levar",
           "I Feel So Good Today",
           "Senhor do Tempo",
           "Zóio de Lula"
         ],
-        "correta": "I Feel So Good Today",
+        "resposta": "I Feel So Good Today",
         "curiosidade": "'I Feel So Good Today' é uma faixa menos conhecida, mas amada pelos fãs, do álbum 'Imunidade Musical'."
       },
       {
         "pergunta": "Em que ano o álbum <br><br> Nadando com os Tubarões foi <br><br> lançado?",
-        "respostas": [
+        "opcoes": [
           "2000",
           "2002",
           "1999",
           "2001"
         ],
-        "correta": "2000",
+        "resposta": "2000",
         "curiosidade": "O 'Nadando com os Tubarões', de 2000, é um divisor de águas na carreira da banda, com sucessos como 'Rubão' e 'Não é Sério'."
       },
       {
         "pergunta": "Em que ano o álbum <br><br> Transpiração Contínua Prolongada foi <br><br> lançado?",
-        "respostas": [
+        "opcoes": [
           "1997",
           "1995",
           "2000",
           "1998"
         ],
-        "correta": "1997",
+        "resposta": "1997",
         "curiosidade": "O álbum de estreia, 'Transpiração Contínua Prolongada' (1997), já mostrava a identidade única da banda com hits como 'O Coro Vai Comê!'."
       },
       {
         "pergunta": "Qual o nome completo do Chorão?",
-        "respostas": [
+        "opcoes": [
           "Alexandre Magno Abrão",
           "Alexandre Abrantes",
           "Carlos Alexandre Jr",
           "Alexandre Bruno Chorão"
         ],
-        "correta": "Alexandre Magno Abrão",
+        "resposta": "Alexandre Magno Abrão",
         "curiosidade": "Alexandre Magno Abrão, o Chorão, era conhecido por sua personalidade forte e suas letras que retratavam o cotidiano."
       }
     ]
   },
   {
+    "nivel": 3,
     "fraseChorao": "Eles querem que você se sinta mal, pois assim eles se sentem bem.",
     "perguntas": [
       {
         "pergunta": "Qual música da banda tem a frase <br><br> A vida me ensinou a nunca desistir...?",
-        "respostas": [
+        "opcoes": [
           "Só os Loucos Sabem",
           "Proibida Pra Mim",
           "Dias de Luta, Dias de Glória",
           "Lugar ao Sol"
         ],
-        "correta": "Dias de Luta, Dias de Glória",
+        "resposta": "Dias de Luta, Dias de Glória",
         "curiosidade": "F 'Dias de Luta, Dias de Glória' é um hino de superação e uma das músicas más emblemáticas da banda."
       },
       {
         "pergunta": "Qual é o nome do álbum <br><br> lançado em 2007?",
-        "respostas": [
+        "opcoes": [
           "Ritmo, Ritual e Responsa",
           "Nadando com os Tubarões",
           "Tâmo Aí na Atividade",
           "Imunidade Musical"
         ],
-        "correta": "Ritmo, Ritual e Responsa",
+        "resposta": "Ritmo, Ritual e Responsa",
         "curiosidade": "'Ritmo, Ritual e Responsa' (2007) trouxe uma sonoridade más madura e músicas como 'Pontes indestrutíveis'."
       },
       {
         "pergunta": "Qual música da banda tem a frase <br><br> Eu vou roubar essa mulher pra mim?",
-        "respostas": [
+        "opcoes": [
           "Proibida Pra Mim (Grazon)",
           "Dias de Luta, Dias de Glória",
           "Só os Loucos Sabem",
           "Lugar ao Sol"
         ],
-        "correta": "Proibida Pra Mim (Grazon)",
+        "resposta": "Proibida Pra Mim (Grazon)",
         "curiosidade": "'Proibida Pra Mim' é um dos maiores sucessos do Charlie Brown Jr., presente no álbum 'Transpiração Contínua Prolongada'."
       },
       {
         "pergunta": "Qual é o nome do baterista <br><br> que tocou na banda até 2005?",
-        "respostas": [
+        "opcoes": [
           "Pinguim",
           "Japinha",
           "Marcão",
           "Pelado"
         ],
-        "correta": "Pelado",
+        "resposta": "Pelado",
         "curiosidade": "Renato Pelado saiu da banda em 2005."
       },
       {
         "pergunta": "Chorão também era conhecido <br><br> por praticar qual esporte:",
-        "respostas": [
+        "opcoes": [
           "Surfe",
           "Futebol",
           "Skate",
           "Capoeira"
         ],
-        "correta": "Skate",
+        "resposta": "Skate",
         "curiosidade": "Chorão era um apaixonado por skate e um grande incentivador do esporte no Brasil, tendo sua própria pista em Santos."
       }
     ]
   },
   {
+    "nivel": 4,
     "fraseChorao": "Eu me flagrei pensando em você em tudo o que eu queria te dizer...",
     "perguntas": [
       {
         "pergunta": "Qual o nome do documentário <br><br> sobre o Chorão lançado em 2021?",
-        "respostas": [
+        "opcoes": [
           "Marginal Alado",
           "O Gênio do Skate",
           "Dias de Luta, Dias de Glória",
           "Viva Chorão"
         ],
-        "correta": "Marginal Alado",
+        "resposta": "Marginal Alado",
         "curiosidade": "Chorão: Marginal Alado é um documentário aclamado que explora a vida e a carreira do vocalista."
       },
       {
         "pergunta": "Qual o nome do primeiro álbum de estúdio do Charlie Brown Jr.?",
-        "respostas": [
+        "opcoes": [
           "Preço Curto... Prazo Longo",
           "Nadando com os Tubarões",
           "Transpiração Contínua Prolongada",
           "Tamo Aí na Atividade"
         ],
-        "correta": "Transpiração Contínua Prolongada",
+        "resposta": "Transpiração Contínua Prolongada",
         "curiosidade": "Lançado em 1997, 'Transpiração Contínua Prolongada' marcou a estreia oficial do Charlie Brown Jr. no cenário musical brasileiro, trazendo sucessos como 'O Coro Vai Comê!'."
       },
       {
         "pergunta": "Qual álbum de estúdio do Charlie Brown Jr. inclui a canção 'Lugar ao Sol'?",
-        "respostas": [
+        "opcoes": [
           "Bocas Ordinárias",
           "100% Charlie Brown Jr. - Abalando a Sua Fábrica",
           "Imunidade Musical",
           "Tamo Aí na Atividade"
         ],
-        "correta": "100% Charlie Brown Jr. - Abalando a Sua Fábrica",
+        "resposta": "100% Charlie Brown Jr. - Abalando a Sua Fábrica",
         "curiosidade": "'Lugar ao Sol' é uma de suas faixas más conhecidas do álbum '100% Charlie Brown Jr. - Abalando a Sua Fábrica', lançado em 2001."
       },
       {
         "pergunta": "Qual foi o primeiro single do Charlie Brown Jr. a ter grande repercussão e tocar nas rádios de todo o Brasil?",
-        "respostas": [
+        "opcoes": [
           "Proibida Pra Mim",
           "Zóio de Lula",
           "O Coro Vai Comê!",
           "Te Levar"
         ],
-        "correta": "O Coro Vai Comê!",
+        "resposta": "O Coro Vai Comê!",
         "curiosidade": "'O Coro Vai Comê!', do álbum de estreia 'Transpiração Contínua Prolongada', foi a música que abriu as portas das rádios para o Charlie Brown Jr., se tornando um marco na carreira da banda."
       },
       {
         "pergunta": "Qual dessas músicas faz parte do <br><br> álbum Preço Curto... Prazo Longo?",
-        "respostas": [
+        "opcoes": [
           "Dias de luta, dias de gloriar",
           "Rubão",
           "O Preço",
           "Só os Loucos Sabem"
         ],
-        "correta": "O Preço",
+        "resposta": "O Preço",
         "curiosidade": "'Preço Curto... Prazo Largo' de 1999, consolidou a banda no cenário nacional."
       }
     ]
   },
   {
+    "nivel": 5,
     "fraseChorao": "Não tão complicado demais, mas nem tão simples assim.",
     "perguntas": [
       {
         "pergunta": "Qual o nome do último álbum de estúdio lançado pelo Charlie Brown Jr?",
-        "respostas": [
+        "opcoes": [
           "Imunidade Musical",
           "Ritmo, Ritual e Responsa",
           "La Família 013",
           "Camisa 10 Joga Bola Até na Chuva"
         ],
-        "correta": "La Família 013",
+        "resposta": "La Família 013",
         "curiosidade": "'La Família 013', lançado em 2013, foi o décimo álbum de estúdio da banda e o último a contar com a participação de Chorão. Ele faleceu meses antes do lançamento."
       },
       {
         "pergunta": "Qual dessas músicas é do álbum <br><br> Tamo Aí na Atividade?",
-        "respostas": [
+        "opcoes": [
           "Papo Reto",
           "Céu Azul",
           "Champanhe e Água Benta",
           "Hoje Eu Acordei Feliz"
         ],
-        "correta": "Champanhe e Água Benta",
+        "resposta": "Champanhe e Água Benta",
         "curiosidade": "'Champanhe e Água Benta' faz parte do álbum 'Tamo Aí na Atividade', lançado em 2004, e é um de dos clássicos da banda."
       },
       {
         "pergunta": "Qual o nome do DVD ao vivo <br><br> lançado em 2003?",
-        "respostas": [
+        "opcoes": [
           "Skate Vibration",
           "Acústico MTV",
           "Imunidade Musical",
           "Ao Vivo em Santos"
         ],
-        "correta": "Acústico MTV",
+        "resposta": "Acústico MTV",
         "curiosidade": "O 'Acústico MTV' do Charlie Brown Jr. é um dos álbuns más aclamados e vendeu más de 2 milhões de cópias."
       },
       {
         "pergunta": "Qual dessas músicas tem a <br><br> participação da Negra Li?",
-        "respostas": [
+        "opcoes": [
           "Ela Vai Voltar",
           "Não é Sério",
           "Proibida pra Mim",
           "Pontes Indestrutíveis"
         ],
-        "correta": "Não é Sério",
+        "resposta": "Não é Sério",
         "curiosidade": ".Não é Sério', do álbum 'Nadando com os Tubarões', conta com a participação marcante da cantora Negra Li."
       },
       {
         "pergunta": "Em qual desses álbuns está a música <br><br> Céu Azul?",
-        "respostas": [
+        "opcoes": [
           "Musica Popular Caiçara",
           "Camisa 10 Joga Bola Até na Chuva",
           "La Família 013",
           "Imunidade Musical"
         ],
-        "correta": "Musica Popular Caiçara",
+        "resposta": "Musica Popular Caiçara",
         "curiosidade": "O 'Céu Azul' é um dos grandes sucessos póstumos da banda, lançada no álbum 'Música Popular Caiçara ao Vivo' em 2012."
       }
     ]
   },
   {
+    "nivel": 6,
     "fraseChorao": "Se eu não puder fazer você ser a pessoa más feliz, eu chego más perto disso possível.",
     "perguntas": [
       {
         "pergunta": "Qual álbum do Charlie Brown Jr. foi indicado ao Grammy Latino em 2005?",
-        "respostas": [
+        "opcoes": [
           "Imunidade Musical",
           "Nadando com os Tubarões",
           "Tamo Aí na Atividade",
           "Transpiração Contínua Prolongada"
         ],
-        "correta": "Tamo Aí na Atividade",
+        "resposta": "Tamo Aí na Atividade",
         "curiosidade": "O álbum 'Tamo Aí na Atividade', lançado em 2004, foi indicado ao Grammy Latino em 2005 na categoria Melhor Álbum de Rock Brasileiro e venceu o prêmio."
       },
       {
         "pergunta": "Qual dessas músicas foi tema de abertura de uma novela da Globo?",
-        "respostas": [
+        "opcoes": [
           "Te Levar",
           "Só os Loucos Sabem",
           "Senhor do Tempo",
           "Longe de Você"
         ],
-        "correta": "Te Levar",
+        "resposta": "Te Levar",
         "curiosidade": "'Te Levar' foi tema de abertura da série 'Malhação', exibida pela TV Globo entre 1999 e 2006."
       },
       {
         "pergunta": "Qual integrante do Charlie Brown Jr. também formou a banda Revolucionnários após sair do grupo?",
-        "respostas": [
+        "opcoes": [
           "Marcão Britto",
           "Graveto",
           "Heitor Gomes",
           "Champignon"
         ],
-        "correta": "Champignon",
+        "resposta": "Champignon",
         "curiosidade": "Após sair do Charlie Brown Jr., Champignon criou a banda Revolucionnários, onde foi vocalista e baixista, explorando novas sonoridades."
       },
       {
         "pergunta": "No projeto Estúdio Coca-Cola Zero, qual cantora da MPB dividiu o palco com o Charlie Brown Jr.?",
-        "respostas": [
+        "opcoes": [
           "Vanessa da Mata",
           "Maria Gadú",
           "Ana Carolina",
           "Ivete Sangalo"
         ],
-        "correta": "Vanessa da Mata",
+        "resposta": "Vanessa da Mata",
         "curiosidade": "Em 2008, no projeto Estúdio Coca-Cola Zero, o Charlie Brown Jr. fez uma apresentação especial ao lado da cantora Vanessa da Mata, misturando rock e MPB em versões inéditas de seus sucessos."
       },
       {
         "pergunta": "Qual roqueiro brasileiro fez participações com Chorão nas músicas 'Hoje' e 'Coração Satânico' e era considerado por ele como um padrinho musical?",
-        "respostas": [
+        "opcoes": [
           "Marcelo Nova",
           "Raimundo Fagner",
           "Herbert Vianna",
           "Supla"
         ],
-        "correta": "Marcelo Nova",
+        "resposta": "Marcelo Nova",
         "curiosidade": "Marcelo Nova, conhecido por seu trabalho com o Camisa de Vênus, participou das músicas 'Hoje' e 'Coração Satânica'. Chorão o considerava um padrinho musical e uma referência no rock nacional."
       },
       {
         "pergunta": "Em qual programa da MTV Chorão participou ao lado da cantora Pitty?",
-        "respostas": [
+        "opcoes": [
           "Acústico MTV",
           "MTV na Estrada",
           "Covernation",
           "Supernova"
         ],
-        "correta": "Covernation",
+        "resposta": "Covernation",
         "curiosidade": "Chorão participou do programa 'Covernation' da MTV Brasil junto com Pitty. No episódio, Charlie Brown Jr. interpretou músicas do Red Hot Chili Peppers e a Pitty, o Queens of the Stone Age ao vivo."
       }
     ]
   },
   {
+    "nivel": 7,
     "fraseChorao": "A arte maior é o jeito de cada um... vivo pra ser feliz, não vivo pra ser comum.",
     "perguntas": [
       {
         "pergunta": "Qual jogo de videogame incluiu a música 'Confisco', do Charlie Brown Jr., em sua trilha sonora?",
-        "respostas": [
+        "opcoes": [
           "Guitarro Hero III",
           "Tony Hawk's Pro Skater 1+2",
           "FIFA Street",
           "Need for Speed Underground"
         ],
-        "correta": "Tony Hawk's Pro Skafater 1+2",
+        "resposta": "Tony Hawk's Pro Skafater 1+2",
         "curiosidade": "A faixa 'Confisco', do álbum 'Preço Curto... Prazo Longo', foi incluída na trilha sonora do jogo 'Tony Hawk's Pro Skater 1+2', lançado em 2020, marcando a presença da banda no universo gamer."
       },
       {
         "pergunta": "Qual banda internacional teve o Charlie Brown Jr. como banda de abertura em suas turnês no Brasil nos anos de 2004 e 2012?",
-        "respostas": [
+        "opcoes": [
           "Limp Bizkit",
           "Green Day",
           "Foo Fighters",
           "Linkin Park"
         ],
-        "correta": "Linkin Park",
+        "resposta": "Linkin Park",
         "curiosidade": "O Charlie Brown Jr. abriu shows do Linkin Park no Brasil em duas ocasiões: em 2004, durante a turnê do álbum 'Meteora', e novamente em 2012, na turnê de 'Living Things', com uma apresentação marcante na Arena Anhembi, em São Paulo."
       },
       {
         "pergunta": "Qual gravadora lançou os primeiros <br><br> álbuns do Charlie Brown Jr.?",
-        "respostas": [
+        "opcoes": [
           "Sony Music",
           "Deckdisc",
           "EMI",
           "Virgin Records"
         ],
-        "correta": "Virgin Records",
+        "resposta": "Virgin Records",
         "curiosidade": "A Virgin Records foi a gravadora responsável pelos primeiros álbuns da banda, incluindo 'Transpiração Contínua Prolongada'."
       },
       {
         "pergunta": "Qual o nome do festival famoso em que o Charlie Brown Jr. costumava se apresentar e era(muito aclamado?",
-        "respostas": [
+        "opcoes": [
           "Rock in Rio",
           "Lollapalooza",
           "SWU",
           "Planeta Atlântida"
         ],
-        "correta": "Planeta Atlântida",
+        "resposta": "Planeta Atlântida",
         "curiosidade": "O Charlie Brown Jr. se tornou uma das bandas más esperadas e aclamadas do festival Planeta Atlântida, com apresentações memoráveis."
       },
       {
         "pergunta": "Qual o nome do álbum que inclui o hit 'Senhor do Tempo'?",
-        "respostas": [
+        "opcoes": [
           "Nadando com os Tubarões",
           "Bocas Ordinárias",
           "Imunidade Musical",
           "Tamo Aí na Atividade"
         ],
-        "correta": "Imunidade Musical",
+        "resposta": "Imunidade Musical",
         "curiosidade": "'Senhor do Tempo' é uma das faixas más conhecidas do álbum 'Imunidade Musical', lançado em 2004, e aborda temas de fé e destino."
       },
       {
         "pergunta": "Em qual programa da MTV Chorão abriu as portas de sua casa para o público?",
-        "respostas": [
+        "opcoes": [
           "MTV Cribs Brasil",
           "Diário de Bordo",
           "Família MTV",
           "MTV na Estrada"
         ],
-        "correta": "Família MTV",
+        "resposta": "Família MTV",
         "curiosidade": "No programa 'Família MTV gravado em 2005', Chorão mostrou detalhes da sua casa em Santos, incluindo sua rotina e ambiente pessoal."
       }
     ]
   },
   {
+    "nivel": 8,
     "fraseChorao": "A vida me ensinou a nunca desistir, nem ganhar, nem perder, mas procurar evoluir...",
     "perguntas": [
       {
         "pergunta": "Qual foi a primeira música da banda a atingir o 1º lugar nas rádios brasileiras?",
-        "respostas": [
+        "opcoes": [
           "Confisco",
           "Zóio de Lula",
           "Te Levar",
           "Só os Loucos Sabem"
         ],
-        "correta": "Zóio de Lula",
+        "resposta": "Zóio de Lula",
         "curiosidade": "'Zóio de Lula' foi o primeiro single da banda a alcançar o topo das rádios no Brasil, marcando um ponto de virada na popularidade do CBJR."
       },
       {
         "pergunta": "Quantas faixas o Charlie Brown Jr. gravou em um único dia durante a produção de 'Preço Curto... Prazo Longo'?",
-        "respostas": [
+        "opcoes": [
           "12",
           "25",
           "16",
           "30"
         ],
-        "correta": "25",
+        "resposta": "25",
         "curiosidade": "Durante a produção do álbum 'Preço Curto... Prazo Longo', a banda conseguiu o feito impressionante de gravar 25 faixas em um único dia, mostrando sua intensidade e criatividade."
       },
       {
         "pergunta": "Quem precisava de autorização judicial para subir no palco em shows do Charlie Brown Jr. por ser menor de idade?",
-        "respostas": [
+        "opcoes": [
           "Champignon",
           "Marcão",
           "Pelado",
           "Thiago"
         ],
-        "correta": "Champignon",
+        "resposta": "Champignon",
         "curiosidade": "No início da carreira, Champignon ainda era menor de idade e precisava de autorização judicial para se apresentar em casas noturnas, um detalhe curioso da história da banda."
       },
       {
         "pergunta": "Como surgiu o nome 'Charlie Brown Jr.'?",
-        "respostas": [
+        "opcoes": [
           "Baseado em filme favorito de Chorão",
           "Por uma barraca de coco com o personagem",
           "Nome de skate patrocinador",
           "Homenagem a um amigo"
         ],
-        "correta": "Por uma barraca de coco com o personagem",
+        "resposta": "Por uma barraca de coco com o personagem",
         "curiosidade": "O nome surgiu depois que Chorão atropelou, sem querer, uma barraca na praia com o desenho do Charlie Brown; o 'Jr.' veio porque se viam como 'filhos do rock'."
       },
       {
         "pergunta": "Qual foi o produtor musical responsável por grande parte dos álbuns de sucesso do Charlie Brown Jr.?",
-        "respostas": [
+        "opcoes": [
           "Rick Bonadio",
           "Liminha",
           "Dudu Marote",
           "Marcelo Sussekind"
         ],
-        "correta": "Rick Bonadio",
+        "resposta": "Rick Bonadio",
         "curiosidade": "Rick Bonadio foi um parceiro fundamental na carreira da banda, produzindo vários de seus álbuns más aclamados, moldando o som que conquistou o Brasil."
       },
       {
         "pergunta": "Qual o nome do livro que aborda a vida e morte de Champignon, lançado após sua partida?",
-        "respostas": [
+        "opcoes": [
           "Champignon: O Legado do Baixista",
           "Champignon: A Voz do Baixo",
           "O Legado de Champignon",
           "CHAMP - a incrível história do baixista Champignon do Charlie Brown Jr"
         ],
-        "correta": "CHAMP - a incrível história do baixista Champignon do Charlie Brown Jr",
+        "resposta": "CHAMP - a incrível história do baixista Champignon do Charlie Brown Jr",
         "curiosidade": "Nesta biografia densa, emocionante e investigativa, a carreira de 35 anos de Champignon é dissecada nos mínimos detalhes. O livro também conta tudo sobre a sua passagem à frente das bandas Music Legends e Revolucionnários, e ao lado de Junior Lima no grupo Nove Mil Anjos."
       },
       {
         "pergunta": "Em que ano foi lançado o single “Só os Loucos Sabem”?",
-        "respostas": [
+        "opcoes": [
           "2008",
           "2010",
           "2004",
           "2012"
         ],
-        "correta": "2010",
+        "resposta": "2010",
         "curiosidade": "Lançada em março de 2010 como parte do álbum 'Camisa 10 (Joga Bola Até a Chuva)', 'Só os Loucos Sabem' foi reconhecida como um dos 10 maiores hits do século pela Rolling Stone."
       }
     ]
