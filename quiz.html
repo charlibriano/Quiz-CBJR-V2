@@ -4228,6 +4228,117 @@ body.tela-pergunta .answers-grid {
   }
 }
 
+
+/* =============================================================
+   AJUSTE FELIPE — OPÇÕES MENORES E SEM QUEBRA DE LINHA
+   Não altera lógica do quiz. Só compacta as respostas.
+   ============================================================= */
+body.tela-pergunta .answers-grid {
+  gap: clamp(6px, .9vh, 10px) !important;
+  width: min(72%, 760px) !important;
+}
+
+body.tela-pergunta .answer-btn {
+  min-height: clamp(34px, 5.2vh, 48px) !important;
+  padding: clamp(5px, .55vw, 8px) clamp(12px, 1.5vw, 20px) !important;
+  grid-template-columns: clamp(26px, 2.4vw, 34px) minmax(0, 1fr) !important;
+  gap: clamp(7px, .8vw, 11px) !important;
+  font-size: clamp(.72rem, 1.02vw, .98rem) !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+body.tela-pergunta .answer-btn span:not(.answer-letter),
+body.tela-pergunta .answer-btn .answer-text {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  min-width: 0 !important;
+}
+
+body.tela-pergunta .answer-letter {
+  width: clamp(24px, 2.4vw, 32px) !important;
+  height: clamp(24px, 2.4vw, 32px) !important;
+  font-size: clamp(.68rem, .85vw, .88rem) !important;
+  flex: 0 0 auto !important;
+}
+
+@media (max-width: 900px) {
+  body.tela-pergunta .answers-grid {
+    width: 100% !important;
+    gap: 6px !important;
+  }
+
+  body.tela-pergunta .answer-btn {
+    min-height: 36px !important;
+    padding: 5px 8px !important;
+    grid-template-columns: 24px minmax(0, 1fr) !important;
+    font-size: .68rem !important;
+    gap: 6px !important;
+  }
+
+  body.tela-pergunta .answer-letter {
+    width: 22px !important;
+    height: 22px !important;
+    font-size: .62rem !important;
+  }
+}
+
+
+/* =============================================================
+   CORREÇÃO FELIPE — OPÇÕES COMPACTAS DENTRO DO QUADRO
+   Reduz o comprimento dos botões e mantém centralizado na área branca.
+   ============================================================= */
+body.tela-pergunta .answers-grid {
+  width: min(54%, 560px) !important;
+  max-width: 560px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-top: 0 !important;
+  gap: clamp(7px, 1vh, 11px) !important;
+}
+
+body.tela-pergunta .answer-btn {
+  width: 100% !important;
+  min-height: clamp(34px, 5vh, 46px) !important;
+  padding: 5px 16px !important;
+  grid-template-columns: 30px minmax(0, 1fr) !important;
+  gap: 10px !important;
+  font-size: clamp(.74rem, .95vw, .94rem) !important;
+  line-height: 1 !important;
+  border-radius: 999px !important;
+}
+
+body.tela-pergunta .answer-letter {
+  width: 26px !important;
+  height: 26px !important;
+  font-size: .72rem !important;
+}
+
+@media (max-width: 900px) {
+  body.tela-pergunta .answers-grid {
+    width: 82% !important;
+    max-width: 420px !important;
+    gap: 6px !important;
+  }
+
+  body.tela-pergunta .answer-btn {
+    min-height: 34px !important;
+    padding: 5px 10px !important;
+    grid-template-columns: 24px minmax(0, 1fr) !important;
+    font-size: .68rem !important;
+    gap: 7px !important;
+  }
+
+  body.tela-pergunta .answer-letter {
+    width: 22px !important;
+    height: 22px !important;
+    font-size: .62rem !important;
+  }
+}
+
 </style>
 </head>
 
