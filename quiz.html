@@ -4190,6 +4190,44 @@ body.tela-pergunta .question-text {
   }
 }
 
+
+/* =============================================================
+   AJUSTE FELIPE — SUBIR PERGUNTA PARA NÃO FICAR ATRÁS DAS OPÇÕES
+   Não altera lógica, não altera perguntas, não altera respostas.
+   Só reposiciona o bloco da pergunta um pouco mais para cima.
+   ============================================================= */
+body.tela-pergunta .quiz-panel {
+  align-content: start !important;
+  justify-content: flex-start !important;
+  padding-top: clamp(24px, 4.8vh, 58px) !important;
+}
+
+body.tela-pergunta .question-kicker {
+  margin-top: 0 !important;
+  margin-bottom: clamp(8px, 1.2vh, 14px) !important;
+}
+
+body.tela-pergunta .question-text {
+  margin-top: 0 !important;
+  margin-bottom: clamp(18px, 2.6vh, 34px) !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+body.tela-pergunta .answers-grid {
+  margin-top: 0 !important;
+}
+
+@media (max-width: 900px) {
+  body.tela-pergunta .quiz-panel {
+    padding-top: 18px !important;
+  }
+
+  body.tela-pergunta .question-text {
+    margin-bottom: 14px !important;
+  }
+}
+
 </style>
 </head>
 
