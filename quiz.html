@@ -416,18 +416,20 @@
     }
 
     .question-text {
-      min-height: 124px;
-      display: grid;
-      place-items: center;
+      min-height: 110px;
+
       color: #050505;
       text-align: center;
-      font-family: 'Elektrix', Arial, sans-serif;
-      font-size: clamp(2.05rem, 3.2vw, 3.85rem);
-      line-height: 1.05;
-      text-shadow: 0 2px 0 rgba(255,255,255,.28);
-      letter-spacing: .015em;
-      opacity: 0;
-      transform: translateY(18px);
+      font-family: Arial, Helvetica, sans-serif;
+
+      font-size: clamp(1.4rem, 2.2vw, 2.4rem);
+      line-height: 1.15;
+
+      padding: 0 10px;
+      margin-bottom: 16px;
+
+      display: block;
+      word-break: break-word;
     }
 
     .question-text.show {
@@ -4048,6 +4050,146 @@
       -webkit-backdrop-filter: none !important;
     }
 
+
+
+    /* =============================================================
+       AJUSTE SOLICITADO — FRASE DA TELA DE NÍVEL NO CENTRO
+       Única alteração: reposiciona somente a frase do Chorão.
+       ============================================================= */
+    #resultOverlay #resultPhrase.chorao-phrase {
+      position: fixed !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      z-index: 3 !important;
+
+      width: min(760px, 62vw) !important;
+      max-width: 62vw !important;
+      margin: 0 !important;
+      padding: 0 18px !important;
+
+      border: 0 !important;
+      border-left: 4px solid #f1c40f !important;
+      border-right: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+
+      color: #fff !important;
+      font-family: 'Elektrix', Arial, Helvetica, sans-serif !important;
+      font-size: clamp(1.45rem, 2.45vw, 2.6rem) !important;
+      line-height: 1.12 !important;
+      letter-spacing: .01em !important;
+      text-align: center !important;
+      text-shadow: 0 0 14px rgba(255,255,255,.22), 0 8px 24px rgba(0,0,0,.98) !important;
+      box-shadow: none !important;
+    }
+
+    @media (max-width: 900px) {
+      #resultOverlay #resultPhrase.chorao-phrase {
+        width: min(86vw, 420px) !important;
+        max-width: 86vw !important;
+        font-size: clamp(1rem, 5.2vw, 1.55rem) !important;
+        padding: 0 12px !important;
+        border-left-width: 3px !important;
+      }
+    }
+
+  
+
+    /* =============================================================
+       CORREÇÃO FINAL — perguntas completas + bloquear avanço sem aprovação
+       ============================================================= */
+    body.tela-pergunta .question-text {
+      max-height: none !important;
+      overflow: visible !important;
+      font-size: clamp(1.35rem, 2.35vw, 2.75rem) !important;
+      line-height: 1.08 !important;
+    }
+
+    #resultOverlay #nextLevelBtn[style*="none"],
+    #resultOverlay #nextLevelBtn:disabled {
+      display: none !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    @media (max-width: 760px) {
+      body.tela-pergunta .question-text {
+        max-height: none !important;
+        overflow: visible !important;
+        font-size: clamp(.85rem, 4vw, 1.35rem) !important;
+        line-height: 1.08 !important;
+      }
+    }
+
+  
+
+/* =============================================================
+   CORREÇÃO FINAL — PERGUNTAS MENORES SEM INVADIR RESPOSTAS
+   Aplicado no final para sobrescrever todas as regras anteriores.
+   ============================================================= */
+body.tela-pergunta #quizScreen.active .quiz-panel .question-text,
+body.tela-pergunta .quiz-panel .question-text,
+body.tela-pergunta .question-text {
+  font-size: clamp(1rem, 1.55vw, 1.78rem) !important;
+  line-height: 1.12 !important;
+  max-height: 15.5vh !important;
+  min-height: 0 !important;
+  margin: 0 auto clamp(16px, 2.2vh, 26px) !important;
+  padding: 0 clamp(8px, 1vw, 14px) !important;
+  overflow: visible !important;
+  display: block !important;
+  text-align: center !important;
+}
+
+body.tela-pergunta #quizScreen.active .quiz-panel .answers-grid,
+body.tela-pergunta .quiz-panel .answers-grid,
+body.tela-pergunta .answers-grid {
+  margin-top: 0 !important;
+}
+
+@media (max-width: 1100px) {
+  body.tela-pergunta #quizScreen.active .quiz-panel .question-text,
+  body.tela-pergunta .quiz-panel .question-text,
+  body.tela-pergunta .question-text {
+    font-size: clamp(.9rem, 2.05vw, 1.38rem) !important;
+    line-height: 1.1 !important;
+    max-height: 15vh !important;
+    margin-bottom: 14px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  body.tela-pergunta #quizScreen.active .quiz-panel .question-text,
+  body.tela-pergunta .quiz-panel .question-text,
+  body.tela-pergunta .question-text {
+    font-size: clamp(.72rem, 3vw, 1rem) !important;
+    line-height: 1.08 !important;
+    max-height: 14vh !important;
+    margin-bottom: 8px !important;
+  }
+}
+
+  
+/* ===== CORREÇÃO DEFINITIVA (AGORA MENOR DE VERDADE) ===== */
+body.tela-pergunta .question-text {
+  font-size: 1.2rem !important; /* FIXO e pequeno */
+  line-height: 1.1 !important;
+  margin-bottom: 20px !important;
+}
+
+@media (max-width: 900px) {
+  body.tela-pergunta .question-text {
+    font-size: 0.95rem !important;
+  }
+}
+
+@media (max-width: 600px) {
+  body.tela-pergunta .question-text {
+    font-size: 0.8rem !important;
+  }
+}
+
 </style>
 </head>
 
@@ -4162,6 +4304,7 @@
       score: 0,
       hits: 0,
       answered: false,
+      levelApproved: false,
       currentQuestions: [],
       powerups: {
         fifty: 2,
@@ -4174,7 +4317,7 @@
         label: 'Fácil',
         fifty: 3,
         skip: 3,
-        shuffleAnswers: false
+        shuffleAnswers: true
       },
       normal: {
         label: 'Normal',
@@ -4348,9 +4491,10 @@
       state.currentLevelIndex = levelIndex;
       state.currentQuestionIndex = 0;
       state.hits = 0;
+      state.levelApproved = false;
       state.currentQuestions = shuffleArray(level.perguntas).map(question => ({
         ...question,
-        opcoes: settings.shuffleAnswers ? shuffleArray(question.opcoes) : [...question.opcoes]
+        opcoes: shuffleArray(question.opcoes)
       }));
 
       updatePowerupButtons();
@@ -4513,6 +4657,7 @@
       const total = state.currentQuestions.length;
       const minimum = Math.ceil(total * (CONFIG.minApprovalPercent / 100));
       const approved = state.hits >= minimum;
+      state.levelApproved = approved;
       const levelNumber = state.currentLevelIndex + 1;
       const phrase = getCurrentLevelPhrase();
 
@@ -4523,6 +4668,7 @@
       els.resultPhrase.textContent = phrase;
 
       els.nextLevelBtn.style.display = approved && state.currentLevelIndex < state.levels.length - 1 ? 'inline-flex' : 'none';
+      els.nextLevelBtn.disabled = !(approved && state.currentLevelIndex < state.levels.length - 1);
       els.retryLevelBtn.style.display = approved ? 'none' : 'inline-flex';
 
       if (approved && state.currentLevelIndex >= state.levels.length - 1) {
@@ -4534,6 +4680,9 @@
     }
 
     function goToNextLevel() {
+      if (!state.levelApproved || state.currentLevelIndex >= state.levels.length - 1) {
+        return;
+      }
       els.resultOverlay.classList.remove('show');
       startLevel(state.currentLevelIndex + 1);
     }
@@ -4600,8 +4749,16 @@
     }
 
     function getCurrentLevelPhrase() {
-      const level = state.levels[state.currentLevelIndex];
-      return (level && level.fraseChorao) || getFallbackPhrase(state.currentLevelIndex);
+      const phrasePool = getPhrasePool();
+      return phrasePool.length ? phrasePool[Math.floor(Math.random() * phrasePool.length)] : CONFIG.defaultPhrase;
+    }
+
+    function getPhrasePool() {
+      const levelPhrases = state.levels
+        .map(level => level && level.fraseChorao)
+        .filter(Boolean);
+
+      return shuffleArray([...new Set([...levelPhrases, ...fallbackPhrases, CONFIG.defaultPhrase])]);
     }
 
     function getFallbackPhrase(index) {
