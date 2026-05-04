@@ -4579,6 +4579,213 @@ body.tela-pergunta .answer-letter {
   }
 }
 
+
+
+/* =============================================================
+   AJUSTE FINAL FELIPE 04/05 — CORREÇÃO REAL DO ENQUADRAMENTO
+   Mantém lógica/perguntas intactas. Corrige somente visual:
+   1) dificuldade sem zoom estourado
+   2) quiz encaixado novamente na moldura branca
+   ============================================================= */
+
+body.tela-dificuldade {
+  height: 100svh !important;
+  min-height: 100svh !important;
+  overflow: hidden !important;
+  background-image: url('https://charlibriano.github.io/Quiz-CBJR-V2/quiz-bg.jpg') !important;
+  background-size: 100% 100% !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  background-color: #000 !important;
+}
+
+body.tela-dificuldade #difficultyScreen.active,
+body.tela-dificuldade .difficulty-screen.active,
+body.tela-dificuldade .difficulty-shell {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100svh !important;
+  min-height: 100svh !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+body.tela-dificuldade .difficulty-title {
+  display: none !important;
+}
+
+body.tela-dificuldade .difficulty-actions {
+  position: fixed !important;
+  left: 8.8vw !important;
+  right: 8.8vw !important;
+  bottom: 8.3vh !important;
+  top: auto !important;
+  width: auto !important;
+  height: 5.6vh !important;
+  min-height: 34px !important;
+  max-height: 58px !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 3.6vw !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 80 !important;
+}
+
+body.tela-dificuldade .level-card {
+  height: 100% !important;
+  min-height: 0 !important;
+  border-radius: 999px !important;
+  background: rgba(0,0,0,.03) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+body.tela-pergunta {
+  width: 100vw !important;
+  height: 100svh !important;
+  min-height: 100svh !important;
+  overflow: hidden !important;
+  background-image: url('https://charlibriano.github.io/Quiz-CBJR-V2/quiz-pergunta.jpg') !important;
+  background-size: 100% 100% !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  background-color: #000 !important;
+}
+
+body.tela-pergunta .quiz-screen.active {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100svh !important;
+  min-height: 100svh !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  background: transparent !important;
+}
+
+body.tela-pergunta .quiz-panel {
+  position: fixed !important;
+  left: 43.5vw !important;
+  right: 5.5vw !important;
+  top: 12.2vh !important;
+  height: 39.5vh !important;
+  width: auto !important;
+  min-height: 0 !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 16px 16px 10px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+  color: #050505 !important;
+}
+
+body.tela-pergunta .question-kicker {
+  margin: 0 0 5px !important;
+  padding: 0 !important;
+  font-size: clamp(.72rem, 1.1vw, 1rem) !important;
+  line-height: 1 !important;
+  letter-spacing: .11em !important;
+  color: #d6a300 !important;
+  text-align: center !important;
+}
+
+body.tela-pergunta .question-text {
+  min-height: 0 !important;
+  max-height: 9.5vh !important;
+  margin: 0 0 8px !important;
+  padding: 0 4px !important;
+  color: #070707 !important;
+  text-align: center !important;
+  font-size: clamp(.92rem, 2vw, 1.85rem) !important;
+  line-height: 1.05 !important;
+  font-weight: 950 !important;
+  overflow: hidden !important;
+}
+
+body.tela-pergunta .answers-grid {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 auto !important;
+  display: grid !important;
+  gap: 7px !important;
+}
+
+body.tela-pergunta .answer-btn {
+  min-height: 36px !important;
+  height: 36px !important;
+  padding: 5px 10px !important;
+  border-radius: 999px !important;
+  grid-template-columns: 24px minmax(0, 1fr) !important;
+  gap: 8px !important;
+  font-size: .72rem !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  background: rgba(3,3,3,.92) !important;
+  color: #fff !important;
+}
+
+body.tela-pergunta .answer-letter {
+  width: 22px !important;
+  height: 22px !important;
+  font-size: .62rem !important;
+  flex: 0 0 auto !important;
+}
+
+@media (min-width: 761px) {
+  body.tela-pergunta .quiz-panel {
+    left: 39vw !important;
+    right: 8vw !important;
+    top: 15vh !important;
+    height: 55vh !important;
+    padding: 26px 44px !important;
+  }
+
+  body.tela-pergunta .question-text {
+    max-height: 16vh !important;
+    font-size: clamp(1.25rem, 2.15vw, 2.35rem) !important;
+  }
+
+  body.tela-pergunta .answer-btn {
+    min-height: 48px !important;
+    height: 48px !important;
+    font-size: clamp(.92rem, 1.1vw, 1.08rem) !important;
+  }
+}
+
+@media (max-width: 390px) and (orientation: portrait) {
+  body.tela-pergunta .quiz-panel {
+    left: 42.5vw !important;
+    right: 4vw !important;
+    top: 12vh !important;
+    height: 40vh !important;
+    padding: 14px 12px 8px !important;
+  }
+
+  body.tela-pergunta .question-text {
+    font-size: .82rem !important;
+    max-height: 9vh !important;
+  }
+
+  body.tela-pergunta .answer-btn {
+    height: 33px !important;
+    min-height: 33px !important;
+    font-size: .66rem !important;
+    padding: 4px 8px !important;
+  }
+}
+
 </style>
 </head>
 
