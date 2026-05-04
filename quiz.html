@@ -4786,6 +4786,436 @@ body.tela-pergunta .answer-letter {
   }
 }
 
+
+/* =============================================================
+   PLAYER CBJR NO MODO QUIZ — mantido para o usuário ouvir jogando
+   ============================================================= */
+.quiz-music-player {
+  position: fixed;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  z-index: 70;
+  width: min(560px, calc(100vw - 24px));
+  border-radius: 18px;
+  border: 1px solid rgba(241,196,15,.34);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.02)),
+    rgba(0,0,0,.78);
+  box-shadow: 0 18px 42px rgba(0,0,0,.58), 0 0 24px rgba(30,215,96,.12), inset 0 1px 0 rgba(255,255,255,.10);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 9px 11px;
+  color: #fff;
+}
+
+.quiz-music-player .player-content {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 10px;
+  align-items: center;
+}
+
+.quiz-music-player #q-current-song {
+  grid-column: 1 / 3;
+  height: 1.25em;
+  line-height: 1.25em;
+  margin: 0;
+  overflow: hidden;
+  color: var(--green);
+  font-weight: 950;
+  font-size: .78rem;
+  white-space: nowrap;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(30,215,96,.32);
+  position: relative;
+}
+
+.quiz-music-player #q-current-song span {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: top;
+}
+
+.quiz-music-player #q-current-song.should-marquee span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  max-width: none;
+  overflow: visible;
+  text-overflow: unset;
+  animation: quizPlayerMarquee var(--q-marquee-duration, 12s) linear infinite alternate;
+}
+
+@keyframes quizPlayerMarquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(var(--q-marquee-distance, -80px)); }
+}
+
+.quiz-music-player .q-progress-area {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.quiz-music-player .q-progress-container {
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.18);
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: inset 0 1px 4px rgba(0,0,0,.65);
+}
+
+.quiz-music-player .q-progress-bar {
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--green), var(--yellow));
+  box-shadow: 0 0 12px rgba(30,215,96,.38);
+}
+
+.quiz-music-player .q-time-display {
+  display: flex;
+  justify-content: space-between;
+  color: rgba(255,255,255,.62);
+  font-size: .62rem;
+  font-weight: 850;
+}
+
+.quiz-music-player .q-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.quiz-music-player .q-audio-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.08);
+  color: rgba(255,255,255,.84);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: .74rem;
+  font-weight: 950;
+  line-height: 1;
+  box-shadow: inset 0 -5px 10px rgba(0,0,0,.36);
+}
+
+.quiz-music-player .q-audio-btn:hover,
+.quiz-music-player .q-audio-btn.active {
+  color: #050505;
+  background: var(--green);
+  border-color: rgba(30,215,96,.72);
+  box-shadow: 0 0 16px rgba(30,215,96,.34);
+}
+
+.quiz-music-player .q-audio-btn.q-main {
+  width: 40px;
+  height: 40px;
+  background: #fff;
+  color: #050505;
+  border: 0;
+  font-size: .92rem;
+  box-shadow: 0 8px 18px rgba(0,0,0,.45), 0 0 16px rgba(255,255,255,.12);
+}
+
+.quiz-music-player .q-volume {
+  grid-column: 1 / 3;
+  display: grid;
+  grid-template-columns: 28px 1fr 38px;
+  gap: 8px;
+  align-items: center;
+}
+
+.quiz-music-player #q-volume-slider {
+  width: 100%;
+  accent-color: var(--green);
+}
+
+.quiz-music-player #q-volume-value {
+  color: var(--green);
+  font-size: .62rem;
+  font-weight: 950;
+  text-align: right;
+}
+
+
+/* Correção Felipe: o player fica escondido na escolha de dificuldade
+   e aparece somente durante as perguntas do quiz. */
+body.tela-dificuldade .quiz-music-player {
+  display: none !important;
+}
+
+body.tela-pergunta .quiz-music-player {
+  display: block !important;
+}
+
+body.tela-pergunta .quiz-music-player {
+  width: min(500px, calc(100vw - 22px));
+  bottom: 10px;
+  padding: 7px 9px;
+}
+
+body.tela-pergunta .quiz-music-player #q-current-song,
+body.tela-pergunta .quiz-music-player .q-volume {
+  display: none;
+}
+
+@media (max-width: 820px) {
+  .quiz-music-player {
+    bottom: 9px;
+    width: calc(100vw - 18px);
+    border-radius: 15px;
+    padding: 7px 8px;
+  }
+
+  .quiz-music-player .player-content {
+    grid-template-columns: 1fr auto;
+    gap: 5px 7px;
+  }
+
+  .quiz-music-player #q-current-song {
+    font-size: .68rem;
+  }
+
+  .quiz-music-player .q-audio-btn {
+    width: 25px;
+    height: 25px;
+    font-size: .66rem;
+  }
+
+  .quiz-music-player .q-audio-btn.q-main {
+    width: 35px;
+    height: 35px;
+  }
+
+  .quiz-music-player .q-volume {
+    display: none;
+  }
+}
+
+
+
+/* =============================================================
+   PLAYER PRO CBJR — capa do disco + barra Spotify + marquee + glow
+   aparece somente durante as perguntas, nunca na escolha de dificuldade
+   ============================================================= */
+.quiz-music-player {
+  --q-glow-power: .42;
+  width: min(690px, calc(100vw - 24px)) !important;
+  bottom: 10px !important;
+  padding: 8px 10px !important;
+  border-radius: 22px !important;
+  border: 1px solid rgba(241,196,15,.38) !important;
+  background:
+    radial-gradient(circle at 12% 50%, rgba(30,215,96,.18), transparent 28%),
+    linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.018)),
+    rgba(0,0,0,.82) !important;
+  box-shadow:
+    0 14px 42px rgba(0,0,0,.64),
+    0 0 calc(12px + (22px * var(--q-glow-power))) rgba(30,215,96,.18),
+    inset 0 1px 0 rgba(255,255,255,.10) !important;
+  overflow: hidden !important;
+}
+
+.quiz-music-player.is-playing {
+  animation: qPlayerGlow 1.45s ease-in-out infinite alternate;
+}
+
+@keyframes qPlayerGlow {
+  from {
+    box-shadow:
+      0 14px 42px rgba(0,0,0,.64),
+      0 0 calc(14px + (18px * var(--q-glow-power))) rgba(30,215,96,.16),
+      inset 0 1px 0 rgba(255,255,255,.10);
+  }
+  to {
+    box-shadow:
+      0 14px 42px rgba(0,0,0,.64),
+      0 0 calc(22px + (32px * var(--q-glow-power))) rgba(30,215,96,.34),
+      0 0 calc(14px + (22px * var(--q-glow-power))) rgba(241,196,15,.16),
+      inset 0 1px 0 rgba(255,255,255,.14);
+  }
+}
+
+.quiz-music-player .player-content {
+  grid-template-columns: 52px minmax(0, 1fr) auto !important;
+  grid-template-areas:
+    "cover title controls"
+    "cover progress controls"
+    "cover volume volume" !important;
+  gap: 6px 10px !important;
+  align-items: center !important;
+}
+
+.quiz-music-player .q-cover-wrap {
+  grid-area: cover;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(241,196,15,.42);
+  background: #111;
+  box-shadow: 0 0 18px rgba(241,196,15,.18), inset 0 1px 0 rgba(255,255,255,.12);
+}
+
+.quiz-music-player .q-cover-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.quiz-music-player.is-playing .q-cover-wrap {
+  box-shadow: 0 0 20px rgba(30,215,96,.34), 0 0 16px rgba(241,196,15,.18);
+}
+
+.quiz-music-player #q-current-song {
+  grid-area: title !important;
+  display: block !important;
+  height: 21px !important;
+  line-height: 21px !important;
+  text-align: left !important;
+  font-size: .82rem !important;
+  letter-spacing: .01em !important;
+  color: #1ed760 !important;
+  padding-right: 8px !important;
+  mask-image: linear-gradient(90deg, #000 0%, #000 84%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 84%, transparent 100%);
+}
+
+.quiz-music-player #q-current-song span {
+  max-width: none !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+}
+
+.quiz-music-player #q-current-song.should-marquee span {
+  animation: quizPlayerMarquee var(--q-marquee-duration, 12s) linear infinite alternate !important;
+}
+
+.quiz-music-player .q-progress-area {
+  grid-area: progress !important;
+  display: grid !important;
+  gap: 3px !important;
+}
+
+.quiz-music-player .q-progress-container {
+  height: 5px !important;
+  background: rgba(255,255,255,.18) !important;
+  border-radius: 999px !important;
+  overflow: hidden !important;
+}
+
+.quiz-music-player .q-progress-bar {
+  background: linear-gradient(90deg, #1ed760, #1ed760 72%, #f1c40f) !important;
+  box-shadow: 0 0 14px rgba(30,215,96,.55) !important;
+  transition: width .16s linear !important;
+}
+
+.quiz-music-player.is-playing .q-progress-bar {
+  animation: qProgressPulse 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes qProgressPulse {
+  from { filter: brightness(1); }
+  to { filter: brightness(1.45); }
+}
+
+.quiz-music-player .q-controls {
+  grid-area: controls !important;
+  gap: 6px !important;
+}
+
+.quiz-music-player .q-volume {
+  grid-area: volume !important;
+  display: grid !important;
+  grid-template-columns: 28px 1fr 38px !important;
+}
+
+body.tela-dificuldade .quiz-music-player {
+  display: none !important;
+}
+
+body.tela-pergunta .quiz-music-player {
+  display: block !important;
+}
+
+body.tela-pergunta .quiz-screen.active {
+  padding-bottom: 96px !important;
+}
+
+@media (max-width: 820px) {
+  .quiz-music-player {
+    width: calc(100vw - 16px) !important;
+    bottom: 8px !important;
+    border-radius: 18px !important;
+    padding: 7px 8px !important;
+  }
+
+  .quiz-music-player .player-content {
+    grid-template-columns: 44px minmax(0, 1fr) auto !important;
+    grid-template-areas:
+      "cover title controls"
+      "cover progress controls" !important;
+    gap: 5px 8px !important;
+  }
+
+  .quiz-music-player .q-cover-wrap {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+
+  .quiz-music-player #q-current-song {
+    font-size: .72rem !important;
+    height: 18px !important;
+    line-height: 18px !important;
+  }
+
+  .quiz-music-player .q-time-display {
+    font-size: .55rem !important;
+  }
+
+  .quiz-music-player .q-audio-btn {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: .62rem !important;
+  }
+
+  .quiz-music-player .q-audio-btn.q-main {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: .82rem !important;
+  }
+
+  .quiz-music-player .q-volume {
+    display: none !important;
+  }
+
+  body.tela-pergunta .quiz-screen.active {
+    padding-bottom: 76px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .quiz-music-player .q-controls {
+    gap: 4px !important;
+  }
+
+  .quiz-music-player .q-audio-btn:not(.q-main):not(#q-prev-btn):not(#q-next-btn) {
+    display: none !important;
+  }
+}
+
 </style>
 </head>
 
@@ -4804,6 +5234,37 @@ body.tela-pergunta .answer-letter {
       <button id="btnPular" class="power-btn" type="button">Pular <span id="countPular">0</span></button>
     </div>
   </header>
+
+
+
+  <div id="quizMusicPlayer" class="quiz-music-player" aria-label="Player de música do quiz">
+    <audio crossorigin="anonymous" id="q-audio"></audio>
+    <div class="player-content">
+      <div class="q-cover-wrap"><img id="q-album-cover" alt="Capa do disco atual" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%201.jpeg" /></div>
+      <p id="q-current-song"><span>Carregando playlist...</span></p>
+      <div class="q-progress-area">
+        <div class="q-progress-container" id="q-progress-container" title="Progresso da música">
+          <div class="q-progress-bar" id="q-progress-bar"></div>
+        </div>
+        <div class="q-time-display">
+          <span id="q-current-time">0:00</span>
+          <span id="q-total-duration">0:00</span>
+        </div>
+      </div>
+      <div class="q-controls">
+        <button class="q-audio-btn" id="q-repeat-btn" title="Repetir playlist" type="button">↻</button>
+        <button aria-label="Música anterior" class="q-audio-btn" id="q-prev-btn" type="button">⏮</button>
+        <button aria-label="Reproduzir ou pausar" class="q-audio-btn q-main" id="q-play-pause-btn" type="button">▶</button>
+        <button aria-label="Próxima música" class="q-audio-btn" id="q-next-btn" type="button">⏭</button>
+        <button class="q-audio-btn" id="q-shuffle-btn" title="Ordem aleatória" type="button">⤨</button>
+      </div>
+      <div class="q-volume">
+        <button aria-label="Ativar ou desativar som" class="q-audio-btn" id="q-mute-btn" type="button">🔊</button>
+        <input aria-label="Volume do áudio" id="q-volume-slider" max="1" min="0" step="0.01" type="range" value="0.42" />
+        <span id="q-volume-value">42%</span>
+      </div>
+    </div>
+  </div>
 
   <main id="app">
     <section id="difficultyScreen" class="screen active difficulty-screen" aria-label="Escolha de dificuldade">
@@ -5401,5 +5862,244 @@ body.tela-pergunta .answer-letter {
         .replace(/'/g, '&#039;');
     }
   </script>
+
+  <script>
+    // PLAYER GLOBAL DO QUIZ — mesmo comportamento da home, sem interferir nas perguntas.
+    (function () {
+      const qPlayer = {
+        audio: document.getElementById('q-audio'),
+        title: document.getElementById('q-current-song'),
+        progressContainer: document.getElementById('q-progress-container'),
+        progressBar: document.getElementById('q-progress-bar'),
+        currentTime: document.getElementById('q-current-time'),
+        totalDuration: document.getElementById('q-total-duration'),
+        repeatBtn: document.getElementById('q-repeat-btn'),
+        prevBtn: document.getElementById('q-prev-btn'),
+        playPauseBtn: document.getElementById('q-play-pause-btn'),
+        nextBtn: document.getElementById('q-next-btn'),
+        shuffleBtn: document.getElementById('q-shuffle-btn'),
+        muteBtn: document.getElementById('q-mute-btn'),
+        volumeSlider: document.getElementById('q-volume-slider'),
+        volumeValue: document.getElementById('q-volume-value'),
+        cover: document.getElementById('q-album-cover'),
+        wrapper: document.getElementById('quizMusicPlayer')
+      };
+
+      const qState = {
+        playlist: [],
+        originalPlaylist: [],
+        currentIndex: 0,
+        shuffle: false,
+        repeat: false,
+        loaded: false,
+        userStarted: false
+      };
+
+      const fallbackTrack = {
+        title: 'Tributo ao Frango da Malásia',
+        url: 'https://charlibriano.github.io/Quiz-CBJR-V2/Transpiracao_Continua_Prolongada/Charlie%20Brown%20Jr%20-%20Tributo%20ao%20Frango%20da%20Mal%C3%A1sia.mp3',
+        cover: 'https://charlibriano.github.io/Quiz-CBJR-V2/CD%201.jpeg'
+      };
+
+      function formatTime(seconds) {
+        if (!Number.isFinite(seconds) || seconds < 0) return '0:00';
+        const min = Math.floor(seconds / 60);
+        const sec = Math.floor(seconds % 60).toString().padStart(2, '0');
+        return `${min}:${sec}`;
+      }
+
+      function getTrackTitle(track) {
+        const raw = (track && (track.titulo || track.title || track.nome || 'Charlie Brown Jr.')) || 'Charlie Brown Jr.';
+        return String(raw)
+          .replace(/^Charlie Brown Jr\s*-\s*/i, '')
+          .replace(/^Transpira[cç][aã]o Continua Prolongada\s*-\s*/i, '')
+          .replace(/^\d+[-_.\s]*/, '')
+          .trim();
+      }
+
+      function normalizeTrack(track, album = {}) {
+        const albumCover = album.capa || album.cover || album.imagem || album.image || album.img || album.capaUrl || album.coverUrl || album.albumCover || album.album_cover || '';
+        const songCover = track.cover || track.capa || track.imagem || track.image || track.img || track.capaUrl || track.coverUrl || '';
+        const albumName = album.nome || album.album || album.title || album.titulo || '';
+        return {
+          title: getTrackTitle(track),
+          url: track.url || track.src || track.audio || '',
+          cover: songCover || albumCover || 'https://charlibriano.github.io/Quiz-CBJR-V2/CD%201.jpeg',
+          album: albumName
+        };
+      }
+
+      function setCover(src) {
+        if (!qPlayer.cover) return;
+        const fallbackCover = 'https://charlibriano.github.io/Quiz-CBJR-V2/CD%201.jpeg';
+        qPlayer.cover.src = src || fallbackCover;
+        qPlayer.cover.onerror = () => { qPlayer.cover.src = fallbackCover; };
+      }
+
+      function setTitle(text) {
+        if (!qPlayer.title) return;
+        qPlayer.title.classList.remove('should-marquee');
+        qPlayer.title.innerHTML = `<span>${String(text || 'Charlie Brown Jr.').replace(/</g, '&lt;')}</span>`;
+        requestAnimationFrame(() => {
+          const span = qPlayer.title.querySelector('span');
+          if (!span) return;
+          const overflow = span.scrollWidth - qPlayer.title.clientWidth;
+          if (overflow > 12) {
+            qPlayer.title.style.setProperty('--q-marquee-distance', `-${overflow + 18}px`);
+            qPlayer.title.style.setProperty('--q-marquee-duration', `${Math.max(8, overflow / 12)}s`);
+            qPlayer.title.classList.add('should-marquee');
+          }
+        });
+      }
+
+      function loadTrack(index, autoplay = false) {
+        if (!qPlayer.audio || !qState.playlist.length) return;
+        qState.currentIndex = (index + qState.playlist.length) % qState.playlist.length;
+        const track = qState.playlist[qState.currentIndex];
+        qPlayer.audio.src = track.url;
+        qPlayer.audio.load();
+        setTitle(track.title || 'Charlie Brown Jr.');
+        setCover(track.cover);
+        localStorage.setItem('cbjr-v2-player-index', String(qState.currentIndex));
+        if (autoplay) {
+          qPlayer.audio.play().then(() => {
+            qState.userStarted = true;
+            localStorage.setItem('cbjr-v2-player-was-playing', '1');
+            qPlayer.playPauseBtn.textContent = '⏸';
+          }).catch(() => {
+            qPlayer.playPauseBtn.textContent = '▶';
+          });
+        } else {
+          qPlayer.playPauseBtn.textContent = '▶';
+        }
+      }
+
+      async function loadPlaylist() {
+        if (!qPlayer.audio || qState.loaded) return;
+        qState.loaded = true;
+        setTitle('Carregando playlist...');
+        try {
+          const response = await fetch('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/radio_albuns.json', { cache: 'no-store' });
+          if (!response.ok) throw new Error('Playlist não encontrada');
+          const albums = await response.json();
+          const tracks = [];
+          albums.forEach((album) => {
+            (album.musicas || album.tracks || []).forEach((song) => {
+              const normalized = normalizeTrack(song, album);
+              if (normalized.url) tracks.push(normalized);
+            });
+          });
+          if (!tracks.length) throw new Error('Playlist vazia');
+          qState.originalPlaylist = tracks;
+          qState.playlist = [...tracks];
+        } catch (error) {
+          qState.originalPlaylist = [normalizeTrack(fallbackTrack, { capa: fallbackTrack.cover })];
+          qState.playlist = [...qState.originalPlaylist];
+          setTitle('Playlist principal indisponível — usando faixa da intro');
+        }
+        const savedIndex = Number(localStorage.getItem('cbjr-v2-player-index') || 0);
+        loadTrack(Number.isFinite(savedIndex) ? savedIndex : 0, false);
+      }
+
+      function nextTrack(autoplay = qState.userStarted) {
+        if (!qState.playlist.length) return;
+        let nextIndex = qState.currentIndex + 1;
+        if (qState.shuffle && qState.playlist.length > 1) {
+          do { nextIndex = Math.floor(Math.random() * qState.playlist.length); }
+          while (nextIndex === qState.currentIndex);
+        }
+        loadTrack(nextIndex, autoplay);
+      }
+
+      function prevTrack() {
+        if (!qState.playlist.length) return;
+        loadTrack(qState.currentIndex - 1, qState.userStarted);
+      }
+
+      function setupQuizPlayer() {
+        if (!qPlayer.audio) return;
+        const savedVolume = Number(localStorage.getItem('cbjr-v2-player-volume'));
+        const initialVolume = Number.isFinite(savedVolume) ? savedVolume : Number(qPlayer.volumeSlider?.value || 0.42);
+        qPlayer.audio.volume = initialVolume;
+        if (qPlayer.volumeSlider) qPlayer.volumeSlider.value = String(initialVolume);
+        if (qPlayer.volumeValue) qPlayer.volumeValue.textContent = `${Math.round(initialVolume * 100)}%`;
+
+        qPlayer.playPauseBtn?.addEventListener('click', async () => {
+          await loadPlaylist();
+          if (qPlayer.audio.paused) {
+            try {
+              await qPlayer.audio.play();
+              qState.userStarted = true;
+              localStorage.setItem('cbjr-v2-player-was-playing', '1');
+              qPlayer.playPauseBtn.textContent = '⏸';
+            } catch (error) {
+              setTitle('Clique novamente para liberar o áudio');
+            }
+          } else {
+            qPlayer.audio.pause();
+            localStorage.setItem('cbjr-v2-player-was-playing', '0');
+            qPlayer.playPauseBtn.textContent = '▶';
+          }
+        });
+
+        qPlayer.nextBtn?.addEventListener('click', () => nextTrack(true));
+        qPlayer.prevBtn?.addEventListener('click', prevTrack);
+        qPlayer.shuffleBtn?.addEventListener('click', () => {
+          qState.shuffle = !qState.shuffle;
+          qPlayer.shuffleBtn.classList.toggle('active', qState.shuffle);
+        });
+        qPlayer.repeatBtn?.addEventListener('click', () => {
+          qState.repeat = !qState.repeat;
+          qPlayer.repeatBtn.classList.toggle('active', qState.repeat);
+        });
+        qPlayer.muteBtn?.addEventListener('click', () => {
+          qPlayer.audio.muted = !qPlayer.audio.muted;
+          qPlayer.muteBtn.textContent = qPlayer.audio.muted ? '🔇' : '🔊';
+        });
+        qPlayer.volumeSlider?.addEventListener('input', () => {
+          const volume = Number(qPlayer.volumeSlider.value);
+          qPlayer.audio.volume = volume;
+          qPlayer.volumeValue.textContent = `${Math.round(volume * 100)}%`;
+          localStorage.setItem('cbjr-v2-player-volume', String(volume));
+        });
+        qPlayer.progressContainer?.addEventListener('click', (event) => {
+          if (!Number.isFinite(qPlayer.audio.duration)) return;
+          const rect = qPlayer.progressContainer.getBoundingClientRect();
+          const pct = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
+          qPlayer.audio.currentTime = pct * qPlayer.audio.duration;
+        });
+        qPlayer.audio.addEventListener('loadedmetadata', () => {
+          qPlayer.totalDuration.textContent = formatTime(qPlayer.audio.duration);
+        });
+        qPlayer.audio.addEventListener('timeupdate', () => {
+          qPlayer.currentTime.textContent = formatTime(qPlayer.audio.currentTime);
+          const pct = Number.isFinite(qPlayer.audio.duration) && qPlayer.audio.duration > 0
+            ? (qPlayer.audio.currentTime / qPlayer.audio.duration) * 100
+            : 0;
+          qPlayer.progressBar.style.width = `${pct}%`;
+          qPlayer.progressBar.style.setProperty('--q-progress', `${pct}%`);
+          qPlayer.wrapper?.style.setProperty('--q-glow-power', `${Math.max(0.18, Math.min(1, qPlayer.audio.volume || 0.42))}`);
+        });
+        qPlayer.audio.addEventListener('play', () => {
+          qPlayer.playPauseBtn.textContent = '⏸';
+          qPlayer.wrapper?.classList.add('is-playing');
+          localStorage.setItem('cbjr-v2-player-was-playing', '1');
+        });
+        qPlayer.audio.addEventListener('pause', () => {
+          qPlayer.playPauseBtn.textContent = '▶';
+          qPlayer.wrapper?.classList.remove('is-playing');
+        });
+        qPlayer.audio.addEventListener('ended', () => {
+          if (qState.repeat) loadTrack(qState.currentIndex, true);
+          else nextTrack(true);
+        });
+
+        loadPlaylist();
+      }
+
+      setupQuizPlayer();
+    })();
+  </script>
+
 </body>
 </html>
