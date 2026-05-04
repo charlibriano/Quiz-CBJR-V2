@@ -2358,6 +2358,132 @@
     @media (max-width: 1050px) { .main { grid-template-columns: 1fr !important; } .hero-panel { display: grid !important; grid-template-columns: 1fr minmax(240px, 320px) !important; align-items: start !important; } .home-player-card { margin-top: 0 !important; } }
     @media (max-width: 760px) { .app { width: calc(100% - 14px) !important; padding: 8px 0 !important; } .hero-panel { display: block !important; padding: 10px !important; } h1 { font-size: clamp(2.15rem, 11vw, 3.15rem) !important; } .subtitle { font-size: .76rem !important; } .home-player-card { margin-top: 10px !important; } .channels { overflow-x: auto !important; scroll-snap-type: x mandatory; grid-template-columns: repeat(5, minmax(78px, 1fr)) !important; } .channel { min-width: 78px !important; scroll-snap-align: center; } .console-head p, .console-note { display: none !important; } }
 
+  
+
+    /* ============================================================
+       AJUSTE FELIPE 04/05 — FADERS MENORES NO CELULAR
+       Mantém a mesa, animações e links. Só reduz a altura dos faders.
+       ============================================================ */
+    @media (max-width: 760px) {
+      .channels {
+        grid-template-columns: repeat(5, minmax(66px, 1fr)) !important;
+        gap: 5px !important;
+      }
+
+      .channel {
+        min-width: 66px !important;
+        min-height: 150px !important;
+        height: 150px !important;
+        padding: 5px !important;
+        gap: 4px !important;
+        grid-template-rows: 14px 17px 34px 46px 16px !important;
+      }
+
+      .ch-top {
+        font-size: .40rem !important;
+        letter-spacing: .04em !important;
+      }
+
+      .channel.is-on .ch-top::after {
+        font-size: .34rem !important;
+        margin-right: 0 !important;
+      }
+
+      .led {
+        width: 6px !important;
+        height: 6px !important;
+      }
+
+      .knobs {
+        gap: 3px !important;
+        padding-bottom: 2px !important;
+      }
+
+      .knobs span {
+        width: 14px !important;
+        height: 14px !important;
+      }
+
+      .knobs span::after {
+        top: 2px !important;
+        height: 5px !important;
+      }
+
+      .channel h3 {
+        writing-mode: horizontal-tb !important;
+        text-orientation: initial !important;
+        justify-self: start !important;
+        align-self: center !important;
+        min-height: 0 !important;
+        font-size: .56rem !important;
+        line-height: .95 !important;
+      }
+
+      .fader-zone {
+        height: 46px !important;
+        min-height: 46px !important;
+        grid-template-columns: 11px 1fr !important;
+        gap: 3px !important;
+      }
+
+      .meter,
+      .fader {
+        height: 46px !important;
+        min-height: 46px !important;
+      }
+
+      .meter {
+        gap: 2px !important;
+        padding: 3px 0 !important;
+      }
+
+      .meter i {
+        width: 5px !important;
+        height: 3px !important;
+      }
+
+      .fader {
+        border-radius: 8px !important;
+      }
+
+      .fader b {
+        width: 22px !important;
+        height: 10px !important;
+        bottom: 10px !important;
+        border-radius: 5px !important;
+      }
+
+      .ch-footer {
+        padding-top: 2px !important;
+        font-size: .38rem !important;
+      }
+    }
+
+    @media (max-width: 390px) {
+      .channels {
+        grid-template-columns: repeat(5, minmax(58px, 1fr)) !important;
+      }
+
+      .channel {
+        min-width: 58px !important;
+        min-height: 142px !important;
+        height: 142px !important;
+      }
+
+      .fader-zone,
+      .meter,
+      .fader {
+        height: 42px !important;
+        min-height: 42px !important;
+      }
+
+      .fader b {
+        width: 20px !important;
+        height: 9px !important;
+        bottom: 9px !important;
+      }
+    }
+
   </style>
 </head>
 
