@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rádio CBJR</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #000;
+  color: #fff;
+}
+
+.hero {
+  height: 100vh;
+  background: url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/radio-bg.png') center center no-repeat;
+  background-size: contain;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: 60px; /* AGORA VAI PRO ESPAÇO EM BRANCO */
+}
+
+.hero-content {
+  text-align: center;
+  padding: 6px;
+  border-radius: 10px;
+  background: rgba(0,0,0,0.03);
+  max-width: 360px;
+}
+
+.hero h1 {
+  font-size: 18px;
+  margin-bottom: 4px;
+  opacity: 0.8;
+}
+
+.hero p {
+  font-size: 11px;
+  margin-bottom: 6px;
+  opacity: 0.6;
+}
+
+.buttons {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.btn {
+  padding: 6px 12px;
+  border-radius: 16px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 10px;
+}
+
+.btn-yellow {
+  background: #FFD700;
+  color: #000;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid #FFD700;
+  color: #FFD700;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+  <div class="hero-content">
+
+    <h1>Rádio Charlie Brown Jr</h1>
+
+    <p>Escute sem olhar o nome e prove que conhece cada faixa de verdade.</p>
+
+    <div class="buttons">
+      <button class="btn btn-yellow">Sintonizar Agora</button>
+      <button class="btn btn-outline" onclick="window.location.href='index.html'">Menu Principal</button>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
