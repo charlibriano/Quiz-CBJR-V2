@@ -1,93 +1,1056 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rádio CBJR</title>
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rádio CBJR - Charlie Brown Jr.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #000;
-  color: #fff;
-}
+  :root {
+    --yellow:#f1c40f; --green:#1ed760; --red:#ff3b30; --white:#f8f8f8; --black:#030303;
+    --glass:rgba(0,0,0,.68); --line:rgba(241,196,15,.35);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%;font-family:Inter,Arial,sans-serif;color:var(--white);background:#000;overflow-x:hidden}
+  body::before{content:"";position:fixed;inset:0;background:var(--album-bg, radial-gradient(circle at center,#222,#000));background-size:cover;background-position:center;filter:blur(2px) brightness(.46);transform:scale(1.04);z-index:0}
+  body::after{content:"";position:fixed;inset:0;background:radial-gradient(circle at 50% 20%,rgba(241,196,15,.16),transparent 30%),linear-gradient(90deg,rgba(0,0,0,.78),rgba(0,0,0,.35),rgba(0,0,0,.82));z-index:1;pointer-events:none}
+  .page{position:relative;z-index:5;min-height:100svh;padding:22px;display:grid;grid-template-rows:auto 1fr}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;position:relative;z-index:10}
+  .back-btn,.small-btn{border:1px solid var(--line);background:rgba(0,0,0,.72);color:#fff;border-radius:999px;min-height:42px;padding:0 18px;font-weight:900;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(241,196,15,.14);cursor:pointer}
+  .mode-pill{font-family:'Permanent Marker',cursive;color:var(--yellow);font-size:clamp(1.2rem,2.5vw,2rem);text-shadow:0 0 20px rgba(241,196,15,.45);letter-spacing:.03em;text-align:center}
+  .stage{width:min(1240px,96vw);margin:20px auto 0;display:grid;grid-template-columns:minmax(280px,390px) 1fr;gap:clamp(18px,3vw,42px);align-items:center}
+  .album-card{border:1px solid var(--line);border-radius:28px;background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.82));box-shadow:0 25px 80px rgba(0,0,0,.58), inset 0 1px 0 rgba(255,255,255,.08);padding:20px;position:relative;overflow:hidden}
+  .cover-wrap{aspect-ratio:1/1;border-radius:22px;overflow:hidden;background:#111;border:1px solid rgba(255,255,255,.12);box-shadow:0 18px 48px rgba(0,0,0,.55)}
+  .cover-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+  .album-meta{margin-top:16px;text-align:center}
+  .album-meta h1{margin:0;color:var(--yellow);font-family:'Permanent Marker',cursive;font-size:clamp(1.6rem,3vw,2.6rem);line-height:.95;text-shadow:0 0 18px rgba(241,196,15,.3)}
+  .album-meta p{margin:8px 0 0;color:rgba(255,255,255,.75);font-weight:900}
+  .radio-panel{border:1px solid var(--line);border-radius:30px;background:linear-gradient(180deg,rgba(0,0,0,.58),rgba(0,0,0,.82));box-shadow:0 25px 80px rgba(0,0,0,.56), inset 0 1px 0 rgba(255,255,255,.08);padding:clamp(18px,2.5vw,34px);min-height:min(76svh,720px);display:grid;grid-template-rows:auto auto 1fr auto;gap:16px}
+  .radio-title{text-align:center}
+  .radio-title small{display:inline-flex;border:1px solid rgba(241,196,15,.32);border-radius:999px;padding:7px 12px;background:rgba(0,0,0,.45);font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.75);font-size:.72rem}
+  .radio-title h2{margin:12px 0 0;color:#fff;font-size:clamp(1.5rem,3vw,3rem);line-height:1.02;text-transform:uppercase;text-shadow:0 0 24px rgba(255,255,255,.18)}
+  .status-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .status-card{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);border-radius:16px;padding:10px;text-align:center}
+  .status-card small{display:block;color:rgba(255,255,255,.58);font-size:.66rem;text-transform:uppercase;font-weight:900;letter-spacing:.1em}
+  .status-card strong{display:block;margin-top:4px;color:var(--yellow);font-size:1.05rem}
+  .track-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-content:start;overflow:auto;padding:4px;max-height:48svh;scrollbar-width:thin}
+  .track-btn{border:1px solid rgba(241,196,15,.22);background:linear-gradient(180deg,rgba(20,20,20,.92),rgba(0,0,0,.96));color:#fff;border-radius:14px;min-height:50px;padding:9px 12px;font-weight:900;font-size:clamp(.72rem,.92vw,.95rem);line-height:1.15;text-align:left;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.08);transition:filter .18s ease, box-shadow .18s ease, border-color .18s ease, opacity .18s ease}
+  .track-btn:hover:not(:disabled){border-color:var(--yellow);box-shadow:0 0 18px rgba(241,196,15,.22)}
+  .track-btn.correct{background:linear-gradient(180deg,rgba(30,215,96,.9),rgba(5,70,32,.95));border-color:var(--green)}
+  .track-btn.wrong{background:linear-gradient(180deg,rgba(255,59,48,.85),rgba(92,10,10,.95));border-color:var(--red)}
+  .track-btn.revealed{opacity:.16;pointer-events:none;filter:grayscale(1)}
+  .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .primary{background:var(--yellow);color:#000;border:0;border-radius:999px;min-height:46px;padding:0 22px;font-weight:1000;cursor:pointer}
+  .secondary{background:rgba(0,0,0,.55);color:#fff;border:1px solid var(--line);border-radius:999px;min-height:46px;padding:0 22px;font-weight:1000;cursor:pointer}
+  .message{min-height:28px;text-align:center;font-weight:900;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.8)}
+  .select-screen{width:min(1180px,96vw);margin:20px auto 0;border:1px solid var(--line);border-radius:30px;background:rgba(0,0,0,.72);padding:clamp(18px,3vw,34px);box-shadow:0 25px 80px rgba(0,0,0,.58)}
+  .select-screen h1{margin:0 0 8px;text-align:center;color:var(--yellow);font-family:'Permanent Marker',cursive;font-size:clamp(2rem,5vw,4.5rem);line-height:.9}
+  .select-screen p{text-align:center;color:rgba(255,255,255,.76);font-weight:800;margin:0 0 20px}
+  .album-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+  .album-option{border:1px solid rgba(241,196,15,.26);border-radius:18px;background:rgba(255,255,255,.06);padding:10px;color:#fff;cursor:pointer;text-align:left;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+  .album-option:hover{transform:translateY(-3px);border-color:var(--yellow);box-shadow:0 0 22px rgba(241,196,15,.18)}
+  .album-option img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:13px;background:#111}
+  .album-option strong{display:block;margin-top:9px;color:#fff;font-size:.9rem;line-height:1.12}
+  .album-option small{color:var(--yellow);font-weight:900}
+  .hidden{display:none!important}
+  .overlay{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.86);display:none;place-items:center;padding:20px;backdrop-filter:blur(8px)}
+  .overlay.show{display:grid}
+  .overlay-card{width:min(640px,94vw);border:1px solid var(--line);border-radius:28px;background:radial-gradient(circle at top,rgba(241,196,15,.12),transparent 42%),rgba(0,0,0,.94);padding:32px;text-align:center;box-shadow:0 28px 90px rgba(0,0,0,.72)}
+  .overlay-card h2{font-family:'Permanent Marker',cursive;color:var(--yellow);font-size:clamp(2.2rem,6vw,4rem);line-height:.9;margin:0 0 14px}
+  .overlay-card p{font-weight:800;color:rgba(255,255,255,.8);line-height:1.45}
+  audio{display:none}
+  @media(max-width:980px){.stage{grid-template-columns:1fr;align-items:start}.album-card{display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:center}.album-meta{text-align:left;margin:0}.radio-panel{min-height:auto}.album-grid{grid-template-columns:repeat(3,1fr)}.track-grid{grid-template-columns:repeat(2,1fr);max-height:48svh}}
+  @media(max-width:620px){.page{padding:12px}.topbar{gap:8px}.back-btn,.small-btn{min-height:36px;padding:0 10px;font-size:.78rem}.mode-pill{font-size:1.2rem}.album-card{grid-template-columns:86px 1fr;border-radius:18px;padding:12px}.radio-panel{border-radius:20px;padding:14px;gap:10px}.status-row{grid-template-columns:repeat(2,1fr);gap:7px}.track-grid{grid-template-columns:1fr;max-height:45svh;gap:7px}.track-btn{min-height:42px;font-size:.82rem}.album-grid{grid-template-columns:repeat(2,1fr);gap:10px}.select-screen{border-radius:20px;padding:14px}}
 
-.hero {
-  height: 100vh;
-  background: url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/radio-bg.png') center center no-repeat;
-  background-size: contain;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  padding-bottom: 60px; /* AGORA VAI PRO ESPAÇO EM BRANCO */
-}
 
-.hero-content {
-  text-align: center;
-  padding: 6px;
-  border-radius: 10px;
-  background: rgba(0,0,0,0.03);
-  max-width: 360px;
-}
+  /* =========================================================
+     INTRO RÁDIO CBJR — tela de entrada sem interferir no jogo
+     ========================================================= */
+  body.has-intro{overflow:hidden}
+  body.has-intro .page{opacity:0;pointer-events:none;filter:blur(2px);transform:scale(.99)}
+  .radio-intro{position:fixed;inset:0;z-index:100;display:grid;place-items:center;overflow:hidden;background:#000}
+  .radio-intro::before{content:"";position:absolute;inset:0;background:url('radio-bg.png') center/cover no-repeat;filter:brightness(.86);transform:scale(1.01)}
+  .radio-intro::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 58%,rgba(0,0,0,.08),rgba(0,0,0,.72) 78%),linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.38));pointer-events:none}
+  .radio-intro-content{position:relative;z-index:2;width:min(900px,92vw);display:grid;justify-items:center;gap:18px;text-align:center;margin-top:min(48vh,380px)}
+  .radio-intro-badge{display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(241,196,15,.55);background:rgba(0,0,0,.58);color:var(--yellow);border-radius:999px;padding:8px 15px;font-weight:1000;letter-spacing:.18em;text-transform:uppercase;font-size:.76rem;box-shadow:0 0 24px rgba(241,196,15,.12)}
+  .radio-intro-title{margin:0;color:#fff;font-family:'Permanent Marker',cursive;font-size:clamp(2.2rem,7vw,6rem);line-height:.86;text-shadow:0 0 24px rgba(0,0,0,.86),0 0 30px rgba(241,196,15,.22)}
+  .radio-intro-subtitle{margin:0;color:rgba(255,255,255,.84);font-weight:900;max-width:660px;line-height:1.35;text-shadow:0 2px 18px rgba(0,0,0,.9)}
+  .radio-intro-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:4px}
+  .radio-enter-btn{border:0;border-radius:999px;min-height:54px;padding:0 30px;background:var(--yellow);color:#000;font-weight:1000;cursor:pointer;box-shadow:0 0 26px rgba(241,196,15,.35);font-size:1rem;text-transform:uppercase;letter-spacing:.04em}
+  .radio-intro-menu{border:1px solid rgba(241,196,15,.55);border-radius:999px;min-height:54px;padding:0 26px;background:rgba(0,0,0,.62);color:#fff;font-weight:1000;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 0 22px rgba(0,0,0,.5)}
+  .radio-intro.hide{animation:introOut .6s ease forwards}
+  @keyframes introOut{to{opacity:0;visibility:hidden;transform:scale(1.02)}}
+  @media(max-width:620px){.radio-intro::before{background-position:center}.radio-intro-content{margin-top:min(42vh,330px);gap:12px}.radio-intro-title{font-size:clamp(2rem,13vw,4.2rem)}.radio-intro-subtitle{font-size:.9rem}.radio-enter-btn,.radio-intro-menu{min-height:46px;padding:0 18px;font-size:.82rem}.radio-intro-badge{font-size:.62rem}}
 
-.hero h1 {
-  font-size: 18px;
-  margin-bottom: 4px;
-  opacity: 0.8;
-}
 
-.hero p {
-  font-size: 11px;
-  margin-bottom: 6px;
-  opacity: 0.6;
-}
+  /* =========================================================
+     AJUSTE FINAL INTRO — posição certa + botão funcional
+     ========================================================= */
+  .radio-intro {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 1000 !important;
+    display: block !important;
+    overflow: hidden !important;
+    background: #000 !important;
+  }
 
-.buttons {
-  display: flex;
-  gap: 6px;
-  justify-content: center;
-}
+  .radio-intro::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/radio-bg.png') center center / contain no-repeat !important;
+    filter: none !important;
+    transform: none !important;
+    z-index: 0 !important;
+  }
 
-.btn {
-  padding: 6px 12px;
-  border-radius: 16px;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 10px;
-}
+  .radio-intro::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: linear-gradient(180deg, rgba(0,0,0,.03), rgba(0,0,0,.08)) !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+  }
 
-.btn-yellow {
-  background: #FFD700;
-  color: #000;
-}
+  .radio-intro-content {
+    position: absolute !important;
+    left: 50% !important;
+    bottom: 5.8vh !important;
+    transform: translateX(-50%) !important;
+    z-index: 3 !important;
+    width: min(390px, 90vw) !important;
+    margin: 0 !important;
+    padding: 8px 10px !important;
+    display: grid !important;
+    justify-items: center !important;
+    gap: 5px !important;
+    text-align: center !important;
+    background: rgba(0,0,0,.04) !important;
+    border: 0 !important;
+    border-radius: 10px !important;
+    box-shadow: none !important;
+    pointer-events: auto !important;
+  }
 
-.btn-outline {
-  background: transparent;
-  border: 2px solid #FFD700;
-  color: #FFD700;
-}
+  .radio-intro-badge {
+    display: none !important;
+  }
+
+  .radio-intro-title {
+    margin: 0 !important;
+    font-family: Inter, Arial, sans-serif !important;
+    font-size: clamp(1.05rem, 2vw, 1.45rem) !important;
+    line-height: 1.05 !important;
+    color: rgba(255,255,255,.86) !important;
+    text-shadow: 0 2px 8px rgba(0,0,0,.75) !important;
+    letter-spacing: .01em !important;
+  }
+
+  .radio-intro-subtitle {
+    margin: 0 !important;
+    max-width: 380px !important;
+    color: rgba(255,255,255,.68) !important;
+    font-size: clamp(.62rem, 1vw, .78rem) !important;
+    line-height: 1.25 !important;
+    font-weight: 800 !important;
+    text-shadow: 0 2px 8px rgba(0,0,0,.8) !important;
+  }
+
+  .radio-intro-actions {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-wrap: nowrap !important;
+    margin-top: 4px !important;
+  }
+
+  .radio-enter-btn,
+  .radio-intro-menu {
+    min-height: 32px !important;
+    padding: 0 15px !important;
+    border-radius: 999px !important;
+    font-size: .68rem !important;
+    font-weight: 950 !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    position: relative !important;
+    z-index: 5 !important;
+  }
+
+  .radio-enter-btn {
+    border: 2px solid #f1c40f !important;
+    background: #f1c40f !important;
+    color: #000 !important;
+    box-shadow: 0 0 14px rgba(241,196,15,.18) !important;
+  }
+
+  .radio-intro-menu {
+    border: 2px solid #f1c40f !important;
+    background: rgba(0,0,0,.18) !important;
+    color: #f1c40f !important;
+    text-decoration: none !important;
+  }
+
+  @media (max-width: 700px) {
+    .radio-intro::before {
+      background-size: cover !important;
+      background-position: center center !important;
+    }
+
+    .radio-intro-content {
+      bottom: 5vh !important;
+      width: min(350px, 92vw) !important;
+    }
+
+    .radio-intro-title {
+      font-size: 1.05rem !important;
+    }
+
+    .radio-intro-subtitle {
+      font-size: .62rem !important;
+    }
+
+    .radio-enter-btn,
+    .radio-intro-menu {
+      min-height: 31px !important;
+      padding: 0 12px !important;
+      font-size: .62rem !important;
+    }
+  }
+
+
+  /* =========================================================
+     AJUSTE FINAL — SELEÇÃO DE CDs COMPACTA SEM SCROLL
+     Mostra todos os álbuns na tela em desktop/notebook.
+     ========================================================= */
+  body:not(.has-intro) {
+    overflow-y: hidden !important;
+  }
+
+  body:not(.has-intro) .page {
+    min-height: 100svh !important;
+    height: 100svh !important;
+    padding: 14px 18px 12px !important;
+    grid-template-rows: auto minmax(0, 1fr) !important;
+    overflow: hidden !important;
+  }
+
+  body:not(.has-intro) .topbar {
+    min-height: 48px !important;
+    margin-bottom: 6px !important;
+  }
+
+  body:not(.has-intro) .back-btn,
+  body:not(.has-intro) .small-btn {
+    min-height: 38px !important;
+    padding: 0 16px !important;
+    font-size: .88rem !important;
+  }
+
+  body:not(.has-intro) .mode-pill {
+    font-size: clamp(1.45rem, 3vw, 2.55rem) !important;
+    line-height: .95 !important;
+  }
+
+  body:not(.has-intro) .select-screen {
+    width: min(1760px, 96vw) !important;
+    height: calc(100svh - 82px) !important;
+    margin: 6px auto 0 !important;
+    padding: 16px 24px 18px !important;
+    border-radius: 24px !important;
+    overflow: hidden !important;
+    display: grid !important;
+    grid-template-rows: auto auto minmax(0, 1fr) !important;
+    align-items: start !important;
+  }
+
+  body:not(.has-intro) .select-screen h1 {
+    font-size: clamp(2.2rem, 4.2vw, 4.2rem) !important;
+    margin: 0 0 4px !important;
+    line-height: .86 !important;
+  }
+
+  body:not(.has-intro) .select-screen p {
+    margin: 0 0 12px !important;
+    font-size: clamp(.82rem, 1.35vw, 1.05rem) !important;
+    line-height: 1.15 !important;
+  }
+
+  body:not(.has-intro) .album-grid {
+    height: 100% !important;
+    display: grid !important;
+    grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+    grid-auto-rows: minmax(0, 1fr) !important;
+    gap: 10px !important;
+    align-items: stretch !important;
+  }
+
+  body:not(.has-intro) .album-option {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    border-radius: 14px !important;
+    padding: 8px !important;
+    display: grid !important;
+    grid-template-rows: minmax(0, 1fr) auto auto !important;
+    align-content: stretch !important;
+    overflow: hidden !important;
+  }
+
+  body:not(.has-intro) .album-option img {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 18.5vh !important;
+    aspect-ratio: 1 / 1 !important;
+    object-fit: cover !important;
+    border-radius: 10px !important;
+  }
+
+  body:not(.has-intro) .album-option strong {
+    margin-top: 6px !important;
+    font-size: clamp(.62rem, .78vw, .82rem) !important;
+    line-height: 1.08 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+
+  body:not(.has-intro) .album-option small {
+    font-size: clamp(.56rem, .7vw, .72rem) !important;
+    line-height: 1.05 !important;
+    white-space: nowrap !important;
+  }
+
+  @media (max-width: 1180px) {
+    body:not(.has-intro) .album-grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    }
+    body:not(.has-intro) .album-option img {
+      max-height: 15.5vh !important;
+    }
+  }
+
+  @media (max-width: 760px) {
+    body:not(.has-intro) {
+      overflow-y: auto !important;
+    }
+    body:not(.has-intro) .page {
+      height: auto !important;
+      min-height: 100svh !important;
+      overflow: visible !important;
+      padding: 12px !important;
+    }
+    body:not(.has-intro) .select-screen {
+      height: auto !important;
+      overflow: visible !important;
+      padding: 14px !important;
+    }
+    body:not(.has-intro) .album-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
+    body:not(.has-intro) .album-option img {
+      max-height: none !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    body:not(.has-intro) .album-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+  }
+
+
+  /* =========================================================
+     CORREÇÃO PRO — MODO FOCO DA RÁDIO
+     Impede a seleção de CDs de aparecer atrás do jogo e deixa
+     as faixas legíveis sobre um fundo cinematográfico.
+     ========================================================= */
+  body:not(.has-intro) .select-screen.hidden,
+  body:not(.has-intro) #selectScreen.hidden,
+  body:not(.has-intro) .stage.hidden,
+  body:not(.has-intro) #gameStage.hidden {
+    display: none !important;
+  }
+
+  body.radio-playing:not(.has-intro) {
+    overflow: hidden !important;
+  }
+
+  body.radio-playing:not(.has-intro)::before {
+    filter: blur(10px) brightness(.25) saturate(.82) !important;
+    transform: scale(1.09) !important;
+  }
+
+  body.radio-playing:not(.has-intro)::after {
+    background:
+      radial-gradient(circle at 50% 22%, rgba(241,196,15,.16), transparent 28%),
+      radial-gradient(circle at 50% 58%, rgba(0,0,0,.18), rgba(0,0,0,.92) 72%),
+      linear-gradient(90deg, rgba(0,0,0,.96), rgba(0,0,0,.72), rgba(0,0,0,.96)) !important;
+  }
+
+  body.radio-playing:not(.has-intro) .page {
+    isolation: isolate !important;
+  }
+
+  body.radio-playing:not(.has-intro) .topbar {
+    position: relative !important;
+    z-index: 40 !important;
+  }
+
+  body.radio-playing:not(.has-intro) #gameStage {
+    position: relative !important;
+    z-index: 30 !important;
+    width: min(1640px, 96vw) !important;
+    height: calc(100svh - 86px) !important;
+    margin: 8px auto 0 !important;
+    padding: clamp(14px, 1.8vw, 28px) !important;
+    border: 1px solid rgba(241,196,15,.42) !important;
+    border-radius: 28px !important;
+    background:
+      radial-gradient(circle at 20% 18%, rgba(241,196,15,.10), transparent 36%),
+      linear-gradient(180deg, rgba(0,0,0,.90), rgba(0,0,0,.965)) !important;
+    box-shadow: 0 28px 90px rgba(0,0,0,.82), inset 0 1px 0 rgba(255,255,255,.08) !important;
+    grid-template-columns: minmax(260px, 430px) minmax(0, 1fr) !important;
+    gap: clamp(16px, 2.2vw, 34px) !important;
+    align-items: stretch !important;
+    overflow: hidden !important;
+    backdrop-filter: blur(8px) !important;
+  }
+
+  body.radio-playing:not(.has-intro) .album-card,
+  body.radio-playing:not(.has-intro) .radio-panel {
+    position: relative !important;
+    z-index: 2 !important;
+    background: linear-gradient(180deg, rgba(8,8,8,.96), rgba(0,0,0,.985)) !important;
+    border-color: rgba(241,196,15,.38) !important;
+    box-shadow: 0 22px 70px rgba(0,0,0,.78), inset 0 1px 0 rgba(255,255,255,.09) !important;
+  }
+
+  body.radio-playing:not(.has-intro) .album-card {
+    display: grid !important;
+    grid-template-rows: minmax(0, 1fr) auto !important;
+    align-content: stretch !important;
+  }
+
+  body.radio-playing:not(.has-intro) .cover-wrap {
+    height: 100% !important;
+    min-height: 0 !important;
+    box-shadow: 0 20px 70px rgba(0,0,0,.78), 0 0 0 1px rgba(255,255,255,.08) !important;
+  }
+
+  body.radio-playing:not(.has-intro) .radio-panel {
+    min-height: 0 !important;
+    height: 100% !important;
+    padding: clamp(16px, 2vw, 30px) !important;
+    grid-template-rows: auto auto auto minmax(0, 1fr) auto !important;
+    gap: clamp(10px, 1.25vw, 16px) !important;
+    overflow: hidden !important;
+  }
+
+  body.radio-playing:not(.has-intro) .radio-title h2 {
+    font-size: clamp(1.75rem, 3.2vw, 4.1rem) !important;
+    text-shadow: 0 2px 18px rgba(0,0,0,.95), 0 0 24px rgba(255,255,255,.12) !important;
+  }
+
+  body.radio-playing:not(.has-intro) .status-row {
+    position: relative !important;
+    z-index: 3 !important;
+  }
+
+  body.radio-playing:not(.has-intro) .status-card {
+    background: rgba(0,0,0,.72) !important;
+    border-color: rgba(241,196,15,.26) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.06) !important;
+  }
+
+  body.radio-playing:not(.has-intro) .message {
+    color: #fff !important;
+    background: rgba(0,0,0,.58) !important;
+    border: 1px solid rgba(241,196,15,.20) !important;
+    border-radius: 999px !important;
+    padding: 8px 14px !important;
+    min-height: 38px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  body.radio-playing:not(.has-intro) .track-grid {
+    max-height: none !important;
+    min-height: 0 !important;
+    overflow: auto !important;
+    padding: 6px !important;
+    gap: 10px !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    align-content: start !important;
+    scrollbar-color: rgba(241,196,15,.55) rgba(255,255,255,.08) !important;
+  }
+
+  body.radio-playing:not(.has-intro) .track-btn {
+    background: linear-gradient(180deg, rgba(18,18,18,.98), rgba(0,0,0,1)) !important;
+    border-color: rgba(241,196,15,.34) !important;
+    color: #fff !important;
+    text-shadow: 0 2px 8px rgba(0,0,0,.85) !important;
+    min-height: 48px !important;
+    font-size: clamp(.72rem, .9vw, .98rem) !important;
+    line-height: 1.12 !important;
+  }
+
+  body.radio-playing:not(.has-intro) .track-btn:hover:not(:disabled) {
+    transform: translateY(-1px) !important;
+    border-color: rgba(241,196,15,.82) !important;
+    box-shadow: 0 0 24px rgba(241,196,15,.22), inset 0 1px 0 rgba(255,255,255,.10) !important;
+  }
+
+  @media (max-width: 1100px) {
+    body.radio-playing:not(.has-intro) #gameStage {
+      grid-template-columns: 1fr !important;
+      height: auto !important;
+      min-height: calc(100svh - 82px) !important;
+      overflow: visible !important;
+    }
+    body.radio-playing:not(.has-intro) .album-card {
+      display: grid !important;
+      grid-template-columns: 110px 1fr !important;
+      grid-template-rows: auto !important;
+      align-items: center !important;
+    }
+    body.radio-playing:not(.has-intro) .album-meta {
+      text-align: left !important;
+      margin: 0 !important;
+    }
+    body.radio-playing:not(.has-intro) .track-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      max-height: 48svh !important;
+    }
+  }
+
+  @media (max-width: 620px) {
+    body.radio-playing:not(.has-intro) {
+      overflow-y: auto !important;
+    }
+    body.radio-playing:not(.has-intro) #gameStage {
+      width: 100% !important;
+      min-height: 0 !important;
+      margin-top: 6px !important;
+      padding: 10px !important;
+      border-radius: 20px !important;
+    }
+    body.radio-playing:not(.has-intro) .album-card {
+      grid-template-columns: 78px 1fr !important;
+      padding: 10px !important;
+    }
+    body.radio-playing:not(.has-intro) .radio-panel {
+      padding: 12px !important;
+      border-radius: 18px !important;
+    }
+    body.radio-playing:not(.has-intro) .radio-title h2 {
+      font-size: clamp(1.35rem, 8vw, 2.25rem) !important;
+    }
+    body.radio-playing:not(.has-intro) .track-grid {
+      grid-template-columns: 1fr !important;
+      max-height: 46svh !important;
+      gap: 8px !important;
+    }
+    body.radio-playing:not(.has-intro) .track-btn {
+      min-height: 42px !important;
+      font-size: .8rem !important;
+    }
+  }
+
+
+  /* =========================================================
+     AJUSTE PRO — TODAS AS FAIXAS VISÍVEIS NO DESKTOP
+     Evita o usuário se perder em CDs longos como Preço Curto...
+     ========================================================= */
+  body.radio-playing:not(.has-intro) #gameStage {
+    grid-template-columns: minmax(230px, 360px) minmax(0, 1fr) !important;
+    gap: clamp(12px, 1.8vw, 26px) !important;
+    padding: clamp(12px, 1.35vw, 22px) !important;
+  }
+
+  body.radio-playing:not(.has-intro) .album-card {
+    padding: clamp(14px, 1.35vw, 22px) !important;
+  }
+
+  body.radio-playing:not(.has-intro) .album-meta h1 {
+    font-size: clamp(1.65rem, 3.2vw, 3.25rem) !important;
+    line-height: .86 !important;
+  }
+
+  body.radio-playing:not(.has-intro) .radio-panel {
+    padding: clamp(14px, 1.45vw, 22px) !important;
+    grid-template-rows: auto auto auto minmax(0, 1fr) auto !important;
+    gap: clamp(8px, .9vw, 12px) !important;
+  }
+
+  body.radio-playing:not(.has-intro) .radio-title small {
+    padding: 5px 12px !important;
+    font-size: clamp(.58rem, .75vw, .72rem) !important;
+  }
+
+  body.radio-playing:not(.has-intro) .radio-title h2 {
+    margin-top: 8px !important;
+    font-size: clamp(1.45rem, 2.7vw, 3.25rem) !important;
+    line-height: .95 !important;
+  }
+
+  body.radio-playing:not(.has-intro) .status-row {
+    gap: 8px !important;
+  }
+
+  body.radio-playing:not(.has-intro) .status-card {
+    padding: 7px 8px !important;
+    border-radius: 14px !important;
+  }
+
+  body.radio-playing:not(.has-intro) .status-card strong {
+    font-size: clamp(.95rem, 1.35vw, 1.35rem) !important;
+  }
+
+  body.radio-playing:not(.has-intro) .message {
+    min-height: 34px !important;
+    padding: 6px 12px !important;
+    font-size: clamp(.82rem, 1.12vw, 1.08rem) !important;
+  }
+
+  body.radio-playing:not(.has-intro) .track-grid {
+    overflow: hidden !important;
+    padding: 4px !important;
+    gap: 8px !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    align-content: stretch !important;
+  }
+
+  body.radio-playing:not(.has-intro) .track-btn {
+    min-height: 0 !important;
+    height: 100% !important;
+    padding: 7px 10px !important;
+    border-radius: 13px !important;
+    font-size: clamp(.62rem, .78vw, .86rem) !important;
+    line-height: 1.08 !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  body.radio-playing.radio-tracks-many:not(.has-intro) #gameStage {
+    grid-template-columns: minmax(210px, 330px) minmax(0, 1fr) !important;
+  }
+
+  body.radio-playing.radio-tracks-many:not(.has-intro) .track-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 7px !important;
+  }
+
+  body.radio-playing.radio-tracks-many:not(.has-intro) .track-btn {
+    padding: 6px 8px !important;
+    font-size: clamp(.56rem, .68vw, .76rem) !important;
+    line-height: 1.05 !important;
+  }
+
+  body.radio-playing.radio-tracks-supermany:not(.has-intro) #gameStage {
+    grid-template-columns: minmax(190px, 300px) minmax(0, 1fr) !important;
+  }
+
+  body.radio-playing.radio-tracks-supermany:not(.has-intro) .track-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+
+  body.radio-playing.radio-tracks-supermany:not(.has-intro) .track-btn {
+    padding: 5px 7px !important;
+    font-size: clamp(.50rem, .58vw, .68rem) !important;
+    line-height: 1.02 !important;
+    border-radius: 11px !important;
+  }
+
+  body.radio-playing.radio-tracks-many:not(.has-intro) .album-meta h1,
+  body.radio-playing.radio-tracks-supermany:not(.has-intro) .album-meta h1 {
+    font-size: clamp(1.35rem, 2.6vw, 2.6rem) !important;
+  }
+
+  body.radio-playing.radio-tracks-many:not(.has-intro) .radio-title h2,
+  body.radio-playing.radio-tracks-supermany:not(.has-intro) .radio-title h2 {
+    font-size: clamp(1.35rem, 2.35vw, 2.85rem) !important;
+  }
+
+  body.radio-playing.radio-tracks-many:not(.has-intro) .actions,
+  body.radio-playing.radio-tracks-supermany:not(.has-intro) .actions {
+    gap: 8px !important;
+  }
+
+  body.radio-playing.radio-tracks-many:not(.has-intro) .primary,
+  body.radio-playing.radio-tracks-many:not(.has-intro) .secondary,
+  body.radio-playing.radio-tracks-supermany:not(.has-intro) .primary,
+  body.radio-playing.radio-tracks-supermany:not(.has-intro) .secondary {
+    min-height: 42px !important;
+    padding: 0 18px !important;
+    font-size: .88rem !important;
+  }
+
+  @media (max-width: 1100px) {
+    body.radio-playing:not(.has-intro) .track-grid,
+    body.radio-playing.radio-tracks-many:not(.has-intro) .track-grid,
+    body.radio-playing.radio-tracks-supermany:not(.has-intro) .track-grid {
+      overflow: auto !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      max-height: 48svh !important;
+    }
+  }
+
+  @media (max-width: 620px) {
+    body.radio-playing:not(.has-intro) .track-grid,
+    body.radio-playing.radio-tracks-many:not(.has-intro) .track-grid,
+    body.radio-playing.radio-tracks-supermany:not(.has-intro) .track-grid {
+      overflow: auto !important;
+      grid-template-columns: 1fr !important;
+      max-height: 46svh !important;
+    }
+  }
 
 </style>
 </head>
-
-<body>
-
-<div class="hero">
-  <div class="hero-content">
-
-    <h1>Rádio Charlie Brown Jr</h1>
-
-    <p>Escute sem olhar o nome e prove que conhece cada faixa de verdade.</p>
-
-    <div class="buttons">
-      <button class="btn btn-yellow">Sintonizar Agora</button>
-      <button class="btn btn-outline" onclick="window.location.href='index.html'">Menu Principal</button>
+<body class="has-intro">
+<div id="radioIntro" class="radio-intro" aria-label="Entrada da Rádio CBJR">
+  <div class="radio-intro-content">
+    <span class="radio-intro-badge">CBJR FM • No ar</span>
+    <h1 class="radio-intro-title">Rádio Charlie Brown Jr.</h1>
+    <p class="radio-intro-subtitle">Escolha um CD, escute sem olhar o nome e prove que conhece cada faixa de verdade.</p>
+    <div class="radio-intro-actions">
+      <button id="enterRadioBtn" class="radio-enter-btn" type="button" onclick="fecharIntroRadio()">Sintonizar agora</button>
+      <a class="radio-intro-menu" href="index.html">← Menu principal</a>
     </div>
+  </div>
+</div>
+<div class="page">
+  <div class="topbar">
+    <a class="back-btn" href="index.html">← Menu</a>
+    <div class="mode-pill">Rádio CBJR</div>
+    <button class="small-btn" id="changeAlbumBtn" type="button">Trocar CD</button>
+  </div>
 
+  <section id="selectScreen" class="select-screen">
+    <h1>Escolha o CD</h1>
+    <p>Toque em um álbum, escute a faixa e descubra qual música está tocando.</p>
+    <div id="albumGrid" class="album-grid"></div>
+  </section>
+
+  <main id="gameStage" class="stage hidden">
+    <aside class="album-card">
+      <div class="cover-wrap"><img id="albumCover" alt="Capa do álbum atual"></div>
+      <div class="album-meta">
+        <h1 id="albumTitle">Álbum</h1>
+        <p id="albumYear">Ano</p>
+      </div>
+    </aside>
+
+    <section class="radio-panel">
+      <div class="radio-title">
+        <small>Escute sem olhar o nome</small>
+        <h2>Qual faixa está tocando?</h2>
+      </div>
+      <div class="status-row">
+        <div class="status-card"><small>CD</small><strong id="statusAlbum">1/13</strong></div>
+        <div class="status-card"><small>Acertos</small><strong id="statusCorrect">0</strong></div>
+        <div class="status-card"><small>Erros</small><strong id="statusWrong">0</strong></div>
+        <div class="status-card"><small>Restam</small><strong id="statusLeft">0</strong></div>
+      </div>
+      <div id="message" class="message">Clique em tocar quando estiver pronto.</div>
+      <div id="trackGrid" class="track-grid"></div>
+      <div class="actions">
+        <button id="playBtn" class="primary" type="button">▶ Tocar faixa</button>
+        <button id="nextBtn" class="secondary hidden" type="button">Próxima música</button>
+        <button id="restartAlbumBtn" class="secondary" type="button">Reiniciar CD</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="finishOverlay" class="overlay">
+  <div class="overlay-card">
+    <h2 id="finishTitle">CD completo!</h2>
+    <p id="finishText"></p>
+    <div class="actions">
+      <button id="finishNextAlbum" class="primary" type="button">Próximo CD</button>
+      <button id="finishChooseAlbum" class="secondary" type="button">Escolher outro CD</button>
+    </div>
   </div>
 </div>
 
+<audio id="radioAudio" preload="auto"></audio>
+<script>
+const RADIO_ALBUMS = [{"folder": "Transpiracao_Continua_Prolongada", "year": 1997, "cover": "CD 1.jpeg", "tracks": [{"title": "Tributo ao Frango da Malásia", "rawTitle": "Charlie Brown Jr - Transpiração Continua Prolongada - 01-Tributo ao Frango da Malásia [1997]", "url": "https://charlibriano.github.io/Quiz-CBJR/Transpiracao_Continua_Prolongada/Charlie%20Brown%20Jr%20-%20Transpira%C3%A7%C3%A3o%20Continua%20Prolongada%20-%2001-Tributo%20ao%20Frango%20da%20Mal%C3%A1sia%20%5B1997%5D.mp3"}, {"title": "O coro vai comê!", "rawTitle": "Charlie Brown Jr - Transpiração Continua Prolongada - 02-O coro vai comê! [1997]", "url": "https://charlibriano.github.io/Quiz-CBJR/Transpiracao_Continua_Prolongada/Charlie%20Brown%20Jr%20-%20Transpira%C3%A7%C3%A3o%20Continua%20Prolongada%20-%2002-O%20coro%20vai%20com%C3%AA%21%20%5B1997%5D.mp3"}, {"title": "Tudo que ela gosta de escutar", "rawTitle": "Charlie Brown Jr - Transpiração Continua Prolongada - 03-Tudo que ela gosta de escutar [1997]", "url": "https://charlibriano.github.io/Quiz-CBJR/Transpiracao_Continua_Prolongada/Charlie%20Brown%20Jr%20-%20Transpira%C3%A7%C3%A3o%20Continua%20Prolongada%20-%2003-Tudo%20que%20ela%20gosta%20de%20escutar%20%5B1997%5D.mp3"}, {"title": "Sheik tosado", "rawTitle": "Charlie Brown Jr - Transpiração Continua Prolongada - 04-Sheik tosado [1997]", "url": "https://charlibriano.github.io/Quiz-CBJR/Transpiracao_Continua_Prolongada/Charlie%20Brown%20Jr%20-%20Transpira%C3%A7%C3%A3o%20Continua%20Prolongada%20-%2004-Sheik%20tosado%20%5B1997%5D.mp3"}, {"title": "Hei! arreia", "rawTitle": "Charlie Brown Jr - Transpiração Continua Prolongada - 05-Hei! arreia [1997]", "url": "https://charlibriano.github.io/Quiz-CBJR/Transpiracao_Continua_Prolongada/Charlie%20Brown%20Jr%20-%20Transpira%C3%A7%C3%A3o%20Continua%20Prolongada%20-%2005-Hei%21%20arreia%20%5B1997%5D.mp3"}, {"title": "Guimme o anel", "rawTitle": "Charlie Brown Jr - Transpiração Continua Prolongada - 06-Guimme o anel [1997]", "url": "https://charlibriano.github.io/Quiz-CBJR/Transpiracao_Continua_Prolongada/Charlie%20Brown%20Jr%20-%20Transpira%C3%A7%C3%A3o%20Continua%20Prolongada%20-%2006-Guimme%20o%20anel%20%5B1997%5D.mp3"}, {"title": "Molengol's groove", "rawTitle": "Charlie Brown Jr - Transpiração Continua Prolongada - 07-Molengol's groove [1997]", "url": "https://charlibriano.github.io/Quiz-CBJR/Transpiracao_Continua_Prolongada/Charlie%20Brown%20Jr%20-%20Transpira%C3%A7%C3%A3o%20Continua%20Prolongada%20-%2007-Molengol%27s%20groove%20%5B1997%5D.mp3"}, {"title": "Aquela Paz", "rawTitle": "Charlie Brown Jr - Transpiração Continua Prolongada - 08 Aquela Paz [1997]", "url": "https://charlibriano.github.io/Quiz-CBJR/Transpiracao_Continua_Prolongada/Charlie%20Brown%20Jr%20-%20Transpira%C3%A7%C3%A3o%20Continua%20Prolongada%20-%2008%20Aquela%20Paz%20%5B1997%5D.mp3"}, {"title": "Quinta Feira", "rawTitle": "Charlie Brown Jr - Transpiração Continua Prolongada - 09-Quinta Feira [1997]", "url": "https://charlibriano.github.io/Quiz-CBJR/Transpiracao_Continua_Prolongada/Charlie%20Brown%20Jr%20-%20Transpira%C3%A7%C3%A3o%20Continua%20Prolongada%20-%2009-Quinta%20Feira%20%5B1997%5D.mp3"}, {"title": "Proibida pra mim", "rawTitle": "Charlie Brown Jr - Transpiração Continua Prolongada - 10-Proibida pra mim [1997]", "url": "https://charlibriano.github.io/Quiz-CBJR/Transpiracao_Continua_Prolongada/Charlie%20Brown%20Jr%20-%20Transpira%C3%A7%C3%A3o%20Continua%20Prolongada%20-%2010-Proibida%20pra%20mim%20%5B1997%5D.mp3"}, {"title": "Lombra", "rawTitle": "Charlie Brown Jr - Transpiração Continua Prolongada - 11-Lombra [1997]", "url": "https://charlibriano.github.io/Quiz-CBJR/Transpiracao_Continua_Prolongada/Charlie%20Brown%20Jr%20-%20Transpira%C3%A7%C3%A3o%20Continua%20Prolongada%20-%2011-Lombra%20%5B1997%5D.mp3"}, {"title": "Charlie Brown Jr Transpiração Continua Prolongada 12 Corra vagabundo 1997", "rawTitle": "Charlie Brown Jr Transpiração Continua Prolongada 12 Corra vagabundo 1997", "url": "https://charlibriano.github.io/Quiz-CBJR/Transpiracao_Continua_Prolongada/Charlie%20Brown%20Jr%20%20%20Transpira%C3%A7%C3%A3o%20Continua%20Prolongada%20%20%2012%20Corra%20vagabundo%201997.mp3"}, {"title": "Falar falar", "rawTitle": "Charlie Brown Jr - Transpiração Continua Prolongada - 13-Falar falar [1997]", "url": "https://charlibriano.github.io/Quiz-CBJR/Transpiracao_Continua_Prolongada/Charlie%20Brown%20Jr%20-%20Transpira%C3%A7%C3%A3o%20Continua%20Prolongada%20-%2013-Falar%20falar%20%5B1997%5D.mp3"}, {"title": "Festa", "rawTitle": "Charlie Brown Jr - Transpiração Continua Prolongada - 14-Festa [1997]", "url": "https://charlibriano.github.io/Quiz-CBJR/Transpiracao_Continua_Prolongada/Charlie%20Brown%20Jr%20-%20Transpira%C3%A7%C3%A3o%20Continua%20Prolongada%20-%2014-Festa%20%5B1997%5D.mp3"}, {"title": "Escalas tropicais", "rawTitle": "Charlie Brown Jr - Transpiração Continua Prolongada - 15-Escalas tropicais [1997]", "url": "https://charlibriano.github.io/Quiz-CBJR/Transpiracao_Continua_Prolongada/Charlie%20Brown%20Jr%20-%20Transpira%C3%A7%C3%A3o%20Continua%20Prolongada%20-%2015-Escalas%20tropicais%20%5B1997%5D.mp3"}, {"title": "Charlie Brown Jr", "rawTitle": "Charlie Brown Jr - Transpiração Continua Prolongada - 16-Charlie Brown Jr [1997]", "url": "https://charlibriano.github.io/Quiz-CBJR/Transpiracao_Continua_Prolongada/Charlie%20Brown%20Jr%20-%20Transpira%C3%A7%C3%A3o%20Continua%20Prolongada%20-%2016-Charlie%20Brown%20Jr%20%20%5B1997%5D.mp3"}]}, {"folder": "Charlie_Brown_Jr._Preco_curto_prazo_longo", "year": 1999, "cover": "CD 2.jpeg", "tracks": [{"title": "12+1 (Doze Mais Um)", "rawTitle": "12+1 (Doze Mais Um)", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/12%2B1%20%28Doze%20Mais%20Um%29.mp3"}, {"title": "333", "rawTitle": "333", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/333.mp3"}, {"title": "A Grande Volta", "rawTitle": "A Grande Volta", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/A%20Grande%20Volta.mp3"}, {"title": "Aquele Velho Carteado E Algumas Manobrinhas", "rawTitle": "Aquele Velho Carteado E Algumas Manobrinhas", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/Aquele%20Velho%20Carteado%20E%20Algumas%20Manobrinhas.mp3"}, {"title": "Bons Aliados", "rawTitle": "Bons Aliados", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/Bons%20Aliados.mp3"}, {"title": "Chicano (Skate Nos Canos)", "rawTitle": "Chicano (Skate Nos Canos)", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/Chicano%20%28Skate%20Nos%20Canos%29.mp3"}, {"title": "Cidade Grande", "rawTitle": "Cidade Grande", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/Cidade%20Grande.mp3"}, {"title": "Confisco", "rawTitle": "Confisco", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/Confisco.mp3"}, {"title": "Cruzei Uma Doida", "rawTitle": "Cruzei Uma Doida", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/Cruzei%20Uma%20Doida.mp3"}, {"title": "Do Surf", "rawTitle": "Do Surf", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/Do%20Surf.mp3"}, {"title": "Estória Mal Escrita", "rawTitle": "Estória Mal Escrita", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/Est%C3%B3ria%20Mal%20Escrita.mp3"}, {"title": "Hoje De Noite", "rawTitle": "Hoje De Noite", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/Hoje%20De%20Noite.mp3"}, {"title": "Local", "rawTitle": "Local", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/Local.mp3"}, {"title": "Mantenha A Dúvida E Espere Até Ouvir Falar De Nós", "rawTitle": "Mantenha A Dúvida E Espere Até Ouvir Falar De Nós", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/Mantenha%20A%20D%C3%BAvida%20E%20Espere%20At%C3%A9%20Ouvir%20Falar%20De%20N%C3%B3s.mp3"}, {"title": "Muito Antes Que Você", "rawTitle": "Muito Antes Que Você", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/Muito%20Antes%20Que%20Voc%C3%AA.mp3"}, {"title": "Não Deixe O Mar Te Engolir", "rawTitle": "Não Deixe O Mar Te Engolir", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/N%C3%A3o%20Deixe%20O%20Mar%20Te%20Engolir.mp3"}, {"title": "O Preço", "rawTitle": "O Preço", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/O%20Pre%C3%A7o.mp3"}, {"title": "O Puxa Carro", "rawTitle": "O Puxa Carro", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/O%20Puxa%20Carro.mp3"}, {"title": "Quem Deu Entrada Pra Subir？ (FDP)", "rawTitle": "Quem Deu Entrada Pra Subir？ (FDP)", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/Quem%20Deu%20Entrada%20Pra%20Subir%EF%BC%9F%20%28FDP%29.mp3"}, {"title": "Resolve O Meu Problema Aí", "rawTitle": "Resolve O Meu Problema Aí", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/Resolve%20O%20Meu%20Problema%20A%C3%AD.mp3"}, {"title": "Te Levar Daqui", "rawTitle": "Te Levar Daqui", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/Te%20Levar%20Daqui.mp3"}, {"title": "Vinheta： Depois De Uma Bela Session, Um Belo Sofá, Cerveja, Pizza E Um Videozinho De Skate", "rawTitle": "Vinheta： Depois De Uma Bela Session, Um Belo Sofá, Cerveja, Pizza E Um Videozinho De Skate", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/Vinheta%EF%BC%9A%20Depois%20De%20Uma%20Bela%20Session%2C%20Um%20Belo%20Sof%C3%A1%2C%20Cerveja%2C%20Pizza%20E%20Um%20Videozinho%20De%20Skate.mp3"}, {"title": "Vinheta： O Que É Da Casa, É Da Casa", "rawTitle": "Vinheta： O Que É Da Casa, É Da Casa", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/Vinheta%EF%BC%9A%20O%20Que%20%C3%89%20Da%20Casa%2C%20%C3%89%20Da%20Casa.mp3"}, {"title": "Vinheta： União", "rawTitle": "Vinheta： União", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/Vinheta%EF%BC%9A%20Uni%C3%A3o.mp3"}, {"title": "Zóio De Lula", "rawTitle": "Zóio De Lula", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/Z%C3%B3io%20De%20Lula.mp3"}]}, {"folder": "Charlie_Brown_Jr._-_Nadando_com_os_Tubaroes", "year": 2000, "cover": "CD 3.jpeg", "tracks": [{"title": "A Banca Ratatá É Bicho Solto", "rawTitle": "charlie brown jr - A Banca Ratatá É Bicho Solto", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Nadando_com_os_Tubaroes/charlie%20brown%20jr%20-%20A%20Banca%20Ratat%C3%A1%20%C3%89%20Bicho%20Solto.mp3"}, {"title": "Amor Pelas Ruas", "rawTitle": "charlie brown jr - Amor Pelas Ruas", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Nadando_com_os_Tubaroes/charlie%20brown%20jr%20-%20Amor%20Pelas%20Ruas.mp3"}, {"title": "Essa É Por Quem Ficou Pra Trás", "rawTitle": "charlie brown jr - Essa É Por Quem Ficou Pra Trás", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Nadando_com_os_Tubaroes/charlie%20brown%20jr%20-%20Essa%20%C3%89%20Por%20Quem%20Ficou%20Pra%20Tr%C3%A1s.mp3"}, {"title": "Fichado", "rawTitle": "charlie brown jr - Fichado", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Nadando_com_os_Tubaroes/charlie%20brown%20jr%20-%20Fichado.mp3"}, {"title": "Fundão", "rawTitle": "charlie brown jr - Fundão", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Nadando_com_os_Tubaroes/charlie%20brown%20jr%20-%20Fund%C3%A3o.mp3"}, {"title": "No Desafino, Ibiraboys", "rawTitle": "charlie brown jr - No Desafino, Ibiraboys", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Nadando_com_os_Tubaroes/charlie%20brown%20jr%20-%20No%20Desafino%2C%20Ibiraboys.mp3"}, {"title": "Não É Sério", "rawTitle": "charlie brown jr - Não É Sério", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Nadando_com_os_Tubaroes/charlie%20brown%20jr%20-%20N%C3%A3o%20%C3%89%20S%C3%A9rio.mp3"}, {"title": "O Penetra", "rawTitle": "charlie brown jr - O Penetra", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Nadando_com_os_Tubaroes/charlie%20brown%20jr%20-%20O%20Penetra.mp3"}, {"title": "Ouviu se Falar", "rawTitle": "charlie brown jr - Ouviu se Falar", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Nadando_com_os_Tubaroes/charlie%20brown%20jr%20-%20Ouviu%20se%20Falar.mp3"}, {"title": "Pra Mais Tarde Fazermos A Cabeça", "rawTitle": "charlie brown jr - Pra Mais Tarde Fazermos A Cabeça", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Nadando_com_os_Tubaroes/charlie%20brown%20jr%20-%20Pra%20Mais%20Tarde%20Fazermos%20A%20Cabe%C3%A7a.mp3"}, {"title": "Ralé", "rawTitle": "charlie brown jr - Ralé", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Nadando_com_os_Tubaroes/charlie%20brown%20jr%20-%20Ral%C3%A9.mp3"}, {"title": "Rubão - O Dono Do Mundo", "rawTitle": "charlie brown jr - Rubão - O Dono Do Mundo", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Nadando_com_os_Tubaroes/charlie%20brown%20jr%20-%20Rub%C3%A3o%20-%20O%20Dono%20Do%20Mundo.mp3"}, {"title": "Somos Extremes no Esporte e Na Música", "rawTitle": "charlie brown jr - Somos Extremes no Esporte e Na Música", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Nadando_com_os_Tubaroes/charlie%20brown%20jr%20-%20Somos%20Extremes%20no%20Esporte%20e%20Na%20M%C3%BAsica.mp3"}, {"title": "Talvez a Metade Do Caminho", "rawTitle": "charlie brown jr - Talvez a Metade Do Caminho", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Nadando_com_os_Tubaroes/charlie%20brown%20jr%20-%20Talvez%20a%20Metade%20Do%20Caminho.mp3"}, {"title": "Transar No Escuro", "rawTitle": "charlie brown jr - Transar No Escuro", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Nadando_com_os_Tubaroes/charlie%20brown%20jr%20-%20Transar%20No%20Escuro.mp3"}, {"title": "Trocando Uma Idéia Com Deus", "rawTitle": "charlie brown jr - Trocando Uma Idéia Com Deus", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Nadando_com_os_Tubaroes/charlie%20brown%20jr%20-%20Trocando%20Uma%20Id%C3%A9ia%20Com%20Deus.mp3"}, {"title": "Tudo Mudar", "rawTitle": "charlie brown jr - Tudo Mudar", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Nadando_com_os_Tubaroes/charlie%20brown%20jr%20-%20Tudo%20Mudar.mp3"}]}, {"folder": "100_Charlie_Brown_Jr._Abalando_Sua_Fabrica", "year": 2001, "cover": "CD 4.jpeg", "tracks": [{"title": "Eu Protesto", "rawTitle": "Charlie Brown Jr - 100% Charlie Brown Jr. Abalando Sua Fábrica - 01-Eu Protesto [2001]", "url": "https://charlibriano.github.io/Quiz-CBJR/100_Charlie_Brown_Jr._Abalando_Sua_Fabrica/Charlie%20Brown%20Jr%20-%20100%25%20Charlie%20Brown%20Jr.%20Abalando%20Sua%20F%C3%A1brica%20-%2001-Eu%20Protesto%20%5B2001%5D.mp3"}, {"title": "Hoje Eu Acordei Feliz", "rawTitle": "Charlie Brown Jr - 100% Charlie Brown Jr. Abalando Sua Fábrica - 02-Hoje Eu Acordei Feliz [2001]", "url": "https://charlibriano.github.io/Quiz-CBJR/100_Charlie_Brown_Jr._Abalando_Sua_Fabrica/Charlie%20Brown%20Jr%20-%20100%25%20Charlie%20Brown%20Jr.%20%20Abalando%20Sua%20F%C3%A1brica%20-%2002-Hoje%20Eu%20Acordei%20Feliz%20%5B2001%5D.mp3"}, {"title": "Sino Dourado", "rawTitle": "Charlie Brown Jr - 100% Charlie Brown Jr. Abalando Sua Fábrica - 03-Sino Dourado [2001]", "url": "https://charlibriano.github.io/Quiz-CBJR/100_Charlie_Brown_Jr._Abalando_Sua_Fabrica/Charlie%20Brown%20Jr%20-%20100%25%20Charlie%20Brown%20Jr.%20Abalando%20Sua%20F%C3%A1brica%20-%2003-Sino%20Dourado%20%5B2001%5D.mp3"}, {"title": "Quebra Mar", "rawTitle": "Charlie Brown Jr - 100% Charlie Brown Jr. Abalando Sua Fábrica - 04-Quebra Mar [2001]", "url": "https://charlibriano.github.io/Quiz-CBJR/100_Charlie_Brown_Jr._Abalando_Sua_Fabrica/Charlie%20Brown%20Jr%20-%20100%25%20Charlie%20Brown%20Jr.%20Abalando%20Sua%20F%C3%A1brica%20-%2004-Quebra%20Mar%20%5B2001%5D.mp3"}, {"title": "Lugar Ao Sol", "rawTitle": "Charlie Brown Jr - 100% Charlie Brown Jr. Abalando Sua Fábrica - 05-Lugar Ao Sol [2001]", "url": "https://charlibriano.github.io/Quiz-CBJR/100_Charlie_Brown_Jr._Abalando_Sua_Fabrica/Charlie%20Brown%20Jr%20-%20100%25%20Charlie%20Brown%20Jr.%20Abalando%20Sua%20F%C3%A1brica%20-%2005-Lugar%20Ao%20Sol%20%5B2001%5D.mp3"}, {"title": "Descubra O Que Há De Errado", "rawTitle": "Charlie Brown Jr-100%Charlie Brown Jr. Abalando Sua Fábrica - 06-Descubra O Que Há De Errado [2001]", "url": "https://charlibriano.github.io/Quiz-CBJR/100_Charlie_Brown_Jr._Abalando_Sua_Fabrica/Charlie%20Brown%20Jr-100%25Charlie%20Brown%20Jr.%20Abalando%20Sua%20F%C3%A1brica%20-%2006-Descubra%20O%20Que%20H%C3%A1%20De%20Errado%20%5B2001%5D.mp3"}, {"title": "Só Lazer", "rawTitle": "Charlie Brown Jr - 100% Charlie Brown Jr. Abalando Sua Fábrica - 07-Só Lazer [2001]", "url": "https://charlibriano.github.io/Quiz-CBJR/100_Charlie_Brown_Jr._Abalando_Sua_Fabrica/Charlie%20Brown%20Jr%20-%20100%25%20Charlie%20Brown%20Jr.%20Abalando%20Sua%20F%C3%A1brica%20-%2007-S%C3%B3%20Lazer%20%5B2001%5D.mp3"}, {"title": "Você De Limusine,Vou De Trem", "rawTitle": "Charlie Brown Jr-100%Charlie Brown Jr.Abalando Sua Fábrica-08-Você De Limusine,Vou De Trem[2001]", "url": "https://charlibriano.github.io/Quiz-CBJR/100_Charlie_Brown_Jr._Abalando_Sua_Fabrica/Charlie%20Brown%20Jr-100%25Charlie%20Brown%20Jr.Abalando%20Sua%20F%C3%A1brica-08-Voc%C3%AA%20De%20Limusine%2CVou%20De%20Trem%5B2001%5D.mp3"}, {"title": "O Lado Certo Da Vida Errada", "rawTitle": "Charlie Brown Jr - 100%Charlie Brown Jr.Abalando Sua Fábrica - 09-O Lado Certo Da Vida Errada [2001]", "url": "https://charlibriano.github.io/Quiz-CBJR/100_Charlie_Brown_Jr._Abalando_Sua_Fabrica/Charlie%20Brown%20Jr%20-%20100%25Charlie%20Brown%20Jr.Abalando%20Sua%20F%C3%A1brica%20-%2009-O%20Lado%20Certo%20Da%20Vida%20Errada%20%5B2001%5D.mp3"}, {"title": "T F D", "rawTitle": "Charlie Brown Jr - 100% Charlie Brown Jr. Abalando Sua Fábrica - 10-T F D [2001]", "url": "https://charlibriano.github.io/Quiz-CBJR/100_Charlie_Brown_Jr._Abalando_Sua_Fabrica/Charlie%20Brown%20Jr%20-%20100%25%20Charlie%20Brown%20Jr.%20Abalando%20Sua%20F%C3%A1brica%20-%2010-T%20F%20D%20%5B2001%5D.mp3"}, {"title": "Tudo Pro Alto", "rawTitle": "Charlie Brown Jr - 100% Charlie Brown Jr. Abalando Sua Fábrica - 11-Tudo Pro Alto [2001]", "url": "https://charlibriano.github.io/Quiz-CBJR/100_Charlie_Brown_Jr._Abalando_Sua_Fabrica/Charlie%20Brown%20Jr%20-%20100%25%20Charlie%20Brown%20Jr.%20Abalando%20Sua%20F%C3%A1brica%20-%2011-Tudo%20Pro%20Alto%20%5B2001%5D.mp3"}, {"title": "Como Tudo Deve Ser", "rawTitle": "Charlie Brown Jr - 100% Charlie Brown Jr. Abalando Sua Fábrica - 12-Como Tudo Deve Ser [2001]", "url": "https://charlibriano.github.io/Quiz-CBJR/100_Charlie_Brown_Jr._Abalando_Sua_Fabrica/Charlie%20Brown%20Jr%20-%20100%25%20Charlie%20Brown%20Jr.%20Abalando%20Sua%20F%C3%A1brica%20-%2012-Como%20Tudo%20Deve%20Ser%20%5B2001%5D.mp3"}]}, {"folder": "Charlie_Brown_Jr._Bocas_Ordinarias", "year": 2002, "cover": "CD 5.jpeg", "tracks": [{"title": "Baader-Meinhof Blues", "rawTitle": "Baader-Meinhof Blues", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Bocas_Ordinarias/Baader-Meinhof%20Blues.mp3"}, {"title": "Bocas Ordinárias, Guerrilhas (Extra - Turne Internacional)", "rawTitle": "Bocas Ordinárias, Guerrilhas (Extra - Turne Internacional)", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Bocas_Ordinarias/Bocas%20Ordin%C3%A1rias%2C%20Guerrilhas%20%28Extra%20-%20Turne%20Internacional%29.mp3"}, {"title": "Com A Boca Amargando", "rawTitle": "Com A Boca Amargando", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Bocas_Ordinarias/Com%20A%20Boca%20Amargando.mp3"}, {"title": "Com Minha Loucura Faço Meu Dinheiro, Com Meu Dinheiro Faço Minhas Loucuras", "rawTitle": "Com Minha Loucura Faço Meu Dinheiro, Com Meu Dinheiro Faço Minhas Loucuras", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Bocas_Ordinarias/Com%20Minha%20Loucura%20Fa%C3%A7o%20Meu%20Dinheiro%2C%20Com%20Meu%20Dinheiro%20Fa%C3%A7o%20Minhas%20Loucuras.mp3"}, {"title": "Hoje Eu Só Procuro A Minha Paz", "rawTitle": "Hoje Eu Só Procuro A Minha Paz", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Bocas_Ordinarias/Hoje%20Eu%20S%C3%B3%20Procuro%20A%20Minha%20Paz.mp3"}, {"title": "My Mini Ramp", "rawTitle": "My Mini Ramp", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Bocas_Ordinarias/My%20Mini%20Ramp.mp3"}, {"title": "Não Fure Os Olhos Da Verdade", "rawTitle": "Não Fure Os Olhos Da Verdade", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Bocas_Ordinarias/N%C3%A3o%20Fure%20Os%20Olhos%20Da%20Verdade.mp3"}, {"title": "Papo Reto (Prazer É Sexo O Resto É Negócio)", "rawTitle": "Papo Reto (Prazer É Sexo O Resto É Negócio)", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Bocas_Ordinarias/Papo%20Reto%20%28Prazer%20%C3%89%20Sexo%20O%20Resto%20%C3%89%20Neg%C3%B3cio%29.mp3"}, {"title": "Somos Poucos Mas Somos Loucos", "rawTitle": "Somos Poucos Mas Somos Loucos", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Bocas_Ordinarias/Somos%20Poucos%20Mas%20Somos%20Loucos.mp3"}, {"title": "Sou Quem Eu Sou (O Que É Seu Também É Meu E O Que É Meu Não É Nosso)", "rawTitle": "Sou Quem Eu Sou (O Que É Seu Também É Meu E O Que É Meu Não É Nosso)", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Bocas_Ordinarias/Sou%20Quem%20Eu%20Sou%20%28O%20Que%20%C3%89%20Seu%20Tamb%C3%A9m%20%C3%89%20Meu%20E%20O%20Que%20%C3%89%20Meu%20N%C3%A3o%20%C3%89%20Nosso%29.mp3"}, {"title": "Só Por Uma Noite", "rawTitle": "Só Por Uma Noite", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Bocas_Ordinarias/S%C3%B3%20Por%20Uma%20Noite.mp3"}, {"title": "Tarja Preta", "rawTitle": "Tarja Preta", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Bocas_Ordinarias/Tarja%20Preta.mp3"}]}, {"folder": "Charlie_Brown_Jr__Acustico_MTV_", "year": 2003, "cover": "CD 6.jpeg", "tracks": [{"title": "Charlie Brown Jr & Marcelo D2- Samba Makosa.", "rawTitle": "Charlie Brown Jr & Marcelo D2- Samba Makosa.", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr__Acustico_MTV_/Charlie%20Brown%20Jr%20%26%20Marcelo%20D2-%20Samba%20Makosa..mp3"}, {"title": "Charlie Brown Jr & Negra Li- Não é Sério", "rawTitle": "Charlie Brown Jr & Negra Li- Não é Sério", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr__Acustico_MTV_/Charlie%20Brown%20Jr%20%26%20Negra%20Li-%20N%C3%A3o%20%C3%A9%20S%C3%A9rio.mp3"}, {"title": "Charlie Brown Jr & RZO - A Banca (Ratatá É Bicho Solto)", "rawTitle": "Charlie Brown Jr & RZO - A Banca (Ratatá É Bicho Solto)", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr__Acustico_MTV_/Charlie%20Brown%20Jr%20%26%20RZO%20-%20A%20Banca%20%28Ratat%C3%A1%20%C3%89%20Bicho%20Solto%29.mp3"}, {"title": "Charlie Brown Jr Zóio de Lula Acústico - Letra", "rawTitle": "Charlie Brown Jr Zóio de Lula Acústico - Letra", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr__Acustico_MTV_/Charlie%20Brown%20Jr%20Zo%CC%81io%20de%20Lula%20Ac%C3%BAstico%20-%20Letra.mp3"}, {"title": "O Preço.", "rawTitle": "Charlie Brown Jr- O Preço.", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr__Acustico_MTV_/Charlie%20Brown%20Jr-%20O%20Pre%C3%A7o..mp3"}, {"title": "O coro vai Comê.", "rawTitle": "Charlie Brown Jr- O coro vai Comê.", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr__Acustico_MTV_/Charlie%20Brown%20Jr-%20O%20coro%20vai%20Com%C3%AA..mp3"}, {"title": "O que é da Cada é da Casa ⧸ Papo Reto", "rawTitle": "Charlie Brown Jr- O que é da Cada é da Casa ⧸ Papo Reto", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr__Acustico_MTV_/Charlie%20Brown%20Jr-%20O%20que%20%C3%A9%20da%20Cada%20%C3%A9%20da%20Casa%20%E2%A7%B8%20Papo%20Reto.mp3"}, {"title": "Proibida pra mim.", "rawTitle": "Charlie Brown Jr- Proibida pra mim.", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr__Acustico_MTV_/Charlie%20Brown%20Jr-%20Proibida%20pra%20mim..mp3"}, {"title": "Quinta- Feira.", "rawTitle": "Charlie Brown Jr- Quinta- Feira.", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr__Acustico_MTV_/Charlie%20Brown%20Jr-%20Quinta-%20Feira..mp3"}, {"title": "Só por uma Noite.", "rawTitle": "Charlie Brown Jr- Só por uma Noite.", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr__Acustico_MTV_/Charlie%20Brown%20Jr-%20S%C3%B3%20por%20uma%20Noite..mp3"}, {"title": "Tudo Mudar.", "rawTitle": "Charlie Brown Jr- Tudo Mudar.", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr__Acustico_MTV_/Charlie%20Brown%20Jr-%20Tudo%20Mudar..mp3"}, {"title": "Tudo Pro Alto.", "rawTitle": "Charlie Brown Jr- Tudo Pro Alto.", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr__Acustico_MTV_/Charlie%20Brown%20Jr-%20Tudo%20Pro%20Alto..mp3"}, {"title": "Tudo que Ela Gosta de Escutar.", "rawTitle": "Charlie Brown Jr- Tudo que Ela Gosta de Escutar.", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr__Acustico_MTV_/Charlie%20Brown%20Jr-%20Tudo%20que%20Ela%20Gosta%20de%20Escutar..mp3"}, {"title": "Vinheta Beat Box II ⧸ Como Tudo Deve Ser.", "rawTitle": "Charlie Brown Jr- Vinheta Beat Box II ⧸ Como Tudo Deve Ser.", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr__Acustico_MTV_/Charlie%20Brown%20Jr-%20Vinheta%20Beat%20Box%20II%20%E2%A7%B8%20Como%20Tudo%20Deve%20Ser..mp3"}, {"title": "Vícios e Virtudes.", "rawTitle": "Charlie Brown Jr- Vícios e Virtudes.", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr__Acustico_MTV_/Charlie%20Brown%20Jr-%20V%C3%ADcios%20e%20Virtudes..mp3"}, {"title": "Charlie Brown Jr. - Não Uso Sapato", "rawTitle": "Charlie Brown Jr. - Não Uso Sapato", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr__Acustico_MTV_/Charlie%20Brown%20Jr.%20-%20N%C3%A3o%20Uso%20Sapato.mp3"}, {"title": "Charlie brown(Acústico Mtv - HD)", "rawTitle": "Charlie brown jr - Charlie brown(Acústico Mtv - HD)", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr__Acustico_MTV_/Charlie%20brown%20jr%20-%20Charlie%20brown%28Ac%C3%BAstico%20Mtv%20-%20HD%29.mp3"}, {"title": "Hoje - Charlie Brown Jr. e Marcelo Nova", "rawTitle": "Hoje - Charlie Brown Jr. e Marcelo Nova", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr__Acustico_MTV_/Hoje%20-%20Charlie%20Brown%20Jr.%20e%20Marcelo%20Nova.mp3"}]}, {"folder": "Charlie_Brown_Jr._Tamo_ai_na_atividade", "year": 2004, "cover": "CD 7.jpeg", "tracks": [{"title": "Champanhe E Água Benta", "rawTitle": "Champanhe E Água Benta", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Tamo_ai_na_atividade/Champanhe%20E%20%C3%81gua%20Benta.mp3"}, {"title": "Cheirando Cola", "rawTitle": "Cheirando Cola", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Tamo_ai_na_atividade/Cheirando%20Cola.mp3"}, {"title": "Di-Sk8 Eu Vim", "rawTitle": "Di-Sk8 Eu Vim", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Tamo_ai_na_atividade/Di-Sk8%20Eu%20Vim.mp3"}, {"title": "Di-Sk8 Eu Vou", "rawTitle": "Di-Sk8 Eu Vou", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Tamo_ai_na_atividade/Di-Sk8%20Eu%20Vou.mp3"}, {"title": "Eu Vim De Santos Sou Charlie Brown", "rawTitle": "Eu Vim De Santos Sou Charlie Brown", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Tamo_ai_na_atividade/Eu%20Vim%20De%20Santos%20Sou%20Charlie%20Brown.mp3"}, {"title": "Indicados Para O Prêmio Nobel Da Paz", "rawTitle": "Indicados Para O Prêmio Nobel Da Paz", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Tamo_ai_na_atividade/Indicados%20Para%20O%20Pr%C3%AAmio%20Nobel%20Da%20Paz.mp3"}, {"title": "Lixo E O Luxo", "rawTitle": "Lixo E O Luxo", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Tamo_ai_na_atividade/Lixo%20E%20O%20Luxo.mp3"}, {"title": "Longe De Você", "rawTitle": "Longe De Você", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Tamo_ai_na_atividade/Longe%20De%20Voc%C3%AA.mp3"}, {"title": "Malabarizando (Quem É De Fé Continua Com A Gente)", "rawTitle": "Malabarizando (Quem É De Fé Continua Com A Gente)", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Tamo_ai_na_atividade/Malabarizando%20%28Quem%20%C3%89%20De%20F%C3%A9%20Continua%20Com%20A%20Gente%29.mp3"}, {"title": "Malokero Sk8 Board", "rawTitle": "Malokero Sk8 Board", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Tamo_ai_na_atividade/Malokero%20Sk8%20Board.mp3"}, {"title": "O Errado Que Deu Certo", "rawTitle": "O Errado Que Deu Certo", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Tamo_ai_na_atividade/O%20Errado%20Que%20Deu%20Certo.mp3"}, {"title": "So Far Away", "rawTitle": "So Far Away", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Tamo_ai_na_atividade/So%20Far%20Away.mp3"}, {"title": "Tamo Ai Na Atividade", "rawTitle": "Tamo Ai Na Atividade", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Tamo_ai_na_atividade/Tamo%20Ai%20Na%20Atividade.mp3"}, {"title": "Todos Iguais", "rawTitle": "Todos Iguais", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Tamo_ai_na_atividade/Todos%20Iguais.mp3"}, {"title": "Vivendo Nesse Absurdo", "rawTitle": "Vivendo Nesse Absurdo", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Tamo_ai_na_atividade/Vivendo%20Nesse%20Absurdo.mp3"}]}, {"folder": "Charlie_Brown_Jr._-_Imunidade_Musical", "year": 2005, "cover": "CD 8.jpeg", "tracks": [{"title": "Abrir Seus Olhos", "rawTitle": "Abrir Seus Olhos", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/Abrir%20Seus%20Olhos.mp3"}, {"title": "Aquela Paz", "rawTitle": "Aquela Paz", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/Aquela%20Paz.mp3"}, {"title": "Charlie Brown JR. - Liberdade Acima De Tudo", "rawTitle": "Charlie Brown JR. - Liberdade Acima De Tudo", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/Charlie%20Brown%20JR.%20-%20Liberdade%20Acima%20De%20Tudo.mp3"}, {"title": "Charlie Brown JR. - Onde Esta O Mundo Bom？ (Living In L.A.)", "rawTitle": "Charlie Brown JR. - Onde Esta O Mundo Bom？ (Living In L.A.)", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/Charlie%20Brown%20JR.%20-%20Onde%20Esta%20O%20Mundo%20Bom%EF%BC%9F%20%28Living%20In%20L.A.%29.mp3"}, {"title": "Criando Anticorpos", "rawTitle": "Criando Anticorpos", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/Criando%20Anticorpos.mp3"}, {"title": "Dias De Luta, Dias De Gloria", "rawTitle": "Dias De Luta, Dias De Gloria", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/Dias%20De%20Luta%2C%20Dias%20De%20Gloria.mp3"}, {"title": "Ela Vai Voltar (Todos Os Defeitos De Uma Mulher Perfeita)", "rawTitle": "Ela Vai Voltar (Todos Os Defeitos De Uma Mulher Perfeita)", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/Ela%20Vai%20Voltar%20%28Todos%20Os%20Defeitos%20De%20Uma%20Mulher%20Perfeita%29.mp3"}, {"title": "Green Goes", "rawTitle": "Green Goes", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/Green%20Goes.mp3"}, {"title": "I Feel So Good Today", "rawTitle": "I Feel So Good Today", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/I%20Feel%20So%20Good%20Today.mp3"}, {"title": "Lutar Pelo Que E Meu", "rawTitle": "Lutar Pelo Que E Meu", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/Lutar%20Pelo%20Que%20E%20Meu.mp3"}, {"title": "Na Palma Da Mão - O Ragga Da Baixada", "rawTitle": "Na Palma Da Mão - O Ragga Da Baixada", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/Na%20Palma%20Da%20M%C3%A3o%20-%20O%20Ragga%20Da%20Baixada.mp3"}, {"title": "No Passo A Passo", "rawTitle": "No Passo A Passo", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/No%20Passo%20A%20Passo.mp3"}, {"title": "O Futuro É Um Labirinto Pra Quem Não Sabe O Que Quer", "rawTitle": "O Futuro É Um Labirinto Pra Quem Não Sabe O Que Quer", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/O%20Futuro%20%C3%89%20Um%20Labirinto%20Pra%20Quem%20N%C3%A3o%20Sabe%20O%20Que%20Quer.mp3"}, {"title": "O Mundo Explodiu La Fora", "rawTitle": "O Mundo Explodiu La Fora", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/O%20Mundo%20Explodiu%20La%20Fora.mp3"}, {"title": "O Nosso Blues", "rawTitle": "O Nosso Blues", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/O%20Nosso%20Blues.mp3"}, {"title": "Onde Não Existe A Paz Não Existe O Amor", "rawTitle": "Onde Não Existe A Paz Não Existe O Amor", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/Onde%20N%C3%A3o%20Existe%20A%20Paz%20N%C3%A3o%20Existe%20O%20Amor.mp3"}, {"title": "Peso Da Batida Do Errado Que Deu Certo", "rawTitle": "Peso Da Batida Do Errado Que Deu Certo", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/Peso%20Da%20Batida%20Do%20Errado%20Que%20Deu%20Certo.mp3"}, {"title": "Pra Não Dizer Que Não Falei Das Flores", "rawTitle": "Pra Não Dizer Que Não Falei Das Flores", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/Pra%20N%C3%A3o%20Dizer%20Que%20N%C3%A3o%20Falei%20Das%20Flores.mp3"}, {"title": "Senhor Do Tempo", "rawTitle": "Senhor Do Tempo", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/Senhor%20Do%20Tempo.mp3"}, {"title": "Skate Vibration", "rawTitle": "Skate Vibration", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/Skate%20Vibration.mp3"}, {"title": "Too Fast Live Too Young Too Die", "rawTitle": "Too Fast Live Too Young Too Die", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/Too%20Fast%20Live%20Too%20Young%20Too%20Die.mp3"}, {"title": "É Quente", "rawTitle": "É Quente", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/%C3%89%20Quente.mp3"}]}, {"folder": "Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007", "year": 2007, "cover": "CD 9.jpeg", "tracks": [{"title": "Pontes Indestrutíveis", "rawTitle": "01 Pontes Indestrutíveis", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/01%20%20%20Pontes%20Indestrut%C3%ADveis.mp3"}, {"title": "O Que Ela Gosta É De Barriga", "rawTitle": "02 O Que Ela Gosta É De Barriga", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/02%20%20%20O%20Que%20Ela%20Gosta%20%C3%89%20De%20Barriga.mp3"}, {"title": "Não Viva em Vão", "rawTitle": "03 Não Viva em Vão", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/03%20%20%20N%C3%A3o%20Viva%20em%20V%C3%A3o.mp3"}, {"title": "Ritmo, Ritual E Responsa", "rawTitle": "04 Ritmo, Ritual E Responsa", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/04%20%20%20Ritmo%2C%20Ritual%20E%20Responsa.mp3"}, {"title": "Be Myself", "rawTitle": "05 Be Myself", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/05%20%20%20Be%20Myself.mp3"}, {"title": "Uma Crianca Com Seu Olhar", "rawTitle": "06 Uma Crianca Com Seu Olhar", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/06%20%20%20Uma%20Crianca%20Com%20Seu%20Olhar.mp3"}, {"title": "Liberdade É Tudo Instrumental", "rawTitle": "07 Liberdade É Tudo Instrumental", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/07%20%20%20Liberdade%20%C3%89%20Tudo%20Instrumental.mp3"}, {"title": "O Universo a Nosso Favor", "rawTitle": "08 O Universo a Nosso Favor", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/08%20%20%20O%20Universo%20a%20Nosso%20Favor.mp3"}, {"title": "Ninguém Entende Você", "rawTitle": "09 Ninguém Entende Você", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/09%20%20%20Ningu%C3%A9m%20Entende%20Voc%C3%AA.mp3"}, {"title": "Quando Tudo Aconteceu Instrumental", "rawTitle": "10 Quando Tudo Aconteceu Instrumental", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/10%20%20%20Quando%20Tudo%20Aconteceu%20Instrumental.mp3"}, {"title": "Beco Sem Saida", "rawTitle": "11 Beco Sem Saida", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/11%20%20%20Beco%20Sem%20Saida.mp3"}, {"title": "Sem Medo da Escuridão", "rawTitle": "12 Sem Medo da Escuridão", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/12%20%20%20Sem%20Medo%20da%20Escurid%C3%A3o.mp3"}, {"title": "Nua, Linda e Inigualável", "rawTitle": "13 Nua, Linda e Inigualável", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/13%20%20%20Nua%2C%20Linda%20e%20Inigual%C3%A1vel.mp3"}, {"title": "Vida De Magnata", "rawTitle": "14 Vida De Magnata", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/14%20%20%20Vida%20De%20Magnata.mp3"}, {"title": "Que Espécie De Vermes São Vocês Part Markon Lobotomia", "rawTitle": "15 Que Espécie De Vermes São Vocês Part Markon Lobotomia", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/15%20%20%20Que%20Esp%C3%A9cie%20De%20Vermes%20S%C3%A3o%20Voc%C3%AAs%20Part%20%20Markon%20Lobotomia.mp3"}, {"title": "Buscando Um Novo Rumo Instrumental", "rawTitle": "16 Buscando Um Novo Rumo Instrumental", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/16%20%20%20Buscando%20Um%20Novo%20Rumo%20Instrumental.mp3"}, {"title": "Vivendo A Vida Numa Louca Viagem", "rawTitle": "17 Vivendo A Vida Numa Louca Viagem", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/17%20%20%20Vivendo%20A%20Vida%20Numa%20Louca%20Viagem.mp3"}, {"title": "Curva De Hill", "rawTitle": "18 Curva De Hill", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/18%20%20%20Curva%20De%20Hill.mp3"}, {"title": "Direto E Reto Sempre", "rawTitle": "19 Direto E Reto Sempre", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/19%20%20%20Direto%20E%20Reto%20Sempre.mp3"}, {"title": "Skateboard Amor Eterno Part Sacramento MC's", "rawTitle": "20 Skateboard Amor Eterno Part Sacramento MC's", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/20%20%20%20Skateboard%20Amor%20Eterno%20Part%20%20Sacramento%20MC%27s.mp3"}, {"title": "Cafe Fundation Instrumental", "rawTitle": "21 Cafe Fundation Instrumental", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/21%20%20%20Cafe%20Fundation%20Instrumental.mp3"}, {"title": "Vão Fazer de Novo Part Paranormal Attack", "rawTitle": "22 Vão Fazer de Novo Part Paranormal Attack", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/22%20%20%20V%C3%A3o%20Fazer%20de%20Novo%20Part%20%20Paranormal%20Attack.mp3"}, {"title": "Senhor Do Tempo Bônus Track", "rawTitle": "23 Senhor Do Tempo Bônus Track", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/23%20%20%20Senhor%20Do%20Tempo%20B%C3%B4nus%20Track.mp3"}]}, {"folder": "Vanessa_da_Mata__Chorao", "year": 2008, "cover": "CD 10.jpeg", "tracks": [{"title": "Só por uma Noite.", "rawTitle": "Charlie Brown Jr- Só por uma Noite.", "url": "https://charlibriano.github.io/Quiz-CBJR/Vanessa_da_Mata__Chorao/Charlie%20Brown%20Jr-%20S%C3%B3%20por%20uma%20Noite..mp3"}, {"title": "Estúdio Coca-Cola Zero： Ai Ai Ai", "rawTitle": "Estúdio Coca-Cola Zero： Ai Ai Ai", "url": "https://charlibriano.github.io/Quiz-CBJR/Vanessa_da_Mata__Chorao/Est%C3%BAdio%20Coca-Cola%20Zero%EF%BC%9A%20Ai%20Ai%20Ai.mp3"}, {"title": "Estúdio Coca-Cola Zero： Lutar Pelo o Que é Meu", "rawTitle": "Estúdio Coca-Cola Zero： Lutar Pelo o Que é Meu", "url": "https://charlibriano.github.io/Quiz-CBJR/Vanessa_da_Mata__Chorao/Est%C3%BAdio%20Coca-Cola%20Zero%EF%BC%9A%20Lutar%20Pelo%20o%20Que%20%C3%A9%20Meu.mp3"}, {"title": "Estúdio Coca-Cola Zero： Música", "rawTitle": "Estúdio Coca-Cola Zero： Música", "url": "https://charlibriano.github.io/Quiz-CBJR/Vanessa_da_Mata__Chorao/Est%C3%BAdio%20Coca-Cola%20Zero%EF%BC%9A%20M%C3%BAsica.mp3"}, {"title": "Estúdio Coca-Cola Zero： Não Me Deixe Só", "rawTitle": "Estúdio Coca-Cola Zero： Não Me Deixe Só", "url": "https://charlibriano.github.io/Quiz-CBJR/Vanessa_da_Mata__Chorao/Est%C3%BAdio%20Coca-Cola%20Zero%EF%BC%9A%20N%C3%A3o%20Me%20Deixe%20S%C3%B3.mp3"}, {"title": "Estúdio Coca-Cola Zero： O Que Ela Gosta É De Barriga", "rawTitle": "Estúdio Coca-Cola Zero： O Que Ela Gosta É De Barriga", "url": "https://charlibriano.github.io/Quiz-CBJR/Vanessa_da_Mata__Chorao/Est%C3%BAdio%20Coca-Cola%20Zero%EF%BC%9A%20O%20Que%20Ela%20Gosta%20%C3%89%20De%20Barriga.mp3"}, {"title": "Estúdio Coca-Cola Zero： Pontes Indestrutíveis", "rawTitle": "Estúdio Coca-Cola Zero： Pontes Indestrutíveis", "url": "https://charlibriano.github.io/Quiz-CBJR/Vanessa_da_Mata__Chorao/Est%C3%BAdio%20Coca-Cola%20Zero%EF%BC%9A%20Pontes%20Indestrut%C3%ADveis.mp3"}, {"title": "Estúdio Coca-Cola Zero： Senhor do Tempo", "rawTitle": "Estúdio Coca-Cola Zero： Senhor do Tempo", "url": "https://charlibriano.github.io/Quiz-CBJR/Vanessa_da_Mata__Chorao/Est%C3%BAdio%20Coca-Cola%20Zero%EF%BC%9A%20Senhor%20do%20Tempo.mp3"}, {"title": "Estúdio Coca-Cola Zero： Vermelho", "rawTitle": "Estúdio Coca-Cola Zero： Vermelho", "url": "https://charlibriano.github.io/Quiz-CBJR/Vanessa_da_Mata__Chorao/Est%C3%BAdio%20Coca-Cola%20Zero%EF%BC%9A%20Vermelho.mp3"}, {"title": "Vanessa da Mata e Charlie Brown Jr -- Pontes Indestrutíveis", "rawTitle": "Vanessa da Mata e Charlie Brown Jr -- Pontes Indestrutíveis", "url": "https://charlibriano.github.io/Quiz-CBJR/Vanessa_da_Mata__Chorao/Vanessa%20da%20Mata%20e%20Charlie%20Brown%20Jr%20--%20Pontes%20Indestrut%C3%ADveis.mp3"}, {"title": "uma criança com o seu olhar-vanessa da mata e charlie brown", "rawTitle": "uma criança com o seu olhar-vanessa da mata e charlie brown", "url": "https://charlibriano.github.io/Quiz-CBJR/Vanessa_da_Mata__Chorao/uma%20crian%C3%A7a%20com%20o%20seu%20olhar-vanessa%20da%20mata%20e%20charlie%20brown.mp3"}]}, {"folder": "Camisa_10_Joga_Bola_Ate_Na_Chuva", "year": 2009, "cover": "CD 11.jpeg", "tracks": [{"title": "Camisa 10 joga bola até na chuva", "rawTitle": "Charlie Brown Jr - Camisa 10 joga bola até na chuva", "url": "https://charlibriano.github.io/Quiz-CBJR/Camisa_10_Joga_Bola_Ate_Na_Chuva/Charlie%20Brown%20Jr%20-%20Camisa%2010%20joga%20bola%20at%C3%A9%20na%20chuva.mp3"}, {"title": "Comigo ninguém tira onda", "rawTitle": "Charlie Brown Jr - Comigo ninguém tira onda", "url": "https://charlibriano.github.io/Quiz-CBJR/Camisa_10_Joga_Bola_Ate_Na_Chuva/Charlie%20Brown%20Jr%20-%20Comigo%20ningu%C3%A9m%20tira%20onda.mp3"}, {"title": "Dona do meu pensamento", "rawTitle": "Charlie Brown Jr - Dona do meu pensamento", "url": "https://charlibriano.github.io/Quiz-CBJR/Camisa_10_Joga_Bola_Ate_Na_Chuva/Charlie%20Brown%20Jr%20-%20Dona%20do%20meu%20pensamento.mp3"}, {"title": "Inabalavelmente", "rawTitle": "Charlie Brown Jr - Inabalavelmente", "url": "https://charlibriano.github.io/Quiz-CBJR/Camisa_10_Joga_Bola_Ate_Na_Chuva/Charlie%20Brown%20Jr%20-%20Inabalavelmente.mp3"}, {"title": "Me encontra", "rawTitle": "Charlie Brown Jr - Me encontra", "url": "https://charlibriano.github.io/Quiz-CBJR/Camisa_10_Joga_Bola_Ate_Na_Chuva/Charlie%20Brown%20Jr%20-%20Me%20encontra.mp3"}, {"title": "O dom, a inteligência e a voz", "rawTitle": "Charlie Brown Jr - O dom, a inteligência e a voz", "url": "https://charlibriano.github.io/Quiz-CBJR/Camisa_10_Joga_Bola_Ate_Na_Chuva/Charlie%20Brown%20Jr%20-%20O%20dom%2C%20a%20intelig%C3%AAncia%20e%20a%20voz.mp3"}, {"title": "Os cortes", "rawTitle": "Charlie Brown Jr - Os cortes", "url": "https://charlibriano.github.io/Quiz-CBJR/Camisa_10_Joga_Bola_Ate_Na_Chuva/Charlie%20Brown%20Jr%20-%20Os%20cortes.mp3"}, {"title": "Puro sangue", "rawTitle": "Charlie Brown Jr - Puro sangue", "url": "https://charlibriano.github.io/Quiz-CBJR/Camisa_10_Joga_Bola_Ate_Na_Chuva/Charlie%20Brown%20Jr%20-%20Puro%20sangue.mp3"}, {"title": "Só existe o agora", "rawTitle": "Charlie Brown Jr - Só existe o agora", "url": "https://charlibriano.github.io/Quiz-CBJR/Camisa_10_Joga_Bola_Ate_Na_Chuva/Charlie%20Brown%20Jr%20-%20S%C3%B3%20existe%20o%20agora.mp3"}, {"title": "Só os loucos sabem", "rawTitle": "Charlie Brown Jr - Só os loucos sabem", "url": "https://charlibriano.github.io/Quiz-CBJR/Camisa_10_Joga_Bola_Ate_Na_Chuva/Charlie%20Brown%20Jr%20-%20S%C3%B3%20os%20loucos%20sabem.mp3"}, {"title": "Só pra vadiar", "rawTitle": "Charlie Brown Jr - Só pra vadiar", "url": "https://charlibriano.github.io/Quiz-CBJR/Camisa_10_Joga_Bola_Ate_Na_Chuva/Charlie%20Brown%20Jr%20-%20S%C3%B3%20pra%20vadiar.mp3"}, {"title": "Uma só vida pra viver, Tenho sede nela eu vou", "rawTitle": "Charlie Brown Jr - Uma só vida pra viver, Tenho sede nela eu vou", "url": "https://charlibriano.github.io/Quiz-CBJR/Camisa_10_Joga_Bola_Ate_Na_Chuva/Charlie%20Brown%20Jr%20-%20Uma%20s%C3%B3%20vida%20pra%20viver%2C%20Tenho%20sede%20nela%20eu%20vou.mp3"}, {"title": "Viver dias de sol", "rawTitle": "Charlie Brown Jr - Viver dias de sol", "url": "https://charlibriano.github.io/Quiz-CBJR/Camisa_10_Joga_Bola_Ate_Na_Chuva/Charlie%20Brown%20Jr%20-%20Viver%20dias%20de%20sol.mp3"}]}, {"folder": "Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo", "year": 2012, "cover": "CD 12.jpeg", "tracks": [{"title": "Coração Satânico", "rawTitle": "Charlie Brown Jr - Coração Satânico", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Cora%C3%A7%C3%A3o%20Sat%C3%A2nico.mp3"}, {"title": "Créditos do DVD Música Popular Caiçara", "rawTitle": "Charlie Brown Jr - Créditos do DVD Música Popular Caiçara", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Cr%C3%A9ditos%20do%20DVD%20M%C3%BAsica%20Popular%20Cai%C3%A7ara.mp3"}, {"title": "Descubra O Que Há De Errado Com Você", "rawTitle": "Charlie Brown Jr - Descubra O Que Há De Errado Com Você", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Descubra%20O%20Que%20H%C3%A1%20De%20Errado%20Com%20Voc%C3%AA.mp3"}, {"title": "Dias De Luta, Dias De Glória", "rawTitle": "Charlie Brown Jr - Dias De Luta, Dias De Glória", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Dias%20De%20Luta%2C%20Dias%20De%20Gl%C3%B3ria.mp3"}, {"title": "Ela Vai Voltar (Todos Os Defeitos De Uma Mulher Perfeita)", "rawTitle": "Charlie Brown Jr - Ela Vai Voltar (Todos Os Defeitos De Uma Mulher Perfeita)", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Ela%20Vai%20Voltar%20%28Todos%20Os%20Defeitos%20De%20Uma%20Mulher%20Perfeita%29.mp3"}, {"title": "Hoje Eu Acordei Feliz", "rawTitle": "Charlie Brown Jr - Hoje Eu Acordei Feliz", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Hoje%20Eu%20Acordei%20Feliz.mp3"}, {"title": "Hoje Eu Só Procuro Minha Paz ⧸ Lutar Pelo Que é Meu", "rawTitle": "Charlie Brown Jr - Hoje Eu Só Procuro Minha Paz ⧸ Lutar Pelo Que é Meu", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Hoje%20Eu%20S%C3%B3%20Procuro%20Minha%20Paz%20%E2%A7%B8%20Lutar%20Pelo%20Que%20%C3%A9%20Meu.mp3"}, {"title": "Longe De Você", "rawTitle": "Charlie Brown Jr - Longe De Você", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Longe%20De%20Voc%C3%AA.mp3"}, {"title": "Lugar Ao Sol", "rawTitle": "Charlie Brown Jr - Lugar Ao Sol", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Lugar%20Ao%20Sol.mp3"}, {"title": "Mantenha a Dúvida e Espere Até Ouvir Falar de Nós", "rawTitle": "Charlie Brown Jr - Mantenha a Dúvida e Espere Até Ouvir Falar de Nós", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Mantenha%20a%20D%C3%BAvida%20e%20Espere%20At%C3%A9%20Ouvir%20Falar%20de%20N%C3%B3s.mp3"}, {"title": "Me Deixa [feat. Marcelo Falcão]", "rawTitle": "Charlie Brown Jr - Me Deixa [feat. Marcelo Falcão]", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Me%20Deixa%20%5Bfeat.%20Marcelo%20Falc%C3%A3o%5D.mp3"}, {"title": "Me Encontra", "rawTitle": "Charlie Brown Jr - Me Encontra", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Me%20Encontra.mp3"}, {"title": "No Passo a Passo", "rawTitle": "Charlie Brown Jr - No Passo a Passo", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20No%20Passo%20a%20Passo.mp3"}, {"title": "Não Deixe o Mar Te Engolir", "rawTitle": "Charlie Brown Jr - Não Deixe o Mar Te Engolir", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20N%C3%A3o%20Deixe%20o%20Mar%20Te%20Engolir.mp3"}, {"title": "Não é Sério [feat. Marcelo Falcão]", "rawTitle": "Charlie Brown Jr - Não é Sério [feat. Marcelo Falcão]", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20N%C3%A3o%20%C3%A9%20S%C3%A9rio%20%5Bfeat.%20Marcelo%20Falc%C3%A3o%5D.mp3"}, {"title": "O Coro Vai Comê", "rawTitle": "Charlie Brown Jr - O Coro Vai Comê", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20O%20Coro%20Vai%20Com%C3%AA.mp3"}, {"title": "Papo Reto (Prazer é Sexo, O Resto é Negócio)", "rawTitle": "Charlie Brown Jr - Papo Reto (Prazer é Sexo, O Resto é Negócio)", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Papo%20Reto%20%28Prazer%20%C3%A9%20Sexo%2C%20O%20Resto%20%C3%A9%20Neg%C3%B3cio%29.mp3"}, {"title": "Parta a Mil [feat. Marcelo Mello]", "rawTitle": "Charlie Brown Jr - Parta a Mil [feat. Marcelo Mello]", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Parta%20a%20Mil%20%5Bfeat.%20Marcelo%20Mello%5D.mp3"}, {"title": "Pipeline", "rawTitle": "Charlie Brown Jr - Pipeline", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Pipeline.mp3"}, {"title": "Pontes Indestrutíveis", "rawTitle": "Charlie Brown Jr - Pontes Indestrutíveis", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Pontes%20Indestrut%C3%ADveis.mp3"}, {"title": "Proibida Pra Mim (Grazon) [feat. Zeca Baleiro]", "rawTitle": "Charlie Brown Jr - Proibida Pra Mim (Grazon) [feat. Zeca Baleiro]", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Proibida%20Pra%20Mim%20%28Grazon%29%20%5Bfeat.%20Zeca%20Baleiro%5D.mp3"}, {"title": "Quinta Feira", "rawTitle": "Charlie Brown Jr - Quinta Feira", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Quinta%20Feira.mp3"}, {"title": "Resolve Meu Problema Aí", "rawTitle": "Charlie Brown Jr - Resolve Meu Problema Aí", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Resolve%20Meu%20Problema%20A%C3%AD.mp3"}, {"title": "Rubão (O Dono Do Mundo)", "rawTitle": "Charlie Brown Jr - Rubão (O Dono Do Mundo)", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Rub%C3%A3o%20%28O%20Dono%20Do%20Mundo%29.mp3"}, {"title": "Só Os Loucos Sabem", "rawTitle": "Charlie Brown Jr - Só Os Loucos Sabem", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20S%C3%B3%20Os%20Loucos%20Sabem.mp3"}, {"title": "Te Levar Daqui", "rawTitle": "Charlie Brown Jr - Te Levar Daqui", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Te%20Levar%20Daqui.mp3"}, {"title": "Tudo Pro Alto", "rawTitle": "Charlie Brown Jr - Tudo Pro Alto", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Tudo%20Pro%20Alto.mp3"}, {"title": "Tudo Que Ela Gosta De Escutar", "rawTitle": "Charlie Brown Jr - Tudo Que Ela Gosta De Escutar", "url": "https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Tudo%20Que%20Ela%20Gosta%20De%20Escutar.mp3"}]}, {"folder": "La_Familia_013", "year": 2013, "cover": "CD 13.jpeg", "tracks": [{"title": "A mais linda do bar", "rawTitle": "Charlie Brown Jr - A mais linda do bar", "url": "https://charlibriano.github.io/Quiz-CBJR/La_Familia_013/Charlie%20Brown%20Jr%20-%20A%20mais%20linda%20do%20bar.mp3"}, {"title": "Camisa Preta", "rawTitle": "Charlie Brown Jr - Camisa Preta", "url": "https://charlibriano.github.io/Quiz-CBJR/La_Familia_013/Charlie%20Brown%20Jr%20-%20Camisa%20Preta.mp3"}, {"title": "Cheia de vida", "rawTitle": "Charlie Brown Jr - Cheia de vida", "url": "https://charlibriano.github.io/Quiz-CBJR/La_Familia_013/Charlie%20Brown%20Jr%20-%20Cheia%20de%20vida.mp3"}, {"title": "Contrastes da vida", "rawTitle": "Charlie Brown Jr - Contrastes da vida", "url": "https://charlibriano.github.io/Quiz-CBJR/La_Familia_013/Charlie%20Brown%20Jr%20-%20Contrastes%20da%20vida.mp3"}, {"title": "Do jeito que eu gosto, do jeito que eu quero", "rawTitle": "Charlie Brown Jr - Do jeito que eu gosto, do jeito que eu quero", "url": "https://charlibriano.github.io/Quiz-CBJR/La_Familia_013/Charlie%20Brown%20Jr%20-%20Do%20jeito%20que%20eu%20gosto%2C%20do%20jeito%20que%20eu%20quero.mp3"}, {"title": "Fina Arte", "rawTitle": "Charlie Brown Jr - Fina Arte", "url": "https://charlibriano.github.io/Quiz-CBJR/La_Familia_013/Charlie%20Brown%20Jr%20-%20Fina%20Arte.mp3"}, {"title": "Hoje sou eu que não mais te quero", "rawTitle": "Charlie Brown Jr - Hoje sou eu que não mais te quero", "url": "https://charlibriano.github.io/Quiz-CBJR/La_Familia_013/Charlie%20Brown%20Jr%20-%20Hoje%20sou%20eu%20que%20n%C3%A3o%20mais%20te%20quero.mp3"}, {"title": "Meu novo mundo", "rawTitle": "Charlie Brown Jr - Meu novo mundo", "url": "https://charlibriano.github.io/Quiz-CBJR/La_Familia_013/Charlie%20Brown%20Jr%20-%20Meu%20novo%20mundo.mp3"}, {"title": "Rock Star", "rawTitle": "Charlie Brown Jr - Rock Star", "url": "https://charlibriano.github.io/Quiz-CBJR/La_Familia_013/Charlie%20Brown%20Jr%20-%20Rock%20Star.mp3"}, {"title": "Samba Triste", "rawTitle": "Charlie Brown Jr - Samba Triste", "url": "https://charlibriano.github.io/Quiz-CBJR/La_Familia_013/Charlie%20Brown%20Jr%20-%20Samba%20Triste.mp3"}, {"title": "Um dia a gente se encontra", "rawTitle": "Charlie Brown Jr - Um dia a gente se encontra", "url": "https://charlibriano.github.io/Quiz-CBJR/La_Familia_013/Charlie%20Brown%20Jr%20-%20Um%20dia%20a%20gente%20se%20encontra.mp3"}, {"title": "Vem ser minha", "rawTitle": "Charlie Brown Jr - Vem ser minha", "url": "https://charlibriano.github.io/Quiz-CBJR/La_Familia_013/Charlie%20Brown%20Jr%20-%20Vem%20ser%20minha.mp3"}, {"title": "Vou me embriagar de você", "rawTitle": "Charlie Brown Jr - Vou me embriagar de você", "url": "https://charlibriano.github.io/Quiz-CBJR/La_Familia_013/Charlie%20Brown%20Jr%20-%20Vou%20me%20embriagar%20de%20voc%C3%AA.mp3"}]}];
+const PAGES_BASE = "https://charlibriano.github.io/Quiz-CBJR/";
+const COVER_BASE = "https://charlibriano.github.io/Quiz-CBJR-V2/";
+
+const COVER_FIXES = {
+  "100_Charlie_Brown_Jr._Abalando_Sua_Fabrica": "CD 4.jpeg",
+  "Charlie_Brown_Jr__Acustico_MTV_": "CD 6.jpeg"
+};
+
+let currentAlbumIndex = 0;
+let currentAlbum = null;
+let pool = [];
+let currentTrack = null;
+let correct = 0;
+let wrong = 0;
+let answered = false;
+let radioStarted = false;
+let autoNextTimer = null;
+
+const $ = (id) => document.getElementById(id);
+const audio = $('radioAudio');
+
+function coverUrl(album) {
+  const file = COVER_FIXES[album.folder] || album.cover;
+  return COVER_BASE + encodeURIComponent(file);
+}
+function setBg(url) { document.body.style.setProperty('--album-bg', `url("${url}")`); }
+function cleanSongName(name) {
+  return String(name || '')
+    .replace(/^Charlie Brown Jr\s*-\s*/i, '')
+    .replace(/\s*\[\d{4}\]\s*$/,'')
+    .replace(/^.*?\s-\s\d{2}[- ]/,'')
+    .replace(/^\d{2}[- ]/,'')
+    .trim();
+}
+function shuffle(arr) {
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function renderAlbums() {
+  $('albumGrid').innerHTML = RADIO_ALBUMS.map((album, index) => `
+    <button class="album-option" type="button" data-index="${index}">
+      <img src="${coverUrl(album)}" alt="${album.folder}" onerror="this.onerror=null;this.src=PAGES_BASE + encodeURIComponent(album.cover);">
+      <strong>${album.folder.replaceAll('_',' ')}</strong>
+      <small>${album.year || ''} • ${album.tracks.length} faixas</small>
+    </button>
+  `).join('');
+  document.querySelectorAll('.album-option').forEach(btn => btn.addEventListener('click', () => startAlbum(Number(btn.dataset.index))));
+}
+function startAlbum(index) {
+  currentAlbumIndex = index;
+  currentAlbum = RADIO_ALBUMS[index];
+  pool = shuffle(currentAlbum.tracks.map((t, idx)=>({...t, originalIndex:idx, title:cleanSongName(t.title)})));
+  correct = 0; wrong = 0; answered = false; currentTrack = null; radioStarted = false;
+  if (autoNextTimer) { clearTimeout(autoNextTimer); autoNextTimer = null; }
+  document.body.classList.remove('radio-tracks-many','radio-tracks-supermany');
+  if (currentAlbum.tracks.length >= 26) {
+    document.body.classList.add('radio-tracks-supermany');
+  } else if (currentAlbum.tracks.length >= 18) {
+    document.body.classList.add('radio-tracks-many');
+  }
+  document.body.classList.add('radio-playing');
+  $('selectScreen').classList.add('hidden');
+  $('gameStage').classList.remove('hidden');
+  const cUrl = coverUrl(currentAlbum);
+  $('albumCover').onerror = () => { $('albumCover').onerror = null; $('albumCover').src = PAGES_BASE + encodeURIComponent(currentAlbum.cover); };
+  $('albumCover').src = cUrl;
+  setBg(cUrl);
+  $('albumTitle').textContent = currentAlbum.folder.replaceAll('_',' ');
+  $('albumYear').textContent = currentAlbum.year ? `Ano: ${currentAlbum.year}` : '';
+  buildOptions();
+  updateStatus();
+  pickTrack();
+}
+function buildOptions() {
+  $('trackGrid').innerHTML = currentAlbum.tracks.map((track, index) => `
+    <button class="track-btn" type="button" data-title="${cleanSongName(track.title).replaceAll('"','&quot;')}" data-index="${index}">${cleanSongName(track.title)}</button>
+  `).join('');
+  document.querySelectorAll('.track-btn').forEach(btn => btn.addEventListener('click', () => chooseAnswer(btn)));
+}
+function updateStatus() {
+  $('statusAlbum').textContent = `${currentAlbumIndex+1}/${RADIO_ALBUMS.length}`;
+  $('statusCorrect').textContent = correct;
+  $('statusWrong').textContent = wrong;
+  $('statusLeft').textContent = pool.length;
+}
+function pickTrack(autoPlay = false) {
+  answered = false;
+  $('nextBtn').classList.add('hidden');
+
+  if (radioStarted) {
+    $('playBtn').classList.add('hidden');
+  } else {
+    $('playBtn').classList.remove('hidden');
+  }
+
+  document.querySelectorAll('.track-btn').forEach(btn => {
+    btn.disabled = false;
+    btn.classList.remove('correct','wrong');
+  });
+
+  if(pool.length === 0) return finishAlbum();
+
+  currentTrack = pool[0];
+  audio.src = currentTrack.url;
+  audio.currentTime = 0;
+  $('message').textContent = radioStarted
+    ? 'Nova faixa no ar… descubra qual música está tocando.'
+    : 'Clique em tocar e descubra qual faixa está tocando.';
+  updateStatus();
+
+  if (autoPlay && radioStarted) {
+    playCurrent(true);
+  }
+}
+async function playCurrent(isAuto = false) {
+  if(!currentTrack) return false;
+  try {
+    audio.muted = false;
+    audio.volume = 1;
+    await audio.play();
+    radioStarted = true;
+    $('playBtn').classList.add('hidden');
+    $('message').textContent = isAuto ? 'Próxima faixa no ar… escolha a música certa.' : 'O som está rolando… escolha a faixa certa.';
+    return true;
+  }
+  catch(e) {
+    $('playBtn').classList.remove('hidden');
+    $('message').textContent = 'Clique em tocar para liberar o áudio no navegador.';
+    return false;
+  }
+}
+function prepareButtonsForNextTrack() {
+  answered = false;
+  document.querySelectorAll('.track-btn').forEach(btn => {
+    btn.disabled = false;
+    btn.classList.remove('correct','wrong');
+  });
+  $('nextBtn').classList.add('hidden');
+  $('playBtn').classList.add('hidden');
+  $('message').textContent = 'Próxima faixa no ar… escolha a música certa.';
+}
+function startNextTrackFromAnswerClick() {
+  if (pool.length === 0) {
+    finishAlbum();
+    return;
+  }
+
+  currentTrack = pool[0];
+  audio.src = currentTrack.url;
+  audio.currentTime = 0;
+  audio.load();
+  radioStarted = true;
+  $('playBtn').classList.add('hidden');
+
+  const playPromise = audio.play();
+  if (playPromise && typeof playPromise.then === 'function') {
+    playPromise
+      .then(() => {
+        if (autoNextTimer) clearTimeout(autoNextTimer);
+        autoNextTimer = setTimeout(prepareButtonsForNextTrack, 700);
+      })
+      .catch(() => {
+        $('playBtn').classList.remove('hidden');
+        $('message').textContent = 'O navegador bloqueou essa faixa. Clique em tocar para continuar.';
+        answered = false;
+        document.querySelectorAll('.track-btn').forEach(b => b.disabled = false);
+      });
+  } else {
+    if (autoNextTimer) clearTimeout(autoNextTimer);
+    autoNextTimer = setTimeout(prepareButtonsForNextTrack, 700);
+  }
+}
+function chooseAnswer(btn) {
+  if(answered || !currentTrack) return;
+  answered = true;
+  const selected = btn.dataset.title;
+  const expected = currentTrack.title;
+  document.querySelectorAll('.track-btn').forEach(b => b.disabled = true);
+  if(selected === expected) {
+    correct++;
+    btn.classList.add('correct');
+    btn.classList.add('revealed');
+    $('message').textContent = 'Acertou! Próxima faixa entrando direto…';
+  } else {
+    wrong++;
+    btn.classList.add('wrong');
+    const right = [...document.querySelectorAll('.track-btn')].find(b => b.dataset.title === expected);
+    if(right) right.classList.add('correct');
+    $('message').textContent = `Vacilou! Era: ${expected}. Próxima faixa entrando direto…`;
+  }
+
+  audio.pause();
+  pool.shift();
+  updateStatus();
+  $('nextBtn').classList.add('hidden');
+  $('playBtn').classList.add('hidden');
+
+  if (autoNextTimer) { clearTimeout(autoNextTimer); autoNextTimer = null; }
+
+  /*
+    Importante: a próxima faixa é iniciada dentro do próprio clique da resposta.
+    Isso evita o bloqueio do Chrome/Edge que acontecia quando o play era chamado
+    apenas por setTimeout depois de muitos acertos/erros.
+  */
+  startNextTrackFromAnswerClick();
+}
+function nextTrack() { pickTrack(radioStarted); }
+function finishAlbum() {
+  audio.pause();
+  $('finishTitle').textContent = correct >= Math.ceil(currentAlbum.tracks.length * .9) ? 'CD desbloqueado!' : 'CD finalizado!';
+  $('finishText').textContent = `Você acertou ${correct} de ${currentAlbum.tracks.length} faixas e errou ${wrong}. ${correct >= Math.ceil(currentAlbum.tracks.length * .9) ? 'Aí sim, isso é vivência de Charlie Brown.' : 'Dá pra ouvir de novo e voltar mais forte.'}`;
+  $('finishNextAlbum').style.display = currentAlbumIndex < RADIO_ALBUMS.length - 1 ? 'inline-flex' : 'none';
+  $('finishOverlay').classList.add('show');
+}
+function showSelect() {
+  audio.pause();
+  if (autoNextTimer) { clearTimeout(autoNextTimer); autoNextTimer = null; }
+  $('finishOverlay').classList.remove('show');
+  document.body.classList.remove('radio-playing','radio-tracks-many','radio-tracks-supermany');
+  $('gameStage').classList.add('hidden');
+  $('selectScreen').classList.remove('hidden');
+}
+$('playBtn').addEventListener('click', playCurrent);
+$('nextBtn').addEventListener('click', nextTrack);
+$('restartAlbumBtn').addEventListener('click', () => { if (autoNextTimer) { clearTimeout(autoNextTimer); autoNextTimer = null; } startAlbum(currentAlbumIndex); });
+$('changeAlbumBtn').addEventListener('click', showSelect);
+$('finishChooseAlbum').addEventListener('click', showSelect);
+$('finishNextAlbum').addEventListener('click', () => { $('finishOverlay').classList.remove('show'); startAlbum(currentAlbumIndex + 1); });
+
+function fecharIntroRadio() {
+  const intro = document.getElementById('radioIntro');
+  document.body.classList.remove('has-intro');
+  const page = document.querySelector('.page');
+  if (page) {
+    page.style.opacity = '1';
+    page.style.pointerEvents = 'auto';
+    page.style.filter = 'none';
+    page.style.transform = 'none';
+  }
+  if (intro) {
+    intro.classList.add('hide');
+    setTimeout(() => {
+      intro.style.display = 'none';
+      intro.remove();
+    }, 350);
+  }
+}
+
+window.fecharIntroRadio = fecharIntroRadio;
+
+document.addEventListener('DOMContentLoaded', () => {
+  const enterRadioBtn = document.getElementById('enterRadioBtn');
+  if (enterRadioBtn) {
+    enterRadioBtn.onclick = fecharIntroRadio;
+    enterRadioBtn.addEventListener('click', fecharIntroRadio);
+  }
+});
+
+const enterRadioBtn = document.getElementById('enterRadioBtn');
+if (enterRadioBtn) {
+  enterRadioBtn.onclick = fecharIntroRadio;
+  enterRadioBtn.addEventListener('click', fecharIntroRadio);
+}
+
+renderAlbums();
+</script>
 </body>
 </html>
