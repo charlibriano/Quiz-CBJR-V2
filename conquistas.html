@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Conquistas CBJR</title>
+<style>
+@font-face{font-family:Elektrix;src:url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/Elektrix-Bold.woff2') format('woff2'),url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/Elektrix-Bold.woff') format('woff'),url('https://cdn.jsdelivr.net/gh/charlibriano/Quiz-CBJR-V2/Elektrix%20Bold.ttf') format('truetype');font-display:swap}
+:root{--yellow:#f1c40f;--green:#1ed760;--red:#ff3b30;--blue:#3498db;--purple:#9b59b6;--white:#f8f8f8;--dark:#030303;--line:rgba(241,196,15,.34);--glass:rgba(0,0,0,.72)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,Arial,sans-serif;color:var(--white);background:#000;overflow-x:hidden}body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 50% 6%,rgba(241,196,15,.17),transparent 28%),radial-gradient(circle at 12% 88%,rgba(30,215,96,.12),transparent 31%),url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/cbjr.png') center/cover no-repeat;filter:brightness(.30) blur(2px);transform:scale(1.04);z-index:0}body::after{content:"";position:fixed;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.94),rgba(0,0,0,.62),rgba(0,0,0,.96));z-index:1;pointer-events:none}.page{position:relative;z-index:2;min-height:100svh;padding:16px;display:grid;grid-template-rows:auto auto 1fr;gap:14px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px}.btn{min-height:40px;border:1px solid var(--line);border-radius:999px;background:rgba(0,0,0,.66);color:#fff;text-decoration:none;padding:0 16px;font-weight:1000;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 22px rgba(241,196,15,.10);transition:.18s ease}.btn:hover{border-color:rgba(241,196,15,.75);transform:translateY(-1px)}.brand{font-family:Elektrix,Inter,sans-serif;color:var(--yellow);font-size:clamp(1.9rem,5vw,4.2rem);line-height:.85;text-align:center;text-shadow:0 0 28px rgba(241,196,15,.36)}.hero{width:min(1180px,96vw);margin:0 auto;border:1px solid var(--line);border-radius:30px;background:radial-gradient(circle at top,rgba(241,196,15,.10),transparent 36%),linear-gradient(180deg,rgba(0,0,0,.78),rgba(0,0,0,.94));box-shadow:0 28px 90px rgba(0,0,0,.72),inset 0 1px 0 rgba(255,255,255,.06);padding:clamp(14px,2.3vw,28px);display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:center}.hero h1{font-family:Elektrix,Inter,sans-serif;color:var(--yellow);font-size:clamp(2.25rem,6vw,5.2rem);line-height:.83;margin:0;text-shadow:0 0 28px rgba(241,196,15,.34),4px 5px 0 rgba(0,0,0,.64)}.hero p{margin:10px 0 0;color:rgba(255,255,255,.76);font-weight:900;line-height:1.45}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.summary-card{border:1px solid rgba(241,196,15,.22);border-radius:18px;background:rgba(255,255,255,.055);padding:12px;text-align:center}.summary-card small{display:block;color:rgba(255,255,255,.58);font-size:.68rem;font-weight:1000;letter-spacing:.10em;text-transform:uppercase}.summary-card strong{display:block;margin-top:6px;color:var(--green);font-family:Elektrix,Inter,sans-serif;font-size:clamp(1.55rem,3vw,2.4rem);line-height:.85}.progress-shell{grid-column:1/-1;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.44);border-radius:999px;padding:7px}.progress-fill{height:10px;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--yellow),#fff2a1,var(--green));box-shadow:0 0 20px rgba(241,196,15,.28);transition:width .55s ease}.tabs{width:min(1180px,96vw);margin:0 auto;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.tab{border:1px solid rgba(241,196,15,.34);background:rgba(0,0,0,.62);color:#fff;border-radius:999px;min-height:38px;padding:0 16px;font-weight:1000;cursor:pointer}.tab.active{background:linear-gradient(90deg,var(--yellow),var(--green));color:#000;border-color:transparent}.grid{width:min(1180px,96vw);margin:0 auto 18px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.card{position:relative;isolation:isolate;overflow:hidden;border:1px solid rgba(241,196,15,.22);border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(0,0,0,.78));min-height:260px;padding:12px;display:grid;grid-template-rows:auto auto 1fr auto;gap:9px;cursor:pointer;box-shadow:0 18px 54px rgba(0,0,0,.52),inset 0 1px 0 rgba(255,255,255,.06);transition:.2s ease}.card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(241,196,15,.22),transparent 46%);opacity:.25;z-index:-1;transition:.2s ease}.card:hover{transform:translateY(-3px);border-color:rgba(241,196,15,.58)}.card:hover::before{opacity:.72}.card.locked{opacity:.54;filter:grayscale(.5)}.card.unlocked{border-color:rgba(30,215,96,.56);box-shadow:0 0 30px rgba(30,215,96,.10),0 18px 54px rgba(0,0,0,.52)}.cover{display:block;width:100%;aspect-ratio:1/1;border-radius:16px;object-fit:cover;background:#111;border:1px solid rgba(255,255,255,.12);filter:brightness(.55) grayscale(.55);transition:.25s ease}.card.unlocked .cover{filter:none}.cover-error{opacity:.18}.badge{position:absolute;top:10px;left:10px;border:1px solid rgba(241,196,15,.52);background:rgba(0,0,0,.76);color:var(--yellow);border-radius:999px;padding:5px 8px;font-size:.58rem;font-weight:1000;letter-spacing:.08em;text-transform:uppercase;z-index:3}.card.unlocked .badge{border-color:rgba(30,215,96,.75);color:var(--green)}.icon{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.74);border:1px solid rgba(255,255,255,.16);font-size:1.1rem;z-index:3}.card h3{margin:0;color:#fff;font-family:Elektrix,Inter,sans-serif;font-size:clamp(1.06rem,1.6vw,1.35rem);line-height:.94}.card p{margin:0;color:rgba(255,255,255,.68);font-weight:800;font-size:.78rem;line-height:1.28}.status{align-self:end;border-radius:999px;border:1px solid rgba(255,255,255,.13);background:rgba(0,0,0,.48);padding:7px 9px;text-align:center;font-weight:1000;font-size:.72rem;color:rgba(255,255,255,.72)}.unlocked .status{color:var(--green);border-color:rgba(30,215,96,.40)}.empty{width:min(1180px,96vw);margin:0 auto;border:1px solid rgba(241,196,15,.25);border-radius:22px;padding:24px;text-align:center;background:rgba(0,0,0,.62);font-weight:900;color:rgba(255,255,255,.72)}.modal{position:fixed;inset:0;z-index:50;display:none;place-items:center;padding:18px;background:rgba(0,0,0,.82);backdrop-filter:blur(12px)}.modal.show{display:grid}.modal-card{width:min(760px,96vw);border:1px solid var(--line);border-radius:28px;background:radial-gradient(circle at top,rgba(241,196,15,.13),transparent 42%),rgba(0,0,0,.96);padding:22px;box-shadow:0 32px 110px rgba(0,0,0,.88);display:grid;grid-template-columns:minmax(150px,240px) 1fr;gap:20px;align-items:center}.modal-card img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:20px;border:1px solid rgba(241,196,15,.34);box-shadow:0 20px 70px rgba(0,0,0,.72)}.modal-card h2{margin:0;color:var(--yellow);font-family:Elektrix,Inter,sans-serif;font-size:clamp(2rem,5vw,4rem);line-height:.86}.modal-card p{color:rgba(255,255,255,.78);font-weight:900;line-height:1.45}.modal-meta{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.chip{border:1px solid rgba(241,196,15,.28);background:rgba(0,0,0,.48);border-radius:999px;padding:7px 10px;color:#fff;font-size:.75rem;font-weight:1000}.modal-actions{display:flex;gap:10px;flex-wrap:wrap}.danger{border-color:rgba(255,59,48,.35);color:#ffb4ae}.footer-note{width:min(1180px,96vw);margin:0 auto 20px;text-align:center;color:rgba(255,255,255,.52);font-weight:800;font-size:.8rem}@media(max-width:980px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:repeat(3,1fr)}.summary{grid-template-columns:repeat(3,1fr)}}@media(max-width:680px){.page{padding:11px}.topbar .btn{min-height:35px;padding:0 11px;font-size:.78rem}.brand{font-size:1.7rem}.hero{border-radius:22px;padding:14px}.summary{grid-template-columns:repeat(3,1fr);gap:7px}.summary-card{padding:9px 5px}.summary-card small{font-size:.52rem}.summary-card strong{font-size:1.35rem}.tabs{justify-content:stretch}.tab{flex:1;padding:0 8px;font-size:.74rem}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.card{min-height:230px;border-radius:17px;padding:9px}.card h3{font-size:.95rem}.card p{font-size:.68rem}.badge{font-size:.48rem}.modal-card{grid-template-columns:1fr;text-align:center}.modal-card img{width:min(210px,70vw);margin:auto}.modal-actions{justify-content:center}}@media(max-width:390px){.grid{grid-template-columns:1fr}.card{min-height:auto;grid-template-columns:90px 1fr;grid-template-rows:auto auto auto;align-items:center}.cover{grid-row:1/4}.badge,.icon{position:static;width:auto;height:auto;display:inline-flex}.status{text-align:left}.card h3{font-size:1.02rem}}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="topbar">
+    <a class="btn" href="index.html">← Menu</a>
+    <div class="brand">Conquistas CBJR</div>
+    <a class="btn" href="ranking.html">Ranking</a>
+  </header>
+
+  <section class="hero">
+    <div>
+      <h1>Sua coleção de troféus</h1>
+      <p>As conquistas do Quiz, Rádio e Modo Letras em uma página própria. O que já foi desbloqueado fica salvo no navegador e a estrutura já está pronta para evoluir junto com o ranking online.</p>
+    </div>
+    <div class="summary">
+      <div class="summary-card"><small>Total</small><strong id="totalCount">0</strong></div>
+      <div class="summary-card"><small>Liberadas</small><strong id="unlockedCount">0</strong></div>
+      <div class="summary-card"><small>Progresso</small><strong id="percentCount">0%</strong></div>
+      <div class="progress-shell"><div id="progressFill" class="progress-fill"></div></div>
+    </div>
+  </section>
+
+  <nav class="tabs" aria-label="Categorias de conquistas">
+    <button class="tab active" data-filter="all">Todas</button>
+    <button class="tab" data-filter="radio">Rádio</button>
+    <button class="tab" data-filter="quiz">Quiz</button>
+    <button class="tab" data-filter="letras">Letras</button>
+  </nav>
+
+  <main id="achievementsGrid" class="grid"></main>
+  <p class="footer-note">Dica: jogue a Rádio novamente para atualizar automaticamente as conquistas ligadas ao desempenho dos CDs.</p>
+</div>
+
+<div id="detailModal" class="modal" role="dialog" aria-modal="true" aria-label="Detalhe da conquista">
+  <article class="modal-card">
+    <img id="modalCover" src="" alt="Capa da conquista" onerror="fallbackCover(this)">
+    <div>
+      <h2 id="modalTitle">Conquista</h2>
+      <p id="modalDesc">Descrição da conquista.</p>
+      <div class="modal-meta">
+        <span id="modalCategory" class="chip">Categoria</span>
+        <span id="modalStatus" class="chip">Status</span>
+        <span id="modalDate" class="chip">Data</span>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" onclick="closeModal()">Fechar</button>
+        <button class="btn danger" onclick="resetAchievements()" title="Limpa apenas as conquistas locais desta página/Rádio">Zerar conquistas locais</button>
+      </div>
+    </div>
+  </article>
+</div>
+
+<script>
+const BASE_URL = './';
+const PAGES_V2 = 'https://charlibriano.github.io/Quiz-CBJR-V2/';
+const RAW_V2 = 'https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/';
+const PAGES_V1 = 'https://charlibriano.github.io/Quiz-CBJR/';
+const RAW_V1 = 'https://raw.githubusercontent.com/charlibriano/Quiz-CBJR/main/';
+const OLD_QUIZ_KEY = 'cobjr_quiz_achievements';
+const RADIO_KEY = 'radioCBJR_achievements_v1';
+const LEGACY_RADIO_IDS = ['bonus_music_master','bonus_album_perfectionist','bonus_hard_album_completed','bonus_fast_guess','bonus_all_albums_completed'];
+
+const catalog = [
+  {id:'first_cd',cat:'radio',icon:'💿',name:'Primeiro CD',desc:'Finalizou seu primeiro álbum na Rádio CBJR.',cover:'CD 1.jpeg'},
+  {id:'unlocked_next',cat:'radio',icon:'🔓',name:'Novo no ar',desc:'Desbloqueou o próximo CD da Rádio.',cover:'CD 2.jpeg'},
+  {id:'no_miss',cat:'radio',icon:'🎯',name:'Sem vacilo',desc:'Fechou um CD sem errar nenhuma faixa.',cover:'CD 3.jpeg'},
+  {id:'ninety',cat:'radio',icon:'🔥',name:'Frango da Malásia',desc:'Atingiu 90% ou mais de aproveitamento na Rádio.',cover:'CD 4.jpeg'},
+  {id:'perfect',cat:'radio',icon:'👑',name:'Lenda CBJR',desc:'Fez 100% de acerto em um CD.',cover:'CD 5.jpeg'},
+  {id:'hard',cat:'radio',icon:'☠️',name:'DJ Hardcore',desc:'Finalizou um CD no modo Hard.',cover:'CD 6.jpeg'},
+  {id:'three_cds',cat:'radio',icon:'📻',name:'Sintonia firme',desc:'Liberou 3 CDs da Rádio.',cover:'CD 7.jpeg'},
+  {id:'half_radio',cat:'radio',icon:'⚡',name:'Meia rádio',desc:'Liberou metade da jornada da Rádio.',cover:'CD 8.jpeg'},
+  {id:'bonus_music_master',cat:'radio',icon:'📡',name:'Rei da Rádio',desc:'Acerte todas as músicas no nível Rádio CBJR.',cover:'CD 9.jpeg'},
+  {id:'bonus_album_perfectionist',cat:'radio',icon:'💚',name:'Perfeição no Disco',desc:'Complete um álbum na Rádio sem errar nenhuma música.',cover:'CD 10.jpeg'},
+  {id:'bonus_hard_album_completed',cat:'radio',icon:'⚡',name:'Modo Hard Dominado',desc:'Complete um álbum em modo Hard com pelo menos 90% de acerto.',cover:'CD 11.jpeg'},
+  {id:'bonus_fast_guess',cat:'radio',icon:'⏱️',name:'Orelha Absoluta',desc:'Acerte uma música em menos de 5 segundos.',cover:'CD 12.jpeg'},
+  {id:'bonus_all_albums_completed',cat:'radio',icon:'🏆',name:'Rei Supremo da Rádio',desc:'Complete todos os discos da Rádio com perfeição.',cover:'CD 13.jpeg'},
+
+  {id:'first_level_completed',cat:'quiz',icon:'💿',name:'Transpiração Contínua Prolongada',desc:'Complete o nível 1 do Quiz.',cover:'CD 1.jpeg'},
+  {id:'combo_3x',cat:'quiz',icon:'🔥',name:'Preço Curto... Prazo Longo',desc:'Acerte 3 perguntas seguidas.',cover:'CD 2.jpeg'},
+  {id:'level_3_completed',cat:'quiz',icon:'🌊',name:'Nadando com os Tubarões',desc:'Complete o nível 3 do Quiz.',cover:'CD 3.jpeg'},
+  {id:'all_main_levels_completed',cat:'quiz',icon:'🏭',name:'Abalando a Sua Fábrica',desc:'Complete todos os 7 níveis principais do Quiz.',cover:'CD 4.jpeg'},
+  {id:'level_5_completed',cat:'quiz',icon:'🛹',name:'Bocas Ordinárias',desc:'Complete o nível 5 do Quiz.',cover:'CD 5.jpeg'},
+  {id:'all_levels_completed',cat:'quiz',icon:'🎸',name:'Acústico MTV',desc:'Complete todos os níveis do Quiz, incluindo o secreto.',cover:'CD 6.jpeg'},
+  {id:'combo_7x',cat:'quiz',icon:'📣',name:'Tamo Aí na Atividade',desc:'Acerte 7 perguntas seguidas.',cover:'CD 7.jpeg'},
+  {id:'combo_5x',cat:'quiz',icon:'🛡️',name:'Imunidade Musical',desc:'Acerte 5 perguntas seguidas.',cover:'CD 8.jpeg'},
+  {id:'used_50_50',cat:'quiz',icon:'➗',name:'Ritmo, Ritual e Responsa',desc:'Use o power-up 50/50 pela primeira vez.',cover:'CD 9.jpeg'},
+  {id:'coca_cola_collaboration',cat:'quiz',icon:'🥤',name:'Estúdio Coca-Cola Zero',desc:'Complete o desafio do álbum Estúdio Coca-Cola Zero.',cover:'CD 10.jpeg'},
+  {id:'combo_10x',cat:'quiz',icon:'⚽',name:'Camisa 10',desc:'Acerte 10 perguntas seguidas.',cover:'CD 11.jpeg'},
+  {id:'new_high_score',cat:'quiz',icon:'📈',name:'Música Popular Caiçara',desc:'Alcance um novo recorde de pontuação.',cover:'CD 12.jpeg'},
+  {id:'secret_level_completed',cat:'quiz',icon:'🔒',name:'La Família 013',desc:'Conclua o nível secreto Hardcore.',cover:'CD 13.jpeg'},
+  {id:'used_skip',cat:'quiz',icon:'🛹',name:'Fera no Skate',desc:'Use o power-up Pular Pergunta pela primeira vez.',cover:'CD 13.jpeg'},
+
+  {id:'letters_tcp_completed',cat:'letras',icon:'✍️',name:'TCP no Modo Letras',desc:'Complete o Modo Letras de Transpiração Contínua Prolongada.',cover:'CD 1.jpeg'},
+  {id:'letters_pcpl_completed',cat:'letras',icon:'✍️',name:'Preço Curto no Modo Letras',desc:'Complete o Modo Letras de Preço Curto... Prazo Longo.',cover:'CD 2.jpeg'},
+  {id:'letters_nadando_completed',cat:'letras',icon:'✍️',name:'Nadando no Modo Letras',desc:'Complete o Modo Letras de Nadando com os Tubarões.',cover:'CD 3.jpeg'},
+  {id:'letters_cbjr100_completed',cat:'letras',icon:'✍️',name:'100% no Modo Letras',desc:'Complete o Modo Letras de 100% Charlie Brown Jr.',cover:'CD 4.jpeg'},
+  {id:'letters_bocas_completed',cat:'letras',icon:'✍️',name:'Bocas no Modo Letras',desc:'Complete o Modo Letras de Bocas Ordinárias.',cover:'CD 5.jpeg'},
+  {id:'letters_atividade_completed',cat:'letras',icon:'✍️',name:'Atividade no Modo Letras',desc:'Complete o Modo Letras de Tamo Aí na Atividade.',cover:'CD 7.jpeg'},
+  {id:'letters_imunidade_completed',cat:'letras',icon:'✍️',name:'Imunidade no Modo Letras',desc:'Complete o Modo Letras de Imunidade Musical.',cover:'CD 8.jpeg'},
+  {id:'letters_ritmo_completed',cat:'letras',icon:'✍️',name:'Ritual no Modo Letras',desc:'Complete o Modo Letras de Ritmo, Ritual e Responsa.',cover:'CD 9.jpeg'},
+  {id:'letters_all_completed',cat:'letras',icon:'📚',name:'Coleção Completa',desc:'Complete o Modo Letras para todos os álbuns.',cover:'CD 1.jpeg'}
+];
+
+const catNames = {all:'Todas',radio:'Rádio',quiz:'Quiz',letras:'Letras'};
+let activeFilter = 'all';
+let state = {};
+
+function readJson(key){try{return JSON.parse(localStorage.getItem(key)||'{}')||{}}catch(e){return {}}}
+function normalizeState(){
+  const radio = readJson(RADIO_KEY);
+  const old = readJson(OLD_QUIZ_KEY);
+  const merged = {};
+  Object.keys(old).forEach(id => { if(old[id]) merged[id] = {unlockedAt: Date.now(), source:'quiz-antigo'}; });
+  Object.keys(radio).forEach(id => { if(radio[id]) merged[id] = typeof radio[id] === 'object' ? {...radio[id], source:'radio'} : {unlockedAt: Date.now(), source:'radio'}; });
+  return merged;
+}
+function encodePath(file){
+  return String(file || 'CD 1.jpeg').replace(/^\/+/, '').split('/').map(part => encodeURIComponent(part)).join('/');
+}
+function coverCandidates(file){
+  const encoded = encodePath(file);
+  const original = String(file || 'CD 1.jpeg').replace(/^\/+/, '');
+  const cache = '?v=20260511-radio-covers-3';
+  return [
+    BASE_URL + encoded + cache,
+    PAGES_V2 + encoded + cache,
+    RAW_V2 + encoded + cache,
+    PAGES_V1 + encoded + cache,
+    RAW_V1 + encoded + cache,
+    BASE_URL + original + cache,
+    PAGES_V2 + 'cbjr.png' + cache,
+    RAW_V2 + 'cbjr.png' + cache
+  ];
+}
+function coverUrl(file){
+  return coverCandidates(file)[0];
+}
+function fallbackCover(img){
+  if(!img) return;
+  const original = img.dataset.originalCover || 'CD 1.jpeg';
+  const candidates = coverCandidates(original);
+  const step = Number(img.dataset.fallbackStep || 0) + 1;
+  if(step < candidates.length){
+    img.dataset.fallbackStep = String(step);
+    img.src = candidates[step];
+    return;
+  }
+  img.classList.add('cover-error');
+}
+function isUnlocked(id){ return Boolean(state[id]); }
+function formatDate(value){
+  const ts = Number(value || 0);
+  if(!ts) return 'Data não registrada';
+  try{return new Date(ts).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});}catch(e){return 'Data não registrada'}
+}
+function render(){
+  state = normalizeState();
+  const total = catalog.length;
+  const unlocked = catalog.filter(a => isUnlocked(a.id)).length;
+  const percent = total ? Math.round((unlocked/total)*100) : 0;
+  document.getElementById('totalCount').textContent = total;
+  document.getElementById('unlockedCount').textContent = unlocked;
+  document.getElementById('percentCount').textContent = percent + '%';
+  document.getElementById('progressFill').style.width = percent + '%';
+
+  const rows = catalog.filter(a => activeFilter === 'all' || a.cat === activeFilter)
+    .sort((a,b) => Number(isUnlocked(b.id)) - Number(isUnlocked(a.id)) || a.cat.localeCompare(b.cat) || a.name.localeCompare(b.name));
+  const grid = document.getElementById('achievementsGrid');
+  if(!rows.length){ grid.outerHTML = '<div class="empty">Nenhuma conquista encontrada nessa categoria.</div>'; return; }
+  grid.innerHTML = rows.map(a => {
+    const unlocked = isUnlocked(a.id);
+    const data = state[a.id] || {};
+    return `<article class="card ${unlocked?'unlocked':'locked'}" onclick="openModal('${a.id}')">
+      <span class="badge">${catNames[a.cat]}</span>
+      <span class="icon">${unlocked ? a.icon : '🔒'}</span>
+      <img class="cover" src="${coverUrl(a.cover)}" data-original-cover="${escapeHtml(a.cover)}" alt="${escapeHtml(a.name)}" onerror="fallbackCover(this)">
+      <h3>${escapeHtml(a.name)}</h3>
+      <p>${escapeHtml(a.desc)}</p>
+      <div class="status">${unlocked ? 'Desbloqueada • ' + formatDate(data.unlockedAt) : 'Bloqueada'}</div>
+    </article>`;
+  }).join('');
+}
+function openModal(id){
+  const a = catalog.find(x => x.id === id); if(!a) return;
+  const data = state[id] || {};
+  const unlocked = isUnlocked(id);
+  const modalImg = document.getElementById('modalCover');
+  modalImg.classList.remove('cover-error');
+  modalImg.dataset.fallbackStep = '0';
+  modalImg.dataset.originalCover = a.cover;
+  modalImg.src = coverUrl(a.cover);
+  document.getElementById('modalTitle').textContent = a.name;
+  document.getElementById('modalDesc').textContent = a.desc;
+  document.getElementById('modalCategory').textContent = catNames[a.cat];
+  document.getElementById('modalStatus').textContent = unlocked ? 'Desbloqueada' : 'Bloqueada';
+  document.getElementById('modalStatus').style.color = unlocked ? 'var(--green)' : 'rgba(255,255,255,.72)';
+  document.getElementById('modalDate').textContent = unlocked ? formatDate(data.unlockedAt) : 'Jogue para liberar';
+  document.getElementById('detailModal').classList.add('show');
+}
+function closeModal(){ document.getElementById('detailModal').classList.remove('show'); }
+function escapeHtml(str){return String(str).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function resetAchievements(){
+  if(!confirm('Zerar as conquistas locais salvas neste navegador?')) return;
+  localStorage.removeItem(RADIO_KEY);
+  localStorage.removeItem(OLD_QUIZ_KEY);
+  closeModal();
+  render();
+}
+document.querySelectorAll('.tab').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active'); activeFilter = btn.dataset.filter; render();
+}));
+document.getElementById('detailModal').addEventListener('click', e => { if(e.target.id === 'detailModal') closeModal(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
+render();
+</script>
+</body>
+</html>
