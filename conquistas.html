@@ -21,8 +21,7 @@
   <section class="hero">
     <div>
       <h1>Sua coleção de troféus</h1>
-      <p>As conquistas do Quiz, Rádio e Modo Letras em uma página própria. O que já foi desbloqueado fica salvo no navegador e a estrutura já está pronta para evoluir junto com o ranking online.</p>
-    </div>
+     </div>
     <div class="summary">
       <div class="summary-card"><small>Total</small><strong id="totalCount">0</strong></div>
       <div class="summary-card"><small>Liberadas</small><strong id="unlockedCount">0</strong></div>
@@ -39,7 +38,11 @@
   </nav>
 
   <main id="achievementsGrid" class="grid"></main>
-  <p class="footer-note">Dica: jogue a Rádio novamente para atualizar automaticamente as conquistas ligadas ao desempenho dos CDs.</p>
+  <!-- Removed footer note to clean up the interface -->
+  <!-- Global reset button for all achievements -->
+  <div style="width:min(1180px,96vw);margin:0 auto 14px;display:flex;justify-content:flex-end;">
+    <button class="btn danger" onclick="resetAchievements()" title="Limpa todas as conquistas locais">Zerar conquistas</button>
+  </div>
 </div>
 
 <div id="detailModal" class="modal" role="dialog" aria-modal="true" aria-label="Detalhe da conquista">
@@ -55,7 +58,7 @@
       </div>
       <div class="modal-actions">
         <button class="btn" onclick="closeModal()">Fechar</button>
-        <button class="btn danger" onclick="resetAchievements()" title="Limpa apenas as conquistas locais desta página/Rádio">Zerar conquistas locais</button>
+        <!-- Removed individual reset button to centralize reset on the page -->
       </div>
     </div>
   </article>
@@ -205,10 +208,39 @@ function openModal(id){
   document.getElementById('modalCategory').textContent = catNames[a.cat];
   document.getElementById('modalStatus').textContent = unlocked ? 'Desbloqueada' : 'Bloqueada';
   document.getElementById('modalStatus').style.color = unlocked ? 'var(--green)' : 'rgba(255,255,255,.72)';
-  document.getElementById('modalDate').textContent = unlocked ? formatDate(data.unlockedAt) : 'Jogue para liberar';
+  const modalDateEl = document.getElementById('modalDate');
+  if(unlocked){
+    modalDateEl.textContent = formatDate(data.unlockedAt);
+  } else {
+    // When locked, display a button that navigates the user to the appropriate game page
+    modalDateEl.innerHTML = '<button class="btn" onclick="playAchievement(\'' + id + '\')">Jogue para liberar</button>';
+  }
   document.getElementById('detailModal').classList.add('show');
 }
 function closeModal(){ document.getElementById('detailModal').classList.remove('show'); }
+
+// Redireciona o jogador para a tela de jogo apropriada para liberar a conquista.
+// Ajuste os caminhos conforme necessário para seu projeto. Aqui usamos páginas base como placeholders.
+function playAchievement(id){
+  const ach = catalog.find(a => a.id === id);
+  if(!ach) return;
+  // Determine a rota com base na categoria da conquista.
+  let targetPage;
+  switch(ach.cat){
+    case 'radio':
+      targetPage = 'radio.html';
+      break;
+    case 'quiz':
+      targetPage = 'index.html';
+      break;
+    case 'letras':
+      targetPage = 'index.html';
+      break;
+    default:
+      targetPage = 'index.html';
+  }
+  window.location.href = BASE_URL + targetPage;
+}
 function escapeHtml(str){return String(str).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function resetAchievements(){
   if(!confirm('Zerar as conquistas locais salvas neste navegador?')) return;
