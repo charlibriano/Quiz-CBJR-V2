@@ -2398,6 +2398,32 @@ button:hover{
   }
 </style>
 
+
+<style id="camisa10-album-fit">
+  /* AJUSTE PARA INCLUSÃO DO ÁLBUM CAMISA 10 */
+  @media (min-width: 1181px) {
+    .album-grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    }
+
+    .album-card {
+      min-height: 190px !important;
+    }
+
+    .album-info h3 {
+      font-size: .72rem !important;
+      line-height: 1.08 !important;
+    }
+  }
+
+  @media (max-height: 760px) and (min-width: 1181px) {
+    .album-card {
+      min-height: 172px !important;
+      padding: 8px !important;
+    }
+  }
+</style>
+
 </head>
 <body>
   <a class="floating-back" href="index.html">← Voltar</a>
@@ -2520,9 +2546,15 @@ button:hover{
           name: 'Ritmo, Ritual e Responsa',
           json: 'Ritmo%20Ritual%20e%20Responsa.json',
           cover: 'CD%209.jpeg'
+        },
+        camisa10: {
+          id: 'camisa10',
+          name: 'Camisa 10 - Joga Bola Até na Chuva',
+          json: 'camisa10.json',
+          cover: 'CD%2011.jpeg'
         }
       },
-      albumOrder: ['tcp', 'pcpl', 'nadando', 'cbjr100', 'bocas', 'atividade', 'imunidade', 'ritmo'],
+      albumOrder: ['tcp', 'pcpl', 'nadando', 'cbjr100', 'bocas', 'atividade', 'imunidade', 'ritmo', 'camisa10'],
       currentAlbumId: 'tcp',
       questions: [],
       currentIndex: 0,
