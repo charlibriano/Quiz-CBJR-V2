@@ -2424,6 +2424,37 @@ button:hover{
   }
 </style>
 
+
+<style id="lafamilia013-fit">
+  /* AJUSTE PARA INCLUSÃO DO ÁLBUM LA FAMILIA 013 */
+  @media (min-width: 1181px) {
+    .album-grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    }
+
+    .album-card {
+      min-height: 182px !important;
+    }
+
+    .album-info h3 {
+      font-size: .70rem !important;
+      line-height: 1.08 !important;
+    }
+
+    .album-status {
+      font-size: .68rem !important;
+      padding: 7px 12px !important;
+    }
+  }
+
+  @media (max-height: 760px) and (min-width: 1181px) {
+    .album-card {
+      min-height: 165px !important;
+      padding: 7px !important;
+    }
+  }
+</style>
+
 </head>
 <body>
   <a class="floating-back" href="index.html">← Voltar</a>
@@ -2552,9 +2583,15 @@ button:hover{
           name: 'Camisa 10 - Joga Bola Até na Chuva',
           json: 'camisa10.json',
           cover: 'CD%2011.jpeg'
+        },
+        lafamilia013: {
+          id: 'lafamilia013',
+          name: 'La Familia 013',
+          json: 'lafamilia013.json',
+          cover: 'CD%2013.jpeg'
         }
       },
-      albumOrder: ['tcp', 'pcpl', 'nadando', 'cbjr100', 'bocas', 'atividade', 'imunidade', 'ritmo', 'camisa10'],
+      albumOrder: ['tcp', 'pcpl', 'nadando', 'cbjr100', 'bocas', 'atividade', 'imunidade', 'ritmo', 'camisa10', 'lafamilia013'],
       currentAlbumId: 'tcp',
       questions: [],
       currentIndex: 0,
