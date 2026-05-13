@@ -2833,6 +2833,413 @@
   }
 </style>
 
+
+<style id="mobile-home-responsivo-v1">
+  @media (max-width: 820px) {
+    html, body {
+      min-height: 100svh;
+      overflow-x: hidden !important;
+    }
+
+    body {
+      background-position: center center !important;
+    }
+
+    .app {
+      width: min(100% - 16px, 640px) !important;
+      min-height: 100svh !important;
+      padding: 8px 0 12px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 8px !important;
+    }
+
+    .topbar {
+      height: auto !important;
+      min-height: 38px !important;
+      padding: 6px 8px !important;
+      border-radius: 18px !important;
+      gap: 8px !important;
+      position: sticky !important;
+      top: 6px !important;
+      z-index: 30 !important;
+    }
+
+    .brand {
+      min-width: 0 !important;
+      flex: 1 1 auto !important;
+    }
+
+    .brand-mark {
+      width: 25px !important;
+      height: 25px !important;
+      font-size: .66rem !important;
+    }
+
+    .brand-text {
+      max-width: 190px !important;
+      font-size: .82rem !important;
+    }
+
+    .top-actions {
+      gap: 6px !important;
+    }
+
+    .icon-btn {
+      width: 28px !important;
+      height: 28px !important;
+      font-size: .76rem !important;
+      flex: 0 0 auto !important;
+    }
+
+    .main {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 8px !important;
+      min-height: auto !important;
+      align-items: stretch !important;
+    }
+
+    .hero-panel,
+    .console {
+      border-radius: 18px !important;
+      min-height: unset !important;
+      overflow: visible !important;
+    }
+
+    .hero-panel {
+      padding: 12px !important;
+      gap: 10px !important;
+      justify-content: flex-start !important;
+    }
+
+    .hero-panel::before {
+      display: none !important;
+    }
+
+    .eyebrow {
+      margin-bottom: 8px !important;
+      padding: 5px 8px !important;
+      font-size: .54rem !important;
+      letter-spacing: .08em !important;
+    }
+
+    h1 {
+      font-size: clamp(2.15rem, 11vw, 3.35rem) !important;
+      line-height: .86 !important;
+      text-shadow:
+        0 0 12px rgba(241,196,15,.45),
+        3px 4px 0 rgba(0,0,0,.68) !important;
+    }
+
+    .subtitle {
+      margin-top: 8px !important;
+      font-size: .82rem !important;
+      line-height: 1.34 !important;
+      color: rgba(255,255,255,.74) !important;
+    }
+
+    .hero-actions {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 7px !important;
+      margin-top: 10px !important;
+    }
+
+    .btn {
+      min-height: 38px !important;
+      padding: 8px 9px !important;
+      border-radius: 11px !important;
+      font-size: .72rem !important;
+      line-height: 1.1 !important;
+      text-align: center !important;
+    }
+
+    .status-card,
+    .home-player-card {
+      margin-top: 10px !important;
+      border-radius: 16px !important;
+      padding: 12px !important;
+    }
+
+    .status-card h2,
+    .home-player-card h2 {
+      font-size: 1.22rem !important;
+      line-height: 1 !important;
+      margin: 6px 0 !important;
+    }
+
+    .status-card p,
+    .home-player-card p {
+      font-size: .76rem !important;
+      line-height: 1.34 !important;
+    }
+
+    .eq {
+      height: 24px !important;
+      margin-top: 8px !important;
+    }
+
+    .eq i {
+      width: 5px !important;
+    }
+
+    .console {
+      padding: 10px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 8px !important;
+    }
+
+    .console-head {
+      padding: 2px 2px 8px !important;
+      align-items: center !important;
+      border-bottom: 1px solid rgba(255,255,255,.10) !important;
+    }
+
+    .console-head h2 {
+      font-size: 1.35rem !important;
+      line-height: 1 !important;
+    }
+
+    .console-head p {
+      display: none !important;
+    }
+
+    .channels {
+      display: grid !important;
+      grid-template-columns: 1fr !important;
+      gap: 8px !important;
+      padding-top: 0 !important;
+      overflow: visible !important;
+    }
+
+    .channel {
+      min-width: 0 !important;
+      min-height: 0 !important;
+      height: auto !important;
+      display: grid !important;
+      grid-template-columns: 34px minmax(0, 1fr) auto !important;
+      grid-template-rows: auto auto !important;
+      align-items: center !important;
+      gap: 6px 10px !important;
+      padding: 10px 12px !important;
+      border-radius: 15px !important;
+    }
+
+    .ch-top {
+      grid-column: 1 / 2 !important;
+      grid-row: 1 / 3 !important;
+      display: grid !important;
+      place-items: center !important;
+      font-size: 0 !important;
+      letter-spacing: 0 !important;
+    }
+
+    .led {
+      width: 13px !important;
+      height: 13px !important;
+    }
+
+    .channel.is-on .ch-top::after {
+      display: none !important;
+    }
+
+    .knobs,
+    .fader-zone,
+    .meter,
+    .fader {
+      display: none !important;
+    }
+
+    .ch-label {
+      grid-column: 2 / 3 !important;
+      grid-row: 1 / 2 !important;
+      display: block !important;
+      min-height: 0 !important;
+      font-size: .56rem !important;
+      line-height: 1 !important;
+      letter-spacing: .08em !important;
+      color: color-mix(in srgb, var(--accent) 78%, white 18%) !important;
+    }
+
+    .channel h3 {
+      grid-column: 2 / 3 !important;
+      grid-row: 2 / 3 !important;
+      writing-mode: horizontal-tb !important;
+      text-orientation: initial !important;
+      justify-self: stretch !important;
+      min-height: 0 !important;
+      font-size: 1.02rem !important;
+      line-height: 1 !important;
+    }
+
+    .channel p {
+      display: none !important;
+    }
+
+    .ch-footer {
+      grid-column: 3 / 4 !important;
+      grid-row: 1 / 3 !important;
+      padding: 0 !important;
+      border: 0 !important;
+      font-size: .58rem !important;
+      justify-content: center !important;
+      align-self: center !important;
+    }
+
+    .ch-footer span:first-child {
+      display: none !important;
+    }
+
+    .tag {
+      display: inline-flex !important;
+      padding: 5px 7px !important;
+      font-size: .50rem !important;
+      max-width: 78px !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      white-space: nowrap !important;
+    }
+
+    .console-note,
+    .footer {
+      display: none !important;
+    }
+
+    #audio-player-wrapper.inside-home {
+      margin-top: 8px !important;
+      padding: 8px !important;
+      border-radius: 15px !important;
+      max-height: none !important;
+    }
+
+    #current-song {
+      font-size: .74rem !important;
+      height: 1.25em !important;
+      line-height: 1.25em !important;
+    }
+
+    .audio-main-controls {
+      gap: 6px !important;
+      flex-wrap: nowrap !important;
+    }
+
+    .audio-control-btn {
+      width: 27px !important;
+      height: 27px !important;
+      font-size: .78rem !important;
+    }
+
+    #play-pause-btn {
+      width: 34px !important;
+      height: 34px !important;
+    }
+
+    .progress-container {
+      height: 4px !important;
+    }
+
+    .time-display {
+      font-size: .58rem !important;
+    }
+
+    .modal-card {
+      border-radius: 20px !important;
+      padding: 18px !important;
+    }
+
+    .modal-card h2 {
+      font-size: 1.35rem !important;
+    }
+
+    .modal-card p {
+      font-size: .88rem !important;
+      line-height: 1.45 !important;
+    }
+  }
+
+  @media (max-width: 460px) {
+    .app {
+      width: calc(100% - 12px) !important;
+    }
+
+    .brand-text {
+      max-width: 145px !important;
+      font-size: .76rem !important;
+    }
+
+    .hero-panel {
+      padding: 10px !important;
+    }
+
+    h1 {
+      font-size: clamp(1.95rem, 11vw, 2.75rem) !important;
+    }
+
+    .subtitle {
+      font-size: .76rem !important;
+    }
+
+    .hero-actions {
+      grid-template-columns: 1fr !important;
+    }
+
+    .btn {
+      min-height: 36px !important;
+    }
+
+    .console {
+      padding: 8px !important;
+    }
+
+    .channel {
+      grid-template-columns: 28px minmax(0, 1fr) auto !important;
+      padding: 9px 10px !important;
+      gap: 5px 8px !important;
+    }
+
+    .led {
+      width: 11px !important;
+      height: 11px !important;
+    }
+
+    .ch-label {
+      font-size: .48rem !important;
+    }
+
+    .channel h3 {
+      font-size: .88rem !important;
+    }
+
+    .tag {
+      max-width: 66px !important;
+      padding: 4px 6px !important;
+      font-size: .46rem !important;
+    }
+
+    .status-card,
+    .home-player-card {
+      padding: 10px !important;
+    }
+  }
+
+  @media (max-height: 720px) and (max-width: 820px) {
+    .subtitle {
+      display: none !important;
+    }
+
+    .status-card {
+      display: none !important;
+    }
+
+    .channel {
+      padding-top: 8px !important;
+      padding-bottom: 8px !important;
+    }
+  }
+</style>
+
 </head>
 
 <body>
