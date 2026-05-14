@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Comunidade CBJR | Voz da Galera</title>
+<style>
+@font-face{font-family:Elektrix;src:url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/Elektrix-Bold.woff2') format('woff2'),url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/Elektrix-Bold.woff') format('woff'),url('https://cdn.jsdelivr.net/gh/charlibriano/Quiz-CBJR-V2/Elektrix%20Bold.ttf') format('truetype');font-display:swap}
+:root{--yellow:#f1c40f;--green:#1ed760;--red:#ff3b30;--white:#f8f8f8;--dark:#030303;--panel:rgba(0,0,0,.76);--panel2:rgba(8,8,8,.88);--line:rgba(241,196,15,.38);--muted:rgba(255,255,255,.68);--soft:rgba(255,255,255,.08)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,Arial,Helvetica,sans-serif;background:#000;color:var(--white);overflow-x:hidden}body::before{content:"";position:fixed;inset:0;background:url('fans-bg.png') center/cover no-repeat;filter:brightness(.58) contrast(1.08);transform:scale(1.01);z-index:0}body::after{content:"";position:fixed;inset:0;background:radial-gradient(circle at 50% 7%,rgba(241,196,15,.12),transparent 30%),linear-gradient(90deg,rgba(0,0,0,.82),rgba(0,0,0,.48),rgba(0,0,0,.82)),linear-gradient(180deg,rgba(0,0,0,.18),rgba(0,0,0,.90));z-index:1;pointer-events:none}.page{position:relative;z-index:2;min-height:100svh;padding:18px;display:grid;gap:18px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px}.btn,.ghost-btn{min-height:42px;border:1px solid var(--line);border-radius:999px;background:rgba(0,0,0,.72);color:#fff;text-decoration:none;padding:0 18px;font-weight:1000;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;box-shadow:0 0 22px rgba(241,196,15,.10),inset 0 1px 0 rgba(255,255,255,.06);transition:.2s ease}.btn:hover,.ghost-btn:hover{border-color:rgba(241,196,15,.8);box-shadow:0 0 28px rgba(241,196,15,.18);transform:translateY(-1px)}.brand-mini{font-family:Elektrix,Arial,sans-serif;color:var(--yellow);font-size:clamp(1.45rem,3.2vw,3rem);letter-spacing:.04em;text-shadow:0 0 22px rgba(241,196,15,.36);text-align:center}.hero{width:min(1180px,96vw);margin:0 auto;border:1px solid var(--line);border-radius:30px;background:linear-gradient(180deg,rgba(0,0,0,.18),rgba(0,0,0,.74));box-shadow:0 30px 90px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.06);padding:clamp(18px,3vw,34px);text-align:center;overflow:hidden}.hero-kicker{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(30,215,96,.35);border-radius:999px;background:rgba(0,0,0,.66);padding:8px 14px;color:#1ed760;font-weight:1000;text-transform:uppercase;letter-spacing:.14em;font-size:.74rem}.hero-kicker::before{content:"";width:9px;height:9px;border-radius:50%;background:#1ed760;box-shadow:0 0 16px #1ed760}.hero h1{margin:14px 0 8px;font-family:Elektrix,Arial,sans-serif;color:var(--yellow);font-size:clamp(2.7rem,8vw,6.7rem);line-height:.78;text-shadow:0 0 26px rgba(241,196,15,.42),5px 6px 0 rgba(0,0,0,.82)}.hero p{margin:0 auto;max-width:780px;color:rgba(255,255,255,.84);font-weight:900;line-height:1.45;text-shadow:0 2px 14px rgba(0,0,0,.85)}.stats{width:min(980px,94vw);margin:-8px auto 0;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{border:1px solid rgba(241,196,15,.25);border-radius:18px;background:rgba(0,0,0,.62);padding:12px;text-align:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}.stat strong{display:block;color:var(--yellow);font-family:Elektrix,Arial,sans-serif;font-size:1.55rem;line-height:1}.stat span{display:block;margin-top:5px;color:rgba(255,255,255,.62);font-size:.72rem;font-weight:950;text-transform:uppercase;letter-spacing:.09em}.layout{width:min(1280px,96vw);margin:0 auto;display:grid;grid-template-columns:minmax(290px,390px) minmax(0,1fr) minmax(280px,340px);gap:16px;align-items:start}.card{border:1px solid var(--line);border-radius:24px;background:linear-gradient(180deg,rgba(0,0,0,.74),rgba(0,0,0,.91));box-shadow:0 24px 70px rgba(0,0,0,.44),inset 0 1px 0 rgba(255,255,255,.06);padding:18px}.card h2{margin:0 0 6px;font-family:Elektrix,Arial,sans-serif;color:var(--yellow);font-size:clamp(1.55rem,2.6vw,2.6rem);line-height:.9;text-shadow:0 0 18px rgba(241,196,15,.22)}.card-sub{margin:0 0 16px;color:var(--muted);font-weight:850;font-size:.9rem;line-height:1.35}.field{display:grid;gap:7px;margin-bottom:12px}.field label{font-weight:950;color:rgba(255,255,255,.86);font-size:.86rem}.field input,.field textarea,.field select{width:100%;border:1px solid rgba(255,255,255,.16);border-radius:14px;background:rgba(0,0,0,.55);color:#fff;min-height:45px;padding:12px 13px;font:inherit;font-weight:800;outline:none}.field textarea{min-height:130px;resize:vertical;line-height:1.4}.field input:focus,.field textarea:focus,.field select:focus{border-color:rgba(241,196,15,.72);box-shadow:0 0 0 3px rgba(241,196,15,.10)}.char-count{text-align:right;color:rgba(255,255,255,.48);font-weight:850;font-size:.78rem;margin-top:-8px;margin-bottom:10px}.remember-row{display:flex;align-items:center;gap:9px;color:rgba(255,255,255,.72);font-weight:850;font-size:.86rem;margin:4px 0 14px}.remember-row input{accent-color:#f1c40f}.publish-btn{width:100%;border:0;border-radius:16px;background:linear-gradient(90deg,var(--yellow),#ffb300);color:#000;min-height:52px;font-weight:1000;font-size:1rem;cursor:pointer;box-shadow:0 0 26px rgba(241,196,15,.18);transition:.2s ease}.publish-btn:hover{transform:translateY(-1px);filter:brightness(1.05)}.publish-btn:disabled{opacity:.45;cursor:not-allowed;transform:none}.status{margin-top:12px;text-align:center;color:rgba(255,255,255,.65);font-weight:850;font-size:.83rem}.feed-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.feed-tools{display:flex;gap:8px;align-items:center}.search{border:1px solid rgba(255,255,255,.16);background:rgba(0,0,0,.5);border-radius:999px;min-height:38px;color:#fff;padding:0 13px;font-weight:850;outline:none;width:min(230px,34vw)}.feed{display:grid;gap:12px}.post{border:1px solid rgba(255,255,255,.12);border-radius:20px;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(0,0,0,.52));padding:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}.post-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.fan{display:flex;gap:12px;align-items:center;min-width:0}.avatar{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,rgba(241,196,15,.95),rgba(0,0,0,.9));border:2px solid rgba(241,196,15,.75);font-weight:1000;color:#000;box-shadow:0 0 20px rgba(241,196,15,.12);overflow:hidden;flex:0 0 auto}.avatar img{width:100%;height:100%;object-fit:cover}.fan-info{min-width:0}.fan-name{font-weight:1000;color:#fff;font-size:1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fan-meta{margin-top:3px;color:rgba(255,255,255,.58);font-weight:800;font-size:.78rem}.time{color:rgba(255,255,255,.48);font-weight:850;font-size:.76rem;white-space:nowrap}.music-pill{display:inline-flex;margin-top:10px;border:1px solid rgba(241,196,15,.36);background:rgba(241,196,15,.12);border-radius:999px;color:var(--yellow);font-weight:950;padding:6px 10px;font-size:.78rem}.message{margin:12px 0 0;color:rgba(255,255,255,.88);font-weight:760;line-height:1.45;white-space:pre-wrap;word-break:break-word}.post-actions{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:13px}.action{border:0;background:transparent;color:rgba(255,255,255,.76);font-weight:950;cursor:pointer;padding:4px 0;display:inline-flex;align-items:center;gap:6px}.action:hover{color:#fff}.action.like.active{color:#ff4d5e}.reply-box{display:none;margin-top:12px;border-top:1px solid rgba(255,255,255,.10);padding-top:12px;gap:8px}.reply-box.show{display:grid}.reply-line{display:grid;grid-template-columns:1fr auto;gap:8px}.reply-line input{min-height:40px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.5);color:#fff;padding:0 13px;font-weight:850;outline:none}.small-btn{border:1px solid rgba(241,196,15,.45);border-radius:999px;background:rgba(241,196,15,.12);color:#f1c40f;padding:0 14px;font-weight:1000;cursor:pointer}.replies{display:grid;gap:8px;margin-top:10px}.reply{border-left:3px solid rgba(241,196,15,.45);padding:8px 10px;background:rgba(255,255,255,.04);border-radius:10px;color:rgba(255,255,255,.8);font-size:.88rem;line-height:1.35}.reply strong{color:#fff}.empty,.loading{border:1px solid rgba(241,196,15,.22);border-radius:18px;padding:20px;text-align:center;color:rgba(255,255,255,.68);font-weight:900}.side-list{display:grid;gap:9px}.active-fan{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(255,255,255,.045);padding:10px}.position{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:rgba(241,196,15,.15);color:var(--yellow);font-weight:1000}.active-name{font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.active-city{color:rgba(255,255,255,.52);font-size:.75rem;font-weight:850;margin-top:2px}.active-score{color:#1ed760;font-weight:1000;white-space:nowrap}.quote-card{margin-top:14px;min-height:170px;background:linear-gradient(90deg,rgba(0,0,0,.84),rgba(0,0,0,.35)),radial-gradient(circle at right,rgba(241,196,15,.12),transparent 48%);position:relative;overflow:hidden}.quote-card p{font-size:1.15rem;line-height:1.45;color:rgba(255,255,255,.9);font-weight:900;margin:16px 0}.quote-card .signature{font-family:Elektrix,Arial,sans-serif;color:var(--yellow);font-size:1.9rem;text-align:right}.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(24px);z-index:30;background:rgba(0,0,0,.88);border:1px solid rgba(241,196,15,.45);border-radius:999px;color:#fff;padding:12px 18px;font-weight:950;opacity:0;pointer-events:none;transition:.22s ease;text-align:center;max-width:min(92vw,520px)}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}@media(max-width:1050px){.layout{grid-template-columns:1fr 1fr}.right-col{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:16px}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:760px){.page{padding:12px}.topbar{align-items:flex-start}.brand-mini{font-size:1.35rem;line-height:.9}.btn,.ghost-btn{min-height:36px;padding:0 11px;font-size:.82rem}.hero{border-radius:22px;padding:16px}.hero h1{font-size:clamp(2.15rem,14vw,4.6rem)}.hero p{font-size:.9rem}.layout{grid-template-columns:1fr;width:100%}.right-col{grid-template-columns:1fr}.card{border-radius:20px;padding:14px}.stats{grid-template-columns:repeat(2,1fr);width:100%;gap:8px}.stat strong{font-size:1.25rem}.feed-head{display:grid}.feed-tools{display:grid;grid-template-columns:1fr}.search{width:100%}.post-top{display:grid}.time{white-space:normal}.avatar{width:46px;height:46px}.reply-line{grid-template-columns:1fr}.small-btn{min-height:38px}.field textarea{min-height:110px}body::before{background-position:center center;filter:brightness(.46) contrast(1.08)}}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="topbar">
+    <a class="btn" href="index.html">← Menu</a>
+    <div class="brand-mini">Comunidade CBJR</div>
+    <a class="btn" href="radio.html">Rádio CBJR</a>
+  </header>
+
+  <section class="hero">
+    <div class="hero-kicker">No ar: voz da galera</div>
+    <h1>Comunidade CBJR</h1>
+    <p>Um espaço para fãs trocarem mensagens, histórias, músicas favoritas e lembranças. Aqui a sintonia continua viva.</p>
+  </section>
+
+  <section class="stats" aria-label="Estatísticas da comunidade">
+    <div class="stat"><strong id="statMessages">0</strong><span>Mensagens</span></div>
+    <div class="stat"><strong id="statLikes">0</strong><span>Curtidas</span></div>
+    <div class="stat"><strong id="statFans">0</strong><span>Fãs</span></div>
+    <div class="stat"><strong id="statCities">0</strong><span>Cidades</span></div>
+  </section>
+
+  <main class="layout">
+    <aside class="card">
+      <h2>Deixe sua mensagem</h2>
+      <p class="card-sub">Preencha seu nome, cidade, Instagram e música favorita. Depois publique sua história no mural.</p>
+      <form id="fanForm">
+        <div class="field"><label for="fanName">Seu nome *</label><input id="fanName" maxlength="32" placeholder="Ex: Felipe" required /></div>
+        <div class="field"><label for="fanCity">Sua cidade *</label><input id="fanCity" maxlength="42" placeholder="Ex: Belo Horizonte - MG" required /></div>
+        <div class="field"><label for="fanInstagram">Instagram</label><input id="fanInstagram" maxlength="40" placeholder="Ex: @seuinstagram" /></div>
+        <div class="field"><label for="fanPhoto">Foto de perfil / URL opcional</label><input id="fanPhoto" type="url" placeholder="Cole uma URL de imagem, se quiser" /></div>
+        <div class="field"><label for="fanMusic">Música/álbum favorito *</label><input id="fanMusic" maxlength="60" placeholder="Ex: Só os Loucos Sabem" required /></div>
+        <div class="field"><label for="fanMessage">Mensagem para a galera *</label><textarea id="fanMessage" maxlength="500" placeholder="Fala aí, fã! Conte sua história, mande uma lembrança, uma frase, uma conexão com o CBJR..." required></textarea></div>
+        <div class="char-count"><span id="charCount">0</span>/500</div>
+        <label class="remember-row"><input type="checkbox" id="rememberFan" checked /> Lembrar meus dados neste navegador</label>
+        <button class="publish-btn" id="publishBtn" type="submit">Publicar na comunidade</button>
+        <div class="status" id="formStatus">Firebase pronto para receber mensagens.</div>
+      </form>
+    </aside>
+
+    <section class="card">
+      <div class="feed-head">
+        <div><h2>Mural da galera</h2><p class="card-sub">Mensagens mais recentes da comunidade.</p></div>
+        <div class="feed-tools">
+          <input class="search" id="searchInput" placeholder="Buscar fã, cidade ou música" />
+          <select class="search" id="sortSelect"><option value="recent">Mais recentes</option><option value="likes">Mais curtidas</option></select>
+        </div>
+      </div>
+      <div id="feed" class="feed"><div class="loading">Carregando mensagens da comunidade...</div></div>
+    </section>
+
+    <aside class="right-col">
+      <section class="card">
+        <h2>Fãs mais ativos</h2>
+        <p class="card-sub">Quem mais participa aparece por aqui.</p>
+        <div id="activeFans" class="side-list"><div class="empty">Ainda sem participação.</div></div>
+      </section>
+      <section class="card quote-card">
+        <h2>Frase da sintonia</h2>
+        <p id="dailyPhrase">“A vida me ensinou a nunca desistir.”</p>
+        <div class="signature">Chorão</div>
+      </section>
+    </aside>
+  </main>
+</div>
+<div id="toast" class="toast"></div>
+<script type="module">
+import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getFirestore, collection, addDoc, doc, updateDoc, increment, serverTimestamp, query, orderBy, limit, onSnapshot, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+const firebaseConfig={
+  apiKey:'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
+  authDomain:'ranking-cbjr.firebaseapp.com',
+  projectId:'ranking-cbjr',
+  storageBucket:'ranking-cbjr.firebasestorage.app',
+  messagingSenderId:'681180179118',
+  appId:'1:681180179118:web:fe10833848e8bb8194db3f',
+  measurementId:'G-QK5QE2Y1CC'
+};
+
+const app=getApps().length?getApp():initializeApp(firebaseConfig);
+const db=getFirestore(app);
+const COLLECTION='comunidade';
+let posts=[];
+let unsubscribe=null;
+
+const $=sel=>document.querySelector(sel);
+const feed=$('#feed');
+const form=$('#fanForm');
+const toast=$('#toast');
+const searchInput=$('#searchInput');
+const sortSelect=$('#sortSelect');
+const phrases=[
+  '“A vida me ensinou a nunca desistir.”',
+  '“Só os loucos sabem.”',
+  '“O impossível é só questão de opinião.”',
+  '“Quem é de verdade sabe quem é de mentira.”',
+  '“Dias de luta, dias de glória.”'
+];
+$('#dailyPhrase').textContent=phrases[new Date().getDate()%phrases.length];
+
+function showToast(msg){toast.textContent=msg;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),2600)}
+function escapeHtml(str){return String(str??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function cleanText(v,max=500){return String(v??'').trim().slice(0,max)}
+function formatDate(v){
+  let d=null;
+  if(!v)d=new Date(); else if(typeof v.toDate==='function')d=v.toDate(); else if(v.seconds)d=new Date(v.seconds*1000); else d=new Date(v);
+  if(Number.isNaN(d.getTime()))return 'agora';
+  return new Intl.DateTimeFormat('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}).format(d);
+}
+function initials(name){return cleanText(name,'').split(/\s+/).filter(Boolean).slice(0,2).map(p=>p[0]?.toUpperCase()).join('')||'CB'}
+function instagramLink(handle){const h=cleanText(handle,40).replace(/^@/,'');return h?`https://instagram.com/${encodeURIComponent(h)}`:''}
+function normalizePost(docSnap){const d=docSnap.data()||{};return{id:docSnap.id,name:cleanText(d.name||'Fã CBJR',32),city:cleanText(d.city||'Cidade não informada',42),instagram:cleanText(d.instagram||'',40),photo:cleanText(d.photo||'',300),music:cleanText(d.music||'Charlie Brown Jr.',60),message:cleanText(d.message||'',500),likes:Number(d.likes||0),replies:Number(d.replies||0),createdAt:d.createdAt||d.timestamp||Date.now()}}
+function getLiked(){try{return JSON.parse(localStorage.getItem('cbjr_fans_liked')||'[]')}catch{return[]}}
+function setLiked(ids){localStorage.setItem('cbjr_fans_liked',JSON.stringify(ids))}
+function markLiked(id){const ids=getLiked();if(!ids.includes(id)){ids.push(id);setLiked(ids)}}
+function isLiked(id){return getLiked().includes(id)}
+function filteredPosts(){
+  const term=searchInput.value.trim().toLowerCase();
+  let list=[...posts];
+  if(term){list=list.filter(p=>`${p.name} ${p.city} ${p.music} ${p.message} ${p.instagram}`.toLowerCase().includes(term));}
+  if(sortSelect.value==='likes')list.sort((a,b)=>(b.likes-a.likes)||getTime(b)-getTime(a)); else list.sort((a,b)=>getTime(b)-getTime(a));
+  return list;
+}
+function getTime(p){if(p.createdAt?.seconds)return p.createdAt.seconds*1000;if(p.createdAt?.toMillis)return p.createdAt.toMillis();return Date.parse(p.createdAt)||0}
+function renderStats(){
+  const fans=new Set(posts.map(p=>p.name.toLowerCase()).filter(Boolean));
+  const cities=new Set(posts.map(p=>p.city.toLowerCase()).filter(Boolean));
+  $('#statMessages').textContent=posts.length;
+  $('#statLikes').textContent=posts.reduce((s,p)=>s+(p.likes||0),0);
+  $('#statFans').textContent=fans.size;
+  $('#statCities').textContent=cities.size;
+}
+function renderActiveFans(){
+  const map=new Map();
+  posts.forEach(p=>{const key=p.name.toLowerCase();const current=map.get(key)||{name:p.name,city:p.city,score:0};current.score+=1+(p.likes||0)+(p.replies||0)*2;map.set(key,current)});
+  const rows=[...map.values()].sort((a,b)=>b.score-a.score).slice(0,5);
+  $('#activeFans').innerHTML=rows.length?rows.map((f,i)=>`<article class="active-fan"><div class="position">${i+1}</div><div><div class="active-name">${escapeHtml(f.name)}</div><div class="active-city">${escapeHtml(f.city)}</div></div><div class="active-score">${f.score} pts</div></article>`).join(''):'<div class="empty">Ainda sem participação.</div>';
+}
+function renderFeed(){
+  const list=filteredPosts();
+  renderStats();renderActiveFans();
+  if(!list.length){feed.innerHTML='<div class="empty">Nenhuma mensagem encontrada. Seja o primeiro a falar com a galera.</div>';return;}
+  feed.innerHTML=list.map(p=>{
+    const link=instagramLink(p.instagram);
+    const liked=isLiked(p.id);
+    const avatar=p.photo?`<img src="${escapeHtml(p.photo)}" alt="Foto de ${escapeHtml(p.name)}" onerror="this.remove()">`:escapeHtml(initials(p.name));
+    return `<article class="post" data-id="${p.id}">
+      <div class="post-top"><div class="fan"><div class="avatar">${avatar}</div><div class="fan-info"><div class="fan-name">${escapeHtml(p.name)}</div><div class="fan-meta">${escapeHtml(p.city)}${link?` • <a href="${link}" target="_blank" rel="noopener" style="color:#f1c40f;text-decoration:none">${escapeHtml(p.instagram.startsWith('@')?p.instagram:'@'+p.instagram)}</a>`:''}</div></div></div><div class="time">${formatDate(p.createdAt)}</div></div>
+      <div class="music-pill">♪ ${escapeHtml(p.music)}</div>
+      <div class="message">${escapeHtml(p.message)}</div>
+      <div class="post-actions"><button class="action like ${liked?'active':''}" data-like="${p.id}">❤ <span>${p.likes||0}</span></button><button class="action" data-reply-toggle="${p.id}">💬 Responder</button><span class="action">${p.replies||0} resposta(s)</span></div>
+      <div class="reply-box" id="reply-${p.id}"><div class="reply-line"><input placeholder="Escreva uma resposta rápida..." maxlength="220" data-reply-input="${p.id}"><button class="small-btn" data-reply-send="${p.id}">Enviar</button></div><div class="replies" id="replies-${p.id}"></div></div>
+    </article>`
+  }).join('');
+}
+async function loadReplies(postId){
+  const box=$(`#replies-${CSS.escape(postId)}`); if(!box)return;
+  box.innerHTML='<div class="reply">Carregando respostas...</div>';
+  try{const snap=await getDocs(query(collection(db,COLLECTION,postId,'respostas'),orderBy('createdAt','asc'),limit(12)));
+    box.innerHTML=snap.empty?'':snap.docs.map(d=>{const r=d.data();return `<div class="reply"><strong>${escapeHtml(r.name||'Fã CBJR')}:</strong> ${escapeHtml(r.message||'')}</div>`}).join('');
+  }catch(e){box.innerHTML='<div class="reply">Não foi possível carregar respostas.</div>';}
+}
+async function likePost(id){
+  if(isLiked(id)){showToast('Você já curtiu essa mensagem.');return;}
+  try{await updateDoc(doc(db,COLLECTION,id),{likes:increment(1)});markLiked(id);showToast('Curtida registrada!');}
+  catch(e){console.error(e);showToast('Não foi possível curtir agora.');}
+}
+async function sendReply(id){
+  const input=document.querySelector(`[data-reply-input="${CSS.escape(id)}"]`); if(!input)return;
+  const message=cleanText(input.value,220); if(message.length<2){showToast('Escreva uma resposta antes de enviar.');return;}
+  const name=cleanText($('#fanName').value||localStorage.getItem('cbjr_fan_name')||'Fã CBJR',32);
+  try{await addDoc(collection(db,COLLECTION,id,'respostas'),{name,message,createdAt:serverTimestamp(),timestamp:Date.now()});await updateDoc(doc(db,COLLECTION,id),{replies:increment(1)});input.value='';showToast('Resposta publicada!');loadReplies(id);}
+  catch(e){console.error(e);showToast('Não foi possível responder agora.');}
+}
+function saveLocal(){if(!$('#rememberFan').checked)return;localStorage.setItem('cbjr_fan_name',$('#fanName').value.trim());localStorage.setItem('cbjr_fan_city',$('#fanCity').value.trim());localStorage.setItem('cbjr_fan_instagram',$('#fanInstagram').value.trim());localStorage.setItem('cbjr_fan_photo',$('#fanPhoto').value.trim());}
+function loadLocal(){$('#fanName').value=localStorage.getItem('cbjr_fan_name')||'';$('#fanCity').value=localStorage.getItem('cbjr_fan_city')||'';$('#fanInstagram').value=localStorage.getItem('cbjr_fan_instagram')||'';$('#fanPhoto').value=localStorage.getItem('cbjr_fan_photo')||'';}
+async function publishPost(e){
+  e.preventDefault();
+  const name=cleanText($('#fanName').value,32),city=cleanText($('#fanCity').value,42),instagram=cleanText($('#fanInstagram').value,40).replace(/\s/g,''),photo=cleanText($('#fanPhoto').value,300),music=cleanText($('#fanMusic').value,60),message=cleanText($('#fanMessage').value,500);
+  if(!name||!city||!music||message.length<5){showToast('Preencha nome, cidade, música e uma mensagem.');return;}
+  $('#publishBtn').disabled=true;$('#formStatus').textContent='Publicando no mural...';
+  try{await addDoc(collection(db,COLLECTION),{name,city,instagram,photo,music,message,likes:0,replies:0,source:'cbjr-v2-fans',timestamp:Date.now(),createdAt:serverTimestamp()});saveLocal();$('#fanMessage').value='';$('#fanMusic').value='';$('#charCount').textContent='0';$('#formStatus').textContent='Mensagem publicada com sucesso.';showToast('Mensagem publicada na Comunidade CBJR!');}
+  catch(err){console.error(err);$('#formStatus').textContent='Falha ao publicar. Confira as regras do Firestore.';showToast('Erro ao publicar mensagem.');}
+  finally{$('#publishBtn').disabled=false;}
+}
+function startRealtime(){
+  if(unsubscribe)unsubscribe();
+  const q=query(collection(db,COLLECTION),orderBy('createdAt','desc'),limit(80));
+  unsubscribe=onSnapshot(q,snap=>{posts=snap.docs.map(normalizePost);renderFeed();$('#formStatus').textContent=`Comunidade online. ${posts.length} mensagem(ns) carregada(s).`;},err=>{console.error(err);feed.innerHTML='<div class="empty">Não foi possível carregar a comunidade. Confira as regras do Firestore.</div>';$('#formStatus').textContent='Falha ao conectar ao Firebase.';});
+}
+
+$('#fanMessage').addEventListener('input',()=>$('#charCount').textContent=$('#fanMessage').value.length);
+form.addEventListener('submit',publishPost);
+searchInput.addEventListener('input',renderFeed);sortSelect.addEventListener('change',renderFeed);
+document.addEventListener('click',e=>{const like=e.target.closest('[data-like]');if(like)likePost(like.dataset.like);const toggle=e.target.closest('[data-reply-toggle]');if(toggle){const id=toggle.dataset.replyToggle;const box=$(`#reply-${CSS.escape(id)}`);box?.classList.toggle('show');if(box?.classList.contains('show'))loadReplies(id);}const send=e.target.closest('[data-reply-send]');if(send)sendReply(send.dataset.replySend);});
+loadLocal();startRealtime();
+</script>
+</body>
+</html>
