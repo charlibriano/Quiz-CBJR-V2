@@ -357,7 +357,7 @@
 
     .channels {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(6, 1fr);
       gap: 10px;
       padding: 14px 0 0;
       min-height: 0;
@@ -819,7 +819,7 @@
       }
 
       .channels {
-        grid-template-columns: repeat(5, minmax(0, 1fr));
+        grid-template-columns: repeat(6, minmax(0, 1fr));
         gap: 6px;
         padding-top: 8px;
       }
@@ -953,7 +953,7 @@
       }
 
       .channels {
-        grid-template-columns: repeat(5, minmax(64px, 1fr));
+        grid-template-columns: repeat(6, minmax(64px, 1fr));
         overflow-x: auto;
         padding-bottom: 2px;
         scrollbar-width: thin;
@@ -1113,7 +1113,7 @@
     @media (max-width: 560px) {
       .app { grid-template-rows: auto auto auto; }
       .hero-panel { padding: 8px; }
-      .channels { grid-template-columns: repeat(5, minmax(70px, 1fr)); overflow-x: auto; }
+      .channels { grid-template-columns: repeat(6, minmax(70px, 1fr)); overflow-x: auto; }
       .channel { min-width: 70px; min-height: 285px; grid-template-rows: 18px 24px 0 72px 82px 24px; }
       .channel h3 { writing-mode: horizontal-tb; text-orientation: initial; min-height: auto; justify-self: start; align-self: center; font-size: .7rem; }
       .ch-label { display: none; }
@@ -2221,7 +2221,7 @@
       .console-head { padding: 0 2px 6px !important; }
       .console-head h2 { font-size: 1.28rem !important; }
       .channels {
-        grid-template-columns: repeat(5, minmax(58px, 1fr)) !important;
+        grid-template-columns: repeat(6, minmax(58px, 1fr)) !important;
         gap: 5px !important;
         padding-top: 7px !important;
         overflow-x: visible !important;
@@ -2266,7 +2266,7 @@
     }
 
     @media (max-width: 390px) {
-      .channels { grid-template-columns: repeat(5, minmax(54px, 1fr)) !important; gap: 4px !important; }
+      .channels { grid-template-columns: repeat(6, minmax(54px, 1fr)) !important; gap: 4px !important; }
       .channel { height: 188px !important; min-height: 188px !important; padding: 5px 4px !important; }
       .channel h3 { font-size: .56rem !important; }
       .fader-zone, .meter, .fader { height: 54px !important; min-height: 54px !important; }
@@ -2337,7 +2337,7 @@
     .console-head { padding: 0 2px 8px !important; }
     .console-head h2 { font-size: 1.72rem !important; }
     .console-head p { max-width: 390px !important; font-size: .72rem !important; line-height: 1.25 !important; }
-    .channels { gap: 8px !important; padding-top: 10px !important; grid-template-columns: repeat(5, minmax(0, 1fr)) !important; }
+    .channels { gap: 8px !important; padding-top: 10px !important; grid-template-columns: repeat(6, minmax(0, 1fr)) !important; }
     .channel { min-height: 288px !important; padding: 8px !important; gap: 6px !important; grid-template-rows: 20px 28px 18px 44px 76px 28px !important; border-radius: 15px !important; }
     .ch-top { font-size: .50rem !important; }
     .knobs { gap: 5px !important; padding-bottom: 5px !important; }
@@ -2356,7 +2356,7 @@
     .boot-start-btn { position: relative !important; z-index: 30 !important; }
     @media (min-width: 1200px) { .main { grid-template-columns: minmax(270px, 310px) minmax(820px, 1fr) !important; } .console { max-width: 980px; } }
     @media (max-width: 1050px) { .main { grid-template-columns: 1fr !important; } .hero-panel { display: grid !important; grid-template-columns: 1fr minmax(240px, 320px) !important; align-items: start !important; } .home-player-card { margin-top: 0 !important; } }
-    @media (max-width: 760px) { .app { width: calc(100% - 14px) !important; padding: 8px 0 !important; } .hero-panel { display: block !important; padding: 10px !important; } h1 { font-size: clamp(2.15rem, 11vw, 3.15rem) !important; } .subtitle { font-size: .76rem !important; } .home-player-card { margin-top: 10px !important; } .channels { overflow-x: auto !important; scroll-snap-type: x mandatory; grid-template-columns: repeat(5, minmax(78px, 1fr)) !important; } .channel { min-width: 78px !important; scroll-snap-align: center; } .console-head p, .console-note { display: none !important; } }
+    @media (max-width: 760px) { .app { width: calc(100% - 14px) !important; padding: 8px 0 !important; } .hero-panel { display: block !important; padding: 10px !important; } h1 { font-size: clamp(2.15rem, 11vw, 3.15rem) !important; } .subtitle { font-size: .76rem !important; } .home-player-card { margin-top: 10px !important; } .channels { overflow-x: auto !important; scroll-snap-type: x mandatory; grid-template-columns: repeat(6, minmax(78px, 1fr)) !important; } .channel { min-width: 78px !important; scroll-snap-align: center; } .console-head p, .console-note { display: none !important; } }
 
   
 
@@ -2366,7 +2366,7 @@
        ============================================================ */
     @media (max-width: 760px) {
       .channels {
-        grid-template-columns: repeat(5, minmax(66px, 1fr)) !important;
+        grid-template-columns: repeat(6, minmax(66px, 1fr)) !important;
         gap: 5px !important;
       }
 
@@ -2461,7 +2461,7 @@
 
     @media (max-width: 390px) {
       .channels {
-        grid-template-columns: repeat(5, minmax(58px, 1fr)) !important;
+        grid-template-columns: repeat(6, minmax(58px, 1fr)) !important;
       }
 
       .channel {
@@ -2481,6 +2481,109 @@
         width: 20px !important;
         height: 9px !important;
         bottom: 9px !important;
+      }
+    }
+
+
+    /* CANAL 06 — COMUNIDADE CBJR / FANS */
+    .channel-fans h3 {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .skate-icon {
+      width: 28px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      color: var(--yellow);
+      filter: drop-shadow(0 0 8px rgba(241,196,15,.55));
+    }
+
+    .skate-icon svg {
+      width: 100%;
+      height: 100%;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    @media (max-width: 820px) {
+      .channel-fans h3 {
+        gap: 4px;
+      }
+      .skate-icon {
+        width: 20px;
+        height: 13px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .channel-fans h3 {
+        justify-self: center;
+        text-align: center;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .skate-icon {
+        width: 22px;
+        height: 14px;
+      }
+    }
+
+  
+
+    /* ÍCONES DOS CANAIS — QUIZ / RÁDIO / LETRAS / CONQUISTAS / RANKING / FANS */
+    .channel h3 {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: flex-start !important;
+      gap: 7px !important;
+    }
+
+    .channel-icon {
+      width: 24px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      color: var(--yellow);
+      filter: drop-shadow(0 0 8px rgba(241,196,15,.55));
+    }
+
+    .channel-icon svg {
+      width: 100%;
+      height: 100%;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    @media (max-width: 820px) {
+      .channel h3 {
+        gap: 4px !important;
+      }
+      .channel-icon {
+        width: 18px;
+        height: 18px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .channel h3 {
+        gap: 3px !important;
+      }
+      .channel-icon {
+        width: 16px;
+        height: 16px;
       }
     }
 
@@ -3330,7 +3433,7 @@
             <div class="ch-top"><span>CH 01</span><span class="led" title="Ligar canal"></span></div>
             <div class="knobs"><span></span><span></span><span></span></div>
             <div class="ch-label">GAIN • LEVEL • FX</div>
-            <h3>Modo Quiz</h3>
+            <h3><span class="channel-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M7 7.5h10a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-5a3 3 0 0 1 3-3Z"/><path d="M8 13h4"/><path d="M10 11v4"/><circle cx="16" cy="12" r=".7"/><circle cx="18" cy="15" r=".7"/></svg></span><span>Modo Quiz</span></h3>
             
             <div class="fader-zone">
               <div class="meter"><i></i><i></i><i></i><i></i><i></i></div>
@@ -3343,7 +3446,7 @@
             <div class="ch-top"><span>CH 02</span><span class="led" title="Ligar canal"></span></div>
             <div class="knobs"><span></span><span></span><span></span></div>
             <div class="ch-label">INPUT • MIX • TIME</div>
-            <h3>Rádio CBJR</h3>
+            <h3><span class="channel-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M6 9h13a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2Z"/><path d="M8 9 18 5"/><circle cx="9" cy="14" r="2.3"/><path d="M15 13h4"/><path d="M15 16h3"/></svg></span><span>Rádio CBJR</span></h3>
             
             <div class="fader-zone">
               <div class="meter"><i></i><i></i><i></i><i></i><i></i></div>
@@ -3356,7 +3459,7 @@
             <div class="ch-top"><span>CH 03</span><span class="led" title="Ligar canal"></span></div>
             <div class="knobs"><span></span><span></span><span></span></div>
             <div class="ch-label">VOCAL • TONE • SPACE</div>
-            <h3>Modo Letras</h3>
+            <h3><span class="channel-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M9 18a3 3 0 1 1 0-6c.65 0 1.25.2 1.75.55V5l8-1.5v10.5"/><path d="M18.75 14a3 3 0 1 1-2-2.83"/><path d="M10.75 8.5 18.75 7"/></svg></span><span>Modo Letras</span></h3>
             
             <div class="fader-zone">
               <div class="meter"><i></i><i></i><i></i><i></i><i></i></div>
@@ -3369,7 +3472,7 @@
             <div class="ch-top"><span>FX 01</span><span class="led" title="Ligar canal"></span></div>
             <div class="knobs"><span></span><span></span><span></span></div>
             <div class="ch-label">SEND • RETURN</div>
-            <h3>Conquistas</h3>
+            <h3><span class="channel-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M8 4h8v4a4 4 0 0 1-8 0V4Z"/><path d="M8 6H5a3 3 0 0 0 3 5"/><path d="M16 6h3a3 3 0 0 1-3 5"/><path d="M12 12v5"/><path d="M9 20h6"/><path d="M10 17h4"/></svg></span><span>Conquistas</span></h3>
             
             <div class="fader-zone">
               <div class="meter"><i></i><i></i><i></i><i></i><i></i></div>
@@ -3382,13 +3485,26 @@
             <div class="ch-top"><span>MASTER</span><span class="led" title="Ligar canal"></span></div>
             <div class="knobs"><span></span><span></span><span></span></div>
             <div class="ch-label">OUT • PEAK</div>
-            <h3>Ranking Online</h3>
+            <h3><span class="channel-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 19V9"/><path d="M12 19V5"/><path d="M19 19v-7"/><path d="M3.5 19h17"/></svg></span><span>Ranking</span></h3>
             
             <div class="fader-zone">
               <div class="meter"><i></i><i></i><i></i><i></i><i></i></div>
               <div class="fader"><b></b></div>
             </div>
             <div class="ch-footer"><span class="tag">Ranking</span><span>Ver →</span></div>
+          </a>
+
+          <a class="channel channel-fans" style="--accent: var(--yellow)" href="fans.html" data-tone="329.63">
+            <div class="ch-top"><span>CH 06</span><span class="led" title="Ligar canal"></span></div>
+            <div class="knobs"><span></span><span></span><span></span></div>
+            <div class="ch-label">CREW • SKATE • VOZ</div>
+            <h3><span class="skate-icon" aria-hidden="true"><svg viewBox="0 0 64 32" focusable="false"><path d="M14 18c8 5 28 5 36 0"/><path d="M18 13c8 4 20 4 28 0"/><circle cx="20" cy="24" r="3.5"/><circle cx="44" cy="24" r="3.5"/></svg></span><span>Comunidade</span></h3>
+            
+            <div class="fader-zone">
+              <div class="meter"><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="fader"><b></b></div>
+            </div>
+            <div class="ch-footer"><span class="tag">Fans</span><span>Entrar →</span></div>
           </a>
         </div>
 </section>
@@ -3682,7 +3798,7 @@
 
     channels.forEach((channel, index) => {
       const fader = channel.querySelector('.fader');
-      const initialLevel = [0.42, 0.54, 0.48, 0.36, 0.58][index] || 0.45;
+      const initialLevel = [0.42, 0.54, 0.48, 0.36, 0.58, 0.50][index] || 0.45;
       let moved = false;
       let dragging = false;
       let lastTick = 0;
