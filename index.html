@@ -3341,6 +3341,20 @@
       padding-bottom: 8px !important;
     }
   }
+
+
+/* CONTADOR ONLINE — HOME CBJR */
+.home-online-now{
+  display:inline-flex;align-items:center;gap:8px;margin-top:12px;
+  border:1px solid rgba(30,215,96,.38);border-radius:999px;
+  background:rgba(0,0,0,.55);color:#fff;padding:8px 12px;
+  font-weight:1000;box-shadow:0 0 18px rgba(30,215,96,.10),inset 0 1px 0 rgba(255,255,255,.06);
+}
+.home-online-now .online-dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green),0 0 26px rgba(30,215,96,.38);}
+.home-online-now strong{color:var(--green);font-family:'Elektrix',Arial,sans-serif;text-shadow:0 0 12px rgba(30,215,96,.42);}
+.home-online-now span:last-child{color:rgba(255,255,255,.78);font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;}
+@media(max-width:760px){.home-online-now{font-size:.82rem;padding:7px 10px;margin-top:9px}.home-online-now span:last-child{font-size:.64rem}}
+
 </style>
 
 </head>
@@ -3383,6 +3397,7 @@
           <p class="subtitle">
             Explore o universo CBJR: responda perguntas no Quiz, descubra músicas na Rádio ou complete trechos no Modo Letras.
           </p>
+          <div class="home-online-now" aria-live="polite"><span class="online-dot"></span><strong id="homeOnlineCount">0</strong><span>fãs online agora</span></div>
 </div>
 
         <div class="status-card home-player-card">
@@ -4258,5 +4273,36 @@
   });
 </script>
 
+
+<script type="module" id="cbjr-online-presence-script">
+  import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+  import { getDatabase, ref, push, set, onDisconnect, onValue, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
+  const firebaseConfig={
+    apiKey:'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
+    authDomain:'ranking-cbjr.firebaseapp.com',
+    databaseURL:'https://ranking-cbjr-default-rtdb.firebaseio.com',
+    projectId:'ranking-cbjr',
+    storageBucket:'ranking-cbjr.firebasestorage.app',
+    messagingSenderId:'681180179118',
+    appId:'1:681180179118:web:fe10833848e8bb8194db3f',
+    measurementId:'G-QK5QE2Y1CC'
+  };
+
+  const app=getApps().length?getApp():initializeApp(firebaseConfig);
+  const realtimeDb=getDatabase(app);
+  const onlineEl=document.getElementById('homeOnlineCount');
+
+  if(onlineEl){
+    const pageKey='site';
+    const sessionRef=push(ref(realtimeDb,`presence/${pageKey}`));
+    set(sessionRef,{page:'home',createdAt:serverTimestamp(),userAgent:navigator.userAgent.slice(0,120)}).catch(()=>{});
+    onDisconnect(sessionRef).remove();
+    window.addEventListener('beforeunload',()=>{set(sessionRef,null).catch(()=>{});});
+    onValue(ref(realtimeDb,`presence/${pageKey}`),snap=>{
+      onlineEl.textContent=String(snap.exists()?snap.size:0);
+    },()=>{onlineEl.textContent='0';});
+  }
+</script>
 </body>
 </html>
