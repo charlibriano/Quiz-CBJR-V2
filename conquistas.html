@@ -13,7 +13,7 @@
 <body>
 <div class="page">
   <header class="topbar">
-    <a class="btn" href="index.html">← Menu</a>
+    <a class="btn" href="index.html?skipIntro=true">← Menu</a>
     <div class="brand">Conquistas CBJR</div>
     <a class="btn" href="ranking.html">Ranking</a>
   </header>
@@ -231,13 +231,13 @@ function playAchievement(id){
       targetPage = 'radio.html';
       break;
     case 'quiz':
-      targetPage = 'index.html';
+      targetPage = 'index.html?skipIntro=true';
       break;
     case 'letras':
-      targetPage = 'index.html';
+      targetPage = 'index.html?skipIntro=true';
       break;
     default:
-      targetPage = 'index.html';
+      targetPage = 'index.html?skipIntro=true';
   }
   window.location.href = BASE_URL + targetPage;
 }
