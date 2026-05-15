@@ -3650,12 +3650,36 @@
     }
 
 
+    const CBJR_SKIP_INTRO_PATCH = new URLSearchParams(window.location.search).get('skipIntro') === 'true';
     const bootScreen = document.getElementById('bootScreen');
     const bootText = document.getElementById('bootText');
     const bootStatus = document.getElementById('bootStatus');
     const startIntroBtn = document.getElementById('startIntroBtn');
     const bootAudioUrl = 'https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/Transpiracao_Continua_Prolongada/Charlie%20Brown%20Jr%20-%20Transpira%C3%A7%C3%A3o%20Continua%20Prolongada%20-%2001-Tributo%20ao%20Frango%20da%20Mal%C3%A1sia%20%5B1997%5D.mp3';
     const bootAudio = new Audio(bootAudioUrl);
+    function applySkipIntroPatch() {
+      if (!CBJR_SKIP_INTRO_PATCH) return;
+      document.body.classList.remove('booting');
+      if (bootScreen) {
+        bootScreen.classList.add('hide');
+        bootScreen.setAttribute('aria-hidden', 'true');
+        bootScreen.style.display = 'none';
+      }
+      const app = document.querySelector('.app');
+      if (app) {
+        app.style.opacity = '1';
+        app.style.pointerEvents = 'auto';
+        app.style.filter = 'none';
+      }
+      const mesa = document.getElementById('mesa');
+      if (mesa) {
+        setTimeout(() => mesa.scrollIntoView({ behavior: 'auto', block: 'start' }), 0);
+      }
+      try {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } catch (error) {}
+    }
+    applySkipIntroPatch();
     bootAudio.preload = 'auto';
     bootAudio.volume = 0.72;
 
@@ -3709,6 +3733,7 @@
     let bootAlreadyStarted = false;
 
     async function runMesaBoot() {
+      if (CBJR_SKIP_INTRO_PATCH) return;
       if (!bootScreen || !channels.length || bootAlreadyStarted) return;
       bootAlreadyStarted = true;
 
@@ -3887,7 +3912,7 @@
     });
 
     window.addEventListener('load', () => {
-      bootAudio.load();
+      if (!CBJR_SKIP_INTRO_PATCH) bootAudio.load();
     });
 
     function playPhysicalButtonClick() {
@@ -3895,7 +3920,7 @@
       return;
     }
 
-    if (startIntroBtn) {
+    if (startIntroBtn && !CBJR_SKIP_INTRO_PATCH) {
       startIntroBtn.addEventListener('click', () => {
         startIntroBtn.classList.add('is-pressed');
         startIntroBtn.style.animation = 'none';
