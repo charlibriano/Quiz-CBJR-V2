@@ -629,7 +629,105 @@
       .options-grid { grid-template-columns: 1fr; gap: 8px; }
       .option-btn { min-height: 48px; font-size: .82rem; border-radius: 14px; }
     }
-  </style>
+  
+
+    /* RANKING ONLINE — MODO LETRAS */
+    .letters-ranking-card {
+      margin: 18px auto 0;
+      width: min(520px, 100%);
+      border: 1px solid rgba(30,215,96,.38);
+      border-radius: 22px;
+      padding: 16px;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(30,215,96,.12), transparent 42%),
+        rgba(0,0,0,.58);
+      box-shadow: 0 0 28px rgba(30,215,96,.10), inset 0 1px 0 rgba(255,255,255,.07);
+      text-align: center;
+    }
+
+    .letters-ranking-card strong {
+      display: block;
+      font-family: 'Elektrix', Arial, sans-serif;
+      color: var(--yellow);
+      font-size: clamp(1.25rem, 3vw, 1.95rem);
+      line-height: 1;
+      text-shadow: 0 0 16px rgba(241,196,15,.28);
+      margin-bottom: 6px;
+    }
+
+    .letters-ranking-card p {
+      margin: 0 0 12px;
+      color: rgba(255,255,255,.72);
+      font-weight: 850;
+      line-height: 1.35;
+      font-size: .9rem;
+    }
+
+    .letters-ranking-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .letters-ranking-row input {
+      min-height: 42px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.58);
+      color: #fff;
+      padding: 0 14px;
+      font-weight: 900;
+      outline: none;
+    }
+
+    .letters-ranking-row input:focus {
+      border-color: rgba(241,196,15,.72);
+      box-shadow: 0 0 0 3px rgba(241,196,15,.10);
+    }
+
+    .letters-ranking-row button {
+      min-height: 42px;
+      border: 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--yellow), var(--green));
+      color: #050505;
+      padding: 0 18px;
+      font-weight: 1000;
+      cursor: pointer;
+    }
+
+    .letters-ranking-row button:disabled {
+      opacity: .65;
+      cursor: default;
+    }
+
+    .letters-ranking-status {
+      margin-top: 10px;
+      min-height: 18px;
+      color: rgba(255,255,255,.66);
+      font-size: .82rem;
+      font-weight: 850;
+    }
+
+    .letters-ranking-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+      color: var(--yellow);
+      text-decoration: none;
+      font-weight: 1000;
+      font-size: .86rem;
+    }
+
+    @media (max-width: 560px) {
+      .letters-ranking-card { padding: 13px; }
+      .letters-ranking-row { grid-template-columns: 1fr; }
+      .letters-ranking-row button { width: 100%; }
+    }
+
+</style>
 
 <style id="cinematic-upgrade">
 body{
@@ -3074,6 +3172,147 @@ const cbjrFeedback = {
       }, isTimeout || selectedOption !== q.correct ? 2800 : 2300);
     }
 
+
+
+    /* Ranking online do Modo Letras — usa o mesmo Firebase do ranking geral */
+    const letrasFirebaseConfig = {
+      apiKey: 'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
+      authDomain: 'ranking-cbjr.firebaseapp.com',
+      projectId: 'ranking-cbjr',
+      storageBucket: 'ranking-cbjr.firebasestorage.app',
+      messagingSenderId: '681180179118',
+      appId: '1:681180179118:web:fe10833848e8bb8194db3f',
+      measurementId: 'G-QK5QE2Y1CC'
+    };
+
+    let letrasFirebaseApiPromise = null;
+    let lastLettersRankingPayload = null;
+
+    async function getLetrasFirebaseApi() {
+      if (letrasFirebaseApiPromise) return letrasFirebaseApiPromise;
+      letrasFirebaseApiPromise = Promise.all([
+        import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
+        import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')
+      ]).then(([appMod, fsMod]) => {
+        const app = appMod.getApps().length ? appMod.getApp() : appMod.initializeApp(letrasFirebaseConfig);
+        const db = fsMod.getFirestore(app);
+        return {
+          db,
+          collection: fsMod.collection,
+          addDoc: fsMod.addDoc,
+          serverTimestamp: fsMod.serverTimestamp
+        };
+      });
+      return letrasFirebaseApiPromise;
+    }
+
+    function calculateLettersOnlineScore(hitCount, errorCount, totalQuestions, completedAlbum) {
+      const safeTotal = Math.max(1, Number(totalQuestions) || 1);
+      const percent = Math.round((Number(hitCount || 0) / safeTotal) * 100);
+      const albumIndex = Math.max(0, lettersMode.albumOrder.indexOf(lettersMode.currentAlbumId));
+      const completionBonus = completedAlbum ? 700 : 0;
+      const perfectBonus = completedAlbum && errorCount === 0 ? 500 : 0;
+      const albumBonus = albumIndex * 85;
+      return Math.max(0, Math.round((percent * 100) + (hitCount * 40) - (errorCount * 55) + completionBonus + perfectBonus + albumBonus));
+    }
+
+    function buildLettersRankingPayload(playerName, completedAlbum) {
+      const album = lettersMode.albumMap[lettersMode.currentAlbumId] || {};
+      const total = lettersMode.questions.length || 1;
+      const correct = lettersMode.correct || 0;
+      const wrong = lettersMode.errors || 0;
+      const accuracy = Math.round((correct / Math.max(1, total)) * 100);
+      const cleanName = String(playerName || '').trim().slice(0, 24) || 'Fã CBJR';
+
+      return {
+        name: cleanName,
+        score: calculateLettersOnlineScore(correct, wrong, total, completedAlbum),
+        timestamp: Date.now(),
+        createdAtText: new Date().toISOString(),
+        gameMode: 'letras',
+        source: 'letras-cbjr-v2',
+        radioMode: '',
+        album: album.name || 'Modo Letras',
+        albumIndex: lettersMode.albumOrder.indexOf(lettersMode.currentAlbumId) + 1,
+        accuracy,
+        correct,
+        wrong,
+        total,
+        rankTitle: completedAlbum ? 'Álbum concluído' : 'Tentativa no Modo Letras'
+      };
+    }
+
+    function setLettersRankingStatus(text, isError = false) {
+      const el = document.getElementById('lettersRankingStatus');
+      if (!el) return;
+      el.textContent = text || '';
+      el.style.color = isError ? '#ff6b64' : 'rgba(255,255,255,.72)';
+    }
+
+    async function saveLettersOnlineScore(payload) {
+      const fb = await getLetrasFirebaseApi();
+      await fb.addDoc(fb.collection(fb.db, 'ranking'), {
+        ...payload,
+        createdAt: fb.serverTimestamp()
+      });
+      return payload;
+    }
+
+    async function submitLettersScoreOnline() {
+      const input = document.getElementById('lettersPlayerName');
+      const btn = document.getElementById('lettersSubmitScoreBtn');
+      const name = input ? input.value.trim() : '';
+
+      if (!name) {
+        setLettersRankingStatus('Digite seu nome para enviar ao ranking.', true);
+        input?.focus();
+        return;
+      }
+
+      const completedAlbum = String(document.getElementById('lettersRankingCard')?.dataset.completed || '') === 'true';
+      const payload = buildLettersRankingPayload(name, completedAlbum);
+
+      try {
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = 'Enviando...';
+        }
+        setLettersRankingStatus('Enviando pontuação para o ranking online...');
+        await saveLettersOnlineScore(payload);
+        lastLettersRankingPayload = payload;
+        localStorage.setItem('lettersCBJR_playerName', payload.name);
+        if (input) input.disabled = true;
+        if (btn) btn.textContent = 'Enviado ✓';
+        setLettersRankingStatus(`Pontuação enviada: ${payload.score} pts. Dias de luta, dias de glória!`);
+      } catch (error) {
+        console.error(error);
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Enviar';
+        }
+        setLettersRankingStatus('Erro ao enviar. Confira as regras do Firestore.', true);
+      }
+    }
+
+    function renderLettersRankingCard(completedAlbum) {
+      const savedName = escapeAttr(localStorage.getItem('lettersCBJR_playerName') || '');
+      const scorePreview = calculateLettersOnlineScore(lettersMode.correct || 0, lettersMode.errors || 0, lettersMode.questions.length || 1, completedAlbum);
+      return `
+        <section class="letters-ranking-card" id="lettersRankingCard" data-completed="${completedAlbum ? 'true' : 'false'}" aria-label="Ranking Online CBJR">
+          <strong>Ranking Online CBJR</strong>
+          <p>Salve sua pontuação do Modo Letras e entre na disputa com a galera. Prévia: <b>${scorePreview} pts</b>.</p>
+          <div class="letters-ranking-row">
+            <input id="lettersPlayerName" maxlength="24" placeholder="Seu nome" value="${savedName}">
+            <button id="lettersSubmitScoreBtn" type="button" onclick="submitLettersScoreOnline()">Enviar</button>
+          </div>
+          <div id="lettersRankingStatus" class="letters-ranking-status">Digite seu nome para enviar sua pontuação ao ranking.</div>
+          <a class="letters-ranking-link" href="ranking.html?from=letras">Ver ranking completo ›</a>
+        </section>
+      `;
+    }
+
+    window.submitLettersScoreOnline = submitLettersScoreOnline;
+
     function endLettersGame() {
       clearInterval(lettersMode.timer);
       const total = lettersMode.questions.length;
@@ -3111,6 +3350,8 @@ const cbjrFeedback = {
                 “${getRandomChoraoQuote()}”
               </blockquote>
 
+              ${renderLettersRankingCard(true)}
+
               <div class="unlock-actions">
                 ${hasNextAlbum ? '<button class="primary-button" id="next-album-btn">Jogar álbum liberado</button>' : ''}
                 <button class="ghost-button" id="albums-btn">Escolher álbum</button>
@@ -3146,6 +3387,7 @@ const cbjrFeedback = {
         <div class="final-box">
           <h2>Fim de jogo!</h2>
           <p>Você chegou ao limite de erros em <strong>${album.name}</strong>.<br><br>Acertos: <strong>${lettersMode.correct}</strong> de <strong>${total}</strong>.</p>
+          ${renderLettersRankingCard(false)}
           <div class="final-actions">
             <button class="primary-button" id="restart-btn">Tentar novamente</button>
             <button class="ghost-button" id="albums-btn">Escolher álbum</button>
