@@ -8,20 +8,6 @@
 @font-face{font-family:Elektrix;src:url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/Elektrix-Bold.woff2') format('woff2'),url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/Elektrix-Bold.woff') format('woff'),url('https://cdn.jsdelivr.net/gh/charlibriano/Quiz-CBJR-V2/Elektrix%20Bold.ttf') format('truetype');font-display:swap}
 :root{--yellow:#f1c40f;--green:#1ed760;--red:#ff3b30;--line:rgba(241,196,15,.36);--white:#f8f8f8;--dark:#030303}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,Arial,sans-serif;color:var(--white);background:#000;overflow-x:hidden}body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 50% 8%,rgba(241,196,15,.16),transparent 26%),radial-gradient(circle at 12% 85%,rgba(30,215,96,.12),transparent 30%),url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/radio-bg.png') center/cover no-repeat;filter:brightness(.35) blur(2px);transform:scale(1.04);z-index:0}body::after{content:"";position:fixed;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.92),rgba(0,0,0,.58),rgba(0,0,0,.94));z-index:1;pointer-events:none}.page{position:relative;z-index:2;min-height:100svh;padding:18px;display:grid;grid-template-rows:auto 1fr;gap:14px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px}.btn{min-height:42px;border:1px solid var(--line);border-radius:999px;background:rgba(0,0,0,.65);color:#fff;text-decoration:none;padding:0 18px;font-weight:1000;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 22px rgba(241,196,15,.12)}.btn:hover{border-color:rgba(241,196,15,.75);box-shadow:0 0 26px rgba(241,196,15,.18)}.brand{font-family:Elektrix,Inter,sans-serif;color:var(--yellow);font-size:clamp(2rem,5vw,4rem);text-shadow:0 0 28px rgba(241,196,15,.35);line-height:.85;text-align:center}.panel{width:min(1180px,96vw);margin:0 auto;border:1px solid var(--line);border-radius:30px;background:radial-gradient(circle at top,rgba(241,196,15,.08),transparent 36%),linear-gradient(180deg,rgba(0,0,0,.78),rgba(0,0,0,.94));box-shadow:0 28px 90px rgba(0,0,0,.72),inset 0 1px 0 rgba(255,255,255,.06);padding:clamp(14px,2.4vw,28px);display:grid;gap:16px}.hero{text-align:center}.hero h1{font-family:Elektrix,Inter,sans-serif;color:var(--yellow);font-size:clamp(2.2rem,7vw,5.5rem);line-height:.85;margin:0 0 8px}.hero p{margin:0;color:rgba(255,255,255,.78);font-weight:900}.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.tab{border:1px solid rgba(241,196,15,.35);background:rgba(0,0,0,.55);color:#fff;border-radius:999px;min-height:38px;padding:0 18px;font-weight:1000;cursor:pointer}.tab.active{background:linear-gradient(90deg,var(--yellow),#1ed760);color:#000;border-color:transparent}.ranking-list{display:grid;gap:10px}.rank-row{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:12px;align-items:center;border:1px solid rgba(241,196,15,.20);border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(0,0,0,.62));padding:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}.rank-row.top1{border-color:rgba(30,215,96,.65);box-shadow:0 0 34px rgba(30,215,96,.12),inset 0 1px 0 rgba(255,255,255,.08)}.pos{font-family:Elektrix,Inter,sans-serif;color:var(--yellow);font-size:2rem;text-align:center}.who{min-width:0}.name{font-weight:1000;font-size:1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.meta{margin-top:4px;color:rgba(255,255,255,.62);font-weight:800;font-size:.78rem}.score{font-weight:1000;color:#1ed760;font-size:1.1rem;text-align:right}.empty,.loading{border:1px solid rgba(241,196,15,.25);border-radius:20px;padding:20px;text-align:center;color:rgba(255,255,255,.72);font-weight:900}.footer-note{text-align:center;color:rgba(255,255,255,.58);font-weight:800;font-size:.82rem}.status{font-size:.74rem;text-align:center;color:rgba(255,255,255,.55);font-weight:800}.date{color:rgba(255,255,255,.74)}@media(max-width:620px){.page{padding:12px}.topbar .btn{min-height:36px;padding:0 12px;font-size:.8rem}.rank-row{grid-template-columns:48px minmax(0,1fr);gap:8px}.score{grid-column:2;text-align:left}.pos{font-size:1.45rem}.panel{border-radius:22px;padding:12px}.tabs{justify-content:stretch}.tab{flex:1;padding:0 8px}.brand{font-size:1.55rem}}
-
-
-/* LOGIN GOOGLE — PERFIL DO USUÁRIO NO TOPO */
-.auth-actions{display:flex;align-items:center;gap:10px;justify-content:flex-end;min-width:0}
-.auth-user-pill{display:none;align-items:center;gap:9px;max-width:300px;min-height:38px;padding:4px 5px 4px 6px;border:1px solid rgba(255,255,255,.16);border-radius:999px;background:rgba(0,0,0,.58);box-shadow:0 0 22px rgba(241,196,15,.10),inset 0 1px 0 rgba(255,255,255,.08);color:#fff;min-width:0}
-.auth-user-pill.show{display:inline-flex}
-.auth-user-pill img{width:30px;height:30px;border-radius:50%;object-fit:cover;border:1px solid rgba(241,196,15,.48);background:rgba(255,255,255,.08);flex:0 0 auto}
-.auth-user-info{min-width:0;display:grid;line-height:1.05}
-.auth-user-info strong{font-size:.78rem;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff}
-.auth-user-info span{font-size:.62rem;font-weight:850;color:rgba(255,255,255,.56);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.auth-logout{width:28px;height:28px;border:0;border-radius:50%;background:rgba(255,255,255,.10);color:#fff;font-weight:1000;cursor:pointer;line-height:1;flex:0 0 auto}
-.auth-logout:hover{background:rgba(241,196,15,.18);color:#f1c40f}
-@media(max-width:760px){.topbar{gap:8px}.auth-actions{gap:6px}.auth-user-pill{max-width:58px;padding:3px}.auth-user-info{display:none}.auth-logout{width:26px;height:26px}.auth-user-pill img{width:28px;height:28px}.auth-actions .btn{padding:0 10px!important}}
-
 </style>
 </head>
 <body>
@@ -29,17 +15,7 @@
   <header class="topbar">
     <a class="btn" href="index.html?skipIntro=true">← Menu</a>
     <div class="brand">Ranking CBJR</div>
-    <div class="auth-actions">
-      <div class="auth-user-pill" id="authUserPill" title="Usuário logado">
-        <img id="authUserPhoto" alt="Foto do usuário logado" src="" />
-        <div class="auth-user-info">
-          <strong id="authUserName">Jogador CBJR</strong>
-          <span id="authUserEmail">Conta Google</span>
-        </div>
-        <button class="auth-logout" id="authLogoutBtn" type="button" title="Sair" aria-label="Sair">×</button>
-      </div>
-      <a class="btn" href="radio.html">Rádio</a>
-    </div>
+    <a class="btn" href="radio.html">Rádio</a>
   </header>
   <main class="panel">
     <section class="hero">
@@ -61,8 +37,7 @@
 </div>
 <script type="module">
 import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getFirestore, collection, getDocs, addDoc, doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { getFirestore, collection, getDocs, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
 const firebaseConfig={
   apiKey:'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
@@ -76,29 +51,9 @@ const firebaseConfig={
 
 const app=getApps().length?getApp():initializeApp(firebaseConfig);
 const db=getFirestore(app);
-const auth=getAuth(app);
 const COLLECTION_NAME='ranking';
-let currentGoogleUser=null;
 let rankingData=[];
 let activeFilter='all';
-const authUserPill=document.getElementById('authUserPill');
-const authUserPhoto=document.getElementById('authUserPhoto');
-const authUserName=document.getElementById('authUserName');
-const authUserEmail=document.getElementById('authUserEmail');
-const authLogoutBtn=document.getElementById('authLogoutBtn');
-function setLoggedUserUI(user){
-  currentGoogleUser=user||null;
-  window.CBJR_CURRENT_USER=user?{uid:user.uid,name:user.displayName||'Jogador CBJR',email:user.email||'',photoURL:user.photoURL||''}:null;
-  if(!user)return;
-  if(authUserName)authUserName.textContent=user.displayName||'Jogador CBJR';
-  if(authUserEmail)authUserEmail.textContent=user.email||'Conta Google';
-  if(authUserPhoto)authUserPhoto.src=user.photoURL||'https://ui-avatars.com/api/?name=CBJR&background=f1c40f&color=000&bold=true';
-  authUserPill?.classList.add('show');
-}
-async function saveLoggedUser(user){
-  if(!user)return;
-  try{await setDoc(doc(db,'usuarios',user.uid),{uid:user.uid,nome:user.displayName||'Jogador CBJR',email:user.email||'',foto:user.photoURL||'',provider:'google',ultimoLogin:serverTimestamp()},{merge:true});}catch(e){console.warn(e)}
-}
 
 function normalizeText(v,fallback=''){return String(v ?? fallback).trim();}
 function normalizeNumber(v,fallback=0){const n=Number(v);return Number.isFinite(n)?n:fallback;}
@@ -178,13 +133,13 @@ async function loadRanking(){
   }
 }
 async function salvarPontuacaoRanking(payload={}){
-  const cleanName=normalizeText(payload.name||payload.playerName||payload.nome||payload.jogador||currentGoogleUser?.displayName,'Ouvinte CBJR').slice(0,32);
+  const cleanName=normalizeText(payload.name||payload.playerName||payload.nome||payload.jogador||window.CBJR_AUTH_USER?.displayName,'Ouvinte CBJR').slice(0,32);
   const score=normalizeNumber(payload.score||payload.pontos||payload.points||payload.pontuacao);
   const game=detectGameMode(payload);
   const data={
-    uid:currentGoogleUser?.uid||payload.uid||'',
-    email:currentGoogleUser?.email||payload.email||'',
-    photoURL:currentGoogleUser?.photoURL||payload.photoURL||'',
+    uid:window.CBJR_AUTH_USER?.uid||payload.uid||'',
+    email:window.CBJR_AUTH_USER?.email||payload.email||'',
+    photoURL:window.CBJR_AUTH_USER?.photoURL||payload.photoURL||'',
     name:cleanName,
     score,
     gameMode:game,
@@ -205,127 +160,70 @@ window.salvarPontuacaoRanking=salvarPontuacaoRanking;
 window.CBJRRanking={save:salvarPontuacaoRanking,reload:loadRanking};
 
 document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');activeFilter=btn.dataset.filter;renderRanking();}));
-authLogoutBtn?.addEventListener('click',async()=>{await signOut(auth);window.location.href='index.html';});
-onAuthStateChanged(auth,async(user)=>{
-  if(!user){window.location.href='index.html?loginRequired=true';return;}
-  setLoggedUserUI(user);
-  await saveLoggedUser(user);
-  loadRanking();
-});
+loadRanking();
 </script>
 
-<!-- CBJR AUTH PROFILE GLOBAL -->
+
+<!-- CBJR PERFIL GOOGLE ÚNICO — sem tela de login nas páginas internas -->
 <style id="cbjr-auth-profile-style">
   .cbjr-auth-profile {
-    position: fixed;
-    top: 18px;
-    right: 18px;
-    z-index: 5000;
-    display: none;
-    align-items: center;
-    gap: 10px;
+    position: fixed; top: 18px; right: 18px; z-index: 5000;
+    display: none; font-family: Inter, Arial, Helvetica, sans-serif;
+  }
+  .cbjr-auth-profile.show { display: block; }
+  .cbjr-auth-trigger {
+    display: inline-flex; align-items: center; gap: 10px;
     max-width: min(360px, calc(100vw - 32px));
-    padding: 6px 8px 6px 6px;
-    border-radius: 999px;
-    border: 1px solid rgba(255,255,255,.18);
-    background: rgba(0,0,0,.76);
-    color: #fff;
+    padding: 6px 10px 6px 6px; border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.18); background: rgba(0,0,0,.78); color: #fff;
     box-shadow: 0 10px 28px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.08);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    font-family: Inter, Arial, Helvetica, sans-serif;
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    cursor: pointer; min-width: 0;
   }
-  .cbjr-auth-profile.show { display: inline-flex; }
-  .cbjr-auth-profile img {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid rgba(241,196,15,.75);
-    background: #111;
-    flex: 0 0 auto;
+  .cbjr-auth-trigger:hover { border-color: rgba(241,196,15,.58); box-shadow: 0 0 28px rgba(241,196,15,.14), 0 10px 28px rgba(0,0,0,.42); }
+  .cbjr-auth-trigger img, .cbjr-auth-fallback {
+    width: 38px; height: 38px; border-radius: 50%; object-fit: cover;
+    border: 2px solid rgba(241,196,15,.75); background: #111; flex: 0 0 auto;
   }
-  .cbjr-auth-fallback {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    flex: 0 0 auto;
-    border: 2px solid rgba(241,196,15,.75);
-    background: #f1c40f;
-    color: #050505;
-    font-weight: 1000;
-    font-size: .9rem;
+  .cbjr-auth-fallback { display: grid; place-items: center; background: #f1c40f; color: #050505; font-weight: 1000; font-size: .9rem; }
+  .cbjr-auth-text { min-width: 0; display: grid; line-height: 1.05; text-align:left; }
+  .cbjr-auth-name { font-weight: 1000; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 210px; }
+  .cbjr-auth-email { margin-top: 3px; color: rgba(255,255,255,.68); font-size: .76rem; font-weight: 850; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 210px; }
+  .cbjr-auth-caret { color:#f1c40f; font-weight:1000; padding:0 2px; flex:0 0 auto; }
+  .cbjr-auth-menu {
+    position: absolute; right: 0; top: calc(100% + 10px); width: min(310px, calc(100vw - 32px));
+    display: none; border: 1px solid rgba(241,196,15,.34); border-radius: 18px;
+    background: rgba(0,0,0,.92); color: #fff; padding: 10px;
+    box-shadow: 0 22px 58px rgba(0,0,0,.62), inset 0 1px 0 rgba(255,255,255,.08);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
   }
-  .cbjr-auth-text {
-    min-width: 0;
-    display: grid;
-    line-height: 1.05;
+  .cbjr-auth-profile.open .cbjr-auth-menu { display: grid; gap: 8px; }
+  .cbjr-auth-menu-title { border-bottom:1px solid rgba(255,255,255,.12); padding: 4px 4px 10px; color: rgba(255,255,255,.72); font-weight: 850; font-size: .82rem; line-height:1.35; }
+  .cbjr-auth-menu-title strong { display:block; color:#f1c40f; font-size:.95rem; }
+  .cbjr-auth-menu a, .cbjr-auth-menu button {
+    width: 100%; min-height: 38px; border-radius: 12px; border: 1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.06); color: #fff; text-decoration: none; display:flex; align-items:center;
+    padding: 0 12px; font-weight: 950; cursor:pointer; font: inherit;
   }
-  .cbjr-auth-name {
-    font-weight: 1000;
-    color: #fff;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 210px;
-  }
-  .cbjr-auth-email {
-    margin-top: 3px;
-    color: rgba(255,255,255,.68);
-    font-size: .76rem;
-    font-weight: 850;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 210px;
-  }
-  .cbjr-auth-logout {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    border: 1px solid rgba(255,255,255,.16);
-    background: rgba(255,255,255,.10);
-    color: #fff;
-    font-size: 1.15rem;
-    line-height: 1;
-    font-weight: 1000;
-    cursor: pointer;
-    display: grid;
-    place-items: center;
-    flex: 0 0 auto;
-  }
-  .cbjr-auth-logout:hover { background: rgba(241,196,15,.20); border-color: rgba(241,196,15,.55); }
-  .cbjr-auth-login-btn {
-    border: 1px solid rgba(241,196,15,.55);
-    border-radius: 999px;
-    background: rgba(0,0,0,.78);
-    color: #fff;
-    min-height: 42px;
-    padding: 0 16px;
-    font-weight: 1000;
-    cursor: pointer;
-    box-shadow: 0 0 22px rgba(241,196,15,.12);
-  }
-  .cbjr-auth-login-btn strong { color: #f1c40f; }
+  .cbjr-auth-menu a:hover, .cbjr-auth-menu button:hover { background: rgba(241,196,15,.14); border-color: rgba(241,196,15,.42); }
+  .cbjr-auth-logout { color:#ffb3b3!important; }
   @media (max-width: 700px) {
-    .cbjr-auth-profile { top: 10px; right: 10px; padding: 5px; gap: 7px; }
-    .cbjr-auth-profile img, .cbjr-auth-fallback { width: 32px; height: 32px; }
+    .cbjr-auth-profile { top: 10px; right: 10px; }
+    .cbjr-auth-trigger { padding: 5px; gap: 7px; }
+    .cbjr-auth-trigger img, .cbjr-auth-fallback { width: 32px; height: 32px; }
     .cbjr-auth-name { max-width: 126px; font-size: .82rem; }
     .cbjr-auth-email { display: none; }
-    .cbjr-auth-logout { width: 30px; height: 30px; font-size: 1rem; }
-    .cbjr-auth-login-btn { min-height: 36px; padding: 0 12px; font-size: .8rem; }
+    .cbjr-auth-caret { font-size:.8rem; }
   }
 </style>
 <div id="cbjrAuthProfile" class="cbjr-auth-profile" aria-live="polite"></div>
 <script type="module" id="cbjr-auth-profile-script">
   import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-  import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+  import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
   import { getFirestore, doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
   const firebaseConfig = {
-    apiKey: 'AIzaSyDtbjYWVdd0lMRy96QfqfjAg1dBReRIoRg4',
+    apiKey: 'AIzaSyDtb8jvVd0lMRy96QfqfjAg1dBReRIoRg4',
     authDomain: 'ranking-cbjr.firebaseapp.com',
     databaseURL: 'https://ranking-cbjr-default-rtdb.firebaseio.com',
     projectId: 'ranking-cbjr',
@@ -334,74 +232,71 @@ onAuthStateChanged(auth,async(user)=>{
     appId: '1:681180179118:web:3ac202c9f7ed69cf94db3f',
     measurementId: 'G-ZXMNGH3TVG'
   };
-
   const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
   const auth = getAuth(app);
-  const provider = new GoogleAuthProvider();
   const db = getFirestore(app);
   const box = document.getElementById('cbjrAuthProfile');
 
-  function escapeHtml(str) {
-    return String(str ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-  }
-
+  function escapeHtml(str) { return String(str ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
   function initials(name, email) {
     const source = String(name || email || 'CB').trim();
     const parts = source.split(/\s+/).filter(Boolean);
     return (parts.length >= 2 ? parts[0][0] + parts[1][0] : source.slice(0,2)).toUpperCase();
   }
-
   async function saveUser(user) {
     try {
       await setDoc(doc(db, 'usuarios', user.uid), {
-        uid: user.uid,
-        name: user.displayName || '',
-        email: user.email || '',
-        photoURL: user.photoURL || '',
-        provider: 'google',
-        lastLoginAt: serverTimestamp()
+        uid: user.uid, nome: user.displayName || 'Fã CBJR', email: user.email || '', foto: user.photoURL || '',
+        provider: 'google', ultimoLogin: serverTimestamp()
       }, { merge: true });
-    } catch (err) {
-      console.warn('CBJR: não foi possível salvar o usuário no Firestore.', err);
-    }
+    } catch (err) { console.warn('CBJR: não foi possível salvar usuário agora.', err); }
   }
-
+  function fillForms(user) {
+    const name = user?.displayName || '';
+    const email = user?.email || '';
+    const photo = user?.photoURL || '';
+    const firstName = name.split(' ')[0] || name;
+    const nameFields = ['fanName','playerName','nomeJogador','userNameInput'];
+    nameFields.forEach(id => { const el = document.getElementById(id); if (el && !el.value) el.value = firstName || name; });
+    const photoEl = document.getElementById('fanPhoto'); if (photoEl && !photoEl.value) photoEl.value = photo;
+    const emailEl = document.getElementById('fanEmail'); if (emailEl && !emailEl.value) emailEl.value = email;
+  }
   function renderLoggedOut() {
+    window.CBJR_AUTH_USER = null;
+    window.dispatchEvent(new CustomEvent('cbjr-auth-change', { detail: { user: null } }));
     if (!box) return;
-    // O login deve acontecer somente na tela inicial.
-    // Se a sessão não existir, volta para o index sem criar botão duplicado.
-    box.classList.remove('show');
+    box.classList.remove('show','open');
     box.innerHTML = '';
-    const current = (location.pathname.split('/').pop() || '').toLowerCase();
-    if (current !== 'index.html' && current !== '') {
-      window.location.href = 'index.html';
-    }
   }
-
   function renderLoggedIn(user) {
+    window.CBJR_AUTH_USER = user;
+    window.dispatchEvent(new CustomEvent('cbjr-auth-change', { detail: { user } }));
     if (!box) return;
     const name = user.displayName || 'Fã CBJR';
     const email = user.email || '';
     const photo = user.photoURL || '';
     box.classList.add('show');
     box.innerHTML = `
-      ${photo ? `<img src="${escapeHtml(photo)}" alt="Foto de ${escapeHtml(name)}">` : `<span class="cbjr-auth-fallback">${escapeHtml(initials(name,email))}</span>`}
-      <span class="cbjr-auth-text"><strong class="cbjr-auth-name">${escapeHtml(name)}</strong><span class="cbjr-auth-email">${escapeHtml(email)}</span></span>
-      <button class="cbjr-auth-logout" type="button" title="Sair da conta Google" aria-label="Sair da conta Google">×</button>
-    `;
-    box.querySelector('.cbjr-auth-logout')?.addEventListener('click', async () => {
-      try { await signOut(auth); window.location.href = 'index.html'; } catch(e) { console.error(e); }
-    });
+      <button class="cbjr-auth-trigger" type="button" aria-label="Abrir opções da conta Google">
+        ${photo ? `<img src="${escapeHtml(photo)}" alt="Foto de ${escapeHtml(name)}">` : `<span class="cbjr-auth-fallback">${escapeHtml(initials(name,email))}</span>`}
+        <span class="cbjr-auth-text"><strong class="cbjr-auth-name">${escapeHtml(name)}</strong><span class="cbjr-auth-email">${escapeHtml(email)}</span></span>
+        <span class="cbjr-auth-caret">▾</span>
+      </button>
+      <div class="cbjr-auth-menu" role="menu">
+        <div class="cbjr-auth-menu-title"><strong>Conta conectada</strong>${escapeHtml(email)}</div>
+        <a href="index.html?skipIntro=true">🏠 Menu principal</a>
+        <a href="ranking.html">🏆 Meu ranking</a>
+        <a href="fans.html">💬 Comunidade</a>
+        <button class="cbjr-auth-logout" type="button">🚪 Sair da conta Google</button>
+      </div>`;
+    box.querySelector('.cbjr-auth-trigger')?.addEventListener('click', (ev) => { ev.stopPropagation(); box.classList.toggle('open'); });
+    box.querySelector('.cbjr-auth-logout')?.addEventListener('click', async () => { try { await signOut(auth); window.location.href = 'index.html'; } catch(e) { console.error(e); } });
+    fillForms(user);
   }
-
-  onAuthStateChanged(auth, user => {
-    window.CBJR_AUTH_USER = user || null;
-    window.dispatchEvent(new CustomEvent('cbjr-auth-change', { detail: { user } }));
-    if (user) { renderLoggedIn(user); saveUser(user); }
-    else { renderLoggedOut(); }
-  });
+  document.addEventListener('click', (ev) => { if (box && !box.contains(ev.target)) box.classList.remove('open'); });
+  onAuthStateChanged(auth, user => { if (user) { renderLoggedIn(user); saveUser(user); } else { renderLoggedOut(); } });
 </script>
-<!-- /CBJR AUTH PROFILE GLOBAL -->
+<!-- /CBJR PERFIL GOOGLE ÚNICO -->
 
 </body>
 </html>
