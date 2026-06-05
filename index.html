@@ -3580,34 +3580,6 @@
     }
   </style>
 
-
-
-  <!-- PERFIL GOOGLE NA HOME — FOTO, NOME E MENU DO USUÁRIO -->
-  <style id="cbjr-home-profile-style">
-    .cbjr-user-area{position:relative;display:none;align-items:center;gap:8px;z-index:90;}
-    body.auth-logged-in .cbjr-user-area{display:flex;}
-    .cbjr-user-button{min-height:32px;border:1px solid rgba(255,255,255,.16);border-radius:999px;background:rgba(255,255,255,.08);color:#fff;display:inline-flex;align-items:center;gap:8px;padding:4px 8px 4px 5px;cursor:pointer;max-width:260px;box-shadow:0 0 18px rgba(241,196,15,.10);}
-    .cbjr-user-button:hover{border-color:rgba(241,196,15,.55);background:rgba(241,196,15,.10);}
-    .cbjr-user-button img{width:24px;height:24px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);}
-    .cbjr-user-button strong{min-width:0;max-width:148px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.74rem;}
-    .cbjr-user-button .chev{font-size:.65rem;color:rgba(255,255,255,.62);}
-    .cbjr-profile-menu{position:absolute;right:0;top:calc(100% + 8px);width:min(280px,86vw);border:1px solid rgba(241,196,15,.28);border-radius:18px;background:rgba(5,5,5,.96);box-shadow:0 24px 70px rgba(0,0,0,.72),inset 0 1px 0 rgba(255,255,255,.08);padding:12px;display:none;}
-    .cbjr-user-area.open .cbjr-profile-menu{display:block;}
-    .cbjr-profile-head{display:flex;align-items:center;gap:10px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.10);}
-    .cbjr-profile-head img{width:42px;height:42px;border-radius:50%;object-fit:cover;border:1px solid rgba(241,196,15,.38);}
-    .cbjr-profile-name{font-weight:1000;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .cbjr-profile-email{margin-top:2px;color:rgba(255,255,255,.55);font-size:.76rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .cbjr-profile-actions{display:grid;gap:7px;margin-top:10px;}
-    .cbjr-profile-link,.cbjr-profile-logout{min-height:36px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;text-decoration:none;display:flex;align-items:center;gap:8px;padding:0 10px;font-weight:900;font-size:.82rem;cursor:pointer;}
-    .cbjr-profile-link:hover,.cbjr-profile-logout:hover{border-color:rgba(241,196,15,.45);background:rgba(241,196,15,.10);}
-    .cbjr-profile-logout{color:#ffdddd;}
-    .home-user-welcome{display:none;position:relative;z-index:2;margin-top:12px;border:1px solid rgba(30,215,96,.26);border-radius:16px;background:rgba(0,0,0,.44);padding:10px 12px;color:rgba(255,255,255,.72);font-size:.84rem;line-height:1.35;}
-    body.auth-logged-in .home-user-welcome{display:block;}
-    .home-user-welcome strong{display:block;color:var(--green);font-size:.96rem;margin-bottom:2px;text-shadow:0 0 12px rgba(30,215,96,.24);}
-    .logout-btn{display:none!important;}
-    @media(max-width:560px){.cbjr-user-button{padding-right:6px}.cbjr-user-button strong{display:none}.cbjr-profile-menu{right:-2px}.home-user-welcome{font-size:.76rem;padding:8px 10px}}
-  </style>
-
 </head>
 
 <body class="auth-loading">
@@ -3656,27 +3628,6 @@
           <strong id="userName">Jogador</strong>
           <button class="logout-btn" id="logoutBtn" type="button" title="Sair" aria-label="Sair">×</button>
         </div>
-        <div class="cbjr-user-area" id="cbjrUserArea">
-          <button class="cbjr-user-button" id="cbjrUserButton" type="button" aria-haspopup="true" aria-expanded="false" title="Perfil do usuário">
-            <img id="homeUserPhoto" alt="Foto do usuário logado" src="" />
-            <strong id="homeUserName">Jogador</strong>
-            <span class="chev">▾</span>
-          </button>
-          <div class="cbjr-profile-menu" id="cbjrProfileMenu">
-            <div class="cbjr-profile-head">
-              <img id="profileMenuPhoto" alt="Foto do usuário logado" src="" />
-              <div style="min-width:0">
-                <div class="cbjr-profile-name" id="profileMenuName">Jogador CBJR</div>
-                <div class="cbjr-profile-email" id="profileMenuEmail">Conta Google conectada</div>
-              </div>
-            </div>
-            <div class="cbjr-profile-actions">
-              <a class="cbjr-profile-link" href="ranking.html">🏆 Meu ranking</a>
-              <a class="cbjr-profile-link" href="fans.html">💬 Comunidade</a>
-              <button class="cbjr-profile-logout" id="profileLogoutBtn" type="button">🚪 Sair da conta</button>
-            </div>
-          </div>
-        </div>
         <button class="icon-btn" id="soundBtn" title="Som ambiente" aria-label="Som ambiente">♪</button>
         <button class="icon-btn" id="infoBtn" title="Sobre" aria-label="Sobre">?</button>
       </div>
@@ -3690,10 +3641,6 @@
           <p class="subtitle">
             Explore o universo CBJR: responda perguntas no Quiz, descubra músicas na Rádio ou complete trechos no Modo Letras.
           </p>
-          <div class="home-user-welcome" id="homeUserWelcome">
-            <strong id="homeWelcomeName">Bem-vindo!</strong>
-            Sua conta Google está conectada. Agora seu progresso, ranking e comunidade podem ficar vinculados ao seu perfil.
-          </div>
           <div class="home-online-now" aria-live="polite"><span class="online-dot"></span><strong id="homeOnlineCount">0</strong><span>fãs online agora</span></div>
 </div>
 
@@ -4630,15 +4577,6 @@
   const logoutBtn = document.getElementById('logoutBtn');
   const userName = document.getElementById('userName');
   const userPhoto = document.getElementById('userPhoto');
-  const homeUserName = document.getElementById('homeUserName');
-  const homeUserPhoto = document.getElementById('homeUserPhoto');
-  const homeWelcomeName = document.getElementById('homeWelcomeName');
-  const cbjrUserArea = document.getElementById('cbjrUserArea');
-  const cbjrUserButton = document.getElementById('cbjrUserButton');
-  const profileMenuPhoto = document.getElementById('profileMenuPhoto');
-  const profileMenuName = document.getElementById('profileMenuName');
-  const profileMenuEmail = document.getElementById('profileMenuEmail');
-  const profileLogoutBtn = document.getElementById('profileLogoutBtn');
 
   function setAuthView(state) {
     document.body.classList.remove('auth-loading', 'auth-logged-out', 'auth-logged-in');
@@ -4686,51 +4624,18 @@
     location.reload();
   });
 
-  profileLogoutBtn?.addEventListener('click', async () => {
-    await signOut(auth);
-    location.reload();
-  });
-
-  cbjrUserButton?.addEventListener('click', () => {
-    cbjrUserArea?.classList.toggle('open');
-    cbjrUserButton?.setAttribute('aria-expanded', cbjrUserArea?.classList.contains('open') ? 'true' : 'false');
-  });
-
-  document.addEventListener('click', (event) => {
-    if (!cbjrUserArea?.contains(event.target)) {
-      cbjrUserArea?.classList.remove('open');
-      cbjrUserButton?.setAttribute('aria-expanded', 'false');
-    }
-  });
-
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
       if (loginStatus) loginStatus.textContent = 'Faça login para continuar.';
       if (userName) userName.textContent = 'Jogador';
       if (userPhoto) userPhoto.removeAttribute('src');
-      if (homeUserName) homeUserName.textContent = 'Jogador';
-      if (homeUserPhoto) homeUserPhoto.removeAttribute('src');
-      if (homeWelcomeName) homeWelcomeName.textContent = 'Bem-vindo!';
-      if (profileMenuPhoto) profileMenuPhoto.removeAttribute('src');
-      if (profileMenuName) profileMenuName.textContent = 'Jogador CBJR';
-      if (profileMenuEmail) profileMenuEmail.textContent = 'Conta Google conectada';
       setAuthView('auth-logged-out');
       return;
     }
 
-    const displayName = user.displayName || 'Jogador CBJR';
-    const firstName = displayName.split(' ')[0] || displayName;
-    const photoURL = user.photoURL || '';
-
     if (loginStatus) loginStatus.textContent = 'Login confirmado. Carregando universo CBJR...';
-    if (userName) userName.textContent = displayName;
-    if (userPhoto && photoURL) userPhoto.src = photoURL;
-    if (homeUserName) homeUserName.textContent = displayName;
-    if (homeUserPhoto && photoURL) homeUserPhoto.src = photoURL;
-    if (homeWelcomeName) homeWelcomeName.textContent = `Bem-vindo, ${firstName}!`;
-    if (profileMenuName) profileMenuName.textContent = displayName;
-    if (profileMenuEmail) profileMenuEmail.textContent = user.email || 'Conta Google conectada';
-    if (profileMenuPhoto && photoURL) profileMenuPhoto.src = photoURL;
+    if (userName) userName.textContent = user.displayName || 'Jogador CBJR';
+    if (userPhoto && user.photoURL) userPhoto.src = user.photoURL;
 
     try {
       await saveUserProfile(user);
@@ -4748,6 +4653,197 @@
     setAuthView('auth-logged-in');
   });
 </script>
+
+
+<!-- CBJR AUTH PROFILE GLOBAL -->
+<style id="cbjr-auth-profile-style">
+  .cbjr-auth-profile {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 5000;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    max-width: min(360px, calc(100vw - 32px));
+    padding: 6px 8px 6px 6px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.18);
+    background: rgba(0,0,0,.76);
+    color: #fff;
+    box-shadow: 0 10px 28px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    font-family: Inter, Arial, Helvetica, sans-serif;
+  }
+  .cbjr-auth-profile.show { display: inline-flex; }
+  .cbjr-auth-profile img {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(241,196,15,.75);
+    background: #111;
+    flex: 0 0 auto;
+  }
+  .cbjr-auth-fallback {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    border: 2px solid rgba(241,196,15,.75);
+    background: #f1c40f;
+    color: #050505;
+    font-weight: 1000;
+    font-size: .9rem;
+  }
+  .cbjr-auth-text {
+    min-width: 0;
+    display: grid;
+    line-height: 1.05;
+  }
+  .cbjr-auth-name {
+    font-weight: 1000;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 210px;
+  }
+  .cbjr-auth-email {
+    margin-top: 3px;
+    color: rgba(255,255,255,.68);
+    font-size: .76rem;
+    font-weight: 850;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 210px;
+  }
+  .cbjr-auth-logout {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.16);
+    background: rgba(255,255,255,.10);
+    color: #fff;
+    font-size: 1.15rem;
+    line-height: 1;
+    font-weight: 1000;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+  }
+  .cbjr-auth-logout:hover { background: rgba(241,196,15,.20); border-color: rgba(241,196,15,.55); }
+  .cbjr-auth-login-btn {
+    border: 1px solid rgba(241,196,15,.55);
+    border-radius: 999px;
+    background: rgba(0,0,0,.78);
+    color: #fff;
+    min-height: 42px;
+    padding: 0 16px;
+    font-weight: 1000;
+    cursor: pointer;
+    box-shadow: 0 0 22px rgba(241,196,15,.12);
+  }
+  .cbjr-auth-login-btn strong { color: #f1c40f; }
+  @media (max-width: 700px) {
+    .cbjr-auth-profile { top: 10px; right: 10px; padding: 5px; gap: 7px; }
+    .cbjr-auth-profile img, .cbjr-auth-fallback { width: 32px; height: 32px; }
+    .cbjr-auth-name { max-width: 126px; font-size: .82rem; }
+    .cbjr-auth-email { display: none; }
+    .cbjr-auth-logout { width: 30px; height: 30px; font-size: 1rem; }
+    .cbjr-auth-login-btn { min-height: 36px; padding: 0 12px; font-size: .8rem; }
+  }
+</style>
+<div id="cbjrAuthProfile" class="cbjr-auth-profile" aria-live="polite"></div>
+<script type="module" id="cbjr-auth-profile-script">
+  import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+  import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+  import { getFirestore, doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey: 'AIzaSyDtbjYWVdd0lMRy96QfqfjAg1dBReRIoRg4',
+    authDomain: 'ranking-cbjr.firebaseapp.com',
+    databaseURL: 'https://ranking-cbjr-default-rtdb.firebaseio.com',
+    projectId: 'ranking-cbjr',
+    storageBucket: 'ranking-cbjr.firebasestorage.app',
+    messagingSenderId: '681180179118',
+    appId: '1:681180179118:web:3ac202c9f7ed69cf94db3f',
+    measurementId: 'G-ZXMNGH3TVG'
+  };
+
+  const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+  const db = getFirestore(app);
+  const box = document.getElementById('cbjrAuthProfile');
+
+  function escapeHtml(str) {
+    return String(str ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  }
+
+  function initials(name, email) {
+    const source = String(name || email || 'CB').trim();
+    const parts = source.split(/\s+/).filter(Boolean);
+    return (parts.length >= 2 ? parts[0][0] + parts[1][0] : source.slice(0,2)).toUpperCase();
+  }
+
+  async function saveUser(user) {
+    try {
+      await setDoc(doc(db, 'usuarios', user.uid), {
+        uid: user.uid,
+        name: user.displayName || '',
+        email: user.email || '',
+        photoURL: user.photoURL || '',
+        provider: 'google',
+        lastLoginAt: serverTimestamp()
+      }, { merge: true });
+    } catch (err) {
+      console.warn('CBJR: não foi possível salvar o usuário no Firestore.', err);
+    }
+  }
+
+  function renderLoggedOut() {
+    if (!box) return;
+    box.classList.add('show');
+    box.innerHTML = '<button class="cbjr-auth-login-btn" type="button">Entrar com <strong>Google</strong></button>';
+    box.querySelector('button')?.addEventListener('click', async () => {
+      try { await signInWithPopup(auth, provider); }
+      catch (err) {
+        console.warn('Popup bloqueado; tentando redirecionamento.', err);
+        try { await signInWithRedirect(auth, provider); } catch(e) { console.error(e); alert('Não foi possível iniciar o login Google.'); }
+      }
+    });
+  }
+
+  function renderLoggedIn(user) {
+    if (!box) return;
+    const name = user.displayName || 'Fã CBJR';
+    const email = user.email || '';
+    const photo = user.photoURL || '';
+    box.classList.add('show');
+    box.innerHTML = `
+      ${photo ? `<img src="${escapeHtml(photo)}" alt="Foto de ${escapeHtml(name)}">` : `<span class="cbjr-auth-fallback">${escapeHtml(initials(name,email))}</span>`}
+      <span class="cbjr-auth-text"><strong class="cbjr-auth-name">${escapeHtml(name)}</strong><span class="cbjr-auth-email">${escapeHtml(email)}</span></span>
+      <button class="cbjr-auth-logout" type="button" title="Sair da conta Google" aria-label="Sair da conta Google">×</button>
+    `;
+    box.querySelector('.cbjr-auth-logout')?.addEventListener('click', async () => {
+      try { await signOut(auth); window.location.href = 'index.html'; } catch(e) { console.error(e); }
+    });
+  }
+
+  onAuthStateChanged(auth, user => {
+    window.CBJR_AUTH_USER = user || null;
+    window.dispatchEvent(new CustomEvent('cbjr-auth-change', { detail: { user } }));
+    if (user) { renderLoggedIn(user); saveUser(user); }
+    else { renderLoggedOut(); }
+  });
+</script>
+<!-- /CBJR AUTH PROFILE GLOBAL -->
 
 </body>
 </html>
