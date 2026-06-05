@@ -3596,13 +3596,13 @@
       width: min(1220px, calc(100% - 28px));
       margin: 0 auto;
       border: 1px solid rgba(241,196,15,.25);
-      border-radius: 22px;
+      border-radius: 20px;
       background:
         radial-gradient(circle at 14% 0%, rgba(241,196,15,.12), transparent 34%),
-        linear-gradient(180deg, rgba(0,0,0,.68), rgba(0,0,0,.88));
-      box-shadow: 0 18px 54px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.08);
-      padding: 14px;
-      gap: 12px;
+        linear-gradient(180deg, rgba(0,0,0,.64), rgba(0,0,0,.86));
+      box-shadow: 0 14px 44px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.08);
+      padding: 12px;
+      gap: 10px;
       position: relative;
       z-index: 4;
     }
@@ -3644,7 +3644,7 @@
 
     .dash-grid {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 9px;
     }
 
@@ -3652,8 +3652,8 @@
       border: 1px solid rgba(255,255,255,.12);
       border-radius: 16px;
       background: rgba(255,255,255,.055);
-      padding: 11px;
-      min-height: 82px;
+      padding: 9px 10px;
+      min-height: 68px;
       display: grid;
       align-content: center;
       gap: 5px;
@@ -3682,9 +3682,50 @@
       display: grid;
       gap: 7px;
       border: 1px solid rgba(255,255,255,.11);
-      border-radius: 16px;
+      border-radius: 14px;
       background: rgba(0,0,0,.32);
-      padding: 10px 12px;
+      padding: 9px 11px;
+    }
+
+    .dash-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .dash-mini-progress {
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 13px;
+      background: rgba(255,255,255,.045);
+      padding: 8px 10px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .dash-mini-progress div:first-child {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      color: rgba(255,255,255,.70);
+      font-size: .72rem;
+      font-weight: 950;
+    }
+
+    .dash-mini-bar {
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      overflow: hidden;
+      box-shadow: inset 0 1px 4px rgba(0,0,0,.62);
+    }
+
+    .dash-mini-bar span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--yellow), var(--green));
+      transition: width .45s ease;
     }
 
     .dash-progress-row {
@@ -3755,7 +3796,8 @@
     @media (max-width: 920px) {
       .player-dashboard { width: calc(100% - 16px); padding: 10px; border-radius: 18px; }
       .dash-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .dash-card { min-height: 72px; }
+      .dash-detail-grid { grid-template-columns: 1fr; }
+      .dash-card { min-height: 66px; }
       .dash-head { align-items: flex-start; }
     }
 
@@ -3861,15 +3903,22 @@
 
       <div class="dash-grid">
         <div class="dash-card"><small>Ranking</small><strong id="dashRanking">#--</strong></div>
+        <div class="dash-card"><small>Nível</small><strong id="dashLevel">Fã CBJR</strong></div>
+        <div class="dash-card"><small>XP</small><strong id="dashXP">0</strong></div>
         <div class="dash-card"><small>Rádio CBJR</small><strong id="dashRadio">1/13 CDs</strong></div>
         <div class="dash-card"><small>Modo Letras</small><strong id="dashLetras">0/13 álbuns</strong></div>
         <div class="dash-card"><small>Conquistas</small><strong id="dashConquistas">0</strong></div>
-        <div class="dash-card"><small>Modo atual</small><strong id="dashModo">Normal</strong></div>
       </div>
 
       <div class="dash-progress-wrap">
         <div class="dash-progress-row"><span>Progresso geral</span><strong id="dashPercent">0%</strong></div>
         <div class="dash-progress-bar"><span id="dashProgressBar"></span></div>
+      </div>
+
+      <div class="dash-detail-grid">
+        <div class="dash-mini-progress"><div><span>Rádio</span><strong id="dashRadioPercent">0%</strong></div><div class="dash-mini-bar"><span id="dashRadioBar"></span></div></div>
+        <div class="dash-mini-progress"><div><span>Letras</span><strong id="dashLetrasPercent">0%</strong></div><div class="dash-mini-bar"><span id="dashLetrasBar"></span></div></div>
+        <div class="dash-mini-progress"><div><span>Conquistas</span><strong id="dashConquistasPercent">0%</strong></div><div class="dash-mini-bar"><span id="dashConquistasBar"></span></div></div>
       </div>
 
       <div class="dash-actions">
@@ -4891,6 +4940,22 @@
     return obj && typeof obj === 'object' && !Array.isArray(obj) ? Object.keys(obj).length : 0;
   }
 
+  function getPlayerLevel(xp) {
+    const levels = [
+      { name: 'Iniciante', min: 0 },
+      { name: 'Fã CBJR', min: 250 },
+      { name: 'Skatista', min: 750 },
+      { name: 'Lokação', min: 1500 },
+      { name: 'Maníaco CBJR', min: 3000 },
+      { name: 'Lenda 013', min: 6000 }
+    ];
+    return levels.slice().reverse().find(level => xp >= level.min) || levels[0];
+  }
+
+  function percentOf(value, total) {
+    return Math.max(0, Math.min(100, Math.round((Number(value || 0) / total) * 100)));
+  }
+
   function readDashboardProgress() {
     const radioIndex = Math.max(0, Number(localStorage.getItem('radioCBJRUnlockedAlbumIndex_v2') || '0') || 0);
     const radioMode = String(localStorage.getItem('radioCBJRMode') || 'normal').toLowerCase();
@@ -4900,9 +4965,14 @@
     const letrasCount = Array.isArray(letras) ? letras.length : 0;
     const radioLiberados = Math.min(13, radioIndex + 1);
     const conquistas = radioAch + quizAch + letrasCount;
-    const totalBase = 13 + 13 + 40;
-    const doneBase = radioLiberados + letrasCount + conquistas;
-    const percent = Math.max(0, Math.min(100, Math.round((doneBase / totalBase) * 100)));
+
+    const radioPercent = percentOf(radioLiberados, 13);
+    const letrasPercent = percentOf(letrasCount, 13);
+    const conquistasPercent = percentOf(conquistas, 40);
+    const percent = Math.round((radioPercent + letrasPercent + conquistasPercent) / 3);
+
+    const xp = (radioLiberados * 120) + (letrasCount * 160) + (conquistas * 80) + (radioMode === 'hard' ? 250 : 0);
+    const level = getPlayerLevel(xp);
 
     let lastLabel = 'comece pela Rádio, Quiz ou Modo Letras';
     let continueHref = 'radio.html';
@@ -4910,14 +4980,19 @@
       lastLabel = `Modo Letras • ${letrasCount}/13 álbum(ns) concluído(s)`;
       continueHref = 'letras.html';
     } else if (radioLiberados > 1) {
-      lastLabel = `Rádio CBJR • ${radioLiberados}/13 CD(s) liberado(s)`;
+      lastLabel = `Rádio CBJR • ${radioLiberados}/13 CD(s) liberado(s) • ${radioMode === 'hard' ? 'Hard' : 'Normal'}`;
       continueHref = 'radio.html';
     } else if (quizAch > 0) {
       lastLabel = `Quiz CBJR • ${quizAch} conquista(s) registrada(s)`;
       continueHref = 'quiz.html';
     }
 
-    return { radioLiberados, radioMode, letrasCount, conquistas, percent, lastLabel, continueHref };
+    return { radioLiberados, radioMode, letrasCount, conquistas, percent, radioPercent, letrasPercent, conquistasPercent, xp, level, lastLabel, continueHref };
+  }
+
+  function setBarWidth(id, percent) {
+    const el = document.getElementById(id);
+    if (el) el.style.width = `${percent}%`;
   }
 
   function renderPlayerDashboard(user, rankingText = null) {
@@ -4927,13 +5002,19 @@
     setText('dashWelcome', `Bem-vindo, ${firstName}`);
     setText('dashSubtitle', user?.email ? `Conta conectada: ${user.email}` : 'Seu progresso está conectado à conta Google.');
     setText('dashRanking', rankingText || '#--');
+    setText('dashLevel', progress.level.name);
+    setText('dashXP', `${progress.xp} XP`);
     setText('dashRadio', `${progress.radioLiberados}/13 CDs`);
     setText('dashLetras', `${progress.letrasCount}/13 álbuns`);
     setText('dashConquistas', `${progress.conquistas}`);
-    setText('dashModo', progress.radioMode === 'hard' ? 'Hard' : 'Normal');
     setText('dashPercent', `${progress.percent}%`);
-    const bar = document.getElementById('dashProgressBar');
-    if (bar) bar.style.width = `${progress.percent}%`;
+    setText('dashRadioPercent', `${progress.radioPercent}%`);
+    setText('dashLetrasPercent', `${progress.letrasPercent}%`);
+    setText('dashConquistasPercent', `${progress.conquistasPercent}%`);
+    setBarWidth('dashProgressBar', progress.percent);
+    setBarWidth('dashRadioBar', progress.radioPercent);
+    setBarWidth('dashLetrasBar', progress.letrasPercent);
+    setBarWidth('dashConquistasBar', progress.conquistasPercent);
     const last = document.getElementById('dashLastActivity');
     if (last) last.innerHTML = `Última atividade: <strong>${progress.lastLabel}</strong>`;
     const btn = document.getElementById('dashContinueBtn');
@@ -4956,11 +5037,15 @@
           createdAt: d.createdAt?.seconds ? d.createdAt.seconds * 1000 : Number(d.timestamp || 0)
         }))
         .sort((a,b) => (b.score - a.score) || (b.createdAt - a.createdAt));
-      const idx = rows.findIndex(r =>
-        (r.uid && r.uid === user.uid) ||
-        (r.email && user.email && r.email.toLowerCase() === user.email.toLowerCase()) ||
-        (r.name && user.displayName && r.name.toLowerCase() === user.displayName.toLowerCase())
-      );
+      const display = String(user.displayName || '').toLowerCase().trim();
+      const first = display.split(/\s+/)[0] || '';
+      const idx = rows.findIndex(r => {
+        const rn = String(r.name || '').toLowerCase().trim();
+        return (r.uid && r.uid === user.uid) ||
+          (r.email && user.email && r.email.toLowerCase() === user.email.toLowerCase()) ||
+          (rn && display && rn === display) ||
+          (rn && first && rn === first);
+      });
       renderPlayerDashboard(user, idx >= 0 ? `#${idx + 1}` : '#--');
     } catch (error) {
       console.warn('Dashboard: não foi possível consultar ranking agora.', error);
