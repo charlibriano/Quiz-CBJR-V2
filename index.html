@@ -3600,6 +3600,14 @@
 </head>
 
 <body class="auth-loading">
+<script>
+  try {
+    if (localStorage.getItem('cbjr_google_logged') === '1') {
+      document.body.classList.remove('auth-loading', 'auth-logged-out');
+      document.body.classList.add('auth-logged-in');
+    }
+  } catch (e) {}
+</script>
 
   <!-- TELA DE LOGIN GOOGLE — OBRIGATÓRIA ANTES DE ENTRAR NO PROJETO -->
   <section class="login-screen" id="loginScreen" aria-live="polite">
@@ -4653,12 +4661,14 @@
   document.addEventListener('click', (ev) => { if (userPill && !userPill.contains(ev.target)) userPill.classList.remove('open'); });
 
   logoutBtn?.addEventListener('click', async () => {
+    try { localStorage.removeItem('cbjr_google_logged'); } catch (e) {}
     await signOut(auth);
-    location.reload();
+    location.href = 'index.html';
   });
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
+      try { localStorage.removeItem('cbjr_google_logged'); } catch (e) {}
       if (loginStatus) loginStatus.textContent = 'Faça login para continuar.';
       if (userName) userName.textContent = 'Jogador';
       if (userEmail) userEmail.textContent = 'Conta Google';
@@ -4668,6 +4678,7 @@
       return;
     }
 
+    try { localStorage.setItem('cbjr_google_logged', '1'); } catch (e) {}
     if (loginStatus) loginStatus.textContent = 'Login confirmado. Carregando universo CBJR...';
     if (userName) userName.textContent = user.displayName || 'Jogador CBJR';
     if (userEmail) userEmail.textContent = user.email || 'Conta Google';
