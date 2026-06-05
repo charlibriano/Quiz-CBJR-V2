@@ -3357,9 +3357,248 @@
 
 </style>
 
+
+
+  <!-- LOGIN GOOGLE CBJR — ADICIONADO SEM ALTERAR A ESTRUTURA ORIGINAL -->
+  <style id="cbjr-google-login-style">
+    body.auth-loading .app,
+    body.auth-logged-out .app,
+    body.auth-loading .boot-screen,
+    body.auth-logged-out .boot-screen {
+      display: none !important;
+    }
+
+    body.auth-logged-in .login-screen {
+      display: none !important;
+    }
+
+    body.auth-loading,
+    body.auth-logged-out {
+      min-height: 100vh;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 12% 16%, rgba(241,196,15,.18), transparent 30%),
+        radial-gradient(circle at 86% 24%, rgba(30,215,96,.14), transparent 30%),
+        linear-gradient(135deg, rgba(0,0,0,.88), rgba(0,0,0,.96)),
+        url('https://charlibriano.github.io/Quiz-CBJR-V2/cbjr.png') center/cover no-repeat !important;
+      color: #fff;
+    }
+
+    .login-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background:
+        radial-gradient(circle at 16% 12%, rgba(241,196,15,.20), transparent 28%),
+        radial-gradient(circle at 84% 20%, rgba(30,215,96,.14), transparent 28%),
+        linear-gradient(135deg, rgba(0,0,0,.86), rgba(0,0,0,.96)),
+        url('https://charlibriano.github.io/Quiz-CBJR-V2/cbjr.png') center/cover no-repeat;
+      overflow: hidden;
+    }
+
+    .login-screen::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: .45;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px);
+      background-size: 36px 36px;
+    }
+
+    .login-card {
+      position: relative;
+      width: min(430px, 100%);
+      border-radius: 28px;
+      padding: 28px;
+      background: rgba(5,5,5,.84);
+      border: 1px solid rgba(255,255,255,.16);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.12),
+        0 28px 90px rgba(0,0,0,.72),
+        0 0 48px rgba(241,196,15,.12);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      text-align: left;
+      overflow: hidden;
+    }
+
+    .login-card::after {
+      content: "CBJR";
+      position: absolute;
+      right: -10px;
+      top: 12px;
+      font-family: 'Elektrix', Arial, sans-serif;
+      font-size: 5rem;
+      color: rgba(255,255,255,.035);
+      pointer-events: none;
+    }
+
+    .login-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: var(--yellow, #f1c40f);
+      color: #050505;
+      font-weight: 950;
+      box-shadow: 0 0 26px rgba(241,196,15,.34);
+      margin-bottom: 18px;
+    }
+
+    .login-card h1 {
+      margin: 0;
+      font-family: 'Elektrix', Arial, sans-serif;
+      color: var(--yellow, #f1c40f);
+      font-size: clamp(2.15rem, 8vw, 3.2rem);
+      line-height: .9;
+      text-shadow: 0 0 18px rgba(241,196,15,.45), 3px 4px 0 rgba(0,0,0,.62);
+    }
+
+    .login-card p {
+      margin: 14px 0 22px;
+      color: rgba(255,255,255,.74);
+      line-height: 1.48;
+      font-size: .95rem;
+    }
+
+    .google-login-btn {
+      width: 100%;
+      min-height: 52px;
+      border: 0;
+      border-radius: 15px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: #18a097;
+      color: #fff;
+      font-weight: 950;
+      font-size: .98rem;
+      cursor: pointer;
+      box-shadow: 0 18px 42px rgba(24,160,151,.22);
+      transition: .2s ease;
+    }
+
+    .google-login-btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
+    }
+
+    .google-login-btn:disabled {
+      cursor: wait;
+      opacity: .72;
+      transform: none;
+    }
+
+    .google-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #fff;
+      color: #4285f4;
+      font-weight: 950;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .login-status {
+      min-height: 18px;
+      margin-top: 14px;
+      color: rgba(255,255,255,.62);
+      font-size: .78rem;
+      line-height: 1.35;
+    }
+
+    .login-note {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,.12);
+      color: rgba(255,255,255,.46);
+      font-size: .74rem;
+      line-height: 1.4;
+    }
+
+    .user-pill {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      max-width: 260px;
+      padding: 4px 5px 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.08);
+      color: #fff;
+    }
+
+    body.auth-logged-in .user-pill {
+      display: inline-flex;
+    }
+
+    .user-pill img {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid rgba(255,255,255,.22);
+    }
+
+    .user-pill strong {
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      font-size: .74rem;
+    }
+
+    .logout-btn {
+      width: 24px;
+      height: 24px;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(255,255,255,.12);
+      color: #fff;
+      cursor: pointer;
+      font-size: .7rem;
+      line-height: 1;
+    }
+
+    @media (max-width: 560px) {
+      .login-card { padding: 22px; border-radius: 22px; }
+      .login-card p { font-size: .86rem; }
+      .google-login-btn { min-height: 48px; font-size: .9rem; }
+      .user-pill { max-width: 150px; padding-left: 6px; }
+      .user-pill strong { display: none; }
+    }
+  </style>
+
 </head>
 
-<body>
+<body class="auth-loading">
+
+  <!-- TELA DE LOGIN GOOGLE — OBRIGATÓRIA ANTES DE ENTRAR NO PROJETO -->
+  <section class="login-screen" id="loginScreen" aria-live="polite">
+    <div class="login-card">
+      <div class="login-badge">CB</div>
+      <h1>Quiz CBJR</h1>
+      <p>Entre com sua conta Google para acessar o universo CBJR, salvar progresso, ranking e conquistas.</p>
+      <button class="google-login-btn" id="googleLoginBtn" type="button">
+        <span class="google-icon">G</span>
+        <span>Continuar com Google</span>
+      </button>
+      <div class="login-status" id="loginStatus">Verificando login...</div>
+      <div class="login-note">O acesso é obrigatório para manter seu progresso vinculado à sua conta.</div>
+    </div>
+  </section>
+
 
   <div class="boot-screen" id="bootScreen" aria-hidden="false">
     <div class="boot-card">
@@ -3384,6 +3623,11 @@
       </div>
 
       <div class="top-actions">
+        <div class="user-pill" id="userPill" title="Usuário logado">
+          <img id="userPhoto" alt="Foto do usuário" src="" />
+          <strong id="userName">Jogador</strong>
+          <button class="logout-btn" id="logoutBtn" type="button" title="Sair" aria-label="Sair">×</button>
+        </div>
         <button class="icon-btn" id="soundBtn" title="Som ambiente" aria-label="Som ambiente">♪</button>
         <button class="icon-btn" id="infoBtn" title="Sobre" aria-label="Sobre">?</button>
       </div>
@@ -4304,5 +4548,111 @@
     },()=>{onlineEl.textContent='0';});
   }
 </script>
+
+
+<script type="module" id="cbjr-google-auth-script">
+  import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+  import { getFirestore, doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey: 'AIzaSyDtb8jvVd0lMRy96QfqfjAg1dBReRIoRg4',
+    authDomain: 'ranking-cbjr.firebaseapp.com',
+    databaseURL: 'https://ranking-cbjr-default-rtdb.firebaseio.com',
+    projectId: 'ranking-cbjr',
+    storageBucket: 'ranking-cbjr.firebasestorage.app',
+    messagingSenderId: '681180179118',
+    appId: '1:681180179118:web:3ac202c9f7ed69cf94db3f',
+    measurementId: 'G-ZXMNGH3TVG'
+  };
+
+  const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
+
+  const loginBtn = document.getElementById('googleLoginBtn');
+  const loginStatus = document.getElementById('loginStatus');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const userName = document.getElementById('userName');
+  const userPhoto = document.getElementById('userPhoto');
+
+  function setAuthView(state) {
+    document.body.classList.remove('auth-loading', 'auth-logged-out', 'auth-logged-in');
+    document.body.classList.add(state);
+  }
+
+  async function saveUserProfile(user) {
+    if (!user) return;
+    await setDoc(doc(db, 'usuarios', user.uid), {
+      uid: user.uid,
+      nome: user.displayName || 'Jogador CBJR',
+      email: user.email || '',
+      foto: user.photoURL || '',
+      provider: 'google',
+      ultimoLogin: serverTimestamp()
+    }, { merge: true });
+  }
+
+  loginBtn?.addEventListener('click', async () => {
+    try {
+      loginBtn.disabled = true;
+      if (loginStatus) loginStatus.textContent = 'Abrindo login do Google...';
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      console.error('Erro no login Google:', error);
+      const code = error?.code || '';
+      if (loginStatus) {
+        if (code.includes('unauthorized-domain')) {
+          loginStatus.textContent = 'Domínio não autorizado no Firebase. Confira se charlibriano.github.io foi adicionado.';
+        } else if (code.includes('popup-closed-by-user')) {
+          loginStatus.textContent = 'Login cancelado. Clique novamente para entrar.';
+        } else if (location.protocol === 'file:') {
+          loginStatus.textContent = 'Para testar o login Google, abra pelo GitHub Pages ou por um servidor local. Arquivo aberto direto no computador pode falhar.';
+        } else {
+          loginStatus.textContent = 'Não foi possível entrar agora. Tente novamente.';
+        }
+      }
+    } finally {
+      loginBtn.disabled = false;
+    }
+  });
+
+  logoutBtn?.addEventListener('click', async () => {
+    await signOut(auth);
+    location.reload();
+  });
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      if (loginStatus) loginStatus.textContent = 'Faça login para continuar.';
+      if (userName) userName.textContent = 'Jogador';
+      if (userPhoto) userPhoto.removeAttribute('src');
+      setAuthView('auth-logged-out');
+      return;
+    }
+
+    if (loginStatus) loginStatus.textContent = 'Login confirmado. Carregando universo CBJR...';
+    if (userName) userName.textContent = user.displayName || 'Jogador CBJR';
+    if (userPhoto && user.photoURL) userPhoto.src = user.photoURL;
+
+    try {
+      await saveUserProfile(user);
+    } catch (error) {
+      console.warn('Não foi possível salvar perfil no Firestore agora:', error);
+    }
+
+    window.CBJR_CURRENT_USER = {
+      uid: user.uid,
+      name: user.displayName || 'Jogador CBJR',
+      email: user.email || '',
+      photoURL: user.photoURL || ''
+    };
+
+    setAuthView('auth-logged-in');
+  });
+</script>
+
 </body>
 </html>
