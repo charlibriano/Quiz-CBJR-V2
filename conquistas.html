@@ -3,402 +3,449 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Comunidade CBJR | Somos poucos mas somos loucos</title>
+<title>Conquistas CBJR</title>
 <style>
 @font-face{font-family:Elektrix;src:url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/Elektrix-Bold.woff2') format('woff2'),url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/Elektrix-Bold.woff') format('woff'),url('https://cdn.jsdelivr.net/gh/charlibriano/Quiz-CBJR-V2/Elektrix%20Bold.ttf') format('truetype');font-display:swap}
-:root{--yellow:#f1c40f;--green:#1ed760;--red:#ff3b30;--white:#f8f8f8;--dark:#030303;--panel:rgba(0,0,0,.72);--panel2:rgba(8,8,8,.9);--line:rgba(241,196,15,.38);--muted:rgba(255,255,255,.68);--soft:rgba(255,255,255,.08);--radius:28px}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,Arial,Helvetica,sans-serif;background:#000;color:var(--white);overflow-x:hidden}body::before{content:"";position:fixed;inset:0;background:url('fans-bg.png') center/cover no-repeat;filter:brightness(.72) contrast(1.12) saturate(1.05);transform:scale(1.015);z-index:0}body::after{content:"";position:fixed;inset:0;background:radial-gradient(circle at 50% 4%,rgba(241,196,15,.18),transparent 28%),linear-gradient(90deg,rgba(0,0,0,.92),rgba(0,0,0,.42) 48%,rgba(0,0,0,.88)),linear-gradient(180deg,rgba(0,0,0,.18),rgba(0,0,0,.88));z-index:1;pointer-events:none}.page{position:relative;z-index:2;min-height:100svh;padding:18px;display:grid;gap:18px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px}.btn,.ghost-btn{min-height:42px;border:1px solid var(--line);border-radius:999px;background:rgba(0,0,0,.70);color:#fff;text-decoration:none;padding:0 18px;font-weight:1000;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;box-shadow:0 0 22px rgba(241,196,15,.10),inset 0 1px 0 rgba(255,255,255,.06);transition:.2s ease}.btn:hover,.ghost-btn:hover{border-color:rgba(241,196,15,.8);box-shadow:0 0 28px rgba(241,196,15,.18);transform:translateY(-1px)}.brand-mini{font-family:Elektrix,Arial,sans-serif;color:var(--yellow);font-size:clamp(1.55rem,3.4vw,3.2rem);letter-spacing:.04em;text-shadow:0 0 22px rgba(241,196,15,.42);text-align:center}.hero{width:min(1240px,96vw);margin:0 auto;border:1px solid rgba(241,196,15,.32);border-radius:34px;background:linear-gradient(90deg,rgba(0,0,0,.78),rgba(0,0,0,.26)),radial-gradient(circle at 72% 15%,rgba(241,196,15,.12),transparent 38%);box-shadow:0 30px 100px rgba(0,0,0,.60),inset 0 1px 0 rgba(255,255,255,.07);padding:clamp(22px,4vw,48px);overflow:hidden;position:relative;min-height:clamp(330px,42vh,500px);display:grid;align-content:center}.hero::before{content:"COMUNIDADE";position:absolute;left:clamp(14px,3vw,42px);bottom:-8px;font-family:Elektrix,Arial,sans-serif;font-size:clamp(3.6rem,12vw,11rem);line-height:.75;color:rgba(255,255,255,.035);letter-spacing:.02em;pointer-events:none}.hero-content{position:relative;z-index:2;max-width:850px}.hero-kicker{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(30,215,96,.35);border-radius:999px;background:rgba(0,0,0,.66);padding:8px 14px;color:#1ed760;font-weight:1000;text-transform:uppercase;letter-spacing:.14em;font-size:.74rem}.hero-kicker::before{content:"";width:9px;height:9px;border-radius:50%;background:#1ed760;box-shadow:0 0 16px #1ed760}.hero h1{margin:16px 0 10px;font-family:Elektrix,Arial,sans-serif;color:var(--yellow);font-size:clamp(3.2rem,9vw,8.8rem);line-height:.76;text-shadow:0 0 26px rgba(241,196,15,.48),5px 6px 0 rgba(0,0,0,.82)}.hero p{margin:0;max-width:720px;color:rgba(255,255,255,.84);font-weight:900;line-height:1.5;text-shadow:0 2px 14px rgba(0,0,0,.85)}.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}.cta{border:0;border-radius:999px;background:linear-gradient(90deg,var(--yellow),#ffb300);color:#050505;min-height:54px;padding:0 24px;font-weight:1000;font-size:1rem;cursor:pointer;box-shadow:0 0 34px rgba(241,196,15,.25),0 14px 34px rgba(0,0,0,.34);transition:.2s ease}.cta:hover{transform:translateY(-2px);filter:brightness(1.05)}.outline-cta{border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(0,0,0,.52);color:#fff;min-height:54px;padding:0 20px;font-weight:950;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}.stats{width:min(1040px,94vw);margin:-8px auto 0;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{border:1px solid rgba(241,196,15,.25);border-radius:18px;background:rgba(0,0,0,.62);padding:12px;text-align:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}.stat strong{display:block;color:var(--yellow);font-family:Elektrix,Arial,sans-serif;font-size:1.55rem;line-height:1}.stat span{display:block;margin-top:5px;color:rgba(255,255,255,.62);font-size:.72rem;font-weight:950;text-transform:uppercase;letter-spacing:.09em}.layout{width:min(1280px,96vw);margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,340px);gap:16px;align-items:start}.card{border:1px solid var(--line);border-radius:24px;background:linear-gradient(180deg,rgba(0,0,0,.70),rgba(0,0,0,.91));box-shadow:0 24px 70px rgba(0,0,0,.44),inset 0 1px 0 rgba(255,255,255,.06);padding:18px}.card h2{margin:0 0 6px;font-family:Elektrix,Arial,sans-serif;color:var(--yellow);font-size:clamp(1.65rem,2.8vw,2.9rem);line-height:.9;text-shadow:0 0 18px rgba(241,196,15,.22)}.card-sub{margin:0 0 16px;color:var(--muted);font-weight:850;font-size:.9rem;line-height:1.35}.feed-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.feed-tools{display:flex;gap:8px;align-items:center}.search{border:1px solid rgba(255,255,255,.16);background:rgba(0,0,0,.5);border-radius:999px;min-height:38px;color:#fff;padding:0 13px;font-weight:850;outline:none;width:min(230px,34vw)}.feed{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.post{border:1px solid rgba(255,255,255,.12);border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(0,0,0,.58));padding:15px;box-shadow:inset 0 1px 0 rgba(255,255,255,.05);position:relative;overflow:hidden}.post::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) 0%,rgba(241,196,15,.12),transparent 38%);opacity:.8;pointer-events:none}.post>*{position:relative;z-index:2}.post-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.fan{display:flex;gap:12px;align-items:center;min-width:0}.avatar{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,rgba(241,196,15,.95),rgba(0,0,0,.9));border:2px solid rgba(241,196,15,.75);font-weight:1000;color:#000;box-shadow:0 0 20px rgba(241,196,15,.12);overflow:hidden;flex:0 0 auto}.avatar img{width:100%;height:100%;object-fit:cover}.fan-info{min-width:0}.fan-name{font-weight:1000;color:#fff;font-size:1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fan-meta{margin-top:3px;color:rgba(255,255,255,.58);font-weight:800;font-size:.78rem}.time{color:rgba(255,255,255,.48);font-weight:850;font-size:.76rem;white-space:nowrap}.music-pill{display:inline-flex;margin-top:10px;border:1px solid rgba(241,196,15,.36);background:rgba(241,196,15,.12);border-radius:999px;color:var(--yellow);font-weight:950;padding:6px 10px;font-size:.78rem}.message{margin:12px 0 0;color:rgba(255,255,255,.90);font-weight:760;line-height:1.45;white-space:pre-wrap;word-break:break-word;font-size:.98rem}.post-actions{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:13px}.action{border:0;background:transparent;color:rgba(255,255,255,.76);font-weight:950;cursor:pointer;padding:4px 0;display:inline-flex;align-items:center;gap:6px}.action:hover{color:#fff}.action.like.active{color:#ff4d5e}.reply-box{display:none;margin-top:12px;border-top:1px solid rgba(255,255,255,.10);padding-top:12px;gap:8px}.reply-box.show{display:grid}.reply-line{display:grid;grid-template-columns:1fr auto;gap:8px}.reply-line input{min-height:40px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.5);color:#fff;padding:0 13px;font-weight:850;outline:none}.small-btn{border:1px solid rgba(241,196,15,.45);border-radius:999px;background:rgba(241,196,15,.12);color:#f1c40f;padding:0 14px;font-weight:1000;cursor:pointer}.replies{display:grid;gap:8px;margin-top:10px}.reply{border-left:3px solid rgba(241,196,15,.45);padding:8px 10px;background:rgba(255,255,255,.04);border-radius:10px;color:rgba(255,255,255,.8);font-size:.88rem;line-height:1.35}.reply strong{color:#fff}.empty,.loading{border:1px solid rgba(241,196,15,.22);border-radius:18px;padding:20px;text-align:center;color:rgba(255,255,255,.68);font-weight:900}.side-list{display:grid;gap:9px}.active-fan{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(255,255,255,.045);padding:10px}.position{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:rgba(241,196,15,.15);color:var(--yellow);font-weight:1000}.active-name{font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.active-city{color:rgba(255,255,255,.52);font-size:.75rem;font-weight:850;margin-top:2px}.active-score{color:#1ed760;font-weight:1000;white-space:nowrap}.quote-card{margin-top:14px;min-height:170px;background:linear-gradient(90deg,rgba(0,0,0,.84),rgba(0,0,0,.35)),radial-gradient(circle at right,rgba(241,196,15,.12),transparent 48%);position:relative;overflow:hidden}.quote-card p{font-size:1.15rem;line-height:1.45;color:rgba(255,255,255,.9);font-weight:900;margin:16px 0}.quote-card .signature{font-family:Elektrix,Arial,sans-serif;color:var(--yellow);font-size:1.9rem;text-align:right}.participate-card{border-color:rgba(30,215,96,.32);background:linear-gradient(180deg,rgba(30,215,96,.08),rgba(0,0,0,.86))}.participate-card .cta{width:100%;margin-top:10px}.modal{position:fixed;inset:0;z-index:80;display:none;place-items:center;background:rgba(0,0,0,.78);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:16px}.modal.show{display:grid}.modal-card{width:min(720px,96vw);max-height:92svh;overflow:auto;border:1px solid rgba(241,196,15,.44);border-radius:28px;background:radial-gradient(circle at 50% 0%,rgba(241,196,15,.10),transparent 40%),rgba(3,3,3,.95);box-shadow:0 30px 90px rgba(0,0,0,.8);padding:20px}.modal-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}.modal-head h2{margin:0;font-family:Elektrix,Arial,sans-serif;color:var(--yellow);font-size:clamp(2rem,5vw,3.4rem);line-height:.85}.close-btn{width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;font-weight:1000;cursor:pointer}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:grid;gap:7px;margin-bottom:12px}.field.full{grid-column:1/-1}.field label{font-weight:950;color:rgba(255,255,255,.86);font-size:.86rem}.field input,.field textarea,.field select{width:100%;border:1px solid rgba(255,255,255,.16);border-radius:14px;background:rgba(0,0,0,.55);color:#fff;min-height:45px;padding:12px 13px;font:inherit;font-weight:800;outline:none}.field textarea{min-height:130px;resize:vertical;line-height:1.4}.field input:focus,.field textarea:focus,.field select:focus{border-color:rgba(241,196,15,.72);box-shadow:0 0 0 3px rgba(241,196,15,.10)}.char-count{text-align:right;color:rgba(255,255,255,.48);font-weight:850;font-size:.78rem;margin-top:-8px;margin-bottom:10px}.remember-row{display:flex;align-items:center;gap:9px;color:rgba(255,255,255,.72);font-weight:850;font-size:.86rem;margin:4px 0 14px}.remember-row input{accent-color:#f1c40f}.publish-btn{width:100%;border:0;border-radius:16px;background:linear-gradient(90deg,var(--yellow),#ffb300);color:#000;min-height:52px;font-weight:1000;font-size:1rem;cursor:pointer;box-shadow:0 0 26px rgba(241,196,15,.18);transition:.2s ease}.publish-btn:hover{transform:translateY(-1px);filter:brightness(1.05)}.publish-btn:disabled{opacity:.45;cursor:not-allowed;transform:none}.status{margin-top:12px;text-align:center;color:rgba(255,255,255,.65);font-weight:850;font-size:.83rem}.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(24px);z-index:100;background:rgba(0,0,0,.88);border:1px solid rgba(241,196,15,.45);border-radius:999px;color:#fff;padding:12px 18px;font-weight:950;opacity:0;pointer-events:none;transition:.22s ease;text-align:center;max-width:min(92vw,520px)}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}@media(max-width:1050px){.layout{grid-template-columns:1fr}.right-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}.stats{grid-template-columns:repeat(2,1fr)}.feed{grid-template-columns:1fr}}@media(max-width:760px){.page{padding:12px}.topbar{align-items:flex-start}.brand-mini{font-size:1.35rem;line-height:.9}.btn,.ghost-btn{min-height:36px;padding:0 11px;font-size:.82rem}.hero{border-radius:22px;padding:18px;min-height:360px}.hero h1{font-size:clamp(2.45rem,15vw,4.8rem)}.hero p{font-size:.9rem}.hero-actions{display:grid}.cta,.outline-cta{width:100%;min-height:48px}.layout{grid-template-columns:1fr;width:100%}.right-col{grid-template-columns:1fr}.card{border-radius:20px;padding:14px}.stats{grid-template-columns:repeat(2,1fr);width:100%;gap:8px}.stat strong{font-size:1.25rem}.feed-head{display:grid}.feed-tools{display:grid;grid-template-columns:1fr}.search{width:100%}.post-top{display:grid}.time{white-space:normal}.avatar{width:46px;height:46px}.reply-line{grid-template-columns:1fr}.small-btn{min-height:38px}.field textarea{min-height:110px}body::before{background-position:center center;filter:brightness(.54) contrast(1.08)}.form-grid{grid-template-columns:1fr}.modal-card{padding:16px;border-radius:22px}}
-
-
-/* AJUSTE FELIPE — COMUNIDADE MAIS COMPACTA E CTA EXPLICADO */
-.page{gap:12px!important;padding:12px!important;}
-.topbar{height:40px!important;}
-.btn,.ghost-btn{min-height:36px!important;padding:0 14px!important;font-size:.84rem!important;}
-.brand-mini{font-size:clamp(1.25rem,2.6vw,2.35rem)!important;}
-.hero{padding:14px 20px!important;border-radius:24px!important;min-height:clamp(220px,28vh,330px)!important;width:min(1180px,96vw)!important;}
-.hero::before{font-size:clamp(2.6rem,9vw,8rem)!important;bottom:-4px!important;}
-.hero-kicker{padding:6px 11px!important;font-size:.64rem!important;}
-.hero h1{font-size:clamp(2.15rem,6vw,5.6rem)!important;margin:8px 0 5px!important;line-height:.78!important;}
-.hero p{font-size:.9rem!important;line-height:1.32!important;max-width:660px!important;}
-.hero-actions{margin-top:12px!important;gap:10px!important;align-items:center!important;}
-.cta{min-height:46px!important;font-size:.9rem!important;padding:0 20px!important;}
-.outline-cta{min-height:46px!important;font-size:.86rem!important;padding:0 17px!important;}
-.cta-wrap{display:grid!important;gap:6px!important;align-items:center!important;justify-items:start!important;}
-.hero-enter-btn{min-height:46px!important;font-size:.92rem!important;}
-.cta-help{color:rgba(255,255,255,.74);font-size:.78rem;font-weight:900;line-height:1.22;text-shadow:0 2px 12px rgba(0,0,0,.8);max-width:340px;}
-.side-help{text-align:center;max-width:none;margin-top:7px;}
-.stats{margin:-4px auto 0!important;gap:8px!important;}
-.stat{padding:9px 10px!important;border-radius:15px!important;}
-.stat strong{font-size:1.32rem!important;}
-.stat span{font-size:.64rem!important;margin-top:3px!important;}
-.layout{gap:12px!important;margin-top:0!important;width:min(1240px,96vw)!important;}
-.card{padding:14px!important;border-radius:20px!important;}
-.card h2{font-size:clamp(1.35rem,2.2vw,2.25rem)!important;}
-.card-sub{font-size:.82rem!important;margin-bottom:10px!important;}
-.feed-head{margin-bottom:9px!important;}
-.feed{gap:10px!important;}
-.post{padding:12px!important;border-radius:18px!important;}
-.avatar{width:46px!important;height:46px!important;}
-.message{font-size:.9rem!important;line-height:1.36!important;margin-top:9px!important;}
-.music-pill{margin-top:8px!important;padding:5px 9px!important;font-size:.72rem!important;}
-.post-actions{margin-top:10px!important;}
-.quote-card{min-height:130px!important;margin-top:10px!important;}
-.quote-card p{font-size:.98rem!important;margin:10px 0!important;line-height:1.35!important;}
-.quote-card .signature{font-size:1.45rem!important;}
-.active-fan{padding:8px!important;}
-.modal-card{max-height:88svh!important;}
-.field{margin-bottom:9px!important;}
-.field input,.field textarea,.field select{min-height:40px!important;padding:10px 12px!important;font-size:.9rem!important;}
-.field textarea{min-height:105px!important;}
-.publish-btn{min-height:46px!important;font-size:.92rem!important;}
-@media(max-width:760px){
-  .page{padding:10px!important;gap:10px!important;}
-  .topbar{height:auto!important;}
-  .hero{min-height:260px!important;padding:14px!important;}
-  .hero h1{font-size:clamp(2rem,12vw,4rem)!important;}
-  .hero p{font-size:.84rem!important;}
-  .hero-actions{display:grid!important;grid-template-columns:1fr!important;}
-  .cta-wrap{justify-items:stretch!important;}
-  .cta-help{text-align:center;margin:0 auto;}
-  .stats{gap:7px!important;}
-  .layout{gap:10px!important;}
-  .card{padding:12px!important;}
-}
-
-
-
-/* CONTADOR ONLINE — COMUNIDADE CBJR */
-.online-now{
-  display:inline-flex;align-items:center;gap:8px;
-  margin-top:10px;border:1px solid rgba(30,215,96,.38);
-  border-radius:999px;background:rgba(0,0,0,.62);
-  color:#fff;padding:8px 13px;font-weight:1000;
-  box-shadow:0 0 22px rgba(30,215,96,.10), inset 0 1px 0 rgba(255,255,255,.06);
-  width:max-content;max-width:100%;
-}
-.online-dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green),0 0 26px rgba(30,215,96,.38);flex:0 0 auto;}
-.online-now strong{color:var(--green);font-family:Elektrix,Arial,sans-serif;font-size:1.16em;line-height:1;text-shadow:0 0 12px rgba(30,215,96,.42);}
-.online-now span:last-child{color:rgba(255,255,255,.78);font-size:.78rem;letter-spacing:.07em;text-transform:uppercase;}
-@media(max-width:760px){.online-now{padding:7px 10px;font-size:.82rem}.online-now span:last-child{font-size:.68rem}}
-
-
-
-/* LOGIN GOOGLE — PERFIL DO USUÁRIO NO TOPO */
-.auth-actions{display:flex;align-items:center;gap:10px;justify-content:flex-end;min-width:0}
-.auth-user-pill{display:none;align-items:center;gap:9px;max-width:300px;min-height:38px;padding:4px 5px 4px 6px;border:1px solid rgba(255,255,255,.16);border-radius:999px;background:rgba(0,0,0,.58);box-shadow:0 0 22px rgba(241,196,15,.10),inset 0 1px 0 rgba(255,255,255,.08);color:#fff;min-width:0}
-.auth-user-pill.show{display:inline-flex}
-.auth-user-pill img{width:30px;height:30px;border-radius:50%;object-fit:cover;border:1px solid rgba(241,196,15,.48);background:rgba(255,255,255,.08);flex:0 0 auto}
-.auth-user-info{min-width:0;display:grid;line-height:1.05}
-.auth-user-info strong{font-size:.78rem;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff}
-.auth-user-info span{font-size:.62rem;font-weight:850;color:rgba(255,255,255,.56);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.auth-logout{width:28px;height:28px;border:0;border-radius:50%;background:rgba(255,255,255,.10);color:#fff;font-weight:1000;cursor:pointer;line-height:1;flex:0 0 auto}
-.auth-logout:hover{background:rgba(241,196,15,.18);color:#f1c40f}
-@media(max-width:760px){.topbar{gap:8px}.auth-actions{gap:6px}.auth-user-pill{max-width:58px;padding:3px}.auth-user-info{display:none}.auth-logout{width:26px;height:26px}.auth-user-pill img{width:28px;height:28px}.auth-actions .btn{padding:0 10px!important}}
-
+:root{--yellow:#f1c40f;--green:#1ed760;--red:#ff3b30;--blue:#3498db;--purple:#9b59b6;--white:#f8f8f8;--dark:#030303;--line:rgba(241,196,15,.34);--glass:rgba(0,0,0,.72)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,Arial,sans-serif;color:var(--white);background:#000;overflow-x:hidden}body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 50% 6%,rgba(241,196,15,.17),transparent 28%),radial-gradient(circle at 12% 88%,rgba(30,215,96,.12),transparent 31%),url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/cbjr.png') center/cover no-repeat;filter:brightness(.30) blur(2px);transform:scale(1.04);z-index:0}body::after{content:"";position:fixed;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.94),rgba(0,0,0,.62),rgba(0,0,0,.96));z-index:1;pointer-events:none}.page{position:relative;z-index:2;min-height:100svh;padding:16px;display:grid;grid-template-rows:auto auto 1fr;gap:14px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px}.btn{min-height:40px;border:1px solid var(--line);border-radius:999px;background:rgba(0,0,0,.66);color:#fff;text-decoration:none;padding:0 16px;font-weight:1000;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 22px rgba(241,196,15,.10);transition:.18s ease}.btn:hover{border-color:rgba(241,196,15,.75);transform:translateY(-1px)}.brand{font-family:Elektrix,Inter,sans-serif;color:var(--yellow);font-size:clamp(1.9rem,5vw,4.2rem);line-height:.85;text-align:center;text-shadow:0 0 28px rgba(241,196,15,.36)}.hero{width:min(1180px,96vw);margin:0 auto;border:1px solid var(--line);border-radius:30px;background:radial-gradient(circle at top,rgba(241,196,15,.10),transparent 36%),linear-gradient(180deg,rgba(0,0,0,.78),rgba(0,0,0,.94));box-shadow:0 28px 90px rgba(0,0,0,.72),inset 0 1px 0 rgba(255,255,255,.06);padding:clamp(14px,2.3vw,28px);display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:center}.hero h1{font-family:Elektrix,Inter,sans-serif;color:var(--yellow);font-size:clamp(2.25rem,6vw,5.2rem);line-height:.83;margin:0;text-shadow:0 0 28px rgba(241,196,15,.34),4px 5px 0 rgba(0,0,0,.64)}.hero p{margin:10px 0 0;color:rgba(255,255,255,.76);font-weight:900;line-height:1.45}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.summary-card{border:1px solid rgba(241,196,15,.22);border-radius:18px;background:rgba(255,255,255,.055);padding:12px;text-align:center}.summary-card small{display:block;color:rgba(255,255,255,.58);font-size:.68rem;font-weight:1000;letter-spacing:.10em;text-transform:uppercase}.summary-card strong{display:block;margin-top:6px;color:var(--green);font-family:Elektrix,Inter,sans-serif;font-size:clamp(1.55rem,3vw,2.4rem);line-height:.85}.progress-shell{grid-column:1/-1;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.44);border-radius:999px;padding:7px}.progress-fill{height:10px;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--yellow),#fff2a1,var(--green));box-shadow:0 0 20px rgba(241,196,15,.28);transition:width .55s ease}.tabs{width:min(1180px,96vw);margin:0 auto;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.tab{border:1px solid rgba(241,196,15,.34);background:rgba(0,0,0,.62);color:#fff;border-radius:999px;min-height:38px;padding:0 16px;font-weight:1000;cursor:pointer}.tab.active{background:linear-gradient(90deg,var(--yellow),var(--green));color:#000;border-color:transparent}.grid{width:min(1180px,96vw);margin:0 auto 18px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.card{position:relative;isolation:isolate;overflow:hidden;border:1px solid rgba(241,196,15,.22);border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(0,0,0,.78));min-height:260px;padding:12px;display:grid;grid-template-rows:auto auto 1fr auto;gap:9px;cursor:pointer;box-shadow:0 18px 54px rgba(0,0,0,.52),inset 0 1px 0 rgba(255,255,255,.06);transition:.2s ease}.card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(241,196,15,.22),transparent 46%);opacity:.25;z-index:-1;transition:.2s ease}.card:hover{transform:translateY(-3px);border-color:rgba(241,196,15,.58)}.card:hover::before{opacity:.72}.card.locked{opacity:.54;filter:grayscale(.5)}.card.unlocked{border-color:rgba(30,215,96,.56);box-shadow:0 0 30px rgba(30,215,96,.10),0 18px 54px rgba(0,0,0,.52)}.cover{display:block;width:100%;aspect-ratio:1/1;border-radius:16px;object-fit:cover;background:#111;border:1px solid rgba(255,255,255,.12);filter:brightness(.55) grayscale(.55);transition:.25s ease}.card.unlocked .cover{filter:none}.cover-error{opacity:.18}.badge{position:absolute;top:10px;left:10px;border:1px solid rgba(241,196,15,.52);background:rgba(0,0,0,.76);color:var(--yellow);border-radius:999px;padding:5px 8px;font-size:.58rem;font-weight:1000;letter-spacing:.08em;text-transform:uppercase;z-index:3}.card.unlocked .badge{border-color:rgba(30,215,96,.75);color:var(--green)}.icon{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.74);border:1px solid rgba(255,255,255,.16);font-size:1.1rem;z-index:3}.card h3{margin:0;color:#fff;font-family:Elektrix,Inter,sans-serif;font-size:clamp(1.06rem,1.6vw,1.35rem);line-height:.94}.card p{margin:0;color:rgba(255,255,255,.68);font-weight:800;font-size:.78rem;line-height:1.28}.status{align-self:end;border-radius:999px;border:1px solid rgba(255,255,255,.13);background:rgba(0,0,0,.48);padding:7px 9px;text-align:center;font-weight:1000;font-size:.72rem;color:rgba(255,255,255,.72)}.unlocked .status{color:var(--green);border-color:rgba(30,215,96,.40)}.empty{width:min(1180px,96vw);margin:0 auto;border:1px solid rgba(241,196,15,.25);border-radius:22px;padding:24px;text-align:center;background:rgba(0,0,0,.62);font-weight:900;color:rgba(255,255,255,.72)}.modal{position:fixed;inset:0;z-index:50;display:none;place-items:center;padding:18px;background:rgba(0,0,0,.82);backdrop-filter:blur(12px)}.modal.show{display:grid}.modal-card{width:min(760px,96vw);border:1px solid var(--line);border-radius:28px;background:radial-gradient(circle at top,rgba(241,196,15,.13),transparent 42%),rgba(0,0,0,.96);padding:22px;box-shadow:0 32px 110px rgba(0,0,0,.88);display:grid;grid-template-columns:minmax(150px,240px) 1fr;gap:20px;align-items:center}.modal-card img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:20px;border:1px solid rgba(241,196,15,.34);box-shadow:0 20px 70px rgba(0,0,0,.72)}.modal-card h2{margin:0;color:var(--yellow);font-family:Elektrix,Inter,sans-serif;font-size:clamp(2rem,5vw,4rem);line-height:.86}.modal-card p{color:rgba(255,255,255,.78);font-weight:900;line-height:1.45}.modal-meta{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.chip{border:1px solid rgba(241,196,15,.28);background:rgba(0,0,0,.48);border-radius:999px;padding:7px 10px;color:#fff;font-size:.75rem;font-weight:1000}.modal-actions{display:flex;gap:10px;flex-wrap:wrap}.danger{border-color:rgba(255,59,48,.35);color:#ffb4ae}.footer-note{width:min(1180px,96vw);margin:0 auto 20px;text-align:center;color:rgba(255,255,255,.52);font-weight:800;font-size:.8rem}@media(max-width:980px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:repeat(3,1fr)}.summary{grid-template-columns:repeat(3,1fr)}}@media(max-width:680px){.page{padding:11px}.topbar .btn{min-height:35px;padding:0 11px;font-size:.78rem}.brand{font-size:1.7rem}.hero{border-radius:22px;padding:14px}.summary{grid-template-columns:repeat(3,1fr);gap:7px}.summary-card{padding:9px 5px}.summary-card small{font-size:.52rem}.summary-card strong{font-size:1.35rem}.tabs{justify-content:stretch}.tab{flex:1;padding:0 8px;font-size:.74rem}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.card{min-height:230px;border-radius:17px;padding:9px}.card h3{font-size:.95rem}.card p{font-size:.68rem}.badge{font-size:.48rem}.modal-card{grid-template-columns:1fr;text-align:center}.modal-card img{width:min(210px,70vw);margin:auto}.modal-actions{justify-content:center}}@media(max-width:390px){.grid{grid-template-columns:1fr}.card{min-height:auto;grid-template-columns:90px 1fr;grid-template-rows:auto auto auto;align-items:center}.cover{grid-row:1/4}.badge,.icon{position:static;width:auto;height:auto;display:inline-flex}.status{text-align:left}.card h3{font-size:1.02rem}}
 </style>
 </head>
 <body>
 <div class="page">
   <header class="topbar">
     <a class="btn" href="index.html?skipIntro=true">← Menu</a>
-    <div class="brand-mini">Comunidade CBJR</div>
-    <div class="auth-actions">
-      <div class="auth-user-pill" id="authUserPill" title="Usuário logado">
-        <img id="authUserPhoto" alt="Foto do usuário logado" src="" />
-        <div class="auth-user-info">
-          <strong id="authUserName">Jogador CBJR</strong>
-          <span id="authUserEmail">Conta Google</span>
-        </div>
-        <button class="auth-logout" id="authLogoutBtn" type="button" title="Sair" aria-label="Sair">×</button>
-      </div>
-      <a class="btn" href="radio.html">Rádio CBJR</a>
-    </div>
+    <div class="brand">Conquistas CBJR</div>
+    <a class="btn" href="ranking.html">Ranking</a>
   </header>
 
   <section class="hero">
-    <div class="hero-content">
-      <div class="hero-kicker">No ar: voz da galera</div>
-      <div class="online-now" aria-live="polite"><span class="online-dot"></span><strong id="onlineCount">0</strong><span>fãs online agora</span></div>
-      <h1>Somos poucos mas somos loucos</h1>
-      <p>Histórias, lembranças, músicas favoritas e mensagens da galera que mantém o som vivo. A Comunidade CBJR é o mural dos fãs que vivem essa sintonia.</p>
-      <div class="hero-actions">
-        <div class="cta-wrap">
-          <button class="cta hero-enter-btn" type="button" data-open-form>🔥 Entrar na sintonia</button>
-          <div class="cta-help">Compartilhe sua história, mande um recado e fortaleça a família CBJR.</div>
-        </div>
-        <a class="outline-cta" href="#mural">Ver mural da galera</a>
-      </div>
+    <div>
+      <h1>Sua coleção de troféus</h1>
+     </div>
+    <div class="summary">
+      <div class="summary-card"><small>Total</small><strong id="totalCount">0</strong></div>
+      <div class="summary-card"><small>Liberadas</small><strong id="unlockedCount">0</strong></div>
+      <div class="summary-card"><small>Progresso</small><strong id="percentCount">0%</strong></div>
+      <div class="progress-shell"><div id="progressFill" class="progress-fill"></div></div>
     </div>
   </section>
 
-  <section class="stats" aria-label="Estatísticas da comunidade">
-    <div class="stat"><strong id="statMessages">0</strong><span>Mensagens</span></div>
-    <div class="stat"><strong id="statLikes">0</strong><span>Curtidas</span></div>
-    <div class="stat"><strong id="statFans">0</strong><span>Fãs</span></div>
-    <div class="stat"><strong id="statCities">0</strong><span>Cidades</span></div>
-  </section>
+  <nav class="tabs" aria-label="Categorias de conquistas">
+    <button class="tab active" data-filter="all">Todas</button>
+    <button class="tab" data-filter="radio">Rádio</button>
+    <button class="tab" data-filter="quiz">Quiz</button>
+    <button class="tab" data-filter="letras">Letras</button>
+  </nav>
 
-  <main class="layout">
-    <section class="card" id="mural">
-      <div class="feed-head">
-        <div><h2>Mural da galera</h2><p class="card-sub">Mensagens mais recentes da comunidade. Clique em “Entrar na sintonia” para deixar seu recado.</p></div>
-        <div class="feed-tools">
-          <input class="search" id="searchInput" placeholder="Buscar fã, cidade ou música" />
-          <select class="search" id="sortSelect"><option value="recent">Mais recentes</option><option value="likes">Mais curtidas</option></select>
-        </div>
-      </div>
-      <div id="feed" class="feed"><div class="loading">Carregando mensagens da comunidade...</div></div>
-    </section>
-
-    <aside class="right-col">
-      <section class="card participate-card">
-        <h2>Entre na sintonia</h2>
-        <p class="card-sub">Mostre seu @, sua cidade, sua música favorita e deixe sua marca no mural CBJR.</p>
-        <button class="cta hero-enter-btn" type="button" data-open-form>🔥 Mandar meu recado</button><div class="cta-help side-help">Sua mensagem aparece no mural da galera.</div>
-        <div class="status" id="formStatus">Firebase pronto para receber mensagens.</div>
-      </section>
-      <section class="card">
-        <h2>Lendas da sintonia</h2>
-        <p class="card-sub">Quem mais participa aparece por aqui.</p>
-        <div id="activeFans" class="side-list"><div class="empty">Ainda sem participação.</div></div>
-      </section>
-      <section class="card quote-card">
-        <h2>Na voz do Chorão</h2>
-        <p id="dailyPhrase">“A vida me ensinou a nunca desistir.”</p>
-        <div class="signature">Chorão</div>
-      </section>
-    </aside>
-  </main>
-</div>
-
-<div class="modal" id="fanModal" aria-hidden="true">
-  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal-head">
-      <div>
-        <h2 id="modalTitle">Entrar na comunidade</h2>
-        <p class="card-sub">Preencha seus dados e publique sua mensagem no mural da galera.</p>
-      </div>
-      <button class="close-btn" type="button" id="closeModal" aria-label="Fechar">×</button>
-    </div>
-    <form id="fanForm">
-      <div class="form-grid">
-        <div class="field"><label for="fanName">Seu nome *</label><input id="fanName" maxlength="32" placeholder="Ex: Felipe" required /></div>
-        <div class="field"><label for="fanCity">Sua cidade *</label><input id="fanCity" maxlength="42" placeholder="Ex: Belo Horizonte - MG" required /></div>
-        <div class="field"><label for="fanInstagram">Instagram</label><input id="fanInstagram" maxlength="40" placeholder="Ex: @seuinstagram" /></div>
-        <div class="field"><label for="fanPhoto">Foto de perfil / URL opcional</label><input id="fanPhoto" type="url" placeholder="Cole uma URL de imagem, se quiser" /></div>
-        <div class="field full"><label for="fanMusic">Música/álbum favorito *</label><input id="fanMusic" maxlength="60" placeholder="Ex: Só os Loucos Sabem" required /></div>
-        <div class="field full"><label for="fanMessage">Mensagem para a galera *</label><textarea id="fanMessage" maxlength="500" placeholder="Fala aí, fã! Conte sua história, mande uma lembrança, uma frase, uma conexão com o CBJR..." required></textarea></div>
-      </div>
-      <div class="char-count"><span id="charCount">0</span>/500</div>
-      <label class="remember-row"><input type="checkbox" id="rememberFan" checked /> Lembrar meus dados neste navegador</label>
-      <button class="publish-btn" id="publishBtn" type="submit">Publicar na comunidade</button>
-    </form>
+  <main id="achievementsGrid" class="grid"></main>
+  <!-- Removed footer note to clean up the interface -->
+  <!-- Global reset button for all achievements -->
+  <div style="width:min(1180px,96vw);margin:0 auto 14px;display:flex;justify-content:flex-end;">
+    <button class="btn danger" onclick="resetAchievements()" title="Limpa todas as conquistas locais">Zerar conquistas</button>
   </div>
 </div>
 
-<div id="toast" class="toast"></div>
-<script type="module">
-import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getFirestore, collection, addDoc, doc, setDoc, updateDoc, increment, serverTimestamp, query, orderBy, limit, onSnapshot, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-import { getDatabase, ref as dbRef, push as dbPush, set as dbSet, onDisconnect, onValue, serverTimestamp as rtdbServerTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+<div id="detailModal" class="modal" role="dialog" aria-modal="true" aria-label="Detalhe da conquista">
+  <article class="modal-card">
+    <img id="modalCover" src="" alt="Capa da conquista" onerror="fallbackCover(this)">
+    <div>
+      <h2 id="modalTitle">Conquista</h2>
+      <p id="modalDesc">Descrição da conquista.</p>
+      <div class="modal-meta">
+        <span id="modalCategory" class="chip">Categoria</span>
+        <span id="modalStatus" class="chip">Status</span>
+        <span id="modalDate" class="chip">Data</span>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" onclick="closeModal()">Fechar</button>
+        <!-- Removed individual reset button to centralize reset on the page -->
+      </div>
+    </div>
+  </article>
+</div>
 
-const firebaseConfig={
-  apiKey:'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
-  authDomain:'ranking-cbjr.firebaseapp.com',
-  databaseURL:'https://ranking-cbjr-default-rtdb.firebaseio.com',
-  projectId:'ranking-cbjr',
-  storageBucket:'ranking-cbjr.firebasestorage.app',
-  messagingSenderId:'681180179118',
-  appId:'1:681180179118:web:fe10833848e8bb8194db3f',
-  measurementId:'G-QK5QE2Y1CC'
-};
+<script>
+const BASE_URL = './';
+const PAGES_V2 = 'https://charlibriano.github.io/Quiz-CBJR-V2/';
+const RAW_V2 = 'https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/';
+const PAGES_V1 = 'https://charlibriano.github.io/Quiz-CBJR/';
+const RAW_V1 = 'https://raw.githubusercontent.com/charlibriano/Quiz-CBJR/main/';
+const OLD_QUIZ_KEY = 'cobjr_quiz_achievements';
+const RADIO_KEY = 'radioCBJR_achievements_v1';
+const LEGACY_RADIO_IDS = ['bonus_music_master','bonus_album_perfectionist','bonus_hard_album_completed','bonus_fast_guess','bonus_all_albums_completed'];
 
-const app=getApps().length?getApp():initializeApp(firebaseConfig);
-const db=getFirestore(app);
-const realtimeDb=getDatabase(app);
-const auth=getAuth(app);
-const COLLECTION='comunidade';
-let posts=[];
-let currentGoogleUser=null;
-let unsubscribe=null;
+const catalog = [
+  {id:'first_cd',cat:'radio',icon:'💿',name:'Primeiro CD',desc:'Finalizou seu primeiro álbum na Rádio CBJR.',cover:'CD 1.jpeg'},
+  {id:'unlocked_next',cat:'radio',icon:'🔓',name:'Novo no ar',desc:'Desbloqueou o próximo CD da Rádio.',cover:'CD 2.jpeg'},
+  {id:'no_miss',cat:'radio',icon:'🎯',name:'Sem vacilo',desc:'Fechou um CD sem errar nenhuma faixa.',cover:'CD 3.jpeg'},
+  {id:'ninety',cat:'radio',icon:'🔥',name:'Frango da Malásia',desc:'Atingiu 90% ou mais de aproveitamento na Rádio.',cover:'CD 4.jpeg'},
+  {id:'perfect',cat:'radio',icon:'👑',name:'Lenda CBJR',desc:'Fez 100% de acerto em um CD.',cover:'CD 5.jpeg'},
+  {id:'hard',cat:'radio',icon:'☠️',name:'DJ Hardcore',desc:'Finalizou um CD no modo Hard.',cover:'CD 6.jpeg'},
+  {id:'three_cds',cat:'radio',icon:'📻',name:'Sintonia firme',desc:'Liberou 3 CDs da Rádio.',cover:'CD 7.jpeg'},
+  {id:'half_radio',cat:'radio',icon:'⚡',name:'Meia rádio',desc:'Liberou metade da jornada da Rádio.',cover:'CD 8.jpeg'},
+  {id:'bonus_music_master',cat:'radio',icon:'📡',name:'Rei da Rádio',desc:'Acerte todas as músicas no nível Rádio CBJR.',cover:'CD 9.jpeg'},
+  {id:'bonus_album_perfectionist',cat:'radio',icon:'💚',name:'Perfeição no Disco',desc:'Complete um álbum na Rádio sem errar nenhuma música.',cover:'CD 10.jpeg'},
+  {id:'bonus_hard_album_completed',cat:'radio',icon:'⚡',name:'Modo Hard Dominado',desc:'Complete um álbum em modo Hard com pelo menos 90% de acerto.',cover:'CD 11.jpeg'},
+  {id:'bonus_fast_guess',cat:'radio',icon:'⏱️',name:'Orelha Absoluta',desc:'Acerte uma música em menos de 5 segundos.',cover:'CD 12.jpeg'},
+  {id:'bonus_all_albums_completed',cat:'radio',icon:'🏆',name:'Rei Supremo da Rádio',desc:'Complete todos os discos da Rádio com perfeição.',cover:'CD 13.jpeg'},
 
-const $=sel=>document.querySelector(sel);
-const feed=$('#feed');
-const form=$('#fanForm');
-const toast=$('#toast');
-const searchInput=$('#searchInput');
-const sortSelect=$('#sortSelect');
-const fanModal=$('#fanModal');
-const authUserPill=$('#authUserPill');
-const authUserPhoto=$('#authUserPhoto');
-const authUserName=$('#authUserName');
-const authUserEmail=$('#authUserEmail');
-const authLogoutBtn=$('#authLogoutBtn');
+  {id:'first_level_completed',cat:'quiz',icon:'💿',name:'Transpiração Contínua Prolongada',desc:'Complete o nível 1 do Quiz.',cover:'CD 1.jpeg'},
+  {id:'combo_3x',cat:'quiz',icon:'🔥',name:'Preço Curto... Prazo Longo',desc:'Acerte 3 perguntas seguidas.',cover:'CD 2.jpeg'},
+  {id:'level_3_completed',cat:'quiz',icon:'🌊',name:'Nadando com os Tubarões',desc:'Complete o nível 3 do Quiz.',cover:'CD 3.jpeg'},
+  {id:'all_main_levels_completed',cat:'quiz',icon:'🏭',name:'Abalando a Sua Fábrica',desc:'Complete todos os 7 níveis principais do Quiz.',cover:'CD 4.jpeg'},
+  {id:'level_5_completed',cat:'quiz',icon:'🛹',name:'Bocas Ordinárias',desc:'Complete o nível 5 do Quiz.',cover:'CD 5.jpeg'},
+  {id:'all_levels_completed',cat:'quiz',icon:'🎸',name:'Acústico MTV',desc:'Complete todos os níveis do Quiz, incluindo o secreto.',cover:'CD 6.jpeg'},
+  {id:'combo_7x',cat:'quiz',icon:'📣',name:'Tamo Aí na Atividade',desc:'Acerte 7 perguntas seguidas.',cover:'CD 7.jpeg'},
+  {id:'combo_5x',cat:'quiz',icon:'🛡️',name:'Imunidade Musical',desc:'Acerte 5 perguntas seguidas.',cover:'CD 8.jpeg'},
+  {id:'used_50_50',cat:'quiz',icon:'➗',name:'Ritmo, Ritual e Responsa',desc:'Use o power-up 50/50 pela primeira vez.',cover:'CD 9.jpeg'},
+  {id:'coca_cola_collaboration',cat:'quiz',icon:'🥤',name:'Estúdio Coca-Cola Zero',desc:'Complete o desafio do álbum Estúdio Coca-Cola Zero.',cover:'CD 10.jpeg'},
+  {id:'combo_10x',cat:'quiz',icon:'⚽',name:'Camisa 10',desc:'Acerte 10 perguntas seguidas.',cover:'CD 11.jpeg'},
+  {id:'new_high_score',cat:'quiz',icon:'📈',name:'Música Popular Caiçara',desc:'Alcance um novo recorde de pontuação.',cover:'CD 12.jpeg'},
+  {id:'secret_level_completed',cat:'quiz',icon:'🔒',name:'La Família 013',desc:'Conclua o nível secreto Hardcore.',cover:'CD 13.jpeg'},
+  {id:'used_skip',cat:'quiz',icon:'🛹',name:'Fera no Skate',desc:'Use o power-up Pular Pergunta pela primeira vez.',cover:'CD 13.jpeg'},
 
-function firstName(fullName){return String(fullName||'').trim().split(/\s+/)[0]||'Jogador CBJR'}
-function setLoggedUserUI(user){
-  currentGoogleUser=user||null;
-  window.CBJR_CURRENT_USER=user?{uid:user.uid,name:user.displayName||'Jogador CBJR',email:user.email||'',photoURL:user.photoURL||''}:null;
-  if(!user)return;
-  if(authUserName)authUserName.textContent=user.displayName||'Jogador CBJR';
-  if(authUserEmail)authUserEmail.textContent=user.email||'Conta Google';
-  if(authUserPhoto){
-    authUserPhoto.src=user.photoURL||'https://ui-avatars.com/api/?name=CBJR&background=f1c40f&color=000&bold=true';
-  }
-  authUserPill?.classList.add('show');
-}
-function applyLoggedUserToForm(){
-  const user=currentGoogleUser;
-  if(!user)return;
-  const nameInput=$('#fanName');
-  const photoInput=$('#fanPhoto');
-  if(nameInput && !nameInput.value.trim())nameInput.value=firstName(user.displayName);
-  if(photoInput && !photoInput.value.trim() && user.photoURL)photoInput.value=user.photoURL;
-}
-async function saveLoggedUser(user){
-  if(!user)return;
-  try{
-    await setDoc(doc(db,'usuarios',user.uid),{uid:user.uid,nome:user.displayName||'Jogador CBJR',email:user.email||'',foto:user.photoURL||'',provider:'google',ultimoLogin:serverTimestamp()},{merge:true});
-  }catch(e){console.warn('Não foi possível salvar perfil do usuário agora:',e)}
-}
-
-const phrases=[
-  '“A vida me ensinou a nunca desistir.”',
-  '“Só os loucos sabem.”',
-  '“O impossível é só questão de opinião.”',
-  '“Quem é de verdade sabe quem é de mentira.”',
-  '“Dias de luta, dias de glória.”'
+  {id:'letters_tcp_completed',cat:'letras',icon:'✍️',name:'TCP no Modo Letras',desc:'Complete o Modo Letras de Transpiração Contínua Prolongada.',cover:'CD 1.jpeg'},
+  {id:'letters_pcpl_completed',cat:'letras',icon:'✍️',name:'Preço Curto no Modo Letras',desc:'Complete o Modo Letras de Preço Curto... Prazo Longo.',cover:'CD 2.jpeg'},
+  {id:'letters_nadando_completed',cat:'letras',icon:'✍️',name:'Nadando no Modo Letras',desc:'Complete o Modo Letras de Nadando com os Tubarões.',cover:'CD 3.jpeg'},
+  {id:'letters_cbjr100_completed',cat:'letras',icon:'✍️',name:'100% no Modo Letras',desc:'Complete o Modo Letras de 100% Charlie Brown Jr.',cover:'CD 4.jpeg'},
+  {id:'letters_bocas_completed',cat:'letras',icon:'✍️',name:'Bocas no Modo Letras',desc:'Complete o Modo Letras de Bocas Ordinárias.',cover:'CD 5.jpeg'},
+  {id:'letters_atividade_completed',cat:'letras',icon:'✍️',name:'Atividade no Modo Letras',desc:'Complete o Modo Letras de Tamo Aí na Atividade.',cover:'CD 7.jpeg'},
+  {id:'letters_imunidade_completed',cat:'letras',icon:'✍️',name:'Imunidade no Modo Letras',desc:'Complete o Modo Letras de Imunidade Musical.',cover:'CD 8.jpeg'},
+  {id:'letters_ritmo_completed',cat:'letras',icon:'✍️',name:'Ritual no Modo Letras',desc:'Complete o Modo Letras de Ritmo, Ritual e Responsa.',cover:'CD 9.jpeg'},
+  {id:'letters_all_completed',cat:'letras',icon:'📚',name:'Coleção Completa',desc:'Complete o Modo Letras para todos os álbuns.',cover:'CD 1.jpeg'}
 ];
-$('#dailyPhrase').textContent=phrases[new Date().getDate()%phrases.length];
 
-function openModal(){applyLoggedUserToForm();fanModal.classList.add('show');fanModal.setAttribute('aria-hidden','false');setTimeout(()=>$('#fanMusic')?.focus(),80)}
-function closeModal(){fanModal.classList.remove('show');fanModal.setAttribute('aria-hidden','true')}
-document.querySelectorAll('[data-open-form]').forEach(btn=>btn.addEventListener('click',openModal));
-$('#closeModal').addEventListener('click',closeModal);
-fanModal.addEventListener('click',e=>{if(e.target===fanModal)closeModal()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+const catNames = {all:'Todas',radio:'Rádio',quiz:'Quiz',letras:'Letras'};
+let activeFilter = 'all';
+let state = {};
 
-function showToast(msg){toast.textContent=msg;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),2600)}
-function escapeHtml(str){return String(str??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-function cleanText(v,max=500){return String(v??'').trim().slice(0,max)}
-function formatDate(v){
-  let d=null;
-  if(!v)d=new Date(); else if(typeof v.toDate==='function')d=v.toDate(); else if(v.seconds)d=new Date(v.seconds*1000); else d=new Date(v);
-  if(Number.isNaN(d.getTime()))return 'agora';
-  return new Intl.DateTimeFormat('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}).format(d);
+function readJson(key){try{return JSON.parse(localStorage.getItem(key)||'{}')||{}}catch(e){return {}}}
+function normalizeState(){
+  const radio = readJson(RADIO_KEY);
+  const old = readJson(OLD_QUIZ_KEY);
+  const merged = {};
+  Object.keys(old).forEach(id => { if(old[id]) merged[id] = {unlockedAt: Date.now(), source:'quiz-antigo'}; });
+  Object.keys(radio).forEach(id => { if(radio[id]) merged[id] = typeof radio[id] === 'object' ? {...radio[id], source:'radio'} : {unlockedAt: Date.now(), source:'radio'}; });
+  return merged;
 }
-function initials(name){return cleanText(name,'').split(/\s+/).filter(Boolean).slice(0,2).map(p=>p[0]?.toUpperCase()).join('')||'CB'}
-function instagramLink(handle){const h=cleanText(handle,40).replace(/^@/,'');return h?`https://instagram.com/${encodeURIComponent(h)}`:''}
-function normalizePost(docSnap){const d=docSnap.data()||{};return{id:docSnap.id,name:cleanText(d.name||'Fã CBJR',32),city:cleanText(d.city||'Cidade não informada',42),instagram:cleanText(d.instagram||'',40),photo:cleanText(d.photo||'',300),music:cleanText(d.music||'Charlie Brown Jr.',60),message:cleanText(d.message||'',500),likes:Number(d.likes||0),replies:Number(d.replies||0),createdAt:d.createdAt||d.timestamp||Date.now()}}
-function getLiked(){try{return JSON.parse(localStorage.getItem('cbjr_fans_liked')||'[]')}catch{return[]}}
-function setLiked(ids){localStorage.setItem('cbjr_fans_liked',JSON.stringify(ids))}
-function markLiked(id){const ids=getLiked();if(!ids.includes(id)){ids.push(id);setLiked(ids)}}
-function isLiked(id){return getLiked().includes(id)}
-function getTime(p){if(p.createdAt?.seconds)return p.createdAt.seconds*1000;if(p.createdAt?.toMillis)return p.createdAt.toMillis();return Date.parse(p.createdAt)||0}
-function filteredPosts(){
-  const term=searchInput.value.trim().toLowerCase();
-  let list=[...posts];
-  if(term){list=list.filter(p=>`${p.name} ${p.city} ${p.music} ${p.message} ${p.instagram}`.toLowerCase().includes(term));}
-  if(sortSelect.value==='likes')list.sort((a,b)=>(b.likes-a.likes)||getTime(b)-getTime(a)); else list.sort((a,b)=>getTime(b)-getTime(a));
-  return list;
+function encodePath(file){
+  return String(file || 'CD 1.jpeg').replace(/^\/+/, '').split('/').map(part => encodeURIComponent(part)).join('/');
 }
-function renderStats(){
-  const fans=new Set(posts.map(p=>p.name.toLowerCase()).filter(Boolean));
-  const cities=new Set(posts.map(p=>p.city.toLowerCase()).filter(Boolean));
-  $('#statMessages').textContent=posts.length;
-  $('#statLikes').textContent=posts.reduce((s,p)=>s+(p.likes||0),0);
-  $('#statFans').textContent=fans.size;
-  $('#statCities').textContent=cities.size;
+function coverCandidates(file){
+  const encoded = encodePath(file);
+  const original = String(file || 'CD 1.jpeg').replace(/^\/+/, '');
+  const cache = '?v=20260511-radio-covers-3';
+  return [
+    BASE_URL + encoded + cache,
+    PAGES_V2 + encoded + cache,
+    RAW_V2 + encoded + cache,
+    PAGES_V1 + encoded + cache,
+    RAW_V1 + encoded + cache,
+    BASE_URL + original + cache,
+    PAGES_V2 + 'cbjr.png' + cache,
+    RAW_V2 + 'cbjr.png' + cache
+  ];
 }
-function renderActiveFans(){
-  const map=new Map();
-  posts.forEach(p=>{const key=p.name.toLowerCase();const current=map.get(key)||{name:p.name,city:p.city,score:0};current.score+=1+(p.likes||0)+(p.replies||0)*2;map.set(key,current)});
-  const rows=[...map.values()].sort((a,b)=>b.score-a.score).slice(0,3);
-  $('#activeFans').innerHTML=rows.length?rows.map((f,i)=>`<article class="active-fan"><div class="position">${i+1}</div><div><div class="active-name">${escapeHtml(f.name)}</div><div class="active-city">${escapeHtml(f.city)}</div></div><div class="active-score">${f.score} pts</div></article>`).join(''):'<div class="empty">Ainda sem participação.</div>';
+function coverUrl(file){
+  return coverCandidates(file)[0];
 }
-function renderFeed(){
-  const list=filteredPosts();
-  renderStats();renderActiveFans();
-  if(!list.length){feed.innerHTML='<div class="empty">Nenhuma mensagem encontrada. Seja o primeiro a falar com a galera.</div>';return;}
-  feed.innerHTML=list.map(p=>{
-    const link=instagramLink(p.instagram);
-    const liked=isLiked(p.id);
-    const avatar=p.photo?`<img src="${escapeHtml(p.photo)}" alt="Foto de ${escapeHtml(p.name)}" onerror="this.remove()">`:escapeHtml(initials(p.name));
-    return `<article class="post" data-id="${p.id}">
-      <div class="post-top"><div class="fan"><div class="avatar">${avatar}</div><div class="fan-info"><div class="fan-name">${escapeHtml(p.name)}</div><div class="fan-meta">${escapeHtml(p.city)}${link?` • <a href="${link}" target="_blank" rel="noopener" style="color:#f1c40f;text-decoration:none">${escapeHtml(p.instagram.startsWith('@')?p.instagram:'@'+p.instagram)}</a>`:''}</div></div></div><div class="time">${formatDate(p.createdAt)}</div></div>
-      <div class="music-pill">♪ ${escapeHtml(p.music)}</div>
-      <div class="message">${escapeHtml(p.message)}</div>
-      <div class="post-actions"><button class="action like ${liked?'active':''}" data-like="${p.id}">❤ <span>${p.likes||0}</span></button><button class="action" data-reply-toggle="${p.id}">Responder</button><span class="action">${p.replies||0} resposta(s)</span></div>
-      <div class="reply-box" id="reply-${p.id}"><div class="reply-line"><input placeholder="Escreva uma resposta rápida..." maxlength="220" data-reply-input="${p.id}"><button class="small-btn" data-reply-send="${p.id}">Enviar</button></div><div class="replies" id="replies-${p.id}"></div></div>
-    </article>`
+function fallbackCover(img){
+  if(!img) return;
+  const original = img.dataset.originalCover || 'CD 1.jpeg';
+  const candidates = coverCandidates(original);
+  const step = Number(img.dataset.fallbackStep || 0) + 1;
+  if(step < candidates.length){
+    img.dataset.fallbackStep = String(step);
+    img.src = candidates[step];
+    return;
+  }
+  img.classList.add('cover-error');
+}
+function isUnlocked(id){ return Boolean(state[id]); }
+function formatDate(value){
+  const ts = Number(value || 0);
+  if(!ts) return 'Data não registrada';
+  try{return new Date(ts).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});}catch(e){return 'Data não registrada'}
+}
+function render(){
+  state = normalizeState();
+  const total = catalog.length;
+  const unlocked = catalog.filter(a => isUnlocked(a.id)).length;
+  const percent = total ? Math.round((unlocked/total)*100) : 0;
+  document.getElementById('totalCount').textContent = total;
+  document.getElementById('unlockedCount').textContent = unlocked;
+  document.getElementById('percentCount').textContent = percent + '%';
+  document.getElementById('progressFill').style.width = percent + '%';
+
+  const rows = catalog.filter(a => activeFilter === 'all' || a.cat === activeFilter)
+    .sort((a,b) => Number(isUnlocked(b.id)) - Number(isUnlocked(a.id)) || a.cat.localeCompare(b.cat) || a.name.localeCompare(b.name));
+  const grid = document.getElementById('achievementsGrid');
+  if(!rows.length){ grid.outerHTML = '<div class="empty">Nenhuma conquista encontrada nessa categoria.</div>'; return; }
+  grid.innerHTML = rows.map(a => {
+    const unlocked = isUnlocked(a.id);
+    const data = state[a.id] || {};
+    return `<article class="card ${unlocked?'unlocked':'locked'}" onclick="openModal('${a.id}')">
+      <span class="badge">${catNames[a.cat]}</span>
+      <span class="icon">${unlocked ? a.icon : '🔒'}</span>
+      <img class="cover" src="${coverUrl(a.cover)}" data-original-cover="${escapeHtml(a.cover)}" alt="${escapeHtml(a.name)}" onerror="fallbackCover(this)">
+      <h3>${escapeHtml(a.name)}</h3>
+      <p>${escapeHtml(a.desc)}</p>
+      <div class="status">${unlocked ? 'Desbloqueada • ' + formatDate(data.unlockedAt) : 'Bloqueada'}</div>
+    </article>`;
   }).join('');
 }
-async function loadReplies(postId){
-  const box=$(`#replies-${CSS.escape(postId)}`); if(!box)return;
-  box.innerHTML='<div class="reply">Carregando respostas...</div>';
-  try{const snap=await getDocs(query(collection(db,COLLECTION,postId,'respostas'),orderBy('createdAt','asc'),limit(12)));
-    box.innerHTML=snap.empty?'':snap.docs.map(d=>{const r=d.data();return `<div class="reply"><strong>${escapeHtml(r.name||'Fã CBJR')}:</strong> ${escapeHtml(r.message||'')}</div>`}).join('');
-  }catch(e){box.innerHTML='<div class="reply">Não foi possível carregar respostas.</div>';}
+function openModal(id){
+  const a = catalog.find(x => x.id === id); if(!a) return;
+  const data = state[id] || {};
+  const unlocked = isUnlocked(id);
+  const modalImg = document.getElementById('modalCover');
+  modalImg.classList.remove('cover-error');
+  modalImg.dataset.fallbackStep = '0';
+  modalImg.dataset.originalCover = a.cover;
+  modalImg.src = coverUrl(a.cover);
+  document.getElementById('modalTitle').textContent = a.name;
+  document.getElementById('modalDesc').textContent = a.desc;
+  document.getElementById('modalCategory').textContent = catNames[a.cat];
+  document.getElementById('modalStatus').textContent = unlocked ? 'Desbloqueada' : 'Bloqueada';
+  document.getElementById('modalStatus').style.color = unlocked ? 'var(--green)' : 'rgba(255,255,255,.72)';
+  const modalDateEl = document.getElementById('modalDate');
+  if(unlocked){
+    modalDateEl.textContent = formatDate(data.unlockedAt);
+  } else {
+    // When locked, display a button that navigates the user to the appropriate game page
+    modalDateEl.innerHTML = '<button class="btn" onclick="playAchievement(\'' + id + '\')">Jogue para liberar</button>';
+  }
+  document.getElementById('detailModal').classList.add('show');
 }
-async function likePost(id){
-  if(isLiked(id)){showToast('Você já curtiu essa mensagem.');return;}
-  try{await updateDoc(doc(db,COLLECTION,id),{likes:increment(1)});markLiked(id);showToast('Curtida registrada!');}
-  catch(e){console.error(e);showToast('Não foi possível curtir agora.');}
-}
-async function sendReply(id){
-  const input=document.querySelector(`[data-reply-input="${CSS.escape(id)}"]`); if(!input)return;
-  const message=cleanText(input.value,220); if(message.length<2){showToast('Escreva uma resposta antes de enviar.');return;}
-  const name=cleanText(currentGoogleUser?.displayName||$('#fanName').value||localStorage.getItem('cbjr_fan_name')||'Fã CBJR',32);
-  try{await addDoc(collection(db,COLLECTION,id,'respostas'),{name,message,createdAt:serverTimestamp(),timestamp:Date.now()});await updateDoc(doc(db,COLLECTION,id),{replies:increment(1)});input.value='';showToast('Resposta publicada!');loadReplies(id);}
-  catch(e){console.error(e);showToast('Não foi possível responder agora.');}
-}
-function saveLocal(){if(!$('#rememberFan').checked)return;localStorage.setItem('cbjr_fan_name',$('#fanName').value.trim());localStorage.setItem('cbjr_fan_city',$('#fanCity').value.trim());localStorage.setItem('cbjr_fan_instagram',$('#fanInstagram').value.trim());localStorage.setItem('cbjr_fan_photo',$('#fanPhoto').value.trim());}
-function loadLocal(){$('#fanName').value=localStorage.getItem('cbjr_fan_name')||'';$('#fanCity').value=localStorage.getItem('cbjr_fan_city')||'';$('#fanInstagram').value=localStorage.getItem('cbjr_fan_instagram')||'';$('#fanPhoto').value=localStorage.getItem('cbjr_fan_photo')||'';}
-async function publishPost(e){
-  e.preventDefault();
-  const name=cleanText($('#fanName').value,32),city=cleanText($('#fanCity').value,42),instagram=cleanText($('#fanInstagram').value,40).replace(/\s/g,''),photo=cleanText($('#fanPhoto').value,300),music=cleanText($('#fanMusic').value,60),message=cleanText($('#fanMessage').value,500);
-  if(!name||!city||!music||message.length<5){showToast('Preencha nome, cidade, música e uma mensagem.');return;}
-  $('#publishBtn').disabled=true;$('#formStatus').textContent='Publicando no mural...';
-  try{await addDoc(collection(db,COLLECTION),{uid:currentGoogleUser?.uid||'',email:currentGoogleUser?.email||'',googleName:currentGoogleUser?.displayName||'',googlePhoto:currentGoogleUser?.photoURL||'',name,city,instagram,photo:photo||currentGoogleUser?.photoURL||'',music,message,likes:0,replies:0,source:'cbjr-v2-fans',timestamp:Date.now(),createdAt:serverTimestamp()});saveLocal();$('#fanMessage').value='';$('#fanMusic').value='';$('#charCount').textContent='0';$('#formStatus').textContent='Mensagem publicada com sucesso.';showToast('Mensagem publicada na Comunidade CBJR!');closeModal();}
-  catch(err){console.error(err);$('#formStatus').textContent='Falha ao publicar. Confira as regras do Firestore.';showToast('Erro ao publicar mensagem.');}
-  finally{$('#publishBtn').disabled=false;}
-}
-function startRealtime(){
-  if(unsubscribe)unsubscribe();
-  const q=query(collection(db,COLLECTION),orderBy('createdAt','desc'),limit(80));
-  unsubscribe=onSnapshot(q,snap=>{posts=snap.docs.map(normalizePost);renderFeed();$('#formStatus').textContent=`Comunidade online. ${posts.length} mensagem(ns) carregada(s).`;},err=>{console.error(err);feed.innerHTML='<div class="empty">Não foi possível carregar a comunidade. Confira as regras do Firestore.</div>';$('#formStatus').textContent='Falha ao conectar ao Firebase.';});
-}
+function closeModal(){ document.getElementById('detailModal').classList.remove('show'); }
 
-$('#fanMessage').addEventListener('input',()=>$('#charCount').textContent=$('#fanMessage').value.length);
-form.addEventListener('submit',publishPost);
-searchInput.addEventListener('input',renderFeed);sortSelect.addEventListener('change',renderFeed);
-document.addEventListener('pointermove',e=>{document.querySelectorAll('.post').forEach(p=>{const r=p.getBoundingClientRect();if(e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom){p.style.setProperty('--mx',`${((e.clientX-r.left)/r.width)*100}%`)}})},{passive:true});
-document.addEventListener('click',e=>{const like=e.target.closest('[data-like]');if(like)likePost(like.dataset.like);const toggle=e.target.closest('[data-reply-toggle]');if(toggle){const id=toggle.dataset.replyToggle;const box=$(`#reply-${CSS.escape(id)}`);box?.classList.toggle('show');if(box?.classList.contains('show'))loadReplies(id);}const send=e.target.closest('[data-reply-send]');if(send)sendReply(send.dataset.replySend);});
-
-function setupOnlinePresence(){
-  const onlineEl=document.getElementById('onlineCount');
-  if(!onlineEl)return;
-  const pageKey='fans';
-  const sessionRef=dbPush(dbRef(realtimeDb,`presence/${pageKey}`));
-  dbSet(sessionRef,{page:pageKey,createdAt:rtdbServerTimestamp(),userAgent:navigator.userAgent.slice(0,120)}).catch(()=>{});
-  onDisconnect(sessionRef).remove();
-  window.addEventListener('beforeunload',()=>{dbSet(sessionRef,null).catch(()=>{});});
-  onValue(dbRef(realtimeDb,`presence/${pageKey}`),snap=>{
-    onlineEl.textContent=String(snap.exists()?snap.size:0);
-  },()=>{onlineEl.textContent='0';});
+// Redireciona o jogador para a tela de jogo apropriada para liberar a conquista.
+// Ajuste os caminhos conforme necessário para seu projeto. Aqui usamos páginas base como placeholders.
+function playAchievement(id){
+  const ach = catalog.find(a => a.id === id);
+  if(!ach) return;
+  // Determine a rota com base na categoria da conquista.
+  let targetPage;
+  switch(ach.cat){
+    case 'radio':
+      targetPage = 'radio.html';
+      break;
+    case 'quiz':
+      targetPage = 'quiz.html';
+      break;
+    case 'letras':
+      targetPage = 'letras.html';
+      break;
+    default:
+      targetPage = 'index.html?skipIntro=true';
+  }
+  window.location.href = BASE_URL + targetPage;
 }
-
-authLogoutBtn?.addEventListener('click',async()=>{await signOut(auth);window.location.href='index.html';});
-onAuthStateChanged(auth,async(user)=>{
-  if(!user){window.location.href='index.html?loginRequired=true';return;}
-  setLoggedUserUI(user);
-  await saveLoggedUser(user);
-  loadLocal();
-  applyLoggedUserToForm();
-  startRealtime();
-  setupOnlinePresence();
-});
+function escapeHtml(str){return String(str).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function resetAchievements(){
+  if(!confirm('Zerar as conquistas locais salvas neste navegador?')) return;
+  localStorage.removeItem(RADIO_KEY);
+  localStorage.removeItem(OLD_QUIZ_KEY);
+  closeModal();
+  render();
+}
+document.querySelectorAll('.tab').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active'); activeFilter = btn.dataset.filter; render();
+}));
+document.getElementById('detailModal').addEventListener('click', e => { if(e.target.id === 'detailModal') closeModal(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
+render();
 </script>
+
+<!-- CBJR AUTH PROFILE GLOBAL -->
+<style id="cbjr-auth-profile-style">
+  .cbjr-auth-profile {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 5000;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    max-width: min(360px, calc(100vw - 32px));
+    padding: 6px 8px 6px 6px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.18);
+    background: rgba(0,0,0,.76);
+    color: #fff;
+    box-shadow: 0 10px 28px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    font-family: Inter, Arial, Helvetica, sans-serif;
+  }
+  .cbjr-auth-profile.show { display: inline-flex; }
+  .cbjr-auth-profile img {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(241,196,15,.75);
+    background: #111;
+    flex: 0 0 auto;
+  }
+  .cbjr-auth-fallback {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    border: 2px solid rgba(241,196,15,.75);
+    background: #f1c40f;
+    color: #050505;
+    font-weight: 1000;
+    font-size: .9rem;
+  }
+  .cbjr-auth-text {
+    min-width: 0;
+    display: grid;
+    line-height: 1.05;
+  }
+  .cbjr-auth-name {
+    font-weight: 1000;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 210px;
+  }
+  .cbjr-auth-email {
+    margin-top: 3px;
+    color: rgba(255,255,255,.68);
+    font-size: .76rem;
+    font-weight: 850;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 210px;
+  }
+  .cbjr-auth-logout {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.16);
+    background: rgba(255,255,255,.10);
+    color: #fff;
+    font-size: 1.15rem;
+    line-height: 1;
+    font-weight: 1000;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+  }
+  .cbjr-auth-logout:hover { background: rgba(241,196,15,.20); border-color: rgba(241,196,15,.55); }
+  .cbjr-auth-login-btn {
+    border: 1px solid rgba(241,196,15,.55);
+    border-radius: 999px;
+    background: rgba(0,0,0,.78);
+    color: #fff;
+    min-height: 42px;
+    padding: 0 16px;
+    font-weight: 1000;
+    cursor: pointer;
+    box-shadow: 0 0 22px rgba(241,196,15,.12);
+  }
+  .cbjr-auth-login-btn strong { color: #f1c40f; }
+  @media (max-width: 700px) {
+    .cbjr-auth-profile { top: 10px; right: 10px; padding: 5px; gap: 7px; }
+    .cbjr-auth-profile img, .cbjr-auth-fallback { width: 32px; height: 32px; }
+    .cbjr-auth-name { max-width: 126px; font-size: .82rem; }
+    .cbjr-auth-email { display: none; }
+    .cbjr-auth-logout { width: 30px; height: 30px; font-size: 1rem; }
+    .cbjr-auth-login-btn { min-height: 36px; padding: 0 12px; font-size: .8rem; }
+  }
+</style>
+<div id="cbjrAuthProfile" class="cbjr-auth-profile" aria-live="polite"></div>
+<script type="module" id="cbjr-auth-profile-script">
+  import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+  import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+  import { getFirestore, doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey: 'AIzaSyDtbjYWVdd0lMRy96QfqfjAg1dBReRIoRg4',
+    authDomain: 'ranking-cbjr.firebaseapp.com',
+    databaseURL: 'https://ranking-cbjr-default-rtdb.firebaseio.com',
+    projectId: 'ranking-cbjr',
+    storageBucket: 'ranking-cbjr.firebasestorage.app',
+    messagingSenderId: '681180179118',
+    appId: '1:681180179118:web:3ac202c9f7ed69cf94db3f',
+    measurementId: 'G-ZXMNGH3TVG'
+  };
+
+  const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+  const db = getFirestore(app);
+  const box = document.getElementById('cbjrAuthProfile');
+
+  function escapeHtml(str) {
+    return String(str ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  }
+
+  function initials(name, email) {
+    const source = String(name || email || 'CB').trim();
+    const parts = source.split(/\s+/).filter(Boolean);
+    return (parts.length >= 2 ? parts[0][0] + parts[1][0] : source.slice(0,2)).toUpperCase();
+  }
+
+  async function saveUser(user) {
+    try {
+      await setDoc(doc(db, 'usuarios', user.uid), {
+        uid: user.uid,
+        name: user.displayName || '',
+        email: user.email || '',
+        photoURL: user.photoURL || '',
+        provider: 'google',
+        lastLoginAt: serverTimestamp()
+      }, { merge: true });
+    } catch (err) {
+      console.warn('CBJR: não foi possível salvar o usuário no Firestore.', err);
+    }
+  }
+
+  function renderLoggedOut() {
+    if (!box) return;
+    // O login deve acontecer somente na tela inicial.
+    // Se a sessão não existir, volta para o index sem criar botão duplicado.
+    box.classList.remove('show');
+    box.innerHTML = '';
+    const current = (location.pathname.split('/').pop() || '').toLowerCase();
+    if (current !== 'index.html' && current !== '') {
+      window.location.href = 'index.html';
+    }
+  }
+
+  function renderLoggedIn(user) {
+    if (!box) return;
+    const name = user.displayName || 'Fã CBJR';
+    const email = user.email || '';
+    const photo = user.photoURL || '';
+    box.classList.add('show');
+    box.innerHTML = `
+      ${photo ? `<img src="${escapeHtml(photo)}" alt="Foto de ${escapeHtml(name)}">` : `<span class="cbjr-auth-fallback">${escapeHtml(initials(name,email))}</span>`}
+      <span class="cbjr-auth-text"><strong class="cbjr-auth-name">${escapeHtml(name)}</strong><span class="cbjr-auth-email">${escapeHtml(email)}</span></span>
+      <button class="cbjr-auth-logout" type="button" title="Sair da conta Google" aria-label="Sair da conta Google">×</button>
+    `;
+    box.querySelector('.cbjr-auth-logout')?.addEventListener('click', async () => {
+      try { await signOut(auth); window.location.href = 'index.html'; } catch(e) { console.error(e); }
+    });
+  }
+
+  onAuthStateChanged(auth, user => {
+    window.CBJR_AUTH_USER = user || null;
+    window.dispatchEvent(new CustomEvent('cbjr-auth-change', { detail: { user } }));
+    if (user) { renderLoggedIn(user); saveUser(user); }
+    else { renderLoggedOut(); }
+  });
+</script>
+<!-- /CBJR AUTH PROFILE GLOBAL -->
+
 </body>
 </html>
