@@ -3438,37 +3438,43 @@ document.addEventListener('DOMContentLoaded',()=>{
     position: fixed;
     top: 18px;
     right: 18px;
-    z-index: 9999;
+    z-index: 5000;
     display: none;
     align-items: center;
     gap: 10px;
-    max-width: min(360px, calc(100vw - 36px));
-    padding: 6px 8px 6px 7px;
+    max-width: min(360px, calc(100vw - 32px));
+    padding: 6px 8px 6px 6px;
     border-radius: 999px;
     border: 1px solid rgba(255,255,255,.18);
-    background: rgba(0,0,0,.72);
+    background: rgba(0,0,0,.76);
     color: #fff;
-    box-shadow: 0 0 26px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.10);
+    box-shadow: 0 10px 28px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.08);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     font-family: Inter, Arial, Helvetica, sans-serif;
   }
   .cbjr-auth-profile.show { display: inline-flex; }
-  .cbjr-auth-profile img, .cbjr-auth-fallback {
-    width: 42px;
-    height: 42px;
+  .cbjr-auth-profile img {
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
-    border: 2px solid #f1c40f;
     object-fit: cover;
+    border: 2px solid rgba(241,196,15,.75);
+    background: #111;
     flex: 0 0 auto;
-    box-shadow: 0 0 16px rgba(241,196,15,.25);
   }
   .cbjr-auth-fallback {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
     display: grid;
     place-items: center;
+    flex: 0 0 auto;
+    border: 2px solid rgba(241,196,15,.75);
     background: #f1c40f;
     color: #050505;
     font-weight: 1000;
+    font-size: .9rem;
   }
   .cbjr-auth-text {
     min-width: 0;
@@ -3476,29 +3482,28 @@ document.addEventListener('DOMContentLoaded',()=>{
     line-height: 1.05;
   }
   .cbjr-auth-name {
-    display: block;
-    max-width: 205px;
+    font-weight: 1000;
+    color: #fff;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: .95rem;
-    font-weight: 1000;
+    max-width: 210px;
   }
   .cbjr-auth-email {
-    display: block;
-    max-width: 205px;
+    margin-top: 3px;
+    color: rgba(255,255,255,.68);
+    font-size: .76rem;
+    font-weight: 850;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
-    color: rgba(255,255,255,.68);
-    font-size: .72rem;
-    font-weight: 850;
+    max-width: 210px;
   }
   .cbjr-auth-logout {
     width: 34px;
     height: 34px;
     border-radius: 50%;
-    border: 1px solid rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.16);
     background: rgba(255,255,255,.10);
     color: #fff;
     font-size: 1.15rem;
@@ -3551,10 +3556,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const provider = new GoogleAuthProvider();
-  provider.setCustomParameters({ prompt: 'select_account' });
   const db = getFirestore(app);
   const box = document.getElementById('cbjrAuthProfile');
-  const CACHE_KEY = 'cbjr_google_user_cache';
 
   function escapeHtml(str) {
     return String(str ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
@@ -3566,39 +3569,15 @@ document.addEventListener('DOMContentLoaded',()=>{
     return (parts.length >= 2 ? parts[0][0] + parts[1][0] : source.slice(0,2)).toUpperCase();
   }
 
-  function toUserData(user) {
-    if (!user) return null;
-    return {
-      uid: user.uid || '',
-      displayName: user.displayName || user.name || 'Fã CBJR',
-      email: user.email || '',
-      photoURL: user.photoURL || user.photo || ''
-    };
-  }
-
-  function readCachedUser() {
-    try { return JSON.parse(localStorage.getItem(CACHE_KEY) || 'null'); } catch { return null; }
-  }
-
-  function cacheUser(userData) {
-    if (!userData) return;
-    localStorage.setItem(CACHE_KEY, JSON.stringify(userData));
-    window.CBJR_AUTH_CACHE = userData;
-  }
-
-  async function saveUser(userData) {
-    if (!userData?.uid) return;
+  async function saveUser(user) {
     try {
-      await setDoc(doc(db, 'usuarios', userData.uid), {
-        uid: userData.uid,
-        name: userData.displayName || '',
-        nome: userData.displayName || '',
-        email: userData.email || '',
-        photoURL: userData.photoURL || '',
-        foto: userData.photoURL || '',
+      await setDoc(doc(db, 'usuarios', user.uid), {
+        uid: user.uid,
+        name: user.displayName || '',
+        email: user.email || '',
+        photoURL: user.photoURL || '',
         provider: 'google',
-        lastLoginAt: serverTimestamp(),
-        ultimoLogin: serverTimestamp()
+        lastLoginAt: serverTimestamp()
       }, { merge: true });
     } catch (err) {
       console.warn('CBJR: não foi possível salvar o usuário no Firestore.', err);
@@ -3607,31 +3586,21 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   function renderLoggedOut() {
     if (!box) return;
-    const cached = readCachedUser();
-    if (cached?.uid || cached?.email) {
-      renderLoggedIn(cached, true);
-      return;
+    // O login deve acontecer somente na tela inicial.
+    // Se a sessão não existir, volta para o index sem criar botão duplicado.
+    box.classList.remove('show');
+    box.innerHTML = '';
+    const current = (location.pathname.split('/').pop() || '').toLowerCase();
+    if (current !== 'index.html' && current !== '') {
+      window.location.href = 'index.html';
     }
-    box.classList.add('show');
-    box.innerHTML = '<button class="cbjr-auth-login-btn" type="button">Entrar com <strong>Google</strong></button>';
-    box.querySelector('button')?.addEventListener('click', async () => {
-      try { await signInWithPopup(auth, provider); }
-      catch (err) {
-        console.warn('Popup não concluiu; tentando redirecionamento.', err);
-        try { await signInWithRedirect(auth, provider); }
-        catch(e) { console.error(e); alert('Não foi possível iniciar o login Google. Código: ' + (e.code || 'erro desconhecido')); }
-      }
-    });
   }
 
-  function renderLoggedIn(userLike, fromCache = false) {
+  function renderLoggedIn(user) {
     if (!box) return;
-    const user = toUserData(userLike);
-    if (!user) return renderLoggedOut();
     const name = user.displayName || 'Fã CBJR';
     const email = user.email || '';
     const photo = user.photoURL || '';
-    cacheUser(user);
     box.classList.add('show');
     box.innerHTML = `
       ${photo ? `<img src="${escapeHtml(photo)}" alt="Foto de ${escapeHtml(name)}">` : `<span class="cbjr-auth-fallback">${escapeHtml(initials(name,email))}</span>`}
@@ -3639,21 +3608,15 @@ document.addEventListener('DOMContentLoaded',()=>{
       <button class="cbjr-auth-logout" type="button" title="Sair da conta Google" aria-label="Sair da conta Google">×</button>
     `;
     box.querySelector('.cbjr-auth-logout')?.addEventListener('click', async () => {
-      try { localStorage.removeItem(CACHE_KEY); await signOut(auth); window.location.href = 'index.html'; } catch(e) { console.error(e); }
+      try { await signOut(auth); window.location.href = 'index.html'; } catch(e) { console.error(e); }
     });
-    if (!fromCache) saveUser(user);
   }
-
-  const cachedUser = readCachedUser();
-  if (cachedUser) renderLoggedIn(cachedUser, true);
 
   onAuthStateChanged(auth, user => {
     window.CBJR_AUTH_USER = user || null;
-    const data = toUserData(user) || readCachedUser();
-    window.CBJR_AUTH_CACHE = data || null;
-    window.dispatchEvent(new CustomEvent('cbjr-auth-change', { detail: { user, userData: data } }));
-    if (user) renderLoggedIn(user);
-    else renderLoggedOut();
+    window.dispatchEvent(new CustomEvent('cbjr-auth-change', { detail: { user } }));
+    if (user) { renderLoggedIn(user); saveUser(user); }
+    else { renderLoggedOut(); }
   });
 </script>
 <!-- /CBJR AUTH PROFILE GLOBAL -->
