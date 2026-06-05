@@ -81,6 +81,20 @@
 .online-now span:last-child{color:rgba(255,255,255,.78);font-size:.78rem;letter-spacing:.07em;text-transform:uppercase;}
 @media(max-width:760px){.online-now{padding:7px 10px;font-size:.82rem}.online-now span:last-child{font-size:.68rem}}
 
+
+
+/* LOGIN GOOGLE — PERFIL DO USUÁRIO NO TOPO */
+.auth-actions{display:flex;align-items:center;gap:10px;justify-content:flex-end;min-width:0}
+.auth-user-pill{display:none;align-items:center;gap:9px;max-width:300px;min-height:38px;padding:4px 5px 4px 6px;border:1px solid rgba(255,255,255,.16);border-radius:999px;background:rgba(0,0,0,.58);box-shadow:0 0 22px rgba(241,196,15,.10),inset 0 1px 0 rgba(255,255,255,.08);color:#fff;min-width:0}
+.auth-user-pill.show{display:inline-flex}
+.auth-user-pill img{width:30px;height:30px;border-radius:50%;object-fit:cover;border:1px solid rgba(241,196,15,.48);background:rgba(255,255,255,.08);flex:0 0 auto}
+.auth-user-info{min-width:0;display:grid;line-height:1.05}
+.auth-user-info strong{font-size:.78rem;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff}
+.auth-user-info span{font-size:.62rem;font-weight:850;color:rgba(255,255,255,.56);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.auth-logout{width:28px;height:28px;border:0;border-radius:50%;background:rgba(255,255,255,.10);color:#fff;font-weight:1000;cursor:pointer;line-height:1;flex:0 0 auto}
+.auth-logout:hover{background:rgba(241,196,15,.18);color:#f1c40f}
+@media(max-width:760px){.topbar{gap:8px}.auth-actions{gap:6px}.auth-user-pill{max-width:58px;padding:3px}.auth-user-info{display:none}.auth-logout{width:26px;height:26px}.auth-user-pill img{width:28px;height:28px}.auth-actions .btn{padding:0 10px!important}}
+
 </style>
 </head>
 <body>
@@ -88,7 +102,17 @@
   <header class="topbar">
     <a class="btn" href="index.html?skipIntro=true">← Menu</a>
     <div class="brand-mini">Comunidade CBJR</div>
-    <a class="btn" href="radio.html">Rádio CBJR</a>
+    <div class="auth-actions">
+      <div class="auth-user-pill" id="authUserPill" title="Usuário logado">
+        <img id="authUserPhoto" alt="Foto do usuário logado" src="" />
+        <div class="auth-user-info">
+          <strong id="authUserName">Jogador CBJR</strong>
+          <span id="authUserEmail">Conta Google</span>
+        </div>
+        <button class="auth-logout" id="authLogoutBtn" type="button" title="Sair" aria-label="Sair">×</button>
+      </div>
+      <a class="btn" href="radio.html">Rádio CBJR</a>
+    </div>
   </header>
 
   <section class="hero">
@@ -175,7 +199,8 @@
 <div id="toast" class="toast"></div>
 <script type="module">
 import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getFirestore, collection, addDoc, doc, updateDoc, increment, serverTimestamp, query, orderBy, limit, onSnapshot, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import { getFirestore, collection, addDoc, doc, setDoc, updateDoc, increment, serverTimestamp, query, orderBy, limit, onSnapshot, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import { getDatabase, ref as dbRef, push as dbPush, set as dbSet, onDisconnect, onValue, serverTimestamp as rtdbServerTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
 const firebaseConfig={
@@ -192,8 +217,10 @@ const firebaseConfig={
 const app=getApps().length?getApp():initializeApp(firebaseConfig);
 const db=getFirestore(app);
 const realtimeDb=getDatabase(app);
+const auth=getAuth(app);
 const COLLECTION='comunidade';
 let posts=[];
+let currentGoogleUser=null;
 let unsubscribe=null;
 
 const $=sel=>document.querySelector(sel);
@@ -203,6 +230,39 @@ const toast=$('#toast');
 const searchInput=$('#searchInput');
 const sortSelect=$('#sortSelect');
 const fanModal=$('#fanModal');
+const authUserPill=$('#authUserPill');
+const authUserPhoto=$('#authUserPhoto');
+const authUserName=$('#authUserName');
+const authUserEmail=$('#authUserEmail');
+const authLogoutBtn=$('#authLogoutBtn');
+
+function firstName(fullName){return String(fullName||'').trim().split(/\s+/)[0]||'Jogador CBJR'}
+function setLoggedUserUI(user){
+  currentGoogleUser=user||null;
+  window.CBJR_CURRENT_USER=user?{uid:user.uid,name:user.displayName||'Jogador CBJR',email:user.email||'',photoURL:user.photoURL||''}:null;
+  if(!user)return;
+  if(authUserName)authUserName.textContent=user.displayName||'Jogador CBJR';
+  if(authUserEmail)authUserEmail.textContent=user.email||'Conta Google';
+  if(authUserPhoto){
+    authUserPhoto.src=user.photoURL||'https://ui-avatars.com/api/?name=CBJR&background=f1c40f&color=000&bold=true';
+  }
+  authUserPill?.classList.add('show');
+}
+function applyLoggedUserToForm(){
+  const user=currentGoogleUser;
+  if(!user)return;
+  const nameInput=$('#fanName');
+  const photoInput=$('#fanPhoto');
+  if(nameInput && !nameInput.value.trim())nameInput.value=firstName(user.displayName);
+  if(photoInput && !photoInput.value.trim() && user.photoURL)photoInput.value=user.photoURL;
+}
+async function saveLoggedUser(user){
+  if(!user)return;
+  try{
+    await setDoc(doc(db,'usuarios',user.uid),{uid:user.uid,nome:user.displayName||'Jogador CBJR',email:user.email||'',foto:user.photoURL||'',provider:'google',ultimoLogin:serverTimestamp()},{merge:true});
+  }catch(e){console.warn('Não foi possível salvar perfil do usuário agora:',e)}
+}
+
 const phrases=[
   '“A vida me ensinou a nunca desistir.”',
   '“Só os loucos sabem.”',
@@ -212,7 +272,7 @@ const phrases=[
 ];
 $('#dailyPhrase').textContent=phrases[new Date().getDate()%phrases.length];
 
-function openModal(){fanModal.classList.add('show');fanModal.setAttribute('aria-hidden','false');setTimeout(()=>$('#fanName')?.focus(),80)}
+function openModal(){applyLoggedUserToForm();fanModal.classList.add('show');fanModal.setAttribute('aria-hidden','false');setTimeout(()=>$('#fanMusic')?.focus(),80)}
 function closeModal(){fanModal.classList.remove('show');fanModal.setAttribute('aria-hidden','true')}
 document.querySelectorAll('[data-open-form]').forEach(btn=>btn.addEventListener('click',openModal));
 $('#closeModal').addEventListener('click',closeModal);
@@ -289,7 +349,7 @@ async function likePost(id){
 async function sendReply(id){
   const input=document.querySelector(`[data-reply-input="${CSS.escape(id)}"]`); if(!input)return;
   const message=cleanText(input.value,220); if(message.length<2){showToast('Escreva uma resposta antes de enviar.');return;}
-  const name=cleanText($('#fanName').value||localStorage.getItem('cbjr_fan_name')||'Fã CBJR',32);
+  const name=cleanText(currentGoogleUser?.displayName||$('#fanName').value||localStorage.getItem('cbjr_fan_name')||'Fã CBJR',32);
   try{await addDoc(collection(db,COLLECTION,id,'respostas'),{name,message,createdAt:serverTimestamp(),timestamp:Date.now()});await updateDoc(doc(db,COLLECTION,id),{replies:increment(1)});input.value='';showToast('Resposta publicada!');loadReplies(id);}
   catch(e){console.error(e);showToast('Não foi possível responder agora.');}
 }
@@ -300,7 +360,7 @@ async function publishPost(e){
   const name=cleanText($('#fanName').value,32),city=cleanText($('#fanCity').value,42),instagram=cleanText($('#fanInstagram').value,40).replace(/\s/g,''),photo=cleanText($('#fanPhoto').value,300),music=cleanText($('#fanMusic').value,60),message=cleanText($('#fanMessage').value,500);
   if(!name||!city||!music||message.length<5){showToast('Preencha nome, cidade, música e uma mensagem.');return;}
   $('#publishBtn').disabled=true;$('#formStatus').textContent='Publicando no mural...';
-  try{await addDoc(collection(db,COLLECTION),{name,city,instagram,photo,music,message,likes:0,replies:0,source:'cbjr-v2-fans',timestamp:Date.now(),createdAt:serverTimestamp()});saveLocal();$('#fanMessage').value='';$('#fanMusic').value='';$('#charCount').textContent='0';$('#formStatus').textContent='Mensagem publicada com sucesso.';showToast('Mensagem publicada na Comunidade CBJR!');closeModal();}
+  try{await addDoc(collection(db,COLLECTION),{uid:currentGoogleUser?.uid||'',email:currentGoogleUser?.email||'',googleName:currentGoogleUser?.displayName||'',googlePhoto:currentGoogleUser?.photoURL||'',name,city,instagram,photo:photo||currentGoogleUser?.photoURL||'',music,message,likes:0,replies:0,source:'cbjr-v2-fans',timestamp:Date.now(),createdAt:serverTimestamp()});saveLocal();$('#fanMessage').value='';$('#fanMusic').value='';$('#charCount').textContent='0';$('#formStatus').textContent='Mensagem publicada com sucesso.';showToast('Mensagem publicada na Comunidade CBJR!');closeModal();}
   catch(err){console.error(err);$('#formStatus').textContent='Falha ao publicar. Confira as regras do Firestore.';showToast('Erro ao publicar mensagem.');}
   finally{$('#publishBtn').disabled=false;}
 }
@@ -329,7 +389,16 @@ function setupOnlinePresence(){
   },()=>{onlineEl.textContent='0';});
 }
 
-loadLocal();startRealtime();setupOnlinePresence();
+authLogoutBtn?.addEventListener('click',async()=>{await signOut(auth);window.location.href='index.html';});
+onAuthStateChanged(auth,async(user)=>{
+  if(!user){window.location.href='index.html?loginRequired=true';return;}
+  setLoggedUserUI(user);
+  await saveLoggedUser(user);
+  loadLocal();
+  applyLoggedUserToForm();
+  startRealtime();
+  setupOnlinePresence();
+});
 </script>
 </body>
 </html>
