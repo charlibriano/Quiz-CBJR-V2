@@ -555,15 +555,14 @@ onAuthStateChanged(auth,async(user)=>{
 
   function renderLoggedOut() {
     if (!box) return;
-    box.classList.add('show');
-    box.innerHTML = '<button class="cbjr-auth-login-btn" type="button">Entrar com <strong>Google</strong></button>';
-    box.querySelector('button')?.addEventListener('click', async () => {
-      try { await signInWithPopup(auth, provider); }
-      catch (err) {
-        console.warn('Popup bloqueado; tentando redirecionamento.', err);
-        try { await signInWithRedirect(auth, provider); } catch(e) { console.error(e); alert('Não foi possível iniciar o login Google.'); }
-      }
-    });
+    // O login deve acontecer somente na tela inicial.
+    // Se a sessão não existir, volta para o index sem criar botão duplicado.
+    box.classList.remove('show');
+    box.innerHTML = '';
+    const current = (location.pathname.split('/').pop() || '').toLowerCase();
+    if (current !== 'index.html' && current !== '') {
+      window.location.href = 'index.html';
+    }
   }
 
   function renderLoggedIn(user) {
