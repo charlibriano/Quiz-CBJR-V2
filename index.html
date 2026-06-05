@@ -3588,6 +3588,187 @@
     .user-menu a, .user-menu button { width:100%; min-height:38px; border-radius:12px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.06); color:#fff; text-decoration:none; display:flex; align-items:center; padding:0 12px; font-weight:950; cursor:pointer; font:inherit; }
     .user-menu a:hover, .user-menu button:hover { background:rgba(241,196,15,.14); border-color:rgba(241,196,15,.42); }
 
+
+
+    /* DASHBOARD DO JOGADOR — HOME V9 */
+    .player-dashboard {
+      display: none;
+      width: min(1220px, calc(100% - 28px));
+      margin: 0 auto;
+      border: 1px solid rgba(241,196,15,.25);
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at 14% 0%, rgba(241,196,15,.12), transparent 34%),
+        linear-gradient(180deg, rgba(0,0,0,.68), rgba(0,0,0,.88));
+      box-shadow: 0 18px 54px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.08);
+      padding: 14px;
+      gap: 12px;
+      position: relative;
+      z-index: 4;
+    }
+
+    body.auth-logged-in .player-dashboard { display: grid; }
+
+    .dash-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+
+    .dash-title { display: grid; gap: 3px; min-width: 0; }
+    .dash-title strong {
+      font-family: 'Elektrix', Arial, sans-serif;
+      color: var(--yellow);
+      font-size: clamp(1.15rem, 2.2vw, 1.8rem);
+      line-height: .9;
+      text-shadow: 0 0 16px rgba(241,196,15,.28);
+    }
+    .dash-title span {
+      color: rgba(255,255,255,.64);
+      font-size: .82rem;
+      font-weight: 850;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .dash-sync {
+      color: rgba(255,255,255,.56);
+      font-size: .72rem;
+      font-weight: 900;
+      text-align: right;
+    }
+
+    .dash-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 9px;
+    }
+
+    .dash-card {
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      background: rgba(255,255,255,.055);
+      padding: 11px;
+      min-height: 82px;
+      display: grid;
+      align-content: center;
+      gap: 5px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .dash-card small {
+      color: rgba(255,255,255,.56);
+      font-weight: 1000;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      font-size: .62rem;
+    }
+
+    .dash-card strong {
+      color: var(--green);
+      font-size: clamp(1.05rem, 2vw, 1.45rem);
+      line-height: 1;
+      font-weight: 1000;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .dash-progress-wrap {
+      display: grid;
+      gap: 7px;
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 16px;
+      background: rgba(0,0,0,.32);
+      padding: 10px 12px;
+    }
+
+    .dash-progress-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: rgba(255,255,255,.72);
+      font-weight: 950;
+      font-size: .82rem;
+    }
+
+    .dash-progress-bar {
+      height: 9px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,.12);
+      box-shadow: inset 0 1px 4px rgba(0,0,0,.7);
+    }
+
+    .dash-progress-bar span {
+      display: block;
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--yellow), var(--green));
+      box-shadow: 0 0 16px rgba(30,215,96,.28);
+      transition: width .45s ease;
+    }
+
+    .dash-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .dash-last {
+      color: rgba(255,255,255,.66);
+      font-weight: 900;
+      font-size: .84rem;
+      line-height: 1.35;
+    }
+    .dash-last strong { color: var(--yellow); }
+
+    .dash-btn {
+      min-height: 40px;
+      border-radius: 999px;
+      border: 1px solid rgba(241,196,15,.5);
+      background: var(--yellow);
+      color: #050505;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 18px;
+      font-weight: 1000;
+      box-shadow: 0 0 20px rgba(241,196,15,.18);
+    }
+
+    .dash-btn.secondary {
+      background: rgba(255,255,255,.07);
+      color: #fff;
+      border-color: rgba(255,255,255,.16);
+      box-shadow: none;
+    }
+
+    @media (max-width: 920px) {
+      .player-dashboard { width: calc(100% - 16px); padding: 10px; border-radius: 18px; }
+      .dash-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .dash-card { min-height: 72px; }
+      .dash-head { align-items: flex-start; }
+    }
+
+    @media (max-width: 560px) {
+      .dash-grid { grid-template-columns: 1fr 1fr; gap: 7px; }
+      .dash-card { padding: 9px; min-height: 66px; }
+      .dash-card small { font-size: .54rem; }
+      .dash-card strong { font-size: .98rem; }
+      .dash-sync { display: none; }
+      .dash-actions { display: grid; }
+      .dash-btn { width: 100%; }
+    }
+
     @media (max-width: 560px) {
       .login-card { padding: 22px; border-radius: 22px; }
       .login-card p { font-size: .86rem; }
@@ -3666,6 +3847,39 @@
         <button class="icon-btn" id="infoBtn" title="Sobre" aria-label="Sobre">?</button>
       </div>
     </header>
+
+
+
+    <section class="player-dashboard" id="playerDashboard" aria-live="polite">
+      <div class="dash-head">
+        <div class="dash-title">
+          <strong id="dashWelcome">Bem-vindo, jogador</strong>
+          <span id="dashSubtitle">Seu progresso CBJR sincronizado com a conta Google.</span>
+        </div>
+        <div class="dash-sync" id="dashSyncStatus">Carregando progresso...</div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="dash-card"><small>Ranking</small><strong id="dashRanking">#--</strong></div>
+        <div class="dash-card"><small>Rádio CBJR</small><strong id="dashRadio">1/13 CDs</strong></div>
+        <div class="dash-card"><small>Modo Letras</small><strong id="dashLetras">0/13 álbuns</strong></div>
+        <div class="dash-card"><small>Conquistas</small><strong id="dashConquistas">0</strong></div>
+        <div class="dash-card"><small>Modo atual</small><strong id="dashModo">Normal</strong></div>
+      </div>
+
+      <div class="dash-progress-wrap">
+        <div class="dash-progress-row"><span>Progresso geral</span><strong id="dashPercent">0%</strong></div>
+        <div class="dash-progress-bar"><span id="dashProgressBar"></span></div>
+      </div>
+
+      <div class="dash-actions">
+        <div class="dash-last" id="dashLastActivity">Última atividade: <strong>comece pela Rádio, Quiz ou Modo Letras</strong></div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <a class="dash-btn" id="dashContinueBtn" href="radio.html">▶ Continuar de onde parei</a>
+          <a class="dash-btn secondary" href="conquistas.html">🎖️ Ver conquistas</a>
+        </div>
+      </div>
+    </section>
 
     <main class="main">
       <section class="hero-panel">
@@ -4587,7 +4801,7 @@
 <script type="module" id="cbjr-google-auth-script">
   import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-  import { getFirestore, doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+  import { getFirestore, doc, setDoc, serverTimestamp, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
   const firebaseConfig = {
     apiKey: 'AIzaSyDtb8jvVd0lMRy96QfqfjAg1dBReRIoRg4',
@@ -4666,6 +4880,104 @@
     location.href = 'index.html';
   });
 
+
+
+  function safeJson(value, fallback) {
+    try { return JSON.parse(value || JSON.stringify(fallback)); } catch (_) { return fallback; }
+  }
+
+  function countObjectKeys(value) {
+    const obj = safeJson(value || '{}', {});
+    return obj && typeof obj === 'object' && !Array.isArray(obj) ? Object.keys(obj).length : 0;
+  }
+
+  function readDashboardProgress() {
+    const radioIndex = Math.max(0, Number(localStorage.getItem('radioCBJRUnlockedAlbumIndex_v2') || '0') || 0);
+    const radioMode = String(localStorage.getItem('radioCBJRMode') || 'normal').toLowerCase();
+    const letras = safeJson(localStorage.getItem('cbjr_letters_completed') || '[]', []);
+    const radioAch = countObjectKeys(localStorage.getItem('radioCBJR_achievements_v1'));
+    const quizAch = countObjectKeys(localStorage.getItem('cobjr_quiz_achievements'));
+    const letrasCount = Array.isArray(letras) ? letras.length : 0;
+    const radioLiberados = Math.min(13, radioIndex + 1);
+    const conquistas = radioAch + quizAch + letrasCount;
+    const totalBase = 13 + 13 + 40;
+    const doneBase = radioLiberados + letrasCount + conquistas;
+    const percent = Math.max(0, Math.min(100, Math.round((doneBase / totalBase) * 100)));
+
+    let lastLabel = 'comece pela Rádio, Quiz ou Modo Letras';
+    let continueHref = 'radio.html';
+    if (letrasCount > 0 && letrasCount >= radioLiberados - 1) {
+      lastLabel = `Modo Letras • ${letrasCount}/13 álbum(ns) concluído(s)`;
+      continueHref = 'letras.html';
+    } else if (radioLiberados > 1) {
+      lastLabel = `Rádio CBJR • ${radioLiberados}/13 CD(s) liberado(s)`;
+      continueHref = 'radio.html';
+    } else if (quizAch > 0) {
+      lastLabel = `Quiz CBJR • ${quizAch} conquista(s) registrada(s)`;
+      continueHref = 'quiz.html';
+    }
+
+    return { radioLiberados, radioMode, letrasCount, conquistas, percent, lastLabel, continueHref };
+  }
+
+  function renderPlayerDashboard(user, rankingText = null) {
+    const progress = readDashboardProgress();
+    const firstName = (user?.displayName || 'Jogador CBJR').split(' ')[0] || 'Jogador';
+    const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
+    setText('dashWelcome', `Bem-vindo, ${firstName}`);
+    setText('dashSubtitle', user?.email ? `Conta conectada: ${user.email}` : 'Seu progresso está conectado à conta Google.');
+    setText('dashRanking', rankingText || '#--');
+    setText('dashRadio', `${progress.radioLiberados}/13 CDs`);
+    setText('dashLetras', `${progress.letrasCount}/13 álbuns`);
+    setText('dashConquistas', `${progress.conquistas}`);
+    setText('dashModo', progress.radioMode === 'hard' ? 'Hard' : 'Normal');
+    setText('dashPercent', `${progress.percent}%`);
+    const bar = document.getElementById('dashProgressBar');
+    if (bar) bar.style.width = `${progress.percent}%`;
+    const last = document.getElementById('dashLastActivity');
+    if (last) last.innerHTML = `Última atividade: <strong>${progress.lastLabel}</strong>`;
+    const btn = document.getElementById('dashContinueBtn');
+    if (btn) btn.href = progress.continueHref;
+    setText('dashSyncStatus', 'Progresso sincronizado');
+  }
+
+  async function updateDashboardRanking(user) {
+    if (!user) return;
+    const status = document.getElementById('dashSyncStatus');
+    try {
+      if (status) status.textContent = 'Atualizando ranking...';
+      const snap = await getDocs(collection(db, 'ranking'));
+      const rows = snap.docs.map(d => ({ id: d.id, ...(d.data() || {}) }))
+        .map(d => ({
+          uid: String(d.uid || ''),
+          email: String(d.email || d.userEmail || ''),
+          name: String(d.name || d.playerName || d.nome || ''),
+          score: Number(d.score || d.pontos || d.points || d.pontuacao || 0),
+          createdAt: d.createdAt?.seconds ? d.createdAt.seconds * 1000 : Number(d.timestamp || 0)
+        }))
+        .sort((a,b) => (b.score - a.score) || (b.createdAt - a.createdAt));
+      const idx = rows.findIndex(r =>
+        (r.uid && r.uid === user.uid) ||
+        (r.email && user.email && r.email.toLowerCase() === user.email.toLowerCase()) ||
+        (r.name && user.displayName && r.name.toLowerCase() === user.displayName.toLowerCase())
+      );
+      renderPlayerDashboard(user, idx >= 0 ? `#${idx + 1}` : '#--');
+    } catch (error) {
+      console.warn('Dashboard: não foi possível consultar ranking agora.', error);
+      renderPlayerDashboard(user, '#--');
+    }
+  }
+
+  window.addEventListener('cbjr-progress-loaded', () => {
+    if (window.CBJR_CURRENT_USER) {
+      renderPlayerDashboard({
+        displayName: window.CBJR_CURRENT_USER.name,
+        email: window.CBJR_CURRENT_USER.email,
+        uid: window.CBJR_CURRENT_USER.uid
+      });
+    }
+  });
+
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
       try { localStorage.removeItem('cbjr_google_logged'); } catch (e) {}
@@ -4698,6 +5010,8 @@
       photoURL: user.photoURL || ''
     };
 
+    renderPlayerDashboard(user);
+    updateDashboardRanking(user);
     setAuthView('auth-logged-in');
   });
 </script>
@@ -4890,22 +5204,7 @@
 </script>
 
 
-<script>
-window.addEventListener('cbjr-progress-loaded', function(){
-  try {
-    const radioIdx = Number(localStorage.getItem('radioCBJRUnlockedAlbumIndex_v2') || '0') + 1;
-    const letras = JSON.parse(localStorage.getItem('cbjr_letters_completed') || '[]');
-    const ach = JSON.parse(localStorage.getItem('radioCBJR_achievements_v1') || '{}');
-    const welcome = Array.from(document.querySelectorAll('*')).find(el => /Sua conta Google está conectada/i.test(el.textContent || ''));
-    if (!welcome || welcome.dataset.progressInjected === '1') return;
-    welcome.dataset.progressInjected = '1';
-    const box = document.createElement('div');
-    box.style.cssText = 'margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.12);display:grid;gap:4px;color:rgba(255,255,255,.76);font-weight:900;font-size:.86rem;line-height:1.3';
-    box.innerHTML = `<span>📻 Rádio: ${Math.max(1, radioIdx)} CD(s) liberado(s)</span><span>🎵 Letras: ${Array.isArray(letras) ? letras.length : 0} álbum(ns) concluído(s)</span><span>🏆 Conquistas: ${Object.keys(ach || {}).length} liberada(s)</span>`;
-    welcome.appendChild(box);
-  } catch(e) {}
-});
-</script>
+
 
 </body>
 </html>
