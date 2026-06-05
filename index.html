@@ -3571,6 +3571,23 @@
       line-height: 1;
     }
 
+
+    .user-pill { position: relative; padding: 0; background: transparent; border: 0; max-width: none; }
+    .user-pill-trigger {
+      border: 1px solid rgba(255,255,255,.16); border-radius: 999px; background: rgba(255,255,255,.08); color: #fff;
+      display: inline-flex; align-items: center; gap: 8px; min-height: 34px; padding: 4px 8px 4px 5px; cursor: pointer;
+    }
+    .user-pill-text { display: grid; min-width: 0; line-height: 1.05; text-align: left; }
+    .user-pill-text strong { font-size: .78rem; max-width: 180px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .user-pill-text span { margin-top: 2px; font-size: .62rem; color: rgba(255,255,255,.62); font-weight: 850; max-width: 180px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .user-pill-caret { color: var(--yellow); font-weight: 1000; }
+    .user-menu { display:none; position:absolute; right:0; top:calc(100% + 10px); width:min(310px, calc(100vw - 32px)); padding:10px; border:1px solid rgba(241,196,15,.34); border-radius:18px; background:rgba(0,0,0,.92); box-shadow:0 22px 58px rgba(0,0,0,.62); z-index:6000; }
+    .user-pill.open .user-menu { display:grid; gap:8px; }
+    .user-menu-title { border-bottom:1px solid rgba(255,255,255,.12); padding:4px 4px 10px; color:rgba(255,255,255,.72); font-weight:850; font-size:.82rem; }
+    .user-menu-title strong { display:block; color:var(--yellow); font-size:.95rem; }
+    .user-menu a, .user-menu button { width:100%; min-height:38px; border-radius:12px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.06); color:#fff; text-decoration:none; display:flex; align-items:center; padding:0 12px; font-weight:950; cursor:pointer; font:inherit; }
+    .user-menu a:hover, .user-menu button:hover { background:rgba(241,196,15,.14); border-color:rgba(241,196,15,.42); }
+
     @media (max-width: 560px) {
       .login-card { padding: 22px; border-radius: 22px; }
       .login-card p { font-size: .86rem; }
@@ -3623,10 +3640,19 @@
       </div>
 
       <div class="top-actions">
-        <div class="user-pill" id="userPill" title="Usuário logado">
-          <img id="userPhoto" alt="Foto do usuário" src="" />
-          <strong id="userName">Jogador</strong>
-          <button class="logout-btn" id="logoutBtn" type="button" title="Sair" aria-label="Sair">×</button>
+        <div class="user-pill" id="userPill" title="Conta Google conectada">
+          <button class="user-pill-trigger" id="userPillTrigger" type="button" aria-label="Abrir opções da conta Google">
+            <img id="userPhoto" alt="Foto do usuário" src="" />
+            <span class="user-pill-text"><strong id="userName">Jogador</strong><span id="userEmail">Conta Google</span></span>
+            <span class="user-pill-caret">▾</span>
+          </button>
+          <div class="user-menu" id="userMenu">
+            <div class="user-menu-title"><strong>Conta conectada</strong><span id="userMenuEmail">Conta Google</span></div>
+            <a href="index.html?skipIntro=true">🏠 Menu principal</a>
+            <a href="ranking.html">🏆 Meu ranking</a>
+            <a href="fans.html">💬 Comunidade</a>
+            <button class="logout-btn" id="logoutBtn" type="button">🚪 Sair da conta Google</button>
+          </div>
         </div>
         <button class="icon-btn" id="soundBtn" title="Som ambiente" aria-label="Som ambiente">♪</button>
         <button class="icon-btn" id="infoBtn" title="Sobre" aria-label="Sobre">?</button>
@@ -4577,6 +4603,10 @@
   const logoutBtn = document.getElementById('logoutBtn');
   const userName = document.getElementById('userName');
   const userPhoto = document.getElementById('userPhoto');
+  const userEmail = document.getElementById('userEmail');
+  const userMenuEmail = document.getElementById('userMenuEmail');
+  const userPill = document.getElementById('userPill');
+  const userPillTrigger = document.getElementById('userPillTrigger');
 
   function setAuthView(state) {
     document.body.classList.remove('auth-loading', 'auth-logged-out', 'auth-logged-in');
@@ -4619,6 +4649,9 @@
     }
   });
 
+  userPillTrigger?.addEventListener('click', (ev) => { ev.stopPropagation(); userPill?.classList.toggle('open'); });
+  document.addEventListener('click', (ev) => { if (userPill && !userPill.contains(ev.target)) userPill.classList.remove('open'); });
+
   logoutBtn?.addEventListener('click', async () => {
     await signOut(auth);
     location.reload();
@@ -4628,6 +4661,8 @@
     if (!user) {
       if (loginStatus) loginStatus.textContent = 'Faça login para continuar.';
       if (userName) userName.textContent = 'Jogador';
+      if (userEmail) userEmail.textContent = 'Conta Google';
+      if (userMenuEmail) userMenuEmail.textContent = 'Conta Google';
       if (userPhoto) userPhoto.removeAttribute('src');
       setAuthView('auth-logged-out');
       return;
@@ -4635,6 +4670,8 @@
 
     if (loginStatus) loginStatus.textContent = 'Login confirmado. Carregando universo CBJR...';
     if (userName) userName.textContent = user.displayName || 'Jogador CBJR';
+    if (userEmail) userEmail.textContent = user.email || 'Conta Google';
+    if (userMenuEmail) userMenuEmail.textContent = user.email || 'Conta Google';
     if (userPhoto && user.photoURL) userPhoto.src = user.photoURL;
 
     try {
@@ -4655,190 +4692,6 @@
 </script>
 
 
-<!-- CBJR AUTH PROFILE GLOBAL -->
-<style id="cbjr-auth-profile-style">
-  .cbjr-auth-profile {
-    position: fixed;
-    top: 18px;
-    right: 18px;
-    z-index: 5000;
-    display: none;
-    align-items: center;
-    gap: 10px;
-    max-width: min(360px, calc(100vw - 32px));
-    padding: 6px 8px 6px 6px;
-    border-radius: 999px;
-    border: 1px solid rgba(255,255,255,.18);
-    background: rgba(0,0,0,.76);
-    color: #fff;
-    box-shadow: 0 10px 28px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.08);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    font-family: Inter, Arial, Helvetica, sans-serif;
-  }
-  .cbjr-auth-profile.show { display: inline-flex; }
-  .cbjr-auth-profile img {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid rgba(241,196,15,.75);
-    background: #111;
-    flex: 0 0 auto;
-  }
-  .cbjr-auth-fallback {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    flex: 0 0 auto;
-    border: 2px solid rgba(241,196,15,.75);
-    background: #f1c40f;
-    color: #050505;
-    font-weight: 1000;
-    font-size: .9rem;
-  }
-  .cbjr-auth-text {
-    min-width: 0;
-    display: grid;
-    line-height: 1.05;
-  }
-  .cbjr-auth-name {
-    font-weight: 1000;
-    color: #fff;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 210px;
-  }
-  .cbjr-auth-email {
-    margin-top: 3px;
-    color: rgba(255,255,255,.68);
-    font-size: .76rem;
-    font-weight: 850;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 210px;
-  }
-  .cbjr-auth-logout {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    border: 1px solid rgba(255,255,255,.16);
-    background: rgba(255,255,255,.10);
-    color: #fff;
-    font-size: 1.15rem;
-    line-height: 1;
-    font-weight: 1000;
-    cursor: pointer;
-    display: grid;
-    place-items: center;
-    flex: 0 0 auto;
-  }
-  .cbjr-auth-logout:hover { background: rgba(241,196,15,.20); border-color: rgba(241,196,15,.55); }
-  .cbjr-auth-login-btn {
-    border: 1px solid rgba(241,196,15,.55);
-    border-radius: 999px;
-    background: rgba(0,0,0,.78);
-    color: #fff;
-    min-height: 42px;
-    padding: 0 16px;
-    font-weight: 1000;
-    cursor: pointer;
-    box-shadow: 0 0 22px rgba(241,196,15,.12);
-  }
-  .cbjr-auth-login-btn strong { color: #f1c40f; }
-  @media (max-width: 700px) {
-    .cbjr-auth-profile { top: 10px; right: 10px; padding: 5px; gap: 7px; }
-    .cbjr-auth-profile img, .cbjr-auth-fallback { width: 32px; height: 32px; }
-    .cbjr-auth-name { max-width: 126px; font-size: .82rem; }
-    .cbjr-auth-email { display: none; }
-    .cbjr-auth-logout { width: 30px; height: 30px; font-size: 1rem; }
-    .cbjr-auth-login-btn { min-height: 36px; padding: 0 12px; font-size: .8rem; }
-  }
-</style>
-<div id="cbjrAuthProfile" class="cbjr-auth-profile" aria-live="polite"></div>
-<script type="module" id="cbjr-auth-profile-script">
-  import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-  import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-  import { getFirestore, doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-
-  const firebaseConfig = {
-    apiKey: 'AIzaSyDtbjYWVdd0lMRy96QfqfjAg1dBReRIoRg4',
-    authDomain: 'ranking-cbjr.firebaseapp.com',
-    databaseURL: 'https://ranking-cbjr-default-rtdb.firebaseio.com',
-    projectId: 'ranking-cbjr',
-    storageBucket: 'ranking-cbjr.firebasestorage.app',
-    messagingSenderId: '681180179118',
-    appId: '1:681180179118:web:3ac202c9f7ed69cf94db3f',
-    measurementId: 'G-ZXMNGH3TVG'
-  };
-
-  const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const provider = new GoogleAuthProvider();
-  const db = getFirestore(app);
-  const box = document.getElementById('cbjrAuthProfile');
-
-  function escapeHtml(str) {
-    return String(str ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-  }
-
-  function initials(name, email) {
-    const source = String(name || email || 'CB').trim();
-    const parts = source.split(/\s+/).filter(Boolean);
-    return (parts.length >= 2 ? parts[0][0] + parts[1][0] : source.slice(0,2)).toUpperCase();
-  }
-
-  async function saveUser(user) {
-    try {
-      await setDoc(doc(db, 'usuarios', user.uid), {
-        uid: user.uid,
-        name: user.displayName || '',
-        email: user.email || '',
-        photoURL: user.photoURL || '',
-        provider: 'google',
-        lastLoginAt: serverTimestamp()
-      }, { merge: true });
-    } catch (err) {
-      console.warn('CBJR: não foi possível salvar o usuário no Firestore.', err);
-    }
-  }
-
-  function renderLoggedOut() {
-    if (!box) return;
-    // Na página inicial, o login fica somente na tela principal de entrada.
-    // Não mostra botão duplicado no canto superior.
-    box.classList.remove('show');
-    box.innerHTML = '';
-  }
-
-  function renderLoggedIn(user) {
-    if (!box) return;
-    const name = user.displayName || 'Fã CBJR';
-    const email = user.email || '';
-    const photo = user.photoURL || '';
-    box.classList.add('show');
-    box.innerHTML = `
-      ${photo ? `<img src="${escapeHtml(photo)}" alt="Foto de ${escapeHtml(name)}">` : `<span class="cbjr-auth-fallback">${escapeHtml(initials(name,email))}</span>`}
-      <span class="cbjr-auth-text"><strong class="cbjr-auth-name">${escapeHtml(name)}</strong><span class="cbjr-auth-email">${escapeHtml(email)}</span></span>
-      <button class="cbjr-auth-logout" type="button" title="Sair da conta Google" aria-label="Sair da conta Google">×</button>
-    `;
-    box.querySelector('.cbjr-auth-logout')?.addEventListener('click', async () => {
-      try { await signOut(auth); window.location.href = 'index.html'; } catch(e) { console.error(e); }
-    });
-  }
-
-  onAuthStateChanged(auth, user => {
-    window.CBJR_AUTH_USER = user || null;
-    window.dispatchEvent(new CustomEvent('cbjr-auth-change', { detail: { user } }));
-    if (user) { renderLoggedIn(user); saveUser(user); }
-    else { renderLoggedOut(); }
-  });
-</script>
-<!-- /CBJR AUTH PROFILE GLOBAL -->
 
 </body>
 </html>
