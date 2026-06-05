@@ -467,5 +467,190 @@ loadLocal();startRealtime();setupOnlinePresence();
 </script>
 <!-- /CBJR PERFIL GOOGLE ÚNICO -->
 
+
+
+<!-- CBJR CLOUD PROGRESS V1 — progresso por conta Google -->
+<script type="module" id="cbjr-cloud-progress-script">
+  import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+  import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+  import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey: 'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
+    authDomain: 'ranking-cbjr.firebaseapp.com',
+    databaseURL: 'https://ranking-cbjr-default-rtdb.firebaseio.com',
+    projectId: 'ranking-cbjr',
+    storageBucket: 'ranking-cbjr.firebasestorage.app',
+    messagingSenderId: '681180179118',
+    appId: '1:681180179118:web:fe10833848e8bb8194db3f',
+    measurementId: 'G-QK5QE2Y1CC'
+  };
+
+  const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const PAGE_NAME = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+  const PROGRESS_KEYS = [
+    'radioCBJRUnlockedAlbumIndex_v2',
+    'radioCBJRMode',
+    'radioCBJR_achievements_v1',
+    'cbjr_letters_completed',
+    'lettersCBJR_playerName',
+    'cobjr_quiz_achievements'
+  ];
+
+  let currentUser = null;
+  let cloudReady = false;
+  let syncing = false;
+  let saveTimer = null;
+
+  function safeJsonParse(value, fallback) {
+    try { return JSON.parse(value); } catch (_) { return fallback; }
+  }
+
+  function readLocalProgress() {
+    const data = {};
+    PROGRESS_KEYS.forEach(key => {
+      const value = localStorage.getItem(key);
+      if (value !== null) data[key] = value;
+    });
+    return data;
+  }
+
+  function mergeObjectString(localValue, remoteValue) {
+    const localObj = safeJsonParse(localValue || '{}', {});
+    const remoteObj = safeJsonParse(remoteValue || '{}', {});
+    return JSON.stringify({ ...remoteObj, ...localObj });
+  }
+
+  function mergeArrayString(localValue, remoteValue) {
+    const localArr = safeJsonParse(localValue || '[]', []);
+    const remoteArr = safeJsonParse(remoteValue || '[]', []);
+    return JSON.stringify([...new Set([...(Array.isArray(remoteArr) ? remoteArr : []), ...(Array.isArray(localArr) ? localArr : [])])]);
+  }
+
+  function mergeProgress(localData, remoteData, user) {
+    const merged = { ...(remoteData || {}), ...(localData || {}) };
+
+    const localRadio = Number(localData.radioCBJRUnlockedAlbumIndex_v2 ?? 0);
+    const remoteRadio = Number(remoteData.radioCBJRUnlockedAlbumIndex_v2 ?? 0);
+    merged.radioCBJRUnlockedAlbumIndex_v2 = String(Math.max(Number.isFinite(localRadio) ? localRadio : 0, Number.isFinite(remoteRadio) ? remoteRadio : 0));
+
+    merged.radioCBJR_achievements_v1 = mergeObjectString(localData.radioCBJR_achievements_v1, remoteData.radioCBJR_achievements_v1);
+    merged.cobjr_quiz_achievements = mergeObjectString(localData.cobjr_quiz_achievements, remoteData.cobjr_quiz_achievements);
+    merged.cbjr_letters_completed = mergeArrayString(localData.cbjr_letters_completed, remoteData.cbjr_letters_completed);
+
+    if (!merged.lettersCBJR_playerName && user?.displayName) {
+      merged.lettersCBJR_playerName = user.displayName.split(' ')[0] || user.displayName;
+    }
+    if (!merged.radioCBJRMode) merged.radioCBJRMode = 'normal';
+
+    return merged;
+  }
+
+  function applyProgressToLocal(data) {
+    syncing = true;
+    try {
+      Object.entries(data || {}).forEach(([key, value]) => {
+        if (PROGRESS_KEYS.includes(key) && value !== undefined && value !== null) {
+          localStorage.setItem(key, String(value));
+        }
+      });
+    } finally {
+      syncing = false;
+    }
+  }
+
+  function refreshCurrentPageUI() {
+    try { window.renderProgress?.(); } catch (_) {}
+    try { window.showSelection?.(); } catch (_) {}
+    try { window.updateLettersDashboard?.(); } catch (_) {}
+    try { window.renderAchievements?.(); } catch (_) {}
+    try { window.renderGrid?.(); } catch (_) {}
+    try { window.renderSummary?.(); } catch (_) {}
+    try { window.CBJRRanking?.reload?.(); } catch (_) {}
+    try { window.dispatchEvent(new CustomEvent('cbjr-progress-loaded')); } catch (_) {}
+  }
+
+  function progressDocRef(user) {
+    return doc(db, 'usuarios', user.uid, 'progresso', 'geral');
+  }
+
+  async function saveCloudProgressNow(extra = {}) {
+    if (!currentUser || syncing) return;
+    const payload = readLocalProgress();
+    try {
+      await setDoc(progressDocRef(currentUser), {
+        ...payload,
+        ...extra,
+        uid: currentUser.uid,
+        email: currentUser.email || '',
+        displayName: currentUser.displayName || '',
+        photoURL: currentUser.photoURL || '',
+        updatedAt: serverTimestamp(),
+        origem: PAGE_NAME
+      }, { merge: true });
+    } catch (error) {
+      console.warn('CBJR cloud progress: não foi possível salvar agora.', error);
+    }
+  }
+
+  function scheduleSaveCloudProgress() {
+    if (!cloudReady || !currentUser || syncing) return;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => saveCloudProgressNow(), 450);
+  }
+
+  const nativeSetItem = localStorage.setItem.bind(localStorage);
+  localStorage.setItem = function patchedSetItem(key, value) {
+    nativeSetItem(key, value);
+    if (PROGRESS_KEYS.includes(key)) scheduleSaveCloudProgress();
+  };
+
+  window.CBJRCloudProgress = {
+    keys: PROGRESS_KEYS,
+    reload: async () => currentUser && loadCloudProgress(currentUser),
+    save: saveCloudProgressNow,
+    getLocal: readLocalProgress
+  };
+
+  async function loadCloudProgress(user) {
+    currentUser = user;
+    if (!user) return;
+
+    try {
+      const snap = await getDoc(progressDocRef(user));
+      const remoteData = snap.exists() ? (snap.data() || {}) : {};
+      const localData = readLocalProgress();
+      const merged = mergeProgress(localData, remoteData, user);
+      applyProgressToLocal(merged);
+      cloudReady = true;
+      await saveCloudProgressNow({ primeiroSync: snap.exists() ? false : true });
+      refreshCurrentPageUI();
+      console.info('CBJR: progresso sincronizado com a conta Google.');
+    } catch (error) {
+      cloudReady = true;
+      console.warn('CBJR cloud progress: falha ao carregar progresso remoto.', error);
+    }
+  }
+
+  onAuthStateChanged(auth, user => {
+    currentUser = user || null;
+    if (user) loadCloudProgress(user);
+  });
+
+  window.addEventListener('beforeunload', () => {
+    if (currentUser && cloudReady) {
+      try {
+        const data = readLocalProgress();
+        const blob = new Blob([JSON.stringify({ ...data, uid: currentUser.uid, updatedAtMs: Date.now(), origem: PAGE_NAME })], { type: 'application/json' });
+        navigator.sendBeacon?.('/__cbjr_progress_ping', blob);
+      } catch (_) {}
+      saveCloudProgressNow();
+    }
+  });
+</script>
+
 </body>
 </html>
