@@ -3806,6 +3806,13 @@
       filter: grayscale(1);
     }
 
+    .dash-achievement-empty {
+      color: rgba(255,255,255,.58);
+      font-size: .78rem;
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
     .dash-actions {
       display: flex;
       align-items: center;
@@ -3979,7 +3986,7 @@
       </div>
 
       <div class="dash-achievements" id="dashAchievementsBox">
-        <div class="dash-achievements-head"><span>Conquistas automáticas</span><strong id="dashAutoAchievementsCount">0/10</strong></div>
+        <div class="dash-achievements-head"><span>Últimas conquistas</span><strong id="dashAutoAchievementsCount">0 liberadas</strong></div>
         <div class="dash-achievement-list" id="dashAutoAchievementsList"></div>
       </div>
 
@@ -5055,7 +5062,12 @@
     if (changed) {
       try { localStorage.setItem('cbjr_auto_achievements_v1', JSON.stringify({ ...saved, ...unlocked })); } catch (_) {}
     }
-    return AUTO_ACHIEVEMENTS.map(item => ({ ...item, unlocked: !!unlocked[item.id] }));
+    const finalSaved = { ...saved, ...unlocked };
+    return AUTO_ACHIEVEMENTS.map(item => ({
+      ...item,
+      unlocked: !!finalSaved[item.id],
+      unlockedAt: finalSaved[item.id]?.unlockedAt || 0
+    }));
   }
 
   function countUnlockedAchievements(list) {
@@ -5144,13 +5156,16 @@
     setBarWidth('dashRadioBar', progress.radioPercent);
     setBarWidth('dashLetrasBar', progress.letrasPercent);
     setBarWidth('dashConquistasBar', progress.conquistasPercent);
-    setText('dashAutoAchievementsCount', `${progress.autoUnlocked}/${AUTO_ACHIEVEMENTS.length}`);
+    setText('dashAutoAchievementsCount', `${progress.autoUnlocked} liberada(s)`);
     const achievementsList = document.getElementById('dashAutoAchievementsList');
     if (achievementsList) {
-      const preferred = progress.autoAchievements.filter(item => item.unlocked).slice(-6);
-      const fallback = progress.autoAchievements.filter(item => !item.unlocked).slice(0, Math.max(0, 6 - preferred.length));
-      const items = [...preferred, ...fallback];
-      achievementsList.innerHTML = items.map(item => `<span class="dash-achievement-pill ${item.unlocked ? '' : 'locked'}" title="${item.unlocked ? '+' + item.xp + ' XP' : 'Ainda bloqueada'}"><span>${item.icon}</span>${item.title}</span>`).join('');
+      const latest = progress.autoAchievements
+        .filter(item => item.unlocked)
+        .sort((a,b) => Number(b.unlockedAt || 0) - Number(a.unlockedAt || 0))
+        .slice(0, 3);
+      achievementsList.innerHTML = latest.length
+        ? latest.map(item => `<span class="dash-achievement-pill" title="+${item.xp} XP"><span>${item.icon}</span>${item.title}</span>`).join('')
+        : '<span class="dash-achievement-empty">Nenhuma conquista recente ainda. Jogue Rádio, Letras ou Quiz para começar.</span>';
     }
     const last = document.getElementById('dashLastActivity');
     if (last) last.innerHTML = `Última atividade: <strong>${progress.lastLabel}</strong>`;
