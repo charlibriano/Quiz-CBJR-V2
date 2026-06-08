@@ -3588,6 +3588,98 @@
     .user-menu a, .user-menu button { width:100%; min-height:38px; border-radius:12px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.06); color:#fff; text-decoration:none; display:flex; align-items:center; padding:0 12px; font-weight:950; cursor:pointer; font:inherit; }
     .user-menu a:hover, .user-menu button:hover { background:rgba(241,196,15,.14); border-color:rgba(241,196,15,.42); }
 
+    /* PERFIL GOOGLE — MENU COMPLETO V11 PARTE 1 */
+    .user-pill { z-index: 7000; }
+    .user-pill-trigger { min-width: 0; box-shadow: 0 0 20px rgba(241,196,15,.08), inset 0 1px 0 rgba(255,255,255,.08); }
+    .user-pill-trigger:hover { border-color: rgba(241,196,15,.56); background: rgba(241,196,15,.10); }
+    .user-pill.open .user-pill-trigger { border-color: rgba(241,196,15,.68); box-shadow: 0 0 24px rgba(241,196,15,.16); }
+    .user-menu {
+      width: min(340px, calc(100vw - 28px));
+      padding: 12px;
+      background: radial-gradient(circle at top left, rgba(241,196,15,.13), transparent 38%), rgba(0,0,0,.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .user-menu-profile {
+      display: grid;
+      grid-template-columns: 54px minmax(0,1fr);
+      gap: 12px;
+      align-items: center;
+      padding: 6px 4px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+    .user-menu-profile img {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(241,196,15,.58);
+      box-shadow: 0 0 22px rgba(241,196,15,.18);
+      background: rgba(255,255,255,.10);
+    }
+    .user-menu-profile strong {
+      display: block;
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      color: var(--yellow);
+      font-size: .98rem;
+      line-height: 1.05;
+    }
+    .user-menu-profile span {
+      display: block;
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      margin-top: 4px;
+      color: rgba(255,255,255,.64);
+      font-size: .78rem;
+      font-weight: 850;
+    }
+    .user-menu-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+      margin: 4px 0;
+    }
+    .user-menu-stat {
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 12px;
+      background: rgba(255,255,255,.055);
+      padding: 8px 7px;
+      display: grid;
+      gap: 3px;
+      min-width: 0;
+    }
+    .user-menu-stat small {
+      color: rgba(255,255,255,.54);
+      font-size: .58rem;
+      font-weight: 1000;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .user-menu-stat strong {
+      color: var(--green);
+      font-size: .86rem;
+      line-height: 1;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .user-menu-links { display: grid; gap: 8px; }
+    .user-menu .user-menu-danger {
+      border-color: rgba(255,59,48,.34);
+      background: rgba(255,59,48,.08);
+      color: #fff;
+      margin-top: 2px;
+    }
+    .user-menu .user-menu-danger:hover {
+      border-color: rgba(255,59,48,.58);
+      background: rgba(255,59,48,.16);
+    }
+
 
 
     /* DASHBOARD DO JOGADOR — HOME V9 */
@@ -3877,12 +3969,26 @@
             <span class="user-pill-text"><strong id="userName">Jogador</strong><span id="userEmail">Conta Google</span></span>
             <span class="user-pill-caret">▾</span>
           </button>
-          <div class="user-menu" id="userMenu">
-            <div class="user-menu-title"><strong>Conta conectada</strong><span id="userMenuEmail">Conta Google</span></div>
-            <a href="index.html?skipIntro=true">🏠 Menu principal</a>
-            <a href="ranking.html">🏆 Meu ranking</a>
-            <a href="fans.html">💬 Comunidade</a>
-            <button class="logout-btn" id="logoutBtn" type="button">🚪 Sair da conta Google</button>
+          <div class="user-menu" id="userMenu" role="menu" aria-label="Menu da conta Google">
+            <div class="user-menu-profile">
+              <img id="userMenuPhoto" alt="Foto da conta Google" src="" />
+              <div>
+                <strong id="userMenuName">Jogador CBJR</strong>
+                <span id="userMenuEmail">Conta Google</span>
+              </div>
+            </div>
+            <div class="user-menu-stats" aria-label="Resumo do jogador">
+              <div class="user-menu-stat"><small>Nível</small><strong id="userMenuLevel">--</strong></div>
+              <div class="user-menu-stat"><small>XP</small><strong id="userMenuXP">0</strong></div>
+              <div class="user-menu-stat"><small>Ranking</small><strong id="userMenuRanking">#--</strong></div>
+            </div>
+            <div class="user-menu-links">
+              <a href="index.html?skipIntro=true">🏠 Menu principal</a>
+              <a href="ranking.html">🏆 Meu ranking</a>
+              <a href="conquistas.html">🎖️ Minhas conquistas</a>
+              <a href="fans.html">💬 Comunidade</a>
+              <button class="logout-btn user-menu-danger" id="logoutBtn" type="button">🚪 Sair da conta Google</button>
+            </div>
           </div>
         </div>
         <button class="icon-btn" id="soundBtn" title="Som ambiente" aria-label="Som ambiente">♪</button>
@@ -4876,6 +4982,11 @@
   const userPhoto = document.getElementById('userPhoto');
   const userEmail = document.getElementById('userEmail');
   const userMenuEmail = document.getElementById('userMenuEmail');
+  const userMenuName = document.getElementById('userMenuName');
+  const userMenuPhoto = document.getElementById('userMenuPhoto');
+  const userMenuLevel = document.getElementById('userMenuLevel');
+  const userMenuXP = document.getElementById('userMenuXP');
+  const userMenuRanking = document.getElementById('userMenuRanking');
   const userPill = document.getElementById('userPill');
   const userPillTrigger = document.getElementById('userPillTrigger');
 
@@ -4920,8 +5031,23 @@
     }
   });
 
-  userPillTrigger?.addEventListener('click', (ev) => { ev.stopPropagation(); userPill?.classList.toggle('open'); });
-  document.addEventListener('click', (ev) => { if (userPill && !userPill.contains(ev.target)) userPill.classList.remove('open'); });
+  userPillTrigger?.addEventListener('click', (ev) => {
+    ev.stopPropagation();
+    const isOpen = userPill?.classList.toggle('open');
+    userPillTrigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+  document.addEventListener('click', (ev) => {
+    if (userPill && !userPill.contains(ev.target)) {
+      userPill.classList.remove('open');
+      userPillTrigger?.setAttribute('aria-expanded', 'false');
+    }
+  });
+  document.addEventListener('keydown', (ev) => {
+    if (ev.key === 'Escape') {
+      userPill?.classList.remove('open');
+      userPillTrigger?.setAttribute('aria-expanded', 'false');
+    }
+  });
 
   logoutBtn?.addEventListener('click', async () => {
     try { localStorage.removeItem('cbjr_google_logged'); } catch (e) {}
@@ -5001,9 +5127,13 @@
     const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
     setText('dashWelcome', `Bem-vindo, ${firstName}`);
     setText('dashSubtitle', user?.email ? `Conta conectada: ${user.email}` : 'Seu progresso está conectado à conta Google.');
-    setText('dashRanking', rankingText || '#--');
+    const rankingValue = rankingText || '#--';
+    setText('dashRanking', rankingValue);
     setText('dashLevel', progress.level.name);
     setText('dashXP', `${progress.xp} XP`);
+    if (userMenuLevel) userMenuLevel.textContent = progress.level.name;
+    if (userMenuXP) userMenuXP.textContent = `${progress.xp} XP`;
+    if (userMenuRanking) userMenuRanking.textContent = rankingValue;
     setText('dashRadio', `${progress.radioLiberados}/13 CDs`);
     setText('dashLetras', `${progress.letrasCount}/13 álbuns`);
     setText('dashConquistas', `${progress.conquistas}`);
@@ -5069,8 +5199,13 @@
       if (loginStatus) loginStatus.textContent = 'Faça login para continuar.';
       if (userName) userName.textContent = 'Jogador';
       if (userEmail) userEmail.textContent = 'Conta Google';
+      if (userMenuName) userMenuName.textContent = 'Jogador CBJR';
       if (userMenuEmail) userMenuEmail.textContent = 'Conta Google';
+      if (userMenuLevel) userMenuLevel.textContent = '--';
+      if (userMenuXP) userMenuXP.textContent = '0';
+      if (userMenuRanking) userMenuRanking.textContent = '#--';
       if (userPhoto) userPhoto.removeAttribute('src');
+      if (userMenuPhoto) userMenuPhoto.removeAttribute('src');
       setAuthView('auth-logged-out');
       return;
     }
@@ -5079,8 +5214,10 @@
     if (loginStatus) loginStatus.textContent = 'Login confirmado. Carregando universo CBJR...';
     if (userName) userName.textContent = user.displayName || 'Jogador CBJR';
     if (userEmail) userEmail.textContent = user.email || 'Conta Google';
+    if (userMenuName) userMenuName.textContent = user.displayName || 'Jogador CBJR';
     if (userMenuEmail) userMenuEmail.textContent = user.email || 'Conta Google';
     if (userPhoto && user.photoURL) userPhoto.src = user.photoURL;
+    if (userMenuPhoto && user.photoURL) userMenuPhoto.src = user.photoURL;
 
     try {
       await saveUserProfile(user);
