@@ -3604,6 +3604,34 @@
     .user-menu-progress { grid-column:1/-1; border:1px solid rgba(255,255,255,.10); border-radius:999px; padding:5px; background:rgba(0,0,0,.38); }
     .user-menu-progress span { display:block; height:7px; width:0%; border-radius:999px; background:linear-gradient(90deg,var(--yellow),var(--green)); box-shadow:0 0 14px rgba(30,215,96,.24); transition:width .45s ease; }
     .user-menu-note { grid-column:1/-1; color:rgba(255,255,255,.62); font-size:.72rem; font-weight:850; line-height:1.25; padding:0 2px 2px; }
+    .user-menu-objective {
+      grid-column: 1/-1;
+      border: 1px solid rgba(30,215,96,.22);
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(30,215,96,.08), rgba(255,255,255,.035));
+      padding: 9px 10px;
+      display: grid;
+      gap: 4px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+    }
+    .user-menu-objective small {
+      color: rgba(255,255,255,.58);
+      font-size: .60rem;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      font-weight: 1000;
+    }
+    .user-menu-objective strong {
+      color: var(--yellow);
+      font-size: .82rem;
+      line-height: 1.16;
+    }
+    .user-menu-objective span {
+      color: rgba(255,255,255,.68);
+      font-size: .70rem;
+      font-weight: 850;
+      line-height: 1.25;
+    }
     .user-menu a, .user-menu button { width:100%; min-height:38px; border-radius:12px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.06); color:#fff; text-decoration:none; display:flex; align-items:center; padding:0 12px; font-weight:950; cursor:pointer; font:inherit; }
     .user-menu a:hover, .user-menu button:hover { background:rgba(241,196,15,.14); border-color:rgba(241,196,15,.42); }
 
@@ -3965,6 +3993,7 @@
               <div class="user-menu-stat"><small>Ranking</small><strong id="userMenuRanking">#--</strong></div>
               <div class="user-menu-progress"><span id="userMenuProgressBar"></span></div>
               <div class="user-menu-note" id="userMenuNote">Progresso conectado à sua conta Google.</div>
+              <div class="user-menu-objective"><small>Próximo desbloqueio</small><strong id="userMenuObjectiveTitle">Carregando...</strong><span id="userMenuObjectiveText">Continue jogando para liberar novas conquistas.</span></div>
             </div>
             <a href="index.html?skipIntro=true">🏠 Menu principal</a>
             <a href="ranking.html">🏆 Meu ranking</a>
@@ -5020,6 +5049,7 @@
 
   userPillTrigger?.addEventListener('click', (ev) => { ev.stopPropagation(); userPill?.classList.toggle('open'); });
   document.addEventListener('click', (ev) => { if (userPill && !userPill.contains(ev.target)) userPill.classList.remove('open'); });
+  document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') userPill?.classList.remove('open'); });
 
   logoutBtn?.addEventListener('click', async () => {
     try { localStorage.removeItem('cbjr_google_logged'); } catch (e) {}
@@ -5107,6 +5137,22 @@
     return (list || []).filter(item => item.unlocked).reduce((sum, item) => sum + Number(item.xp || 0), 0);
   }
 
+
+  function getNextObjective(progress) {
+    const lockedAuto = (progress.autoAchievements || []).find(item => !item.unlocked);
+    if (lockedAuto) {
+      if (lockedAuto.id === 'radio_three_cds') return { title: 'Liberar 3 CDs na Rádio', text: `Você está com ${progress.radioLiberados}/3 CDs. Recompensa: +${lockedAuto.xp} XP.` };
+      if (lockedAuto.id === 'radio_half') return { title: 'Chegar à metade da Rádio', text: `Você está com ${progress.radioLiberados}/7 CDs. Recompensa: +${lockedAuto.xp} XP.` };
+      if (lockedAuto.id === 'letras_three_albums') return { title: 'Completar 3 álbuns no Letras', text: `Você está com ${progress.letrasCount}/3 álbuns. Recompensa: +${lockedAuto.xp} XP.` };
+      if (lockedAuto.id === 'letras_half') return { title: 'Chegar à metade do Modo Letras', text: `Você está com ${progress.letrasCount}/7 álbuns. Recompensa: +${lockedAuto.xp} XP.` };
+      if (lockedAuto.id === 'quiz_primeira_medalha') return { title: 'Ganhar uma medalha no Quiz', text: `Complete uma partida no Quiz para liberar +${lockedAuto.xp} XP.` };
+      if (lockedAuto.id === 'familia_013') return { title: 'Virar Família 013', text: `Complete Rádio e Letras. Recompensa: +${lockedAuto.xp} XP.` };
+      return { title: lockedAuto.title, text: `Libere essa conquista para ganhar +${lockedAuto.xp} XP.` };
+    }
+    if (progress.level?.next) return { title: `Rumo ao nível ${progress.level.next.name}`, text: `Faltam ${progress.level.missing} XP para subir de nível.` };
+    return { title: 'Universo dominado', text: 'Você liberou as conquistas principais. Continue buscando recordes no ranking.' };
+  }
+
   function readDashboardProgress() {
     const radioIndex = Math.max(0, Number(localStorage.getItem('radioCBJRUnlockedAlbumIndex_v2') || '0') || 0);
     const radioMode = String(localStorage.getItem('radioCBJRMode') || 'normal').toLowerCase();
@@ -5152,7 +5198,9 @@
       continueHref = 'conquistas.html';
     }
 
-    return { radioLiberados, radioMode, letrasCount, conquistas, baseConquistas, autoUnlocked, autoAchievements, percent, radioPercent, letrasPercent, conquistasPercent, xp, level, lastLabel, continueHref };
+    const nextObjective = getNextObjective({ radioLiberados, radioMode, letrasCount, conquistas, baseConquistas, autoUnlocked, autoAchievements, percent, radioPercent, letrasPercent, conquistasPercent, xp, level, lastLabel, continueHref });
+
+    return { radioLiberados, radioMode, letrasCount, conquistas, baseConquistas, autoUnlocked, autoAchievements, percent, radioPercent, letrasPercent, conquistasPercent, xp, level, lastLabel, continueHref, nextObjective };
   }
 
   function setBarWidth(id, percent) {
@@ -5210,6 +5258,8 @@
     setText('userMenuConquistas', `${progress.conquistas}`);
     setText('userMenuRanking', rankingText || '#--');
     setText('userMenuNote', progress.level.next ? `Faltam ${progress.level.missing} XP para ${progress.level.next.name}.` : 'Você chegou ao nível máximo do universo CBJR.');
+    setText('userMenuObjectiveTitle', progress.nextObjective?.title || 'Continue evoluindo');
+    setText('userMenuObjectiveText', progress.nextObjective?.text || 'Jogue para liberar novas conquistas e subir no ranking.');
     setBarWidth('userMenuProgressBar', progress.percent);
   }
 
