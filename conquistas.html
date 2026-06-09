@@ -160,9 +160,65 @@ function readJson(key){try{return JSON.parse(localStorage.getItem(key)||'{}')||{
 function normalizeState(){
   const radio = readJson(RADIO_KEY);
   const old = readJson(OLD_QUIZ_KEY);
+  const auto = readJson('cbjr_auto_achievements_v1');
+  let lettersCompleted = [];
+  try { lettersCompleted = JSON.parse(localStorage.getItem('cbjr_letters_completed') || '[]'); } catch(e) { lettersCompleted = []; }
+
   const merged = {};
-  Object.keys(old).forEach(id => { if(old[id]) merged[id] = {unlockedAt: Date.now(), source:'quiz-antigo'}; });
+  const mark = (id, source = 'auto') => {
+    if (!id) return;
+    if (!merged[id]) merged[id] = { unlockedAt: Date.now(), source };
+  };
+
+  Object.keys(old).forEach(id => { if(old[id]) merged[id] = {unlockedAt: old[id]?.unlockedAt || Date.now(), source:'quiz'}; });
   Object.keys(radio).forEach(id => { if(radio[id]) merged[id] = typeof radio[id] === 'object' ? {...radio[id], source:'radio'} : {unlockedAt: Date.now(), source:'radio'}; });
+
+  // Conquistas automáticas gravadas pelo painel principal
+  const autoMap = {
+    first_login: 'first_login',
+    radio_first_cd: 'first_cd',
+    radio_three_cds: 'three_cds',
+    radio_half: 'half_radio',
+    radio_hard: 'hard',
+    letras_first_album: 'letters_tcp_completed',
+    letras_three_albums: 'letters_nadando_completed',
+    letras_half: 'letters_imunidade_completed',
+    quiz_primeira_medalha: 'new_high_score',
+    familia_013: 'letters_all_completed'
+  };
+  Object.keys(auto).forEach(id => {
+    if(auto[id]) {
+      const target = autoMap[id] || id;
+      merged[target] = { unlockedAt: auto[id]?.unlockedAt || Date.now(), source:'auto' };
+    }
+  });
+
+  // Deriva conquistas da Rádio pelo progresso salvo
+  const radioIndex = Number(localStorage.getItem('radioCBJRUnlockedAlbumIndex_v2') || '0') || 0;
+  const radioLiberados = Math.min(13, Math.max(1, radioIndex + 1));
+  const radioMode = String(localStorage.getItem('radioCBJRMode') || 'normal').toLowerCase();
+  if (radioLiberados >= 2) { mark('first_cd','radio-progress'); mark('unlocked_next','radio-progress'); }
+  if (radioLiberados >= 3) mark('three_cds','radio-progress');
+  if (radioLiberados >= 7) mark('half_radio','radio-progress');
+  if (radioLiberados >= 13) mark('bonus_all_albums_completed','radio-progress');
+  if (radioMode === 'hard') mark('hard','radio-progress');
+
+  // Deriva conquistas do Modo Letras pelos álbuns concluídos
+  const letterMap = {
+    tcp: 'letters_tcp_completed',
+    pcpl: 'letters_pcpl_completed',
+    nadando: 'letters_nadando_completed',
+    cbjr100: 'letters_cbjr100_completed',
+    bocas: 'letters_bocas_completed',
+    atividade: 'letters_atividade_completed',
+    imunidade: 'letters_imunidade_completed',
+    ritmo: 'letters_ritmo_completed'
+  };
+  if (Array.isArray(lettersCompleted)) {
+    lettersCompleted.forEach(id => mark(letterMap[id] || '', 'letras-progress'));
+    if (lettersCompleted.length >= 8) mark('letters_all_completed', 'letras-progress');
+  }
+
   return merged;
 }
 function encodePath(file){
@@ -219,7 +275,11 @@ function render(){
   const rows = catalog.filter(a => activeFilter === 'all' || (activeFilter === 'unlocked' ? isUnlocked(a.id) : activeFilter === 'locked' ? !isUnlocked(a.id) : a.cat === activeFilter))
     .sort((a,b) => Number(isUnlocked(b.id)) - Number(isUnlocked(a.id)) || a.cat.localeCompare(b.cat) || a.name.localeCompare(b.name));
   const grid = document.getElementById('achievementsGrid');
-  if(!rows.length){ grid.outerHTML = '<div class="empty">Nenhuma conquista encontrada nessa categoria.</div>'; return; }
+  if(!grid) return;
+  if(!rows.length){
+    grid.innerHTML = '<div class="empty" style="grid-column:1/-1">Nenhuma conquista encontrada nessa categoria.</div>';
+    return;
+  }
   grid.innerHTML = rows.map(a => {
     const unlocked = isUnlocked(a.id);
     const data = state[a.id] || {};
@@ -236,6 +296,9 @@ function render(){
     </article>`;
   }).join('');
 }
+window.renderAchievements = render;
+window.renderGrid = render;
+window.addEventListener('cbjr-progress-loaded', render);
 function openModal(id){
   const a = catalog.find(x => x.id === id); if(!a) return;
   const data = state[id] || {};
@@ -290,6 +353,7 @@ function resetAchievements(){
   if(!confirm('Zerar as conquistas locais salvas neste navegador?')) return;
   localStorage.removeItem(RADIO_KEY);
   localStorage.removeItem(OLD_QUIZ_KEY);
+  localStorage.removeItem('cbjr_auto_achievements_v1');
   closeModal();
   render();
 }
@@ -425,7 +489,6 @@ render();
         <div class="cbjr-auth-menu-title"><strong>Conta conectada</strong>${escapeHtml(email)}</div>
         <a href="index.html?skipIntro=true">🏠 Menu principal</a>
         <a href="ranking.html">🏆 Meu ranking</a>
-        <a href="perfil.html">📊 Meu perfil</a>
         <a href="fans.html">💬 Comunidade</a>
         <button class="cbjr-auth-logout" type="button">🚪 Sair da conta Google</button>
       </div>`;
@@ -468,7 +531,8 @@ render();
     'radioCBJR_achievements_v1',
     'cbjr_letters_completed',
     'lettersCBJR_playerName',
-    'cobjr_quiz_achievements'
+    'cobjr_quiz_achievements',
+    'cbjr_auto_achievements_v1'
   ];
 
   let currentUser = null;
