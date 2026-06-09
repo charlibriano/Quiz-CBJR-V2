@@ -3585,6 +3585,25 @@
     .user-pill.open .user-menu { display:grid; gap:8px; }
     .user-menu-title { border-bottom:1px solid rgba(255,255,255,.12); padding:4px 4px 10px; color:rgba(255,255,255,.72); font-weight:850; font-size:.82rem; }
     .user-menu-title strong { display:block; color:var(--yellow); font-size:.95rem; }
+    .user-menu-stats {
+      display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:7px;
+      padding:2px 0 4px;
+    }
+    .user-menu-stat {
+      border:1px solid rgba(241,196,15,.20); border-radius:13px;
+      background:rgba(255,255,255,.055); padding:8px; min-width:0;
+    }
+    .user-menu-stat small {
+      display:block; color:rgba(255,255,255,.56); font-size:.60rem;
+      text-transform:uppercase; letter-spacing:.08em; font-weight:950;
+    }
+    .user-menu-stat strong {
+      display:block; margin-top:4px; color:var(--green); font-size:.92rem;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .user-menu-progress { grid-column:1/-1; border:1px solid rgba(255,255,255,.10); border-radius:999px; padding:5px; background:rgba(0,0,0,.38); }
+    .user-menu-progress span { display:block; height:7px; width:0%; border-radius:999px; background:linear-gradient(90deg,var(--yellow),var(--green)); box-shadow:0 0 14px rgba(30,215,96,.24); transition:width .45s ease; }
+    .user-menu-note { grid-column:1/-1; color:rgba(255,255,255,.62); font-size:.72rem; font-weight:850; line-height:1.25; padding:0 2px 2px; }
     .user-menu a, .user-menu button { width:100%; min-height:38px; border-radius:12px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.06); color:#fff; text-decoration:none; display:flex; align-items:center; padding:0 12px; font-weight:950; cursor:pointer; font:inherit; }
     .user-menu a:hover, .user-menu button:hover { background:rgba(241,196,15,.14); border-color:rgba(241,196,15,.42); }
 
@@ -3937,6 +3956,16 @@
           </button>
           <div class="user-menu" id="userMenu">
             <div class="user-menu-title"><strong>Conta conectada</strong><span id="userMenuEmail">Conta Google</span></div>
+            <div class="user-menu-stats" aria-label="Resumo do jogador">
+              <div class="user-menu-stat"><small>Nível</small><strong id="userMenuLevel">Fã CBJR</strong></div>
+              <div class="user-menu-stat"><small>XP</small><strong id="userMenuXP">0 XP</strong></div>
+              <div class="user-menu-stat"><small>Rádio</small><strong id="userMenuRadio">1/13</strong></div>
+              <div class="user-menu-stat"><small>Letras</small><strong id="userMenuLetras">0/13</strong></div>
+              <div class="user-menu-stat"><small>Conquistas</small><strong id="userMenuConquistas">0</strong></div>
+              <div class="user-menu-stat"><small>Ranking</small><strong id="userMenuRanking">#--</strong></div>
+              <div class="user-menu-progress"><span id="userMenuProgressBar"></span></div>
+              <div class="user-menu-note" id="userMenuNote">Progresso conectado à sua conta Google.</div>
+            </div>
             <a href="index.html?skipIntro=true">🏠 Menu principal</a>
             <a href="ranking.html">🏆 Meu ranking</a>
             <a href="fans.html">💬 Comunidade</a>
@@ -5172,6 +5201,16 @@
     const btn = document.getElementById('dashContinueBtn');
     if (btn) btn.href = progress.continueHref;
     setText('dashSyncStatus', 'Progresso sincronizado');
+
+    // Perfil Google clicável: resumo rápido dentro do menu da conta.
+    setText('userMenuLevel', progress.level.name);
+    setText('userMenuXP', `${progress.xp} XP`);
+    setText('userMenuRadio', `${progress.radioLiberados}/13`);
+    setText('userMenuLetras', `${progress.letrasCount}/13`);
+    setText('userMenuConquistas', `${progress.conquistas}`);
+    setText('userMenuRanking', rankingText || '#--');
+    setText('userMenuNote', progress.level.next ? `Faltam ${progress.level.missing} XP para ${progress.level.next.name}.` : 'Você chegou ao nível máximo do universo CBJR.');
+    setBarWidth('userMenuProgressBar', progress.percent);
   }
 
   async function updateDashboardRanking(user) {
