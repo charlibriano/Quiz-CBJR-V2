@@ -3860,105 +3860,6 @@
       line-height: 1.35;
     }
 
-
-
-    .daily-missions {
-      border: 1px solid rgba(30,215,96,.18);
-      border-radius: 16px;
-      background: linear-gradient(90deg, rgba(30,215,96,.075), rgba(0,0,0,.32));
-      padding: 10px;
-      display: grid;
-      gap: 9px;
-    }
-
-    .daily-missions-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items: center;
-      color: rgba(255,255,255,.74);
-      font-weight: 1000;
-      font-size: .78rem;
-    }
-
-    .daily-missions-head strong { color: var(--yellow); }
-
-    .daily-mission-list {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-    }
-
-    .daily-mission-item {
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 13px;
-      background: rgba(0,0,0,.42);
-      padding: 9px;
-      display: grid;
-      text-decoration: none;
-      gap: 5px;
-      min-height: 76px;
-    }
-
-    .daily-mission-item.done {
-      border-color: rgba(30,215,96,.48);
-      background: rgba(30,215,96,.09);
-      box-shadow: 0 0 20px rgba(30,215,96,.08);
-    }
-
-    .daily-mission-title {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      color: #fff;
-      font-weight: 1000;
-      font-size: .76rem;
-      line-height: 1.15;
-    }
-
-    .daily-mission-check {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      border: 1px solid rgba(255,255,255,.22);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.48);
-      flex: 0 0 auto;
-      font-size: .72rem;
-    }
-
-    .daily-mission-item.done .daily-mission-check {
-      color: #041006;
-      background: var(--green);
-      border-color: rgba(30,215,96,.7);
-      box-shadow: 0 0 14px rgba(30,215,96,.35);
-    }
-
-    .daily-mission-desc {
-      color: rgba(255,255,255,.58);
-      font-size: .68rem;
-      font-weight: 800;
-      line-height: 1.25;
-    }
-
-    .daily-mission-reward {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      color: rgba(255,255,255,.68);
-      font-size: .74rem;
-      font-weight: 950;
-      border-top: 1px solid rgba(255,255,255,.09);
-      padding-top: 8px;
-    }
-
-    .daily-mission-reward strong { color: var(--green); }
-
-    .daily-mission-reward.complete strong { color: var(--yellow); }
-
     .dash-actions {
       display: flex;
       align-items: center;
@@ -4012,7 +3913,6 @@
       .dash-card strong { font-size: .98rem; }
       .dash-sync { display: none; }
       .dash-actions { display: grid; }
-      .daily-mission-list { grid-template-columns: 1fr; }
       .dash-btn { width: 100%; }
     }
 
@@ -4096,6 +3996,7 @@
               <div class="user-menu-objective"><small>Próximo desbloqueio</small><strong id="userMenuObjectiveTitle">Carregando...</strong><span id="userMenuObjectiveText">Continue jogando para liberar novas conquistas.</span></div>
             </div>
             <a href="index.html?skipIntro=true">🏠 Menu principal</a>
+            <a href="perfil.html">📊 Meu perfil</a>
             <a href="ranking.html">🏆 Meu ranking</a>
             <a href="fans.html">💬 Comunidade</a>
             <button class="logout-btn" id="logoutBtn" type="button">🚪 Sair da conta Google</button>
@@ -4146,14 +4047,6 @@
       <div class="dash-achievements" id="dashAchievementsBox">
         <div class="dash-achievements-head"><span>Últimas conquistas</span><strong id="dashAutoAchievementsCount">0 liberadas</strong></div>
         <div class="dash-achievement-list" id="dashAutoAchievementsList"></div>
-      </div>
-
-
-
-      <div class="daily-missions" id="dailyMissionsBox">
-        <div class="daily-missions-head"><span>🎯 Missões do dia</span><strong id="dailyMissionsStatus">0/3 concluídas</strong></div>
-        <div class="daily-mission-list" id="dailyMissionsList"></div>
-        <div class="daily-mission-reward" id="dailyMissionsReward"><span>Recompensa ao concluir todas</span><strong>+200 XP</strong></div>
       </div>
 
       <div class="dash-actions">
@@ -5261,73 +5154,6 @@
     return { title: 'Universo dominado', text: 'Você liberou as conquistas principais. Continue buscando recordes no ranking.' };
   }
 
-
-
-  function todayKey() {
-    const d = new Date();
-    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-  }
-
-  function dailyMissionStorageKey() {
-    const uid = window.CBJR_CURRENT_USER?.uid || 'local';
-    return `cbjr_daily_missions_v1_${uid}_${todayKey()}`;
-  }
-
-  function readDailyMissionState(ctx) {
-    const key = dailyMissionStorageKey();
-    let state = safeJson(localStorage.getItem(key) || 'null', null);
-    if (!state || state.date !== todayKey()) {
-      state = {
-        date: todayKey(),
-        baseline: {
-          radioLiberados: ctx.radioLiberados,
-          letrasCount: ctx.letrasCount,
-          quizAch: ctx.quizAch,
-          radioAch: ctx.radioAch
-        },
-        rewardClaimed: false
-      };
-      try { localStorage.setItem(key, JSON.stringify(state)); } catch (_) {}
-    }
-    return state;
-  }
-
-  function getDailyMissions(ctx) {
-    const state = readDailyMissionState(ctx);
-    const base = state.baseline || {};
-    const missions = [
-      {
-        id: 'daily_radio',
-        title: 'Entrar na sintonia',
-        desc: 'Avance na Rádio CBJR ou registre uma conquista da Rádio hoje.',
-        done: ctx.radioLiberados > Number(base.radioLiberados || 0) || ctx.radioAch > Number(base.radioAch || 0),
-        href: 'radio.html'
-      },
-      {
-        id: 'daily_letras',
-        title: 'Completar um álbum Letras',
-        desc: 'Conclua mais um álbum no Modo Letras hoje.',
-        done: ctx.letrasCount > Number(base.letrasCount || 0),
-        href: 'letras.html'
-      },
-      {
-        id: 'daily_quiz',
-        title: 'Jogar uma partida Quiz',
-        desc: 'Registre uma nova conquista ou medalha no Quiz hoje.',
-        done: ctx.quizAch > Number(base.quizAch || 0),
-        href: 'quiz.html'
-      }
-    ];
-    const doneCount = missions.filter(m => m.done).length;
-    const complete = doneCount === missions.length;
-    if (complete && !state.rewardClaimed) {
-      state.rewardClaimed = true;
-      state.rewardClaimedAt = Date.now();
-      try { localStorage.setItem(dailyMissionStorageKey(), JSON.stringify(state)); } catch (_) {}
-    }
-    return { missions, doneCount, total: missions.length, complete, rewardXP: complete ? 200 : 0, rewardClaimed: !!state.rewardClaimed };
-  }
-
   function readDashboardProgress() {
     const radioIndex = Math.max(0, Number(localStorage.getItem('radioCBJRUnlockedAlbumIndex_v2') || '0') || 0);
     const radioMode = String(localStorage.getItem('radioCBJRMode') || 'normal').toLowerCase();
@@ -5342,7 +5168,6 @@
     const autoAchievements = getAutoAchievements(ctx);
     const autoUnlocked = countUnlockedAchievements(autoAchievements);
     const conquistas = baseConquistas + autoUnlocked;
-    const dailyMissions = getDailyMissions(ctx);
 
     const radioPercent = percentOf(radioLiberados, 13);
     const letrasPercent = percentOf(letrasCount, 13);
@@ -5354,8 +5179,7 @@
     const xpConquistas = baseConquistas * 90;
     const xpAutoConquistas = getAchievementsXP(autoAchievements);
     const xpHardBonus = radioMode === 'hard' ? 250 : 0;
-    const xpDailyBonus = dailyMissions.rewardXP || 0;
-    const xp = xpBaseRadio + xpBaseLetras + xpConquistas + xpAutoConquistas + xpHardBonus + xpDailyBonus;
+    const xp = xpBaseRadio + xpBaseLetras + xpConquistas + xpAutoConquistas + xpHardBonus;
     const level = getPlayerLevel(xp);
 
     let lastLabel = 'comece pela Rádio, Quiz ou Modo Letras';
@@ -5377,7 +5201,7 @@
 
     const nextObjective = getNextObjective({ radioLiberados, radioMode, letrasCount, conquistas, baseConquistas, autoUnlocked, autoAchievements, percent, radioPercent, letrasPercent, conquistasPercent, xp, level, lastLabel, continueHref });
 
-    return { radioLiberados, radioMode, letrasCount, conquistas, baseConquistas, autoUnlocked, autoAchievements, dailyMissions, percent, radioPercent, letrasPercent, conquistasPercent, xp, level, lastLabel, continueHref, nextObjective };
+    return { radioLiberados, radioMode, letrasCount, conquistas, baseConquistas, autoUnlocked, autoAchievements, percent, radioPercent, letrasPercent, conquistasPercent, xp, level, lastLabel, continueHref, nextObjective };
   }
 
   function setBarWidth(id, percent) {
@@ -5421,24 +5245,6 @@
         ? latest.map(item => `<span class="dash-achievement-pill" title="+${item.xp} XP"><span>${item.icon}</span>${item.title}</span>`).join('')
         : '<span class="dash-achievement-empty">Nenhuma conquista recente ainda. Jogue Rádio, Letras ou Quiz para começar.</span>';
     }
-    setText('dailyMissionsStatus', `${progress.dailyMissions.doneCount}/${progress.dailyMissions.total} concluídas`);
-    const dailyList = document.getElementById('dailyMissionsList');
-    if (dailyList) {
-      dailyList.innerHTML = progress.dailyMissions.missions.map(mission => `
-        <a class="daily-mission-item ${mission.done ? 'done' : ''}" href="${mission.href}" title="${mission.done ? 'Missão concluída' : 'Clique para cumprir esta missão'}">
-          <div class="daily-mission-title"><span class="daily-mission-check">${mission.done ? '✓' : '□'}</span><span>${mission.title}</span></div>
-          <div class="daily-mission-desc">${mission.desc}</div>
-        </a>
-      `).join('');
-    }
-    const missionReward = document.getElementById('dailyMissionsReward');
-    if (missionReward) {
-      missionReward.classList.toggle('complete', !!progress.dailyMissions.complete);
-      missionReward.innerHTML = progress.dailyMissions.complete
-        ? '<span>🔥 Missão do dia concluída</span><strong>+200 XP aplicado</strong>'
-        : '<span>Recompensa ao concluir todas</span><strong>+200 XP</strong>';
-    }
-
     const last = document.getElementById('dashLastActivity');
     if (last) last.innerHTML = `Última atividade: <strong>${progress.lastLabel}</strong>`;
     const btn = document.getElementById('dashContinueBtn');
