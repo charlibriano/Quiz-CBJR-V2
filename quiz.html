@@ -7885,7 +7885,6 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
         <div class="cbjr-auth-menu-title"><strong>Conta conectada</strong>${escapeHtml(email)}</div>
         <a href="index.html?skipIntro=true">🏠 Menu principal</a>
         <a href="ranking.html">🏆 Meu ranking</a>
-        <a href="perfil.html">📊 Meu perfil</a>
         <a href="fans.html">💬 Comunidade</a>
         <button class="cbjr-auth-logout" type="button">🚪 Sair da conta Google</button>
       </div>`;
@@ -8082,6 +8081,137 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     }
   });
 </script>
+
+
+
+<!-- CBJR POP-UP DE CONQUISTA DESBLOQUEADA -->
+<style id="cbjr-achievement-popup-style">
+  .cbjr-achievement-stack{
+    position:fixed;right:18px;bottom:18px;z-index:99999;display:grid;gap:10px;width:min(360px,calc(100vw - 28px));pointer-events:none;
+    font-family:Inter,Arial,Helvetica,sans-serif;
+  }
+  .cbjr-achievement-popup{
+    pointer-events:auto;display:grid;grid-template-columns:54px 1fr auto;gap:12px;align-items:center;
+    border:1px solid rgba(241,196,15,.55);border-radius:20px;padding:12px 12px 12px 10px;
+    background:radial-gradient(circle at 0% 0%,rgba(241,196,15,.22),transparent 36%),linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.82));
+    color:#fff;box-shadow:0 24px 70px rgba(0,0,0,.62),0 0 28px rgba(241,196,15,.14),inset 0 1px 0 rgba(255,255,255,.10);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transform:translateX(120%) scale(.96);opacity:0;
+    animation:cbjrAchIn .44s cubic-bezier(.2,.85,.25,1.18) forwards, cbjrAchOut .42s ease forwards 4.8s;
+    overflow:hidden;isolation:isolate;
+  }
+  .cbjr-achievement-popup::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(30,215,96,.16),transparent 52%);z-index:-1;opacity:.75;}
+  .cbjr-ach-icon{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,#f1c40f,#1ed760);color:#050505;font-size:1.85rem;box-shadow:0 0 26px rgba(241,196,15,.28);font-weight:1000;}
+  .cbjr-ach-copy{min-width:0;display:grid;gap:3px;}
+  .cbjr-ach-kicker{color:#1ed760;text-transform:uppercase;letter-spacing:.12em;font-size:.64rem;font-weight:1000;}
+  .cbjr-ach-title{color:#f1c40f;font-weight:1000;font-size:1rem;line-height:1.08;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 0 12px rgba(241,196,15,.22);}
+  .cbjr-ach-desc{color:rgba(255,255,255,.76);font-size:.78rem;font-weight:850;line-height:1.22;}
+  .cbjr-ach-xp{border:1px solid rgba(30,215,96,.38);border-radius:999px;background:rgba(30,215,96,.12);color:#1ed760;font-weight:1000;font-size:.72rem;padding:6px 8px;white-space:nowrap;align-self:center;}
+  @keyframes cbjrAchIn{to{transform:translateX(0) scale(1);opacity:1}}
+  @keyframes cbjrAchOut{to{transform:translateX(120%) scale(.98);opacity:0}}
+  @media(max-width:620px){.cbjr-achievement-stack{right:10px;bottom:10px}.cbjr-achievement-popup{grid-template-columns:44px 1fr;padding:10px}.cbjr-ach-icon{width:44px;height:44px;font-size:1.45rem}.cbjr-ach-xp{grid-column:2;justify-self:start;padding:5px 8px}.cbjr-ach-title{font-size:.9rem}.cbjr-ach-desc{font-size:.72rem}}
+</style>
+<div id="cbjrAchievementStack" class="cbjr-achievement-stack" aria-live="polite" aria-atomic="true"></div>
+<script id="cbjr-achievement-popup-script">
+(function(){
+  if(window.__CBJR_ACHIEVEMENT_POPUP_READY__) return;
+  window.__CBJR_ACHIEVEMENT_POPUP_READY__ = true;
+
+  const WATCH_KEYS = ['radioCBJR_achievements_v1','cobjr_quiz_achievements','cbjr_letters_completed'];
+  const RADIO = {
+    first_cd:{icon:'💿',name:'Primeiro CD',desc:'Finalizou seu primeiro álbum na Rádio CBJR.',xp:100},
+    unlocked_next:{icon:'🔓',name:'Novo no ar',desc:'Desbloqueou o próximo CD da Rádio.',xp:120},
+    no_miss:{icon:'🎯',name:'Sem vacilo',desc:'Fechou um CD sem errar nenhuma faixa.',xp:200},
+    ninety:{icon:'🔥',name:'Frango da Malásia',desc:'Atingiu 90% ou mais na Rádio.',xp:180},
+    perfect:{icon:'👑',name:'Lenda CBJR',desc:'Fez 100% de acerto em um CD.',xp:300},
+    hard:{icon:'☠️',name:'Modo Hard',desc:'Finalizou um CD no modo Hard.',xp:250},
+    three_cds:{icon:'📻',name:'Sintonia firme',desc:'Liberou 3 CDs da Rádio.',xp:300},
+    half_radio:{icon:'⚡',name:'Meia rádio',desc:'Liberou metade da jornada da Rádio.',xp:500},
+    bonus_music_master:{icon:'📡',name:'Rei da Rádio',desc:'Acerte todas as músicas no nível Rádio CBJR.',xp:700},
+    bonus_album_perfectionist:{icon:'💚',name:'Perfeição no Disco',desc:'Complete um álbum sem errar nenhuma música.',xp:450},
+    bonus_hard_album_completed:{icon:'⚡',name:'Modo Hard Dominado',desc:'Complete um álbum Hard com pelo menos 90%.',xp:550},
+    bonus_fast_guess:{icon:'⏱️',name:'Orelha Absoluta',desc:'Acerte uma música em menos de 5 segundos.',xp:250},
+    bonus_all_albums_completed:{icon:'🏆',name:'Rei Supremo da Rádio',desc:'Complete todos os discos da Rádio.',xp:1000}
+  };
+  const QUIZ = {
+    first_level_completed:{icon:'💿',name:'Primeiro nível',desc:'Complete o primeiro nível do Quiz.',xp:120},
+    combo_3x:{icon:'🔥',name:'Combo 3x',desc:'Acerte 3 perguntas seguidas.',xp:80},
+    combo_5x:{icon:'🛡️',name:'Combo 5x',desc:'Acerte 5 perguntas seguidas.',xp:140},
+    combo_7x:{icon:'📣',name:'Combo 7x',desc:'Acerte 7 perguntas seguidas.',xp:220},
+    combo_10x:{icon:'⚽',name:'Camisa 10',desc:'Acerte 10 perguntas seguidas.',xp:350},
+    new_high_score:{icon:'📈',name:'Novo recorde',desc:'Alcance um novo recorde de pontuação.',xp:180},
+    all_levels_completed:{icon:'🎸',name:'Acústico MTV',desc:'Complete todos os níveis do Quiz.',xp:700},
+    secret_level_completed:{icon:'🔒',name:'La Família 013',desc:'Conclua o nível secreto Hardcore.',xp:600}
+  };
+  const LETRAS = {
+    tcp:{icon:'✍️',name:'TCP no Modo Letras',desc:'Complete Transpiração Contínua e Prolongada.',xp:120},
+    pcpl:{icon:'✍️',name:'Preço Curto no Letras',desc:'Complete Preço Curto Prazo Longo.',xp:120},
+    nadando:{icon:'🌊',name:'Nadando no Letras',desc:'Complete Nadando com os Tubarões.',xp:140},
+    cbjr100:{icon:'🏭',name:'100% no Letras',desc:'Complete 100% Charlie Brown Jr.',xp:160},
+    bocas:{icon:'🛹',name:'Bocas no Letras',desc:'Complete Bocas Ordinárias.',xp:160},
+    atividade:{icon:'📣',name:'Atividade no Letras',desc:'Complete Tamo Aí na Atividade.',xp:180},
+    imunidade:{icon:'🛡️',name:'Imunidade no Letras',desc:'Complete Imunidade Musical.',xp:180},
+    ritmo:{icon:'⚡',name:'Ritual no Letras',desc:'Complete Ritmo, Ritual e Responsa.',xp:200},
+    camisa10:{icon:'⚽',name:'Camisa 10 no Letras',desc:'Complete Camisa 10.',xp:220},
+    lafamilia013:{icon:'🔒',name:'La Família no Letras',desc:'Complete La Família 013.',xp:250}
+  };
+
+  function safeParse(value, fallback){try{return JSON.parse(value || '');}catch(_){return fallback;}}
+  function readKey(key){return localStorage.getItem(key);}
+  function snapshot(){const s={}; WATCH_KEYS.forEach(k=>s[k]=readKey(k)); return s;}
+  let previous = snapshot();
+  let armed = false;
+  const queue = [];
+  let running = false;
+
+  function normalizeObject(value){const obj=safeParse(value,{}); return obj && typeof obj==='object' && !Array.isArray(obj) ? obj : {};}
+  function normalizeArray(value){const arr=safeParse(value,[]); return Array.isArray(arr) ? arr : [];}
+  function findNewObjectIds(oldValue,newValue){const oldObj=normalizeObject(oldValue), newObj=normalizeObject(newValue); return Object.keys(newObj).filter(id=>newObj[id] && !oldObj[id]);}
+  function findNewArrayIds(oldValue,newValue){const oldArr=new Set(normalizeArray(oldValue)); return normalizeArray(newValue).filter(id=>!oldArr.has(id));}
+  function resolveAchievement(key,id){
+    if(key==='radioCBJR_achievements_v1') return RADIO[id] ? {...RADIO[id], id, source:'radio'} : {icon:'🏆',name:id,desc:'Nova conquista da Rádio CBJR.',xp:100};
+    if(key==='cobjr_quiz_achievements') return QUIZ[id] ? {...QUIZ[id], id, source:'quiz'} : {icon:'🏆',name:id,desc:'Nova conquista do Quiz CBJR.',xp:100};
+    if(key==='cbjr_letters_completed') return LETRAS[id] ? {...LETRAS[id], id, source:'letras'} : {icon:'✍️',name:'Álbum Letras concluído',desc:'Você concluiu um álbum no Modo Letras.',xp:120};
+    return null;
+  }
+  function detectNew(key,oldValue,newValue){
+    const ids = key==='cbjr_letters_completed' ? findNewArrayIds(oldValue,newValue) : findNewObjectIds(oldValue,newValue);
+    return ids.map(id=>resolveAchievement(key,id)).filter(Boolean);
+  }
+  function escapeHtml(str){return String(str??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
+  function ensureStack(){return document.getElementById('cbjrAchievementStack') || document.body.appendChild(Object.assign(document.createElement('div'),{id:'cbjrAchievementStack',className:'cbjr-achievement-stack'}));}
+  function enqueue(items){items.forEach(item=>queue.push(item)); if(!running) showNext();}
+  function showNext(){
+    const item = queue.shift();
+    if(!item){running=false;return;}
+    running=true;
+    const stack = ensureStack();
+    const el = document.createElement('div');
+    el.className='cbjr-achievement-popup';
+    el.innerHTML=`<div class="cbjr-ach-icon">${escapeHtml(item.icon||'🏆')}</div><div class="cbjr-ach-copy"><div class="cbjr-ach-kicker">Conquista desbloqueada</div><div class="cbjr-ach-title">${escapeHtml(item.name)}</div><div class="cbjr-ach-desc">${escapeHtml(item.desc)}</div></div><div class="cbjr-ach-xp">+${Number(item.xp||100)} XP</div>`;
+    stack.appendChild(el);
+    try{window.dispatchEvent(new CustomEvent('cbjr-achievement-popup',{detail:item}));}catch(_){ }
+    setTimeout(()=>{el.remove(); showNext();},5400);
+  }
+  function refreshBaseline(){previous=snapshot();}
+
+  const nativeSetItem = localStorage.setItem.bind(localStorage);
+  localStorage.setItem = function cbjrAchievementSetItem(key,value){
+    const oldValue = readKey(key);
+    nativeSetItem(key,value);
+    if(WATCH_KEYS.includes(key)){
+      if(!armed){previous[key]=String(value);return;}
+      const items = detectNew(key, previous[key], String(value));
+      previous[key]=String(value);
+      if(items.length) enqueue(items);
+    }
+  };
+
+  window.CBJRAchievementPopup = { show:item=>enqueue([item]), refreshBaseline };
+  window.addEventListener('cbjr-progress-loaded',()=>{refreshBaseline(); setTimeout(()=>{armed=true;},350);});
+  setTimeout(()=>{refreshBaseline(); armed=true;},2600);
+})();
+</script>
+<!-- /CBJR POP-UP DE CONQUISTA DESBLOQUEADA -->
 
 </body>
 </html>
