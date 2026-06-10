@@ -81,7 +81,10 @@
 .online-now span:last-child{color:rgba(255,255,255,.78);font-size:.78rem;letter-spacing:.07em;text-transform:uppercase;}
 @media(max-width:760px){.online-now{padding:7px 10px;font-size:.82rem}.online-now span:last-child{font-size:.68rem}}
 
-.fan-title{display:inline-flex;align-items:center;gap:6px;margin-top:5px;border:1px solid rgba(241,196,15,.30);background:rgba(241,196,15,.10);color:var(--yellow);border-radius:999px;padding:4px 8px;font-size:.70rem;font-weight:1000;line-height:1}.fan-xp{color:#1ed760;font-weight:1000}.public-medal-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.public-medal{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);border-radius:999px;padding:4px 7px;color:rgba(255,255,255,.82);font-size:.68rem;font-weight:950}
+
+/* CARTÃO DO JOGADOR CBJR */
+.post{cursor:pointer}.post .action,.post a,.post input,.post button{cursor:auto}.fan-title{margin-top:4px;color:#f1c40f;font-weight:1000;font-size:.76rem}.player-card-modal{position:fixed;inset:0;z-index:9000;display:none;place-items:center;padding:18px;background:rgba(0,0,0,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.player-card-modal.show{display:grid}.player-card-box{width:min(540px,94vw);border:1px solid rgba(241,196,15,.45);border-radius:28px;background:radial-gradient(circle at 50% 0%,rgba(241,196,15,.16),transparent 40%),rgba(0,0,0,.96);box-shadow:0 30px 100px rgba(0,0,0,.84);padding:22px;color:#fff;position:relative;overflow:hidden;text-align:center}.player-card-close{position:absolute;right:14px;top:14px;width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;font-weight:1000;cursor:pointer}.player-card-avatar{width:86px;height:86px;margin:0 auto 12px;border-radius:50%;border:3px solid rgba(241,196,15,.78);background:linear-gradient(135deg,var(--yellow),#111);display:grid;place-items:center;color:#000;font-weight:1000;font-size:1.45rem;overflow:hidden;box-shadow:0 0 28px rgba(241,196,15,.22)}.player-card-avatar img{width:100%;height:100%;object-fit:cover}.player-card-name{font-family:Elektrix,Inter,sans-serif;color:var(--yellow);font-size:clamp(1.8rem,5vw,3rem);line-height:.9;margin:0 0 8px;text-shadow:0 0 20px rgba(241,196,15,.35)}.player-card-title{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid rgba(241,196,15,.38);border-radius:999px;background:rgba(241,196,15,.10);padding:7px 12px;font-weight:1000;color:#fff;margin-bottom:12px}.player-card-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:12px 0}.player-card-stat{border:1px solid rgba(255,255,255,.12);border-radius:16px;background:rgba(255,255,255,.055);padding:10px}.player-card-stat small{display:block;color:rgba(255,255,255,.58);font-size:.66rem;font-weight:1000;text-transform:uppercase;letter-spacing:.08em}.player-card-stat strong{display:block;margin-top:5px;color:#1ed760;font-size:1.05rem}.player-card-medals{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:12px}.player-card-medal{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(241,196,15,.36);background:rgba(0,0,0,.55);font-size:1.18rem}
+
 </style>
 </head>
 <body>
@@ -174,6 +177,23 @@
 </div>
 
 <div id="toast" class="toast"></div>
+
+<div id="playerCardModal" class="player-card-modal" aria-hidden="true">
+  <article class="player-card-box" role="dialog" aria-modal="true" aria-label="Cartão do jogador">
+    <button class="player-card-close" type="button" data-player-close>×</button>
+    <div id="playerCardAvatar" class="player-card-avatar">CB</div>
+    <h2 id="playerCardName" class="player-card-name">Jogador</h2>
+    <div id="playerCardTitle" class="player-card-title">🎸 Charlibriano</div>
+    <div class="player-card-stats">
+      <div class="player-card-stat"><small>Cidade</small><strong id="playerCardCity">--</strong></div>
+      <div class="player-card-stat"><small>Participação</small><strong id="playerCardScore">0 pts</strong></div>
+      <div class="player-card-stat"><small>Curtidas</small><strong id="playerCardLikes">0</strong></div>
+      <div class="player-card-stat"><small>Música favorita</small><strong id="playerCardMusic">CBJR</strong></div>
+    </div>
+    <div id="playerCardMedals" class="player-card-medals"></div>
+  </article>
+</div>
+
 <script type="module">
 import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import { getFirestore, collection, addDoc, doc, updateDoc, increment, serverTimestamp, query, orderBy, limit, onSnapshot, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
@@ -231,7 +251,7 @@ function formatDate(v){
 }
 function initials(name){return cleanText(name,'').split(/\s+/).filter(Boolean).slice(0,2).map(p=>p[0]?.toUpperCase()).join('')||'CB'}
 function instagramLink(handle){const h=cleanText(handle,40).replace(/^@/,'');return h?`https://instagram.com/${encodeURIComponent(h)}`:''}
-function normalizePost(docSnap){const d=docSnap.data()||{};return{id:docSnap.id,uid:cleanText(d.uid||'',80),name:cleanText(d.name||'Fã CBJR',32),city:cleanText(d.city||'Cidade não informada',42),instagram:cleanText(d.instagram||'',40),photo:cleanText(d.photo||'',300),music:cleanText(d.music||'Charlie Brown Jr.',60),message:cleanText(d.message||'',500),likes:Number(d.likes||0),replies:Number(d.replies||0),xp:Number(d.xp||d.playerXP||0),playerTitle:cleanText(d.playerTitle||'',50),publicMedal:cleanText(d.publicMedal||'',50),createdAt:d.createdAt||d.timestamp||Date.now()}}
+function normalizePost(docSnap){const d=docSnap.data()||{};return{id:docSnap.id,name:cleanText(d.name||'Fã CBJR',32),city:cleanText(d.city||'Cidade não informada',42),instagram:cleanText(d.instagram||'',40),photo:cleanText(d.photo||'',300),music:cleanText(d.music||'Charlie Brown Jr.',60),message:cleanText(d.message||'',500),likes:Number(d.likes||0),replies:Number(d.replies||0),createdAt:d.createdAt||d.timestamp||Date.now()}}
 function getLiked(){try{return JSON.parse(localStorage.getItem('cbjr_fans_liked')||'[]')}catch{return[]}}
 function setLiked(ids){localStorage.setItem('cbjr_fans_liked',JSON.stringify(ids))}
 function markLiked(id){const ids=getLiked();if(!ids.includes(id)){ids.push(id);setLiked(ids)}}
@@ -258,35 +278,12 @@ function renderActiveFans(){
   const rows=[...map.values()].sort((a,b)=>b.score-a.score).slice(0,3);
   $('#activeFans').innerHTML=rows.length?rows.map((f,i)=>`<article class="active-fan"><div class="position">${i+1}</div><div><div class="active-name">${escapeHtml(f.name)}</div><div class="active-city">${escapeHtml(f.city)}</div></div><div class="active-score">${f.score} pts</div></article>`).join(''):'<div class="empty">Ainda sem participação.</div>';
 }
-function publicTitleByXP(xp){
-  const value=Number(xp||0);
-  if(value>=5000)return '👑 Lenda CBJR';
-  if(value>=3500)return '🔥 Maníaco CBJR';
-  if(value>=2000)return '📀 Colecionador CBJR';
-  if(value>=1000)return '🎸 Charlibriano';
-  if(value>=500)return '🛹 Skatista Urbano';
-  return '🎧 Fã Iniciante';
-}
-function participationTitle(p){
-  if(p.playerTitle)return p.playerTitle;
-  const score=Number(p.xp||0) || ((Number(p.likes||0)*25)+(Number(p.replies||0)*40)+100);
-  return publicTitleByXP(score);
-}
-function publicMedalForPost(p){
-  if(p.publicMedal)return p.publicMedal;
-  if(Number(p.likes||0)>=10)return '💚 Lenda da comunidade';
-  if(Number(p.replies||0)>=3)return '💬 Voz da galera';
-  return '🎸 Família CBJR';
-}
-function currentPublicProfile(){
-  try{
-    const radio=Number(localStorage.getItem('radioCBJRUnlockedAlbumIndex_v2')||0);
-    const letras=JSON.parse(localStorage.getItem('cbjr_letters_completed')||'[]');
-    const ach={...JSON.parse(localStorage.getItem('radioCBJR_achievements_v1')||'{}'),...JSON.parse(localStorage.getItem('cobjr_quiz_achievements')||'{}')};
-    const xp=(radio*250)+((Array.isArray(letras)?letras.length:0)*180)+(Object.keys(ach||{}).length*80);
-    return {xp,playerTitle:publicTitleByXP(xp),publicMedal: radio>=3?'📻 Mestre da Rádio':((Array.isArray(letras)&&letras.length>=3)?'🎤 Mestre das Letras':'🎸 Família CBJR')};
-  }catch(e){return {xp:0,playerTitle:'🎧 Fã Iniciante',publicMedal:'🎸 Família CBJR'};}
-}
+
+function publicTitleFromPost(p){const score=1+(p.likes||0)+(p.replies||0)*2;if(score>=20)return '👑 Lenda da Comunidade';if(score>=10)return '🎸 Charlibriano';if((p.likes||0)>=5)return '🏆 Voz da Galera';return '🛹 Skatista Urbano';}
+function medalsFromPost(p){const medals=['🎧'];if((p.likes||0)>=1)medals.push('❤');if((p.likes||0)>=5)medals.push('🏆');if((p.replies||0)>=1)medals.push('💬');if((1+(p.likes||0)+(p.replies||0)*2)>=10)medals.push('🎸');return medals;}
+function openPlayerCardFromPost(id){const p=posts.find(x=>x.id===id);if(!p)return;const score=1+(p.likes||0)+(p.replies||0)*2;const modal=document.getElementById('playerCardModal');const avatar=document.getElementById('playerCardAvatar');avatar.innerHTML=p.photo?`<img src="${escapeHtml(p.photo)}" alt="Foto de ${escapeHtml(p.name)}">`:escapeHtml(initials(p.name));document.getElementById('playerCardName').textContent=p.name;document.getElementById('playerCardTitle').textContent=publicTitleFromPost(p);document.getElementById('playerCardCity').textContent=p.city||'--';document.getElementById('playerCardScore').textContent=score+' pts';document.getElementById('playerCardLikes').textContent=p.likes||0;document.getElementById('playerCardMusic').textContent=p.music||'CBJR';document.getElementById('playerCardMedals').innerHTML=medalsFromPost(p).map(m=>`<span class="player-card-medal">${m}</span>`).join('');modal.classList.add('show');modal.setAttribute('aria-hidden','false');}
+function closePlayerCard(){const modal=document.getElementById('playerCardModal');modal?.classList.remove('show');modal?.setAttribute('aria-hidden','true');}
+
 function renderFeed(){
   const list=filteredPosts();
   renderStats();renderActiveFans();
@@ -296,7 +293,7 @@ function renderFeed(){
     const liked=isLiked(p.id);
     const avatar=p.photo?`<img src="${escapeHtml(p.photo)}" alt="Foto de ${escapeHtml(p.name)}" onerror="this.remove()">`:escapeHtml(initials(p.name));
     return `<article class="post" data-id="${p.id}">
-      <div class="post-top"><div class="fan"><div class="avatar">${avatar}</div><div class="fan-info"><div class="fan-name">${escapeHtml(p.name)}</div><div class="fan-title">${escapeHtml(participationTitle(p))}${p.xp?` <span class="fan-xp">• ${p.xp} XP</span>`:''}</div><div class="fan-meta">${escapeHtml(p.city)}${link?` • <a href="${link}" target="_blank" rel="noopener" style="color:#f1c40f;text-decoration:none">${escapeHtml(p.instagram.startsWith('@')?p.instagram:'@'+p.instagram)}</a>`:''}</div><div class="public-medal-row"><span class="public-medal">${escapeHtml(publicMedalForPost(p))}</span></div></div></div><div class="time">${formatDate(p.createdAt)}</div></div>
+      <div class="post-top"><div class="fan"><div class="avatar">${avatar}</div><div class="fan-info"><div class="fan-name">${escapeHtml(p.name)}</div><div class="fan-title">${escapeHtml(publicTitleFromPost(p))}</div><div class="fan-meta">${escapeHtml(p.city)}${link?` • <a href="${link}" target="_blank" rel="noopener" style="color:#f1c40f;text-decoration:none">${escapeHtml(p.instagram.startsWith('@')?p.instagram:'@'+p.instagram)}</a>`:''}</div></div></div><div class="time">${formatDate(p.createdAt)}</div></div>
       <div class="music-pill">♪ ${escapeHtml(p.music)}</div>
       <div class="message">${escapeHtml(p.message)}</div>
       <div class="post-actions"><button class="action like ${liked?'active':''}" data-like="${p.id}">❤ <span>${p.likes||0}</span></button><button class="action" data-reply-toggle="${p.id}">Responder</button><span class="action">${p.replies||0} resposta(s)</span></div>
@@ -304,6 +301,11 @@ function renderFeed(){
     </article>`
   }).join('');
 }
+feed.addEventListener('click',e=>{if(e.target.closest('.post-actions, .reply-box, a, button, input'))return;const post=e.target.closest('.post');if(post?.dataset?.id)openPlayerCardFromPost(post.dataset.id);});
+document.querySelector('[data-player-close]')?.addEventListener('click',closePlayerCard);
+document.getElementById('playerCardModal')?.addEventListener('click',e=>{if(e.target.id==='playerCardModal')closePlayerCard();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePlayerCard();});
+
 async function loadReplies(postId){
   const box=$(`#replies-${CSS.escape(postId)}`); if(!box)return;
   box.innerHTML='<div class="reply">Carregando respostas...</div>';
@@ -330,7 +332,7 @@ async function publishPost(e){
   const name=cleanText($('#fanName').value,32),city=cleanText($('#fanCity').value,42),instagram=cleanText($('#fanInstagram').value,40).replace(/\s/g,''),photo=cleanText($('#fanPhoto').value,300),music=cleanText($('#fanMusic').value,60),message=cleanText($('#fanMessage').value,500);
   if(!name||!city||!music||message.length<5){showToast('Preencha nome, cidade, música e uma mensagem.');return;}
   $('#publishBtn').disabled=true;$('#formStatus').textContent='Publicando no mural...';
-  try{const publicProfile=currentPublicProfile();await addDoc(collection(db,COLLECTION),{uid:window.CBJR_AUTH_USER?.uid||'',email:window.CBJR_AUTH_USER?.email||'',googleName:window.CBJR_AUTH_USER?.displayName||'',googlePhoto:window.CBJR_AUTH_USER?.photoURL||'',name,city,instagram,photo:photo||window.CBJR_AUTH_USER?.photoURL||'',music,message,likes:0,replies:0,xp:publicProfile.xp,playerTitle:publicProfile.playerTitle,publicMedal:publicProfile.publicMedal,source:'cbjr-v2-fans',timestamp:Date.now(),createdAt:serverTimestamp()});saveLocal();$('#fanMessage').value='';$('#fanMusic').value='';$('#charCount').textContent='0';$('#formStatus').textContent='Mensagem publicada com sucesso.';showToast('Mensagem publicada na Comunidade CBJR!');closeModal();}
+  try{await addDoc(collection(db,COLLECTION),{uid:window.CBJR_AUTH_USER?.uid||'',email:window.CBJR_AUTH_USER?.email||'',googleName:window.CBJR_AUTH_USER?.displayName||'',googlePhoto:window.CBJR_AUTH_USER?.photoURL||'',name,city,instagram,photo:photo||window.CBJR_AUTH_USER?.photoURL||'',music,message,likes:0,replies:0,source:'cbjr-v2-fans',timestamp:Date.now(),createdAt:serverTimestamp()});saveLocal();$('#fanMessage').value='';$('#fanMusic').value='';$('#charCount').textContent='0';$('#formStatus').textContent='Mensagem publicada com sucesso.';showToast('Mensagem publicada na Comunidade CBJR!');closeModal();}
   catch(err){console.error(err);$('#formStatus').textContent='Falha ao publicar. Confira as regras do Firestore.';showToast('Erro ao publicar mensagem.');}
   finally{$('#publishBtn').disabled=false;}
 }
