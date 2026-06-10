@@ -113,11 +113,11 @@ const AUTO_ACHIEVEMENTS = [
 {id:'quiz_primeira_medalha',title:'Medalha no Quiz',icon:'🏅',xp:120,unlocked:c=>c.quizAch>0},
 {id:'familia_013',title:'Família 013',icon:'013',xp:500,unlocked:c=>c.radioLiberados>=13&&c.letrasCount>=13}
 ];
-const LEVELS=[{name:'Iniciante',min:0},{name:'Fã',min:500},{name:'Skatista',min:1000},{name:'Lokação',min:1500},{name:'Maníaco CBJR',min:3000},{name:'Charlibriano',min:5000},{name:'Família 013',min:6500},{name:'Lenda 013',min:8500}];
+const LEVELS=[{name:'Iniciante',min:0},{name:'Fã CBJR',min:500},{name:'Skatista Urbano',min:1000},{name:'Charlibriano',min:1500},{name:'Maníaco CBJR',min:3000},{name:'Família 013',min:5000},{name:'Lenda CBJR',min:6500},{name:'Lenda 013',min:8500}];
 
 const MEDALS=[
 {id:'primeiros_passos',icon:'🛹',title:'Primeiros Passos',desc:'Entrou no universo CBJR com conta Google.',rarity:'comum',xp:50,unlocked:(p,rank)=>true},
-{id:'lokacao',icon:'🔥',title:'Lokação',desc:'Alcançou o nível Lokação.',rarity:'comum',xp:150,unlocked:(p,rank)=>p.xp>=1500},
+{id:'charlibriano',icon:'🎸',title:'Charlibriano',desc:'Alcançou o título Charlibriano.',rarity:'comum',xp:150,unlocked:(p,rank)=>p.xp>=1500},
 {id:'maniaco',icon:'⚡',title:'Maníaco CBJR',desc:'Chegou ao nível Maníaco CBJR.',rarity:'rara',xp:300,unlocked:(p,rank)=>p.xp>=3000},
 {id:'colecionador_cds',icon:'💿',title:'Colecionador de CDs',desc:'Liberou pelo menos 3 CDs na Rádio.',rarity:'rara',xp:250,unlocked:(p,rank)=>p.radioLiberados>=3},
 {id:'mestre_letras',icon:'🎤',title:'Mestre das Letras',desc:'Completou pelo menos 3 álbuns no Modo Letras.',rarity:'rara',xp:250,unlocked:(p,rank)=>p.letrasCount>=3},
