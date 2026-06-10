@@ -8,7 +8,20 @@
 @font-face{font-family:Elektrix;src:url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/Elektrix-Bold.woff2') format('woff2'),url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/Elektrix-Bold.woff') format('woff'),url('https://cdn.jsdelivr.net/gh/charlibriano/Quiz-CBJR-V2/Elektrix%20Bold.ttf') format('truetype');font-display:swap}
 :root{--yellow:#f1c40f;--green:#1ed760;--red:#ff3b30;--line:rgba(241,196,15,.36);--white:#f8f8f8;--dark:#030303}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,Arial,sans-serif;color:var(--white);background:#000;overflow-x:hidden}body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 50% 8%,rgba(241,196,15,.16),transparent 26%),radial-gradient(circle at 12% 85%,rgba(30,215,96,.12),transparent 30%),url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/radio-bg.png') center/cover no-repeat;filter:brightness(.35) blur(2px);transform:scale(1.04);z-index:0}body::after{content:"";position:fixed;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.92),rgba(0,0,0,.58),rgba(0,0,0,.94));z-index:1;pointer-events:none}.page{position:relative;z-index:2;min-height:100svh;padding:18px;display:grid;grid-template-rows:auto 1fr;gap:14px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px}.btn{min-height:42px;border:1px solid var(--line);border-radius:999px;background:rgba(0,0,0,.65);color:#fff;text-decoration:none;padding:0 18px;font-weight:1000;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 22px rgba(241,196,15,.12)}.btn:hover{border-color:rgba(241,196,15,.75);box-shadow:0 0 26px rgba(241,196,15,.18)}.brand{font-family:Elektrix,Inter,sans-serif;color:var(--yellow);font-size:clamp(2rem,5vw,4rem);text-shadow:0 0 28px rgba(241,196,15,.35);line-height:.85;text-align:center}.panel{width:min(1180px,96vw);margin:0 auto;border:1px solid var(--line);border-radius:30px;background:radial-gradient(circle at top,rgba(241,196,15,.08),transparent 36%),linear-gradient(180deg,rgba(0,0,0,.78),rgba(0,0,0,.94));box-shadow:0 28px 90px rgba(0,0,0,.72),inset 0 1px 0 rgba(255,255,255,.06);padding:clamp(14px,2.4vw,28px);display:grid;gap:16px}.hero{text-align:center}.hero h1{font-family:Elektrix,Inter,sans-serif;color:var(--yellow);font-size:clamp(2.2rem,7vw,5.5rem);line-height:.85;margin:0 0 8px}.hero p{margin:0;color:rgba(255,255,255,.78);font-weight:900}.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.tab{border:1px solid rgba(241,196,15,.35);background:rgba(0,0,0,.55);color:#fff;border-radius:999px;min-height:38px;padding:0 18px;font-weight:1000;cursor:pointer}.tab.active{background:linear-gradient(90deg,var(--yellow),#1ed760);color:#000;border-color:transparent}.ranking-list{display:grid;gap:10px}.rank-row{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:12px;align-items:center;border:1px solid rgba(241,196,15,.20);border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(0,0,0,.62));padding:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}.rank-row.top1{border-color:rgba(30,215,96,.65);box-shadow:0 0 34px rgba(30,215,96,.12),inset 0 1px 0 rgba(255,255,255,.08)}.pos{font-family:Elektrix,Inter,sans-serif;color:var(--yellow);font-size:2rem;text-align:center}.who{min-width:0}.name{font-weight:1000;font-size:1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.meta{margin-top:4px;color:rgba(255,255,255,.62);font-weight:800;font-size:.78rem}.score{font-weight:1000;color:#1ed760;font-size:1.1rem;text-align:right}.empty,.loading{border:1px solid rgba(241,196,15,.25);border-radius:20px;padding:20px;text-align:center;color:rgba(255,255,255,.72);font-weight:900}.footer-note{text-align:center;color:rgba(255,255,255,.58);font-weight:800;font-size:.82rem}.status{font-size:.74rem;text-align:center;color:rgba(255,255,255,.55);font-weight:800}.date{color:rgba(255,255,255,.74)}@media(max-width:620px){.page{padding:12px}.topbar .btn{min-height:36px;padding:0 12px;font-size:.8rem}.rank-row{grid-template-columns:48px minmax(0,1fr);gap:8px}.score{grid-column:2;text-align:left}.pos{font-size:1.45rem}.panel{border-radius:22px;padding:12px}.tabs{justify-content:stretch}.tab{flex:1;padding:0 8px}.brand{font-size:1.55rem}}
-.player-title{display:inline-flex;align-items:center;gap:6px;margin-top:6px;border:1px solid rgba(241,196,15,.28);background:rgba(241,196,15,.10);color:var(--yellow);border-radius:999px;padding:4px 8px;font-size:.72rem;font-weight:1000;line-height:1}.rank-row.top1 .player-title{border-color:rgba(30,215,96,.48);background:rgba(30,215,96,.12);color:#1ed760}.player-submeta{margin-top:5px;color:rgba(255,255,255,.54);font-size:.72rem;font-weight:850}
+
+/* CARTÃO DO JOGADOR CBJR */
+.rank-row{cursor:pointer;}
+.player-card-modal{position:fixed;inset:0;z-index:9000;display:none;place-items:center;padding:18px;background:rgba(0,0,0,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.player-card-modal.show{display:grid;}
+.player-card-box{width:min(520px,94vw);border:1px solid rgba(241,196,15,.45);border-radius:28px;background:radial-gradient(circle at 50% 0%,rgba(241,196,15,.16),transparent 40%),rgba(0,0,0,.96);box-shadow:0 30px 100px rgba(0,0,0,.84);padding:22px;color:#fff;position:relative;overflow:hidden;text-align:center}
+.player-card-close{position:absolute;right:14px;top:14px;width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;font-weight:1000;cursor:pointer}
+.player-card-avatar{width:86px;height:86px;margin:0 auto 12px;border-radius:50%;border:3px solid rgba(241,196,15,.78);background:linear-gradient(135deg,var(--yellow),#111);display:grid;place-items:center;color:#000;font-weight:1000;font-size:1.45rem;overflow:hidden;box-shadow:0 0 28px rgba(241,196,15,.22)}
+.player-card-avatar img{width:100%;height:100%;object-fit:cover}
+.player-card-name{font-family:Elektrix,Inter,sans-serif;color:var(--yellow);font-size:clamp(1.8rem,5vw,3rem);line-height:.9;margin:0 0 8px;text-shadow:0 0 20px rgba(241,196,15,.35)}
+.player-card-title{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid rgba(241,196,15,.38);border-radius:999px;background:rgba(241,196,15,.10);padding:7px 12px;font-weight:1000;color:#fff;margin-bottom:12px}
+.player-card-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:12px 0}
+.player-card-stat{border:1px solid rgba(255,255,255,.12);border-radius:16px;background:rgba(255,255,255,.055);padding:10px}.player-card-stat small{display:block;color:rgba(255,255,255,.58);font-size:.66rem;font-weight:1000;text-transform:uppercase;letter-spacing:.08em}.player-card-stat strong{display:block;margin-top:5px;color:#1ed760;font-size:1.05rem}.player-card-medals{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:12px}.player-card-medal{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(241,196,15,.36);background:rgba(0,0,0,.55);font-size:1.18rem}
+
 </style>
 </head>
 <body>
@@ -36,6 +49,23 @@
     <p class="footer-note">Agora o ranking aceita pontuação do Quiz, Rádio e Modo Letras, ordena por maior pontuação e mostra a data.</p>
   </main>
 </div>
+
+<div id="playerCardModal" class="player-card-modal" aria-hidden="true">
+  <article class="player-card-box" role="dialog" aria-modal="true" aria-label="Cartão do jogador">
+    <button class="player-card-close" type="button" data-player-close>×</button>
+    <div id="playerCardAvatar" class="player-card-avatar">CB</div>
+    <h2 id="playerCardName" class="player-card-name">Jogador</h2>
+    <div id="playerCardTitle" class="player-card-title">🎸 Charlibriano</div>
+    <div class="player-card-stats">
+      <div class="player-card-stat"><small>Ranking</small><strong id="playerCardRank">#--</strong></div>
+      <div class="player-card-stat"><small>Pontuação</small><strong id="playerCardScore">0 pts</strong></div>
+      <div class="player-card-stat"><small>Modo</small><strong id="playerCardMode">CBJR</strong></div>
+      <div class="player-card-stat"><small>Aproveitamento</small><strong id="playerCardAccuracy">0%</strong></div>
+    </div>
+    <div id="playerCardMedals" class="player-card-medals"></div>
+  </article>
+</div>
+
 <script type="module">
 import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import { getFirestore, collection, getDocs, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
@@ -95,7 +125,10 @@ function docToEntry(docSnap){
     accuracy:normalizeNumber(d.accuracy||d.percentual||d.aproveitamento),
     correct:normalizeNumber(d.correct||d.acertos),
     total:normalizeNumber(d.total||d.perguntas||d.musicas),
-    wrong:normalizeNumber(d.wrong||d.erros)
+    wrong:normalizeNumber(d.wrong||d.erros),
+    uid:normalizeText(d.uid||''),
+    email:normalizeText(d.email||''),
+    photoURL:normalizeText(d.photoURL||d.foto||d.photo||'')
   };
 }
 function entryMatchesFilter(e){
@@ -112,43 +145,40 @@ function modeLabel(e){
   if(e.game==='letras')return 'Letras';
   return 'Quiz';
 }
-function publicTitleByScore(score, pos){
-  if(pos === 1) return '🏆 Campeão do Ranking';
-  const xp = Number(score || 0);
-  if(xp >= 5000) return '👑 Lenda CBJR';
-  if(xp >= 3500) return '🔥 Maníaco CBJR';
-  if(xp >= 2000) return '📀 Colecionador CBJR';
-  if(xp >= 1000) return '🎸 Charlibriano';
-  if(xp >= 500) return '🛹 Skatista Urbano';
-  return '🎧 Fã Iniciante';
+
+function initialsFromName(name){const parts=String(name||'CB').trim().split(/\s+/).filter(Boolean);return (parts.length>1?parts[0][0]+parts[1][0]:String(name||'CB').slice(0,2)).toUpperCase();}
+function publicTitleFromEntry(e,position){
+  if(position===1)return '🏆 Campeão do Ranking';
+  if((e.radioMode||'')==='hard')return '🔥 Hard na Veia';
+  if((e.game||'')==='radio')return '📻 Mestre da Rádio';
+  if((e.game||'')==='letras')return '🎤 Mestre das Letras';
+  if((e.score||0)>=1000)return '🎸 Charlibriano';
+  return '🛹 Skatista Urbano';
 }
-function publicMedalByEntry(e, pos){
-  if(pos === 1) return '👑 Líder da estação';
-  if(e.game === 'radio' && e.radioMode === 'hard') return '🔥 Hard na Veia';
-  if(e.game === 'radio') return '📻 Sintonia CBJR';
-  if(e.game === 'letras') return '🎤 Mestre das Letras';
-  if(e.game === 'quiz') return '🥇 Mestre do Quiz';
-  return '🎸 Universo CBJR';
+function medalsFromEntry(e,position){
+  const medals=[]; if(position===1)medals.push('🏆'); if((e.score||0)>=1000)medals.push('🎸'); if(e.game==='radio')medals.push('📻'); if(e.game==='letras')medals.push('🎤'); if(e.game==='quiz')medals.push('🥇'); if(e.radioMode==='hard')medals.push('🔥'); return medals.length?medals:['🎧'];
 }
+function openPlayerCardFromRanking(index){
+  const rows=rankingData.filter(entryMatchesFilter).slice(0,100); const e=rows[index]; if(!e)return;
+  const modal=document.getElementById('playerCardModal');
+  const avatar=document.getElementById('playerCardAvatar');
+  avatar.innerHTML=e.photoURL?`<img src="${escapeHtml(e.photoURL)}" alt="Foto de ${escapeHtml(e.name)}">`:escapeHtml(initialsFromName(e.name));
+  document.getElementById('playerCardName').textContent=e.name;
+  document.getElementById('playerCardTitle').textContent=publicTitleFromEntry(e,index+1);
+  document.getElementById('playerCardRank').textContent='#'+(index+1);
+  document.getElementById('playerCardScore').textContent=(e.score||0)+' pts';
+  document.getElementById('playerCardMode').textContent=modeLabel(e);
+  document.getElementById('playerCardAccuracy').textContent=(e.accuracy||0)+'%';
+  document.getElementById('playerCardMedals').innerHTML=medalsFromEntry(e,index+1).map(m=>`<span class="player-card-medal">${m}</span>`).join('');
+  modal.classList.add('show');modal.setAttribute('aria-hidden','false');
+}
+function closePlayerCard(){const modal=document.getElementById('playerCardModal');modal?.classList.remove('show');modal?.setAttribute('aria-hidden','true');}
+
 function renderRanking(){
   const list=document.getElementById('rankingList');
   const rows=rankingData.filter(entryMatchesFilter).slice(0,100);
   if(!rows.length){list.innerHTML='<div class="empty">Nenhuma pontuação enviada ainda nesse filtro.</div>';return;}
-  list.innerHTML=rows.map((e,i)=>{
-    const pos=i+1;
-    const title=publicTitleByScore(e.score,pos);
-    const medal=publicMedalByEntry(e,pos);
-    return `<article class="rank-row ${i===0?'top1':''}">
-      <div class="pos">#${pos}</div>
-      <div class="who">
-        <div class="name">${escapeHtml(e.name)}</div>
-        <div class="player-title">${escapeHtml(title)}</div>
-        <div class="player-submeta">${escapeHtml(medal)}</div>
-        <div class="meta">${escapeHtml(e.album)} • ${e.accuracy||0}% • ${e.correct||0}/${e.total||0} • ${modeLabel(e)} • <span class="date">${formatDate(e.createdAt)}</span></div>
-      </div>
-      <div class="score">${e.score} pts</div>
-    </article>`;
-  }).join('');
+  list.innerHTML=rows.map((e,i)=>`<article class="rank-row ${i===0?'top1':''}" data-player-card="${i}" title="Ver cartão do jogador"><div class="pos">#${i+1}</div><div class="who"><div class="name">${escapeHtml(e.name)}</div><div class="meta"><strong style="color:#f1c40f">${escapeHtml(publicTitleFromEntry(e,i+1))}</strong> • ${escapeHtml(e.album)} • ${e.accuracy||0}% • ${e.correct||0}/${e.total||0} • ${modeLabel(e)} • <span class="date">${formatDate(e.createdAt)}</span></div></div><div class="score">${e.score} pts</div></article>`).join('');
 }
 async function loadRanking(){
   const list=document.getElementById('rankingList');
@@ -192,7 +222,17 @@ async function salvarPontuacaoRanking(payload={}){
 window.salvarPontuacaoRanking=salvarPontuacaoRanking;
 window.CBJRRanking={save:salvarPontuacaoRanking,reload:loadRanking};
 
-document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');activeFilter=btn.dataset.filter;renderRanking();}));
+document.getElementById('rankingList')?.addEventListener('click',e=>{const row=e.target.closest('[data-player-card]');if(row)openPlayerCardFromRanking(Number(row.dataset.playerCard));});
+document.querySelector('[data-player-close]')?.addEventListener('click',closePlayerCard);
+document.getElementById('playerCardModal')?.addEventListener('click',e=>{if(e.target.id==='playerCardModal')closePlayerCard();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePlayerCard();});
+
+document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{document.getElementById('rankingList')?.addEventListener('click',e=>{const row=e.target.closest('[data-player-card]');if(row)openPlayerCardFromRanking(Number(row.dataset.playerCard));});
+document.querySelector('[data-player-close]')?.addEventListener('click',closePlayerCard);
+document.getElementById('playerCardModal')?.addEventListener('click',e=>{if(e.target.id==='playerCardModal')closePlayerCard();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePlayerCard();});
+
+document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');activeFilter=btn.dataset.filter;renderRanking();}));
 loadRanking();
 </script>
 
