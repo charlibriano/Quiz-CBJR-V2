@@ -3,6 +3,21 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Ouça as músicas do Charlie Brown Jr. e teste seus conhecimentos sobre os álbuns e faixas da banda. Modo interativo com quiz musical!" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Rádio CBJR — Charlie Brown Jr." />
+  <meta property="og:description" content="Ouça as músicas do Charlie Brown Jr. e teste seus conhecimentos sobre os álbuns e faixas da banda. Modo interativo com quiz musical!" />
+  <meta property="og:image" content="https://charlibriano.github.io/Quiz-CBJR-V2/cbjr.png" />
+  <meta property="og:url" content="https://quiz-cbjr.vercel.app/radio.html" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Rádio CBJR — Charlie Brown Jr." />
+  <meta name="twitter:description" content="Ouça as músicas do Charlie Brown Jr. e teste seus conhecimentos sobre os álbuns e faixas da banda. Modo interativo com quiz musical!" />
+  <meta name="twitter:image" content="https://charlibriano.github.io/Quiz-CBJR-V2/cbjr.png" />
+  <link rel="canonical" href="https://quiz-cbjr.vercel.app/radio.html" />
+  <link rel="icon" type="image/png" href="https://charlibriano.github.io/Quiz-CBJR-V2/cbjr.png" />
+  <link rel="apple-touch-icon" href="https://charlibriano.github.io/Quiz-CBJR-V2/cbjr.png" />
+
 <title>Rádio CBJR - Charlie Brown Jr.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,7 +42,7 @@
   body::after{content:"";position:fixed;inset:0;background:radial-gradient(circle at 50% 20%,rgba(241,196,15,.16),transparent 30%),linear-gradient(90deg,rgba(0,0,0,.78),rgba(0,0,0,.35),rgba(0,0,0,.82));z-index:1;pointer-events:none}
   .page{position:relative;z-index:5;min-height:100svh;padding:22px;display:grid;grid-template-rows:auto 1fr}
   .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;position:relative;z-index:10}
-  .back-btn,.small-btn{border:1px solid var(--line);background:rgba(0,0,0,.72);color:#fff;border-radius:999px;min-height:42px;padding:0 18px;font-weight:900;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(241,196,15,.14);cursor:pointer}
+  .back-btn,.small-btn{border:1px solid var(--line);background:rgba(0,0,0,.72);color:#fff;border-radius:999px;min-height:44px;padding:0 18px;font-weight:900;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(241,196,15,.14);cursor:pointer}
   .mode-pill{font-family:'Elektrix', 'Permanent Marker', cursive;color:var(--yellow);font-size:clamp(1.2rem,2.5vw,2rem);text-shadow:0 0 20px rgba(241,196,15,.45);letter-spacing:.03em;text-align:center}
   .stage{width:min(1240px,96vw);margin:20px auto 0;display:grid;grid-template-columns:minmax(280px,390px) 1fr;gap:clamp(18px,3vw,42px);align-items:center}
   .album-card{border:1px solid var(--line);border-radius:28px;background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.82));box-shadow:0 25px 80px rgba(0,0,0,.58), inset 0 1px 0 rgba(255,255,255,.08);padding:20px;position:relative;overflow:hidden}
@@ -42,7 +57,7 @@
   .radio-title h2{margin:12px 0 0;color:#fff;font-size:clamp(1.5rem,3vw,3rem);line-height:1.02;text-transform:uppercase;text-shadow:0 0 24px rgba(255,255,255,.18)}
   .status-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
   .status-card{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);border-radius:16px;padding:10px;text-align:center}
-  .status-card small{display:block;color:rgba(255,255,255,.58);font-size:.66rem;text-transform:uppercase;font-weight:900;letter-spacing:.1em}
+  .status-card small{display:block;color:rgba(255,255,255,.58);font-size:0.72rem;text-transform:uppercase;font-weight:900;letter-spacing:.1em}
   .status-card strong{display:block;margin-top:4px;color:var(--yellow);font-size:1.05rem}
   .track-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-content:start;overflow:auto;padding:4px;max-height:48svh;scrollbar-width:thin}
   .track-btn{border:1px solid rgba(241,196,15,.22);background:linear-gradient(180deg,rgba(20,20,20,.92),rgba(0,0,0,.96));color:#fff;border-radius:14px;min-height:50px;padding:9px 12px;font-weight:900;font-size:clamp(.72rem,.92vw,.95rem);line-height:1.15;text-align:left;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.08);transition:filter .18s ease, box-shadow .18s ease, border-color .18s ease, opacity .18s ease}
@@ -71,7 +86,7 @@
   .overlay-card p{font-weight:800;color:rgba(255,255,255,.8);line-height:1.45}
   audio{display:none}
   @media(max-width:980px){.stage{grid-template-columns:1fr;align-items:start}.album-card{display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:center}.album-meta{text-align:left;margin:0}.radio-panel{min-height:auto}.album-grid{grid-template-columns:repeat(3,1fr)}.track-grid{grid-template-columns:repeat(2,1fr);max-height:48svh}}
-  @media(max-width:620px){.page{padding:12px}.topbar{gap:8px}.back-btn,.small-btn{min-height:36px;padding:0 10px;font-size:.78rem}.mode-pill{font-size:1.2rem}.album-card{grid-template-columns:86px 1fr;border-radius:18px;padding:12px}.radio-panel{border-radius:20px;padding:14px;gap:10px}.status-row{grid-template-columns:repeat(2,1fr);gap:7px}.track-grid{grid-template-columns:1fr;max-height:45svh;gap:7px}.track-btn{min-height:42px;font-size:.82rem}.album-grid{grid-template-columns:repeat(2,1fr);gap:10px}.select-screen{border-radius:20px;padding:14px}}
+  @media(max-width:620px){.page{padding:12px}.topbar{gap:8px}.back-btn,.small-btn{min-height:44px;padding:0 10px;font-size:.78rem}.mode-pill{font-size:1.2rem}.album-card{grid-template-columns:86px 1fr;border-radius:18px;padding:12px}.radio-panel{border-radius:20px;padding:14px;gap:10px}.status-row{grid-template-columns:repeat(2,1fr);gap:7px}.track-grid{grid-template-columns:1fr;max-height:45svh;gap:7px}.track-btn{min-height:44px;font-size:.82rem}.album-grid{grid-template-columns:repeat(2,1fr);gap:10px}.select-screen{border-radius:20px;padding:14px}}
 
 
   /* =========================================================
@@ -91,7 +106,7 @@
   .radio-intro-menu{border:1px solid rgba(241,196,15,.55);border-radius:999px;min-height:54px;padding:0 26px;background:rgba(0,0,0,.62);color:#fff;font-weight:1000;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 0 22px rgba(0,0,0,.5)}
   .radio-intro.hide{animation:introOut .6s ease forwards}
   @keyframes introOut{to{opacity:0;visibility:hidden;transform:scale(1.02)}}
-  @media(max-width:620px){.radio-intro::before{background-position:center}.radio-intro-content{margin-top:min(42vh,330px);gap:12px}.radio-intro-title{font-size:clamp(2rem,13vw,4.2rem)}.radio-intro-subtitle{font-size:.9rem}.radio-enter-btn,.radio-intro-menu{min-height:46px;padding:0 18px;font-size:.82rem}.radio-intro-badge{font-size:.62rem}}
+  @media(max-width:620px){.radio-intro::before{background-position:center}.radio-intro-content{margin-top:min(42vh,330px);gap:12px}.radio-intro-title{font-size:clamp(2rem,13vw,4.2rem)}.radio-intro-subtitle{font-size:.9rem}.radio-enter-btn,.radio-intro-menu{min-height:46px;padding:0 18px;font-size:.82rem}.radio-intro-badge{font-size:0.72rem}}
 
 
   /* =========================================================
@@ -183,7 +198,7 @@
     min-height: 32px !important;
     padding: 0 15px !important;
     border-radius: 999px !important;
-    font-size: .68rem !important;
+    font-size: 0.72rem !important;
     font-weight: 950 !important;
     cursor: pointer !important;
     pointer-events: auto !important;
@@ -221,14 +236,14 @@
     }
 
     .radio-intro-subtitle {
-      font-size: .62rem !important;
+      font-size: 0.72rem !important;
     }
 
     .radio-enter-btn,
     .radio-intro-menu {
       min-height: 31px !important;
       padding: 0 12px !important;
-      font-size: .62rem !important;
+      font-size: 0.72rem !important;
     }
   }
 
@@ -784,11 +799,11 @@
   .album-option::before{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at 50% 0%,rgba(241,196,15,.18),transparent 45%);opacity:.22;pointer-events:none;z-index:1;transition:opacity .25s ease}
   .album-option:not(.locked):hover::before{opacity:.72}
   .album-option img,.album-option strong,.album-option small{position:relative;z-index:2}
-  .album-option .album-badge{position:absolute;top:9px;left:9px;z-index:4;border:1px solid rgba(241,196,15,.52);background:rgba(0,0,0,.72);color:#f1c40f;border-radius:999px;padding:4px 8px;font-size:.56rem;font-weight:1000;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 0 16px rgba(0,0,0,.5);pointer-events:none}
+  .album-option .album-badge{position:absolute;top:9px;left:9px;z-index:4;border:1px solid rgba(241,196,15,.52);background:rgba(0,0,0,.72);color:#f1c40f;border-radius:999px;padding:4px 8px;font-size:0.72rem;font-weight:1000;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 0 16px rgba(0,0,0,.5);pointer-events:none}
   .album-option .album-badge.new{border-color:rgba(30,215,96,.7);color:#1ed760;box-shadow:0 0 18px rgba(30,215,96,.22)}
   .album-option .album-badge.done{border-color:rgba(255,255,255,.45);color:#fff}
   .album-option .lock-icon{position:absolute;z-index:5;inset:0;display:grid;place-items:center;pointer-events:none;font-size:clamp(1.5rem,2.6vw,2.7rem);filter:drop-shadow(0 4px 16px rgba(0,0,0,.9));animation:lockPulse 1.8s ease-in-out infinite}
-  .album-option.locked::after{content:"BLOQUEADO" !important;inset:auto 9px 9px 9px !important;min-height:30px !important;display:flex !important;align-items:center !important;justify-content:center !important;border:1px solid rgba(241,196,15,.28);background:rgba(0,0,0,.78) !important;border-radius:999px !important;font-size:.58rem !important;letter-spacing:.11em !important;z-index:4 !important}
+  .album-option.locked::after{content:"BLOQUEADO" !important;inset:auto 9px 9px 9px !important;min-height:30px !important;display:flex !important;align-items:center !important;justify-content:center !important;border:1px solid rgba(241,196,15,.28);background:rgba(0,0,0,.78) !important;border-radius:999px !important;font-size:0.72rem !important;letter-spacing:.11em !important;z-index:4 !important}
   .album-option.locked img{filter:grayscale(1) brightness(.48) contrast(1.08)}
   .album-option.unlocked-next{animation:newAlbumGlow 2.2s ease-in-out infinite;border-color:rgba(30,215,96,.76) !important}
   .album-option.unlocked-next::before{background:radial-gradient(circle at 50% 0%,rgba(30,215,96,.30),transparent 48%);opacity:.70}
@@ -799,11 +814,11 @@
   .overlay.unlock-success .overlay-card{width:min(860px,94vw) !important;padding:0 !important;overflow:hidden !important;background:linear-gradient(180deg,rgba(9,9,9,.98),rgba(0,0,0,.99)) !important;border-color:rgba(30,215,96,.42) !important;box-shadow:0 34px 110px rgba(0,0,0,.88),0 0 55px rgba(30,215,96,.16),inset 0 1px 0 rgba(255,255,255,.08) !important}
   .unlock-hero{display:grid;grid-template-columns:minmax(170px,260px) 1fr;gap:24px;align-items:center;padding:30px;background:radial-gradient(circle at 25% 20%,rgba(30,215,96,.18),transparent 38%),radial-gradient(circle at 65% 0%,rgba(241,196,15,.13),transparent 40%)}
   .unlock-cover{position:relative;aspect-ratio:1/1;border-radius:24px;overflow:hidden;border:1px solid rgba(241,196,15,.36);box-shadow:0 24px 70px rgba(0,0,0,.72),0 0 35px rgba(30,215,96,.16)}
-  .unlock-cover::after{content:"NOVO";position:absolute;top:12px;left:12px;border-radius:999px;background:#1ed760;color:#001b09;padding:5px 10px;font-weight:1000;font-size:.68rem;letter-spacing:.08em;box-shadow:0 0 20px rgba(30,215,96,.45)}
+  .unlock-cover::after{content:"NOVO";position:absolute;top:12px;left:12px;border-radius:999px;background:#1ed760;color:#001b09;padding:5px 10px;font-weight:1000;font-size:0.72rem;letter-spacing:.08em;box-shadow:0 0 20px rgba(30,215,96,.45)}
   .unlock-cover img{width:100%;height:100%;object-fit:cover;display:block}
   .unlock-info{text-align:left}.unlock-kicker{display:inline-flex;border:1px solid rgba(30,215,96,.55);background:rgba(30,215,96,.08);color:#1ed760;border-radius:999px;padding:7px 12px;font-size:.72rem;font-weight:1000;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}.unlock-info h2{margin:0 0 8px !important;font-family:'Elektrix', 'Permanent Marker', cursive;color:#f1c40f !important;font-size:clamp(2rem,5vw,4.6rem) !important;line-height:.88 !important;text-shadow:0 0 24px rgba(241,196,15,.26)}.unlock-info p{margin:0 0 16px !important;color:rgba(255,255,255,.84) !important;font-weight:900;line-height:1.35}.unlock-stats{display:flex;flex-wrap:wrap;gap:9px}.unlock-chip{border:1px solid rgba(241,196,15,.28);background:rgba(0,0,0,.50);border-radius:999px;padding:8px 12px;color:#fff;font-size:.78rem;font-weight:1000}.overlay.unlock-success .actions{padding:0 30px 30px}.overlay.unlock-success .primary{box-shadow:0 0 24px rgba(241,196,15,.28)}
   .overlay.unlock-fail .overlay-card{border-color:rgba(241,196,15,.30) !important}.overlay.unlock-fail #finishTitle{font-size:clamp(2rem,5vw,3.8rem) !important}.overlay.radio-complete .overlay-card{border-color:rgba(241,196,15,.55) !important;box-shadow:0 34px 110px rgba(0,0,0,.86),0 0 54px rgba(241,196,15,.18) !important}
-  @media(max-width:680px){.unlock-hero{grid-template-columns:1fr;padding:22px;text-align:center}.unlock-cover{width:min(230px,72vw);margin:auto}.unlock-info{text-align:center}.unlock-stats{justify-content:center}.overlay.unlock-success .actions{padding:0 18px 22px}.album-option .album-badge{font-size:.48rem;padding:3px 6px}.album-option .lock-icon{font-size:1.65rem}}
+  @media(max-width:680px){.unlock-hero{grid-template-columns:1fr;padding:22px;text-align:center}.unlock-cover{width:min(230px,72vw);margin:auto}.unlock-info{text-align:center}.unlock-stats{justify-content:center}.overlay.unlock-success .actions{padding:0 18px 22px}.album-option .album-badge{font-size:0.72rem;padding:3px 6px}.album-option .lock-icon{font-size:1.65rem}}
 
 
 
@@ -1016,7 +1031,7 @@
       padding: 6px 10px !important;
     }
     body.radio-playing:not(.has-intro) .live-radio-eq .eq-status {
-      font-size: .56rem !important;
+      font-size: 0.72rem !important;
     }
   }
 
@@ -1105,7 +1120,7 @@
       bottom: 7px;
       min-height: 22px;
       padding: 4px 7px;
-      font-size: .55rem;
+      font-size: 0.72rem;
       letter-spacing: .05em;
     }
   }
@@ -1607,7 +1622,7 @@
     border-radius: 999px !important;
     padding: 4px 9px !important;
     font-family: Inter, Arial, sans-serif !important;
-    font-size: .62rem !important;
+    font-size: 0.72rem !important;
     font-weight: 1000 !important;
     letter-spacing: .08em !important;
     vertical-align: middle !important;
@@ -1737,7 +1752,7 @@
       min-height: 28px !important;
       height: 28px !important;
       padding: 0 11px !important;
-      font-size: .62rem !important;
+      font-size: 0.72rem !important;
     }
     body:not(.has-intro) .mode-help {
       position: static !important;
@@ -1747,7 +1762,7 @@
       text-align: center !important;
       flex-basis: 100% !important;
       margin-top: 4px !important;
-      font-size: .58rem !important;
+      font-size: 0.72rem !important;
     }
     body:not(.has-intro) .radio-progress {
       pointer-events: none !important;
@@ -1798,10 +1813,10 @@
       min-height: 23px !important;
       height: 23px !important;
       padding: 0 8px !important;
-      font-size: .54rem !important;
+      font-size: 0.72rem !important;
     }
     body:not(.has-intro) .mode-help {
-      font-size: .52rem !important;
+      font-size: 0.72rem !important;
     }
   }
 
@@ -1828,7 +1843,7 @@
     border-radius:999px;
     padding:5px 10px;
     font-family:Inter,Arial,sans-serif !important;
-    font-size:.66rem;
+    font-size:0.72rem;
     font-weight:1000;
     letter-spacing:.14em;
     text-transform:uppercase;
@@ -1899,7 +1914,7 @@
   @media(max-width:680px){
     .performance-card{padding:13px 12px;border-radius:18px}
     .overlay.unlock-success .performance-card{margin:0 18px 18px !important}
-    .performance-stats span{font-size:.68rem;padding:6px 9px}
+    .performance-stats span{font-size:0.72rem;padding:6px 9px}
   }
 
 
@@ -1939,12 +1954,12 @@
   .unlock-cover.epic-cover::after{
     top:8px !important;
     left:8px !important;
-    font-size:.56rem !important;
+    font-size:0.72rem !important;
     padding:5px 8px !important;
   }
 
   .unlock-kicker.epic-kicker{
-    font-size:.58rem !important;
+    font-size:0.72rem !important;
     padding:4px 9px !important;
     margin-bottom:5px !important;
   }
@@ -1995,7 +2010,7 @@
   }
 
   .performance-kicker{
-    font-size:.54rem !important;
+    font-size:0.72rem !important;
     padding:4px 9px !important;
     margin-bottom:5px !important;
   }
@@ -2025,7 +2040,7 @@
 
   .performance-stats span{
     padding:5px 9px !important;
-    font-size:.66rem !important;
+    font-size:0.72rem !important;
   }
 
   .overlay.unlock-success .actions.epic-actions{
@@ -2142,7 +2157,7 @@
     justify-content:center !important;
     text-decoration:none !important;
     font-weight:1000 !important;
-    font-size:.66rem !important;
+    font-size:0.72rem !important;
     letter-spacing:.03em !important;
   }
 
@@ -2281,7 +2296,7 @@
     body:not(.has-intro) .small-btn {
       min-height: 34px !important;
       padding: 0 10px !important;
-      font-size: .66rem !important;
+      font-size: 0.72rem !important;
       border-radius: 999px !important;
       white-space: nowrap !important;
     }
@@ -2345,7 +2360,7 @@
     body:not(.has-intro) .mode-choice {
       min-height: 28px !important;
       padding: 0 8px !important;
-      font-size: .64rem !important;
+      font-size: 0.72rem !important;
       border-radius: 999px !important;
       line-height: 1 !important;
       position: relative !important;
@@ -2355,7 +2370,7 @@
 
     body:not(.has-intro) .mode-help {
       grid-column: 1 / -1 !important;
-      font-size: .58rem !important;
+      font-size: 0.72rem !important;
       line-height: 1.15 !important;
       margin: 2px auto 0 !important;
       opacity: .72 !important;
@@ -2391,20 +2406,20 @@
 
     body:not(.has-intro) .album-option strong {
       margin-top: 6px !important;
-      font-size: .62rem !important;
+      font-size: 0.72rem !important;
       line-height: 1.08 !important;
       -webkit-line-clamp: 2 !important;
     }
 
     body:not(.has-intro) .album-option small {
-      font-size: .58rem !important;
+      font-size: 0.72rem !important;
       line-height: 1.05 !important;
       white-space: normal !important;
     }
 
     .album-option.locked::after {
       inset: 7px !important;
-      font-size: .58rem !important;
+      font-size: 0.72rem !important;
       letter-spacing: .04em !important;
       border-radius: 12px !important;
     }
@@ -2466,7 +2481,7 @@
     body.radio-playing:not(.has-intro) .reveal-label,
     body.radio-playing:not(.has-intro) .cover-progress-label,
     body.radio-playing:not(.has-intro) .cover-percent {
-      font-size: .52rem !important;
+      font-size: 0.72rem !important;
       padding: 4px 6px !important;
     }
 
@@ -2487,7 +2502,7 @@
     }
 
     body.radio-playing:not(.has-intro) .radio-title small {
-      font-size: .55rem !important;
+      font-size: 0.72rem !important;
       padding: 4px 9px !important;
       letter-spacing: .08em !important;
       justify-self: center !important;
@@ -2525,7 +2540,7 @@
     }
 
     body.radio-playing:not(.has-intro) .status-card small {
-      font-size: .48rem !important;
+      font-size: 0.72rem !important;
       letter-spacing: .06em !important;
     }
 
@@ -2658,7 +2673,7 @@
     .unlock-chip.epic-chip,
     .unlock-chip {
       padding: 5px 7px !important;
-      font-size: .6rem !important;
+      font-size: 0.72rem !important;
     }
 
     .performance-card {
@@ -2668,7 +2683,7 @@
     }
 
     .performance-kicker {
-      font-size: .58rem !important;
+      font-size: 0.72rem !important;
       padding: 4px 8px !important;
     }
 
@@ -2690,7 +2705,7 @@
 
     .performance-stats span {
       padding: 7px 6px !important;
-      font-size: .64rem !important;
+      font-size: 0.72rem !important;
       min-width: 0 !important;
     }
 
@@ -2711,7 +2726,7 @@
     }
 
     body:not(.has-intro) .album-option strong {
-      font-size: .56rem !important;
+      font-size: 0.72rem !important;
     }
 
     body.radio-playing:not(.has-intro) .status-row {
@@ -2839,7 +2854,7 @@
       padding: 5px 8px !important;
     }
     body:not(.has-intro) .radio-progress .progress-label {
-      font-size: .52rem !important;
+      font-size: 0.72rem !important;
     }
   }
 
@@ -2896,13 +2911,13 @@
   @keyframes achievementPop{0%{transform:scale(.94);opacity:.55}60%{transform:scale(1.035);opacity:1}100%{transform:scale(1);opacity:1}}
   .achievement-icon{display:block;font-size:1.25rem;line-height:1;margin-bottom:5px;filter:drop-shadow(0 0 10px rgba(241,196,15,.25))}
   .achievement-name{display:block;color:var(--yellow);font-weight:1000;font-size:.78rem;line-height:1.05;text-transform:uppercase}
-  .achievement-desc{display:block;color:rgba(255,255,255,.68);font-weight:800;font-size:.62rem;line-height:1.12;margin-top:4px}
+  .achievement-desc{display:block;color:rgba(255,255,255,.68);font-weight:800;font-size:0.72rem;line-height:1.12;margin-top:4px}
   .achievement-empty{color:rgba(255,255,255,.66);font-weight:900;font-size:.78rem;padding:6px 0}
   @media(max-width:760px){
     .achievements-card{padding:10px;margin-top:8px;border-radius:18px}
     .achievements-grid{gap:6px}
     .achievement-badge{min-width:112px;flex-basis:112px;padding:8px}
-    .achievement-name{font-size:.68rem}.achievement-desc{font-size:.56rem}
+    .achievement-name{font-size:0.72rem}.achievement-desc{font-size:0.72rem}
   }
 
 
@@ -2952,13 +2967,13 @@
     top:7px !important;
     left:7px !important;
     padding:4px 7px !important;
-    font-size:.50rem !important;
+    font-size:0.72rem !important;
   }
 
   .unlock-kicker.epic-kicker{
     padding:4px 9px !important;
     margin-bottom:4px !important;
-    font-size:.56rem !important;
+    font-size:0.72rem !important;
   }
 
   .unlock-info.epic-info h2{
@@ -2991,7 +3006,7 @@
 
   .unlock-chip.epic-chip{
     padding:5px 8px !important;
-    font-size:.65rem !important;
+    font-size:0.72rem !important;
     min-height:0 !important;
   }
 
@@ -3010,7 +3025,7 @@
   }
 
   .performance-kicker{
-    font-size:.50rem !important;
+    font-size:0.72rem !important;
     padding:3px 8px !important;
     margin-bottom:4px !important;
   }
@@ -3040,7 +3055,7 @@
 
   .performance-stats span{
     padding:4px 8px !important;
-    font-size:.60rem !important;
+    font-size:0.72rem !important;
   }
 
   .ranking-card{
@@ -3050,7 +3065,7 @@
   }
 
   .ranking-kicker{
-    font-size:.56rem !important;
+    font-size:0.72rem !important;
   }
 
   .ranking-number{
@@ -3059,14 +3074,14 @@
   }
 
   .ranking-card p{
-    font-size:.62rem !important;
+    font-size:0.72rem !important;
     margin:0 0 6px !important;
   }
 
   .ranking-link{
     min-height:26px !important;
     padding:0 11px !important;
-    font-size:.58rem !important;
+    font-size:0.72rem !important;
   }
 
   .achievements-card{
@@ -3079,7 +3094,7 @@
   }
 
   .achievements-head{
-    font-size:.58rem !important;
+    font-size:0.72rem !important;
     margin-bottom:5px !important;
     gap:6px !important;
   }
@@ -3106,12 +3121,12 @@
   }
 
   .achievement-name{
-    font-size:.58rem !important;
+    font-size:0.72rem !important;
     line-height:1.02 !important;
   }
 
   .achievement-desc{
-    font-size:.50rem !important;
+    font-size:0.72rem !important;
     line-height:1.05 !important;
     margin-top:2px !important;
   }
@@ -3125,7 +3140,7 @@
   .overlay.unlock-success .actions.epic-actions .secondary{
     min-height:34px !important;
     padding:0 16px !important;
-    font-size:.68rem !important;
+    font-size:0.72rem !important;
   }
 
   @media(max-width:900px){
@@ -3189,7 +3204,7 @@
 
   .unlock-chip.epic-chip{
     padding:5px 9px !important;
-    font-size:.66rem !important;
+    font-size:0.72rem !important;
   }
 
   .performance-row{
@@ -3211,7 +3226,7 @@
   }
 
   .performance-kicker{
-    font-size:.48rem !important;
+    font-size:0.72rem !important;
     padding:3px 8px !important;
     margin-bottom:3px !important;
   }
@@ -3241,7 +3256,7 @@
 
   .performance-stats span{
     padding:4px 8px !important;
-    font-size:.58rem !important;
+    font-size:0.72rem !important;
     line-height:1 !important;
   }
 
@@ -3252,7 +3267,7 @@
   }
 
   .ranking-kicker{
-    font-size:.54rem !important;
+    font-size:0.72rem !important;
   }
 
   .ranking-number{
@@ -3261,14 +3276,14 @@
   }
 
   .ranking-card p{
-    font-size:.56rem !important;
+    font-size:0.72rem !important;
     margin:0 0 5px !important;
   }
 
   .ranking-link{
     min-height:24px !important;
     padding:0 10px !important;
-    font-size:.54rem !important;
+    font-size:0.72rem !important;
   }
 
   .achievements-card{
@@ -3279,7 +3294,7 @@
   }
 
   .achievements-head{
-    font-size:.54rem !important;
+    font-size:0.72rem !important;
     margin-bottom:4px !important;
   }
 
@@ -3296,11 +3311,11 @@
   }
 
   .achievement-name{
-    font-size:.54rem !important;
+    font-size:0.72rem !important;
   }
 
   .achievement-desc{
-    font-size:.46rem !important;
+    font-size:0.72rem !important;
     line-height:1.02 !important;
   }
 
@@ -3361,7 +3376,7 @@
   }
   .online-ranking-status{
     min-height:14px;
-    font-size:.64rem;
+    font-size:0.72rem;
     line-height:1.15;
     font-weight:900;
     color:rgba(255,255,255,.72);
@@ -3381,7 +3396,7 @@
     background:rgba(255,255,255,.035);
     border-radius:9px;
     padding:3px 6px;
-    font-size:.62rem;
+    font-size:0.72rem;
     font-weight:900;
     color:rgba(255,255,255,.78);
   }
@@ -3418,7 +3433,7 @@
   }
 
   .overlay.unlock-success .performance-kicker{
-    font-size:.42rem !important;
+    font-size:0.72rem !important;
     padding:2px 7px !important;
     margin-bottom:2px !important;
     opacity:.78 !important;
@@ -3450,7 +3465,7 @@
 
   .overlay.unlock-success .performance-stats span{
     padding:3px 7px !important;
-    font-size:.50rem !important;
+    font-size:0.72rem !important;
     line-height:1 !important;
     border-radius:999px !important;
   }
@@ -3465,7 +3480,7 @@
   }
 
   .overlay.unlock-success .ranking-kicker{
-    font-size:.46rem !important;
+    font-size:0.72rem !important;
     letter-spacing:.08em !important;
   }
 
@@ -3489,7 +3504,7 @@
     min-height:14px !important;
     padding:1px 5px !important;
     border-radius:999px !important;
-    font-size:.48rem !important;
+    font-size:0.72rem !important;
     line-height:1 !important;
   }
 
@@ -3505,17 +3520,17 @@
   .overlay.unlock-success .online-ranking-row input{
     min-height:22px !important;
     padding:0 8px !important;
-    font-size:.54rem !important;
+    font-size:0.72rem !important;
   }
 
   .overlay.unlock-success .online-ranking-row button{
     min-height:22px !important;
     padding:0 8px !important;
-    font-size:.52rem !important;
+    font-size:0.72rem !important;
   }
 
   .overlay.unlock-success .online-ranking-status{
-    font-size:.44rem !important;
+    font-size:0.72rem !important;
     line-height:1.05 !important;
     min-height:10px !important;
   }
@@ -3523,7 +3538,7 @@
   .overlay.unlock-success .ranking-link{
     min-height:20px !important;
     padding:0 8px !important;
-    font-size:.48rem !important;
+    font-size:0.72rem !important;
   }
 
   .overlay.unlock-success .achievements-card{
@@ -3534,7 +3549,7 @@
   }
 
   .overlay.unlock-success .achievements-head{
-    font-size:.50rem !important;
+    font-size:0.72rem !important;
     margin-bottom:3px !important;
   }
 
@@ -3546,8 +3561,8 @@
   }
 
   .overlay.unlock-success .achievement-icon{font-size:.82rem !important;margin-bottom:1px !important;}
-  .overlay.unlock-success .achievement-name{font-size:.48rem !important;}
-  .overlay.unlock-success .achievement-desc{font-size:.40rem !important;line-height:1.02 !important;}
+  .overlay.unlock-success .achievement-name{font-size:0.72rem !important;}
+  .overlay.unlock-success .achievement-desc{font-size:0.72rem !important;line-height:1.02 !important;}
 
   @media(max-width:900px){
     .overlay.unlock-success .performance-row{
@@ -3639,7 +3654,7 @@
 
   .overlay.unlock-success .performance-kicker{
     grid-area:kicker !important;
-    font-size:.38rem !important;
+    font-size:0.72rem !important;
     padding:2px 7px !important;
     margin:0 !important;
     white-space:nowrap !important;
@@ -3676,7 +3691,7 @@
 
   .overlay.unlock-success .performance-stats span{
     padding:2px 6px !important;
-    font-size:.44rem !important;
+    font-size:0.72rem !important;
     line-height:1 !important;
     white-space:nowrap !important;
   }
@@ -3688,13 +3703,13 @@
     gap:2px !important;
   }
 
-  .overlay.unlock-success .ranking-kicker{font-size:.40rem !important;}
+  .overlay.unlock-success .ranking-kicker{font-size:0.72rem !important;}
   .overlay.unlock-success .ranking-number{font-size:clamp(1rem,1.7vw,1.7rem) !important;}
   .overlay.unlock-success .online-mini-list{display:none !important;}
-  .overlay.unlock-success .online-ranking-row input{min-height:19px !important;font-size:.48rem !important;}
-  .overlay.unlock-success .online-ranking-row button{min-height:19px !important;font-size:.46rem !important;}
+  .overlay.unlock-success .online-ranking-row input{min-height:19px !important;font-size:0.72rem !important;}
+  .overlay.unlock-success .online-ranking-row button{min-height:44px !important;font-size:0.72rem !important;}
   .overlay.unlock-success .online-ranking-status{display:none !important;}
-  .overlay.unlock-success .ranking-link{min-height:18px !important;font-size:.42rem !important;}
+  .overlay.unlock-success .ranking-link{min-height:18px !important;font-size:0.72rem !important;}
 
   .overlay.unlock-success .achievements-card{
     width:min(1120px,86%) !important;
@@ -3705,7 +3720,7 @@
   }
 
   .overlay.unlock-success .achievements-head{
-    font-size:.44rem !important;
+    font-size:0.72rem !important;
     margin-bottom:2px !important;
   }
 
@@ -3722,7 +3737,7 @@
   }
 
   .overlay.unlock-success .achievement-icon{font-size:.72rem !important;}
-  .overlay.unlock-success .achievement-name{font-size:.42rem !important;}
+  .overlay.unlock-success .achievement-name{font-size:0.72rem !important;}
   .overlay.unlock-success .achievement-desc{display:none !important;}
 
   .overlay.unlock-success .epic-actions{
@@ -3734,7 +3749,7 @@
   .overlay.unlock-success .epic-actions .secondary{
     min-height:34px !important;
     padding:0 16px !important;
-    font-size:.66rem !important;
+    font-size:0.72rem !important;
   }
 
   @media(max-width:900px){
@@ -3746,6 +3761,13 @@
   }
 
 </style>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1JCN94Y3P0"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-1JCN94Y3P0');
+  </script>
 </head>
 <body class="has-intro">
 <div id="radioIntro" class="radio-intro" aria-label="Entrada da Rádio CBJR">
@@ -5382,7 +5404,7 @@ renderAlbums();
   .cbjr-achievement-popup::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(30,215,96,.16),transparent 52%);z-index:-1;opacity:.75;}
   .cbjr-ach-icon{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,#f1c40f,#1ed760);color:#050505;font-size:1.85rem;box-shadow:0 0 26px rgba(241,196,15,.28);font-weight:1000;}
   .cbjr-ach-copy{min-width:0;display:grid;gap:3px;}
-  .cbjr-ach-kicker{color:#1ed760;text-transform:uppercase;letter-spacing:.12em;font-size:.64rem;font-weight:1000;}
+  .cbjr-ach-kicker{color:#1ed760;text-transform:uppercase;letter-spacing:.12em;font-size:0.72rem;font-weight:1000;}
   .cbjr-ach-title{color:#f1c40f;font-weight:1000;font-size:1rem;line-height:1.08;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 0 12px rgba(241,196,15,.22);}
   .cbjr-ach-desc{color:rgba(255,255,255,.76);font-size:.78rem;font-weight:850;line-height:1.22;}
   .cbjr-ach-xp{border:1px solid rgba(30,215,96,.38);border-radius:999px;background:rgba(30,215,96,.12);color:#1ed760;font-weight:1000;font-size:.72rem;padding:6px 8px;white-space:nowrap;align-self:center;}
