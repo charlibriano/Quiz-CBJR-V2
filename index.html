@@ -5181,6 +5181,11 @@
     const xpHardBonus = radioMode === 'hard' ? 250 : 0;
     const xp = xpBaseRadio + xpBaseLetras + xpConquistas + xpAutoConquistas + xpHardBonus;
     const level = getPlayerLevel(xp);
+    try {
+      localStorage.setItem('cbjr_xp_total', String(xp));
+      localStorage.setItem('cbjr_public_title', level?.name || 'Fã Iniciante');
+      if (window.CBJRProgress?.save) window.CBJRProgress.save({ source: 'index-dashboard', forcedAtMs: Date.now() });
+    } catch (_) {}
 
     let lastLabel = 'comece pela Rádio, Quiz ou Modo Letras';
     let continueHref = 'radio.html';
