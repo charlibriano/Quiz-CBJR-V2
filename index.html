@@ -4341,7 +4341,7 @@
   <script>
     const infoBtn = document.getElementById('infoBtn');
     const infoModal = document.getElementById('infoModal');
-    const closeModal = document.getElementById('infoModalClose');
+    const closeModal = document.getElementById('closeModal');
     const soundBtn = document.getElementById('soundBtn');
 
     infoBtn.addEventListener('click', () => {
@@ -4741,9 +4741,9 @@
         startIntroBtn.style.animation = 'none';
         if (bootStatus) bootStatus.textContent = 'Carregando o universo CBJR...';
         playPhysicalButtonClick();
-        // Importante: iniciar o áudio diretamente no clique do usuário.
-        // Alguns navegadores bloqueiam autoplay quando o play() fica dentro de setTimeout.
-        runMesaBoot();
+        setTimeout(() => {
+          runMesaBoot();
+        }, 170);
       });
     }
 
