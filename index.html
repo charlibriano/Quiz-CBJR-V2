@@ -4978,7 +4978,7 @@
 <script type="module" id="cbjr-google-auth-script">
   import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-  import { getFirestore, doc, setDoc, serverTimestamp, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+  import { getFirestore, doc, getDoc, setDoc, serverTimestamp, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
   const firebaseConfig = {
     apiKey: 'AIzaSyDtb8jvVd0lMRy96QfqfjAg1dBReRIoRg4',
@@ -5139,6 +5139,102 @@
   }
 
 
+  const DASHBOARD_PROGRESS_KEYS = [
+    'radioCBJRUnlockedAlbumIndex_v2',
+    'radioCBJRMode',
+    'radioCBJR_achievements_v1',
+    'cbjr_letters_completed',
+    'lettersCBJR_playerName',
+    'cobjr_quiz_achievements',
+    'cbjr_auto_achievements_v1',
+    'cbjr_xp_total',
+    'cbjr_public_title',
+    'cbjr_medals_v1',
+    'cbjr_last_activity_v1',
+    'cbjr_history_v1'
+  ];
+
+  function readDashboardLocal() {
+    const data = {};
+    DASHBOARD_PROGRESS_KEYS.forEach(key => {
+      const value = localStorage.getItem(key);
+      if (value !== null) data[key] = value;
+    });
+    return data;
+  }
+
+  function writeDashboardLocal(data = {}) {
+    Object.entries(data || {}).forEach(([key, value]) => {
+      if (DASHBOARD_PROGRESS_KEYS.includes(key) && value !== undefined && value !== null) {
+        localStorage.setItem(key, String(value));
+      }
+    });
+  }
+
+  function mergeObjectProgress(localValue, remoteValue) {
+    return JSON.stringify({ ...safeJson(remoteValue || '{}', {}), ...safeJson(localValue || '{}', {}) });
+  }
+
+  function mergeArrayProgress(localValue, remoteValue) {
+    const localArray = safeJson(localValue || '[]', []);
+    const remoteArray = safeJson(remoteValue || '[]', []);
+    return JSON.stringify([...new Set([...(Array.isArray(remoteArray) ? remoteArray : []), ...(Array.isArray(localArray) ? localArray : [])])]);
+  }
+
+  async function loadDashboardCloud(user) {
+    if (!user) return;
+    try {
+      const ref = doc(db, 'usuarios', user.uid, 'progresso', 'geral');
+      const snap = await getDoc(ref);
+      const remote = snap.exists() ? (snap.data() || {}) : {};
+      const local = readDashboardLocal();
+      const merged = { ...remote, ...local };
+
+      const localRadio = Number(local.radioCBJRUnlockedAlbumIndex_v2 ?? 0);
+      const remoteRadio = Number(remote.radioCBJRUnlockedAlbumIndex_v2 ?? 0);
+      merged.radioCBJRUnlockedAlbumIndex_v2 = String(Math.max(Number.isFinite(localRadio) ? localRadio : 0, Number.isFinite(remoteRadio) ? remoteRadio : 0));
+
+      const localXp = Number(local.cbjr_xp_total || 0);
+      const remoteXp = Number(remote.cbjr_xp_total || remote?.stats?.xp || 0);
+      merged.cbjr_xp_total = String(Math.max(Number.isFinite(localXp) ? localXp : 0, Number.isFinite(remoteXp) ? remoteXp : 0));
+
+      merged.radioCBJR_achievements_v1 = mergeObjectProgress(local.radioCBJR_achievements_v1, remote.radioCBJR_achievements_v1);
+      merged.cobjr_quiz_achievements = mergeObjectProgress(local.cobjr_quiz_achievements, remote.cobjr_quiz_achievements);
+      merged.cbjr_auto_achievements_v1 = mergeObjectProgress(local.cbjr_auto_achievements_v1, remote.cbjr_auto_achievements_v1);
+      merged.cbjr_letters_completed = mergeArrayProgress(local.cbjr_letters_completed, remote.cbjr_letters_completed);
+      merged.cbjr_medals_v1 = mergeArrayProgress(local.cbjr_medals_v1, remote.cbjr_medals_v1);
+      merged.cbjr_history_v1 = mergeArrayProgress(local.cbjr_history_v1, remote.cbjr_history_v1);
+
+      writeDashboardLocal(merged);
+      const calculated = readDashboardProgress(false);
+      localStorage.setItem('cbjr_xp_total', String(Math.max(Number(merged.cbjr_xp_total || 0), Number(calculated.xp || 0))));
+      localStorage.setItem('cbjr_public_title', calculated.level?.name || 'Fã Iniciante');
+
+      const payload = readDashboardLocal();
+      await setDoc(ref, {
+        ...payload,
+        stats: {
+          xp: Number(payload.cbjr_xp_total || calculated.xp || 0),
+          title: calculated.level?.name || 'Fã Iniciante',
+          radioAlbums: calculated.radioLiberados,
+          letrasAlbums: calculated.letrasCount,
+          conquistas: calculated.conquistas,
+          progressPercent: calculated.percent
+        },
+        uid: user.uid,
+        email: user.email || '',
+        displayName: user.displayName || '',
+        photoURL: user.photoURL || '',
+        updatedAt: serverTimestamp(),
+        origem: 'index.html',
+        source: 'dashboard-cloud-sync'
+      }, { merge: true });
+    } catch (error) {
+      console.warn('Dashboard: não foi possível sincronizar progresso remoto agora.', error);
+    }
+  }
+
+
   function getNextObjective(progress) {
     const lockedAuto = (progress.autoAchievements || []).find(item => !item.unlocked);
     if (lockedAuto) {
@@ -5154,7 +5250,7 @@
     return { title: 'Universo dominado', text: 'Você liberou as conquistas principais. Continue buscando recordes no ranking.' };
   }
 
-  function readDashboardProgress() {
+  function readDashboardProgress(shouldSave = true) {
     const radioIndex = Math.max(0, Number(localStorage.getItem('radioCBJRUnlockedAlbumIndex_v2') || '0') || 0);
     const radioMode = String(localStorage.getItem('radioCBJRMode') || 'normal').toLowerCase();
     const letras = safeJson(localStorage.getItem('cbjr_letters_completed') || '[]', []);
@@ -5179,13 +5275,17 @@
     const xpConquistas = baseConquistas * 90;
     const xpAutoConquistas = getAchievementsXP(autoAchievements);
     const xpHardBonus = radioMode === 'hard' ? 250 : 0;
-    const xp = xpBaseRadio + xpBaseLetras + xpConquistas + xpAutoConquistas + xpHardBonus;
+    const calculatedXp = xpBaseRadio + xpBaseLetras + xpConquistas + xpAutoConquistas + xpHardBonus;
+    const storedXp = Number(localStorage.getItem('cbjr_xp_total') || 0) || 0;
+    const xp = Math.max(calculatedXp, storedXp);
     const level = getPlayerLevel(xp);
-    try {
-      localStorage.setItem('cbjr_xp_total', String(xp));
-      localStorage.setItem('cbjr_public_title', level?.name || 'Fã Iniciante');
-      if (window.CBJRProgress?.save) window.CBJRProgress.save({ source: 'index-dashboard', forcedAtMs: Date.now() });
-    } catch (_) {}
+    if (shouldSave) {
+      try {
+        localStorage.setItem('cbjr_xp_total', String(xp));
+        localStorage.setItem('cbjr_public_title', level?.name || 'Fã Iniciante');
+        if (window.CBJRProgress?.save) window.CBJRProgress.save({ source: 'index-dashboard', forcedAtMs: Date.now() });
+      } catch (_) {}
+    }
 
     let lastLabel = 'comece pela Rádio, Quiz ou Modo Letras';
     let continueHref = 'radio.html';
@@ -5300,13 +5400,15 @@
     }
   }
 
-  window.addEventListener('cbjr-progress-loaded', () => {
+  window.addEventListener('cbjr-progress-loaded', async () => {
     if (window.CBJR_CURRENT_USER) {
-      renderPlayerDashboard({
+      const user = {
         displayName: window.CBJR_CURRENT_USER.name,
         email: window.CBJR_CURRENT_USER.email,
         uid: window.CBJR_CURRENT_USER.uid
-      });
+      };
+      await loadDashboardCloud(user);
+      renderPlayerDashboard(user);
     }
   });
 
@@ -5342,6 +5444,7 @@
       photoURL: user.photoURL || ''
     };
 
+    await loadDashboardCloud(user);
     renderPlayerDashboard(user);
     updateDashboardRanking(user);
     setAuthView('auth-logged-in');
