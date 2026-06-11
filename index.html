@@ -4341,34 +4341,31 @@
   <script>
     const infoBtn = document.getElementById('infoBtn');
     const infoModal = document.getElementById('infoModal');
-    // Correção: o botão do modal no HTML se chama infoModalClose.
-    // Antes estava buscando closeModal, retornava null e travava a tela de boot.
-    const closeModal = document.getElementById('infoModalClose') || document.getElementById('closeModal');
+    const closeModal = document.getElementById('infoModalClose');
     const soundBtn = document.getElementById('soundBtn');
 
-    function openInfoModal() {
-      if (!infoModal) return;
+    infoBtn.addEventListener('click', () => {
       infoModal.classList.add('show');
       infoModal.setAttribute('aria-hidden', 'false');
-    }
+    });
 
-    function closeInfoModal() {
-      if (!infoModal) return;
+    closeModal.addEventListener('click', () => {
       infoModal.classList.remove('show');
       infoModal.setAttribute('aria-hidden', 'true');
-    }
+    });
 
-    if (infoBtn) infoBtn.addEventListener('click', openInfoModal);
-    if (closeModal) closeModal.addEventListener('click', closeInfoModal);
-
-    if (infoModal) {
-      infoModal.addEventListener('click', (event) => {
-        if (event.target === infoModal) closeInfoModal();
-      });
-    }
+    infoModal.addEventListener('click', (event) => {
+      if (event.target === infoModal) {
+        infoModal.classList.remove('show');
+        infoModal.setAttribute('aria-hidden', 'true');
+      }
+    });
 
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') closeInfoModal();
+      if (event.key === 'Escape') {
+        infoModal.classList.remove('show');
+        infoModal.setAttribute('aria-hidden', 'true');
+      }
     });
 
     let audioCtx;
@@ -4744,9 +4741,9 @@
         startIntroBtn.style.animation = 'none';
         if (bootStatus) bootStatus.textContent = 'Carregando o universo CBJR...';
         playPhysicalButtonClick();
-        setTimeout(() => {
-          runMesaBoot();
-        }, 170);
+        // Importante: iniciar o áudio diretamente no clique do usuário.
+        // Alguns navegadores bloqueiam autoplay quando o play() fica dentro de setTimeout.
+        runMesaBoot();
       });
     }
 
