@@ -4048,7 +4048,7 @@
             rgba(0,0,0,.62) 60%,
             rgba(8,8,8,1) 100%
           ),
-          url('https://charlibriano.github.io/Quiz-CBJR-V2/quiz-bg.jpg') !important;
+          url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/fundo-cbjr.jpg') !important;
         background-size: cover !important;
         background-position: center 30% !important;
         border-radius: 0 0 28px 28px !important;
@@ -4111,8 +4111,11 @@
         letter-spacing: .04em !important;
       }
 
-      /* Botão único: Jogar Quiz */
+      /* hero-actions: oculto no mobile — card já faz o trabalho */
       .hero-actions {
+        display: none !important;
+      }
+      .hero-actions-DISABLED {
         display: flex !important;
         justify-content: center !important;
         margin-top: 4px !important;
@@ -4285,9 +4288,7 @@
           <div class="eyebrow"><span></span> Universo Interativo</div>
           <h1>Charlie<br><em>Brown Jr.</em></h1>
           <p class="subtitle">Sinta o som. Viva o legado.</p>
-          <div class="hero-actions">
-            <a class="btn-primary" href="quiz.html">🎸 Jogar Quiz</a>
-          </div>
+
           <div class="home-online-now" aria-live="polite"><span class="online-dot"></span><strong id="homeOnlineCount">0</strong>&nbsp;<span>fãs online agora</span></div>
         </div>
 
