@@ -3761,6 +3761,217 @@
   }
 
 </style>
+
+<style id="radio-mobile-v1">
+/* ═══════════════════════════════════════════════════════════
+   RÁDIO CBJR — MOBILE
+   1. Select screen: álbuns em 2 colunas, modo toggle no topo
+   2. Track grid: 2 colunas compactas com número da faixa
+   ═══════════════════════════════════════════════════════════ */
+
+@media (max-width: 760px) {
+
+  /* ── Tela de seleção de álbum ── */
+  .select-screen {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100svh !important;
+    margin: 0 !important;
+    padding: 60px 12px 90px !important;
+    border-radius: 0 !important;
+    overflow-y: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+  }
+
+  .select-screen h1 {
+    font-family: "Elektrix", Arial, sans-serif !important;
+    font-size: clamp(1.6rem, 8vw, 2.2rem) !important;
+    text-align: center !important;
+    color: #f1c40f !important;
+    margin: 0 !important;
+    text-shadow: 0 0 24px rgba(241,196,15,.4) !important;
+  }
+
+  .select-screen > p {
+    font-size: .8rem !important;
+    text-align: center !important;
+    color: rgba(255,255,255,.5) !important;
+    margin: 0 !important;
+  }
+
+  /* Toggle Normal/Hard — linha compacta no topo */
+  .mode-select-wrap {
+    display: flex !important;
+    gap: 8px !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .mode-choice {
+    flex: 1 !important;
+    max-width: 140px !important;
+    height: 38px !important;
+    border-radius: 999px !important;
+    font-size: .82rem !important;
+    font-weight: 900 !important;
+    border: 1.5px solid rgba(255,255,255,.18) !important;
+    background: rgba(255,255,255,.05) !important;
+    color: rgba(255,255,255,.55) !important;
+    cursor: pointer !important;
+  }
+
+  .mode-choice.active {
+    background: #f1c40f !important;
+    border-color: #f1c40f !important;
+    color: #000 !important;
+    box-shadow: 0 0 16px rgba(241,196,15,.3) !important;
+  }
+
+  /* Grid de álbuns: 2 colunas */
+  .album-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-auto-rows: auto !important;
+    gap: 10px !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* Card do álbum */
+  .album-option {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    border: 1.5px solid rgba(255,255,255,.1) !important;
+    background: rgba(255,255,255,.04) !important;
+    cursor: pointer !important;
+    transition: transform .15s ease, box-shadow .15s ease !important;
+    min-height: 0 !important;
+    aspect-ratio: unset !important;
+    height: auto !important;
+    padding: 0 !important;
+  }
+
+  .album-option:active {
+    transform: scale(.97) !important;
+  }
+
+  /* Capa do álbum — quadrada */
+  .album-option .album-cover,
+  .album-option img,
+  .album-option [class*="cover"] {
+    width: 100% !important;
+    aspect-ratio: 1 !important;
+    object-fit: cover !important;
+    display: block !important;
+    border-radius: 0 !important;
+  }
+
+  /* Nome e info do álbum */
+  .album-option .album-info,
+  .album-option [class*="info"],
+  .album-option [class*="label"] {
+    padding: 8px 10px !important;
+    font-size: .78rem !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+    color: #fff !important;
+  }
+
+  /* ── Tela do jogo (gameStage) mobile ── */
+  body.radio-playing:not(.has-intro) {
+    overflow-y: auto !important;
+  }
+
+  /* Header do jogo: topbar compacta */
+  .radio-topbar,
+  .game-topbar,
+  [class*="topbar"] {
+    position: fixed !important;
+    top: 0 !important; left: 0 !important; right: 0 !important;
+    height: 52px !important;
+    z-index: 50 !important;
+  }
+
+  /* Track grid: 2 colunas no mobile */
+  .track-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 7px !important;
+    padding: 8px !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /* Botão de faixa: compacto, com número */
+  .track-btn {
+    min-height: 52px !important;
+    height: auto !important;
+    border-radius: 12px !important;
+    padding: 8px 10px !important;
+    font-size: clamp(.78rem, 3.2vw, .9rem) !important;
+    line-height: 1.2 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+    text-align: left !important;
+    border: 1px solid rgba(241,196,15,.28) !important;
+    background: linear-gradient(160deg, rgba(22,22,22,.97), rgba(8,8,8,.99)) !important;
+    color: #fff !important;
+    cursor: pointer !important;
+    -webkit-tap-highlight-color: rgba(241,196,15,.12) !important;
+  }
+
+  /* Número da faixa (counter via CSS) */
+  .track-grid {
+    counter-reset: track-counter !important;
+  }
+
+  .track-btn {
+    counter-increment: track-counter !important;
+    position: relative !important;
+  }
+
+  .track-btn::before {
+    content: counter(track-counter, decimal-leading-zero) !important;
+    flex-shrink: 0 !important;
+    font-size: .62rem !important;
+    font-weight: 900 !important;
+    color: rgba(241,196,15,.55) !important;
+    font-family: monospace !important;
+    line-height: 1 !important;
+    min-width: 22px !important;
+    padding-top: 1px !important;
+  }
+
+  /* Estados correto/errado */
+  .track-btn.correct {
+    background: rgba(13,120,54,.92) !important;
+    border-color: #1ed760 !important;
+    box-shadow: 0 0 14px rgba(30,215,96,.25) !important;
+  }
+
+  .track-btn.wrong {
+    background: rgba(132,24,20,.92) !important;
+    border-color: #ff3b30 !important;
+    box-shadow: 0 0 14px rgba(255,59,48,.2) !important;
+  }
+
+  .track-btn:disabled {
+    opacity: .45 !important;
+    cursor: default !important;
+  }
+}
+</style>
+
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1JCN94Y3P0"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -5514,6 +5725,30 @@ renderAlbums();
 })();
 </script>
 <!-- /CBJR POP-UP DE CONQUISTA DESBLOQUEADA -->
+
+
+<script id="radio-mobile-js">
+/* Pular intro automaticamente no mobile */
+(function() {
+  if (window.innerWidth <= 760) {
+    document.addEventListener('DOMContentLoaded', function() {
+      // Aguarda o init da página e pula a intro
+      setTimeout(function() {
+        if (typeof fecharIntroRadio === 'function') {
+          fecharIntroRadio();
+        } else {
+          // Fallback: esconder o elemento diretamente
+          var intro = document.getElementById('radioIntro');
+          if (intro) {
+            intro.style.display = 'none';
+            document.body.classList.remove('has-intro');
+          }
+        }
+      }, 80);
+    });
+  }
+})();
+</script>
 
 </body>
 </html>
