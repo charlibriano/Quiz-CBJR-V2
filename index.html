@@ -3453,6 +3453,14 @@
       display: none !important;
     }
 
+    /* Boot screen some automaticamente quando já logado */
+    body.auth-logged-in .boot-screen {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+      transition: none !important;
+    }
+
     body.auth-loading,
     body.auth-logged-out {
       min-height: 100vh;
@@ -4018,17 +4026,6 @@
   } catch (e) {}
 </script>
 
-  </style>
-</head>
-<body class="auth-loading">
-<script>
-  try {
-    if (localStorage.getItem('cbjr_google_logged') === '1') {
-      document.body.classList.remove('auth-loading', 'auth-logged-out');
-      document.body.classList.add('auth-logged-in');
-    }
-  } catch (e) {}
-</script>
 
   <section class="login-screen" id="loginScreen" aria-live="polite">
     <div class="login-card">
@@ -4341,7 +4338,7 @@
   <script>
     const infoBtn = document.getElementById('infoBtn');
     const infoModal = document.getElementById('infoModal');
-    const closeModal = document.getElementById('closeModal');
+    const closeModal = document.getElementById('infoModalClose');
     const soundBtn = document.getElementById('soundBtn');
 
     infoBtn.addEventListener('click', () => {
@@ -4495,6 +4492,16 @@
       } catch (error) {}
     }
     applySkipIntroPatch();
+
+    // Se já logado e sem skipIntro, ocultar boot screen automaticamente
+    if (!CBJR_SKIP_INTRO_PATCH && document.body.classList.contains('auth-logged-in')) {
+      if (bootScreen) {
+        bootScreen.classList.add('hide');
+        bootScreen.setAttribute('aria-hidden', 'true');
+        setTimeout(() => { bootScreen.style.display = 'none'; }, 50);
+      }
+    }
+
     bootAudio.preload = 'auto';
     bootAudio.volume = 0.72;
 
@@ -5583,8 +5590,15 @@
 </script>
 
 <!-- CBJR FIREBASE PROGRESS CORE V1 — sincronização por conta Google -->
-<script type="module" src="./firebase-progress.js"></script>
-</body>
-</html>
+<script>
+/* firebase-progress.js — carregado opcionalmente para não travar se ausente */
+(function() {
+  var s = document.createElement('script');
+  s.type = 'module';
+  s.src = './firebase-progress.js';
+  s.onerror = function() { console.warn('firebase-progress.js não encontrado — progresso local ativo.'); };
+  document.body.appendChild(s);
+})();
+</script>
 </body>
 </html>
