@@ -7258,19 +7258,30 @@ body.tela-pergunta .answer-btn {
 
         qPlayer.playPauseBtn?.addEventListener('click', async () => {
           await loadPlaylist();
-          if (qPlayer.audio.paused) {
+          // Se o audio não tem src ainda mas já carregou a playlist, tenta de novo
+          if (!qPlayer.audio.src && qState.playlist.length) {
+            loadTrack(qState.currentIndex, false);
+          }
+          if (!qPlayer.audio.paused && qPlayer.audio.readyState > 0) {
+            // Está tocando — pausar
+            qPlayer.audio.pause();
+            localStorage.setItem('cbjr-v2-player-was-playing', '0');
+            qPlayer.playPauseBtn.textContent = '▶';
+          } else {
+            // Parado ou em loading — tentar tocar
             try {
-              await qPlayer.audio.play();
+              const playPromise = qPlayer.audio.play();
+              if (playPromise !== undefined) {
+                await playPromise;
+              }
               qState.userStarted = true;
               localStorage.setItem('cbjr-v2-player-was-playing', '1');
               qPlayer.playPauseBtn.textContent = '⏸';
             } catch (error) {
-              setTitle('Clique novamente para liberar o áudio');
+              // Falha de autoplay no mobile — mostrar mensagem e tentar novamente
+              setTitle('Toque novamente para iniciar');
+              qState.loaded = false; // Permite recarregar na próxima tentativa
             }
-          } else {
-            qPlayer.audio.pause();
-            localStorage.setItem('cbjr-v2-player-was-playing', '0');
-            qPlayer.playPauseBtn.textContent = '▶';
           }
         });
 
@@ -8228,1257 +8239,383 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
 </script>
 <!-- /CBJR POP-UP DE CONQUISTA DESBLOQUEADA -->
 
-</body>
-</html>
-<!-- =============================================================
-     CORREÇÃO FELIPE — SOMENTE PERGUNTA MENOR + RESPOSTAS RESTAURADAS
-     ============================================================= -->
-<style>
-  body.tela-pergunta .question-kicker {
-    font-size: 0.72rem !important;
-    line-height: 1 !important;
-    margin: 0 0 8px !important;
-    letter-spacing: .20em !important;
+
+<style id="cbjr-mobile-quiz-definitivo">
+/* ============================================================
+   QUIZ CBJR — MOBILE DEFINITIVO
+   No celular: abandona a moldura da imagem.
+   Layout limpo com card branco centralizado, scrollável.
+   ============================================================ */
+
+/* --- TELA DE PERGUNTA MOBILE --- */
+@media (max-width: 760px) {
+
+  /* Fundo escuro simples, sem tentar encaixar na moldura */
+  body.tela-pergunta {
+    width: 100vw !important;
+    min-height: 100svh !important;
+    height: auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    background-image:
+      linear-gradient(180deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.88) 100%),
+      url('https://charlibriano.github.io/Quiz-CBJR-V2/quiz-pergunta.jpg') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-attachment: fixed !important;
+    background-color: #000 !important;
   }
 
-  /* PERGUNTA: fonte menor de verdade, sem mexer nas respostas */
-  body.tela-pergunta .question-text {
+  /* Quiz screen: fluxo normal, scrollável */
+  body.tela-pergunta #quizScreen.active {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100svh !important;
+    overflow: visible !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    padding: 70px 12px 100px !important;
+    background: transparent !important;
+    z-index: 5 !important;
+  }
+
+  /* Topbar fixo no topo */
+  body.tela-pergunta .topbar {
+    position: fixed !important;
+    top: 8px !important;
+    left: 8px !important;
+    right: 8px !important;
+    z-index: 50 !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  body.tela-pergunta .menu-btn,
+  body.tela-pergunta .power-btn {
+    min-height: 38px !important;
+    padding: 0 12px !important;
+    font-size: .82rem !important;
+    background: rgba(0,0,0,.72) !important;
+    border: 1px solid rgba(241,196,15,.72) !important;
+    color: #f1c40f !important;
+  }
+
+  /* Balão do Chorão: oculto no mobile, não faz sentido */
+  body.tela-pergunta #choraoBalloon,
+  body.tela-pergunta .chorao-balloon {
+    display: none !important;
+  }
+
+  /* HUD: visível e compacto no mobile */
+  body.tela-pergunta .quiz-hud {
+    display: grid !important;
+    position: relative !important;
+    top: auto !important; left: auto !important; right: auto !important;
+    width: 100% !important;
+    max-width: 480px !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 6px !important;
+    margin: 0 0 10px 0 !important;
+    z-index: 8 !important;
+  }
+
+  body.tela-pergunta .hud-card {
+    padding: 6px 4px !important;
+    border-radius: 10px !important;
+    text-align: center !important;
+  }
+
+  body.tela-pergunta .hud-card small {
+    display: none !important;
+  }
+
+  body.tela-pergunta .hud-card strong {
+    font-size: .78rem !important;
+  }
+
+  /* Painel do quiz: card branco limpo, centralizado */
+  body.tela-pergunta .quiz-panel {
+    position: relative !important;
+    left: auto !important; right: auto !important;
+    top: auto !important; bottom: auto !important;
+    width: min(96vw, 480px) !important;
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    margin: 0 auto !important;
+    padding: 20px 16px 18px !important;
+    background: rgba(255,255,255,.95) !important;
+    border-radius: 20px !important;
+    border: 2px solid rgba(0,0,0,.14) !important;
+    box-shadow: 0 16px 44px rgba(0,0,0,.52) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    overflow: visible !important;
+    z-index: 10 !important;
+    color: #050505 !important;
+  }
+
+  body.tela-pergunta .quiz-panel::before,
+  body.tela-pergunta .quiz-panel::after {
+    display: none !important;
+  }
+
+  body.tela-pergunta .quote-line {
+    display: none !important;
+  }
+
+  /* Kicker (Pergunta X de Y) */
+  body.tela-pergunta .question-kicker,
+  body.tela-pergunta #questionKicker {
+    font-size: .72rem !important;
+    font-weight: 900 !important;
+    color: #c89200 !important;
+    letter-spacing: .14em !important;
+    text-align: center !important;
+    text-transform: uppercase !important;
+    margin: 0 0 10px !important;
+    text-shadow: none !important;
+  }
+
+  /* Pergunta: texto legível, tamanho decente */
+  body.tela-pergunta .question-text,
+  body.tela-pergunta #questionText {
     font-family: Arial, Helvetica, sans-serif !important;
-    font-size: min(var(--question-pixel-size, 18px), 18px) !important;
-    line-height: 1.12 !important;
-    font-weight: 760 !important;
-    letter-spacing: 0 !important;
+    font-size: clamp(1rem, 4.2vw, 1.22rem) !important;
+    font-weight: 800 !important;
+    line-height: 1.32 !important;
+    letter-spacing: .005em !important;
     text-transform: uppercase !important;
     text-align: center !important;
-    color: #050505 !important;
-
-    width: 100% !important;
-    max-width: 74% !important;
+    color: #111 !important;
+    text-shadow: none !important;
     min-height: 0 !important;
-    max-height: 88px !important;
-    margin: 0 auto 22px !important;
-    padding: 0 4px !important;
-
-    overflow: hidden !important;
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    white-space: normal !important;
     word-break: normal !important;
     overflow-wrap: break-word !important;
-    text-wrap: balance !important;
+    margin: 0 0 16px !important;
+    padding: 0 4px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: block !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  /* Grid de respostas */
+  body.tela-pergunta .answers-grid,
+  body.tela-pergunta #answersGrid {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 9px !important;
+  }
+
+  /* Botão de resposta */
+  body.tela-pergunta .answer-btn {
+    min-height: 48px !important;
+    max-height: none !important;
+    height: auto !important;
+    border-radius: 14px !important;
+    border: 2px solid rgba(0,0,0,.82) !important;
+    background: rgba(6,6,6,.94) !important;
+    color: #fff !important;
+    display: grid !important;
+    grid-template-columns: 36px 1fr !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 10px 14px !important;
+    font-size: clamp(.9rem, 3.8vw, 1.05rem) !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
     transform: none !important;
     opacity: 1 !important;
-    position: relative !important;
-    z-index: 2 !important;
+    cursor: pointer !important;
   }
 
-  body.tela-pergunta .question-text.q-fit-long,
-  body.tela-pergunta .question-text.q-pixel-tight {
-    font-size: 16px !important;
-    line-height: 1.08 !important;
-    font-weight: 720 !important;
-    max-width: 78% !important;
-    margin-bottom: 20px !important;
+  body.tela-pergunta .answer-btn.show {
+    animation: respostaEntrada .4s ease forwards !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 
-  body.tela-pergunta .question-text.q-fit-very-long {
-    font-size: 14px !important;
-    line-height: 1.06 !important;
-    font-weight: 700 !important;
-    max-width: 82% !important;
-    margin-bottom: 18px !important;
-  }
-
-  /* RESPOSTAS: restauradas para não ficarem pequenas/espremidas */
-  body.tela-pergunta .answers-grid {
-    width: min(72%, 760px) !important;
-    max-width: 760px !important;
-    margin: 0 auto !important;
-    gap: clamp(10px, 1.25vh, 14px) !important;
-    position: relative !important;
-    z-index: 9 !important;
-  }
-
-  body.tela-pergunta .answer-btn {
-    min-height: clamp(48px, 6vh, 60px) !important;
-    max-height: none !important;
-    padding: 9px 20px !important;
-    font-size: clamp(.9rem, 1.05vw, 1.08rem) !important;
-    line-height: 1.15 !important;
-    font-weight: 850 !important;
-    grid-template-columns: 40px 1fr !important;
-    gap: 12px !important;
+  body.tela-pergunta .answer-btn span:last-child {
+    white-space: normal !important;
+    overflow: visible !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+    text-align: left !important;
+    min-width: 0 !important;
   }
 
   body.tela-pergunta .answer-letter {
     width: 32px !important;
     height: 32px !important;
     min-width: 32px !important;
-    font-size: .9rem !important;
+    font-size: .88rem !important;
+    font-weight: 950 !important;
+    border-color: #f1c40f !important;
+    color: #f1c40f !important;
+    background: #111 !important;
   }
 
-  @media (max-width: 900px) {
-    body.tela-pergunta .question-text {
-      font-size: min(var(--question-pixel-size, 15px), 15px) !important;
-      line-height: 1.1 !important;
-      max-width: 86% !important;
-      max-height: 74px !important;
-      margin-bottom: 14px !important;
-    }
-
-    body.tela-pergunta .question-text.q-fit-long,
-    body.tela-pergunta .question-text.q-pixel-tight {
-      font-size: 13px !important;
-      line-height: 1.06 !important;
-      max-width: 90% !important;
-    }
-
-    body.tela-pergunta .question-text.q-fit-very-long {
-      font-size: 11px !important;
-      line-height: 1.04 !important;
-      max-width: 94% !important;
-    }
-
-    body.tela-pergunta .answers-grid {
-      width: 92% !important;
-      gap: 8px !important;
-    }
-
-    body.tela-pergunta .answer-btn {
-      min-height: 44px !important;
-      padding: 8px 12px !important;
-      font-size: .82rem !important;
-      grid-template-columns: 30px 1fr !important;
-      gap: 9px !important;
-    }
-
-    body.tela-pergunta .answer-letter {
-      width: 26px !important;
-      height: 26px !important;
-      min-width: 26px !important;
-      font-size: .74rem !important;
-    }
-  }
-
-
-/* =============================================================
-   CORREÇÃO FINAL — PEDIDO DO FELIPE
-   1) Reduz SOMENTE a fonte da PERGUNTA, com padrão fixo e sem negrito.
-   2) Mantém/restaura as OPÇÕES DE RESPOSTA legíveis, sem abreviar com "...".
-   3) Não altera lógica do quiz, JSON, player, telas ou fluxo.
-   ============================================================= */
-body.tela-pergunta .question-kicker {
-  font-size: 14px !important;
-  line-height: 1.1 !important;
-  font-weight: 700 !important;
-  letter-spacing: .18em !important;
-  margin: 0 auto 10px !important;
-  text-align: center !important;
-}
-
-body.tela-pergunta .question-text,
-body.tela-pergunta .question-text.q-long,
-body.tela-pergunta .question-text.q-very-long {
-  font-family: Arial, Helvetica, sans-serif !important;
-  font-size: 18px !important;
-  line-height: 1.28 !important;
-  font-weight: 400 !important;
-  letter-spacing: 0 !important;
-  text-transform: uppercase !important;
-  text-align: center !important;
-  width: min(78%, 680px) !important;
-  max-width: 680px !important;
-  min-height: 0 !important;
-  max-height: none !important;
-  margin: 0 auto 28px !important;
-  padding: 0 !important;
-  white-space: normal !important;
-  overflow: visible !important;
-  text-overflow: clip !important;
-  word-break: normal !important;
-  overflow-wrap: normal !important;
-  text-wrap: balance !important;
-}
-
-body.tela-pergunta .answers-grid {
-  width: min(72%, 760px) !important;
-  max-width: 760px !important;
-  margin: 0 auto !important;
-  gap: 12px !important;
-}
-
-body.tela-pergunta .answer-btn {
-  min-height: 52px !important;
-  max-height: none !important;
-  height: auto !important;
-  padding: 10px 22px !important;
-  grid-template-columns: 40px minmax(0, 1fr) !important;
-  gap: 14px !important;
-  font-family: Arial, Helvetica, sans-serif !important;
-  font-size: 18px !important;
-  line-height: 1.22 !important;
-  font-weight: 700 !important;
-  white-space: normal !important;
-  overflow: visible !important;
-  text-overflow: clip !important;
-  align-items: center !important;
-}
-
-body.tela-pergunta .answer-btn span:not(.answer-letter),
-body.tela-pergunta .answer-btn .answer-text {
-  white-space: normal !important;
-  overflow: visible !important;
-  text-overflow: clip !important;
-  word-break: normal !important;
-  overflow-wrap: break-word !important;
-  min-width: 0 !important;
-  display: block !important;
-}
-
-body.tela-pergunta .answer-letter {
-  width: 34px !important;
-  height: 34px !important;
-  min-width: 34px !important;
-  font-size: 16px !important;
-  font-weight: 800 !important;
-}
-
-@media (max-width: 900px) {
-  body.tela-pergunta .question-kicker {
-    font-size: 11px !important;
-    margin-bottom: 7px !important;
-  }
-
-  body.tela-pergunta .question-text,
-  body.tela-pergunta .question-text.q-long,
-  body.tela-pergunta .question-text.q-very-long {
-    font-size: 14px !important;
-    line-height: 1.24 !important;
-    font-weight: 400 !important;
-    width: 86% !important;
-    max-width: 86% !important;
-    margin-bottom: 16px !important;
-  }
-
-  body.tela-pergunta .answers-grid {
-    width: 92% !important;
-    gap: 8px !important;
-  }
-
-  body.tela-pergunta .answer-btn {
-    min-height: 42px !important;
-    padding: 8px 12px !important;
-    grid-template-columns: 30px minmax(0, 1fr) !important;
-    gap: 9px !important;
-    font-size: 13px !important;
-    line-height: 1.18 !important;
-  }
-
-  body.tela-pergunta .answer-letter {
-    width: 26px !important;
-    height: 26px !important;
-    min-width: 26px !important;
-    font-size: 12px !important;
-  }
-}
-
-
-/* =============================================================
-   CORREÇÃO FINAL REAL — SOMENTE LEITURA DA PERGUNTA E RESPOSTAS
-   - Pergunta com fonte menor, padrão e sem negrito.
-   - Respostas legíveis, sem "...", mas sem aumentar exagerado.
-   - Não altera player, JSON, fluxo, fundo ou botões superiores.
-   ============================================================= */
-body.tela-pergunta .question-kicker {
-  font-family: Arial, Helvetica, sans-serif !important;
-  font-size: 12px !important;
-  line-height: 1.1 !important;
-  font-weight: 700 !important;
-  letter-spacing: .18em !important;
-  margin: 0 auto 8px !important;
-  text-align: center !important;
-}
-
-body.tela-pergunta .question-text,
-body.tela-pergunta .question-text.q-long,
-body.tela-pergunta .question-text.q-very-long,
-body.tela-pergunta .question-text.q-fit-long,
-body.tela-pergunta .question-text.q-fit-very-long,
-body.tela-pergunta .question-text.q-pixel-tight {
-  font-family: Arial, Helvetica, sans-serif !important;
-  font-size: 15px !important;
-  line-height: 1.24 !important;
-  font-weight: 400 !important;
-  letter-spacing: 0 !important;
-  text-transform: uppercase !important;
-  text-align: center !important;
-  color: #050505 !important;
-
-  display: block !important;
-  width: 92% !important;
-  max-width: 92% !important;
-  min-height: 0 !important;
-  max-height: none !important;
-  margin: 0 auto 22px !important;
-  padding: 0 8px !important;
-
-  white-space: normal !important;
-  overflow: visible !important;
-  text-overflow: clip !important;
-  word-break: normal !important;
-  overflow-wrap: break-word !important;
-  text-wrap: balance !important;
-  transform: none !important;
-  opacity: 1 !important;
-  position: relative !important;
-  z-index: 2 !important;
-}
-
-body.tela-pergunta .answers-grid {
-  width: min(64%, 690px) !important;
-  max-width: 690px !important;
-  margin: 0 auto !important;
-  gap: 9px !important;
-  position: relative !important;
-  z-index: 9 !important;
-}
-
-body.tela-pergunta .answer-btn {
-  min-height: 42px !important;
-  max-height: none !important;
-  height: auto !important;
-  padding: 7px 16px !important;
-  grid-template-columns: 32px minmax(0, 1fr) !important;
-  gap: 10px !important;
-  font-family: Arial, Helvetica, sans-serif !important;
-  font-size: 15px !important;
-  line-height: 1.15 !important;
-  font-weight: 700 !important;
-  white-space: normal !important;
-  overflow: visible !important;
-  text-overflow: clip !important;
-  align-items: center !important;
-}
-
-body.tela-pergunta .answer-btn span:not(.answer-letter),
-body.tela-pergunta .answer-btn .answer-text {
-  white-space: normal !important;
-  overflow: visible !important;
-  text-overflow: clip !important;
-  word-break: normal !important;
-  overflow-wrap: break-word !important;
-  min-width: 0 !important;
-  display: block !important;
-}
-
-body.tela-pergunta .answer-letter {
-  width: 28px !important;
-  height: 28px !important;
-  min-width: 28px !important;
-  font-size: 13px !important;
-  font-weight: 800 !important;
-}
-
-@media (max-width: 900px) {
-  body.tela-pergunta .question-kicker {
-    font-size: 10px !important;
-    margin-bottom: 6px !important;
-  }
-
-  body.tela-pergunta .question-text,
-  body.tela-pergunta .question-text.q-long,
-  body.tela-pergunta .question-text.q-very-long,
-  body.tela-pergunta .question-text.q-fit-long,
-  body.tela-pergunta .question-text.q-fit-very-long,
-  body.tela-pergunta .question-text.q-pixel-tight {
-    font-size: 12px !important;
-    line-height: 1.18 !important;
-    font-weight: 400 !important;
-    width: 94% !important;
-    max-width: 94% !important;
-    margin-bottom: 12px !important;
-    padding: 0 4px !important;
-  }
-
-  body.tela-pergunta .answers-grid {
-    width: 92% !important;
-    gap: 7px !important;
-  }
-
-  body.tela-pergunta .answer-btn {
-    min-height: 38px !important;
-    padding: 6px 10px !important;
-    grid-template-columns: 26px minmax(0, 1fr) !important;
-    gap: 8px !important;
-    font-size: 12px !important;
-    line-height: 1.14 !important;
-  }
-
-  body.tela-pergunta .answer-letter {
-    width: 23px !important;
-    height: 23px !important;
-    min-width: 23px !important;
-    font-size: 11px !important;
-  }
-}
-
-</style>
-
-
-<!-- =============================================================
-     AJUSTE FINAL DEFINITIVO FELIPE — NÃO MEXER EM PLAYER / FUNDO / FLUXO
-     Objetivo: diminuir SOMENTE a pergunta e restaurar opções legíveis.
-     ============================================================= -->
-<style id="ajuste-final-felipe-pergunta-respostas">
-  body.tela-pergunta #questionText,
-  body.tela-pergunta .question-text,
-  body.tela-pergunta .question-text.show,
-  body.tela-pergunta .question-text.q-long,
-  body.tela-pergunta .question-text.q-very-long,
-  body.tela-pergunta .question-text.q-fit-long,
-  body.tela-pergunta .question-text.q-fit-very-long,
-  body.tela-pergunta .question-text.q-pixel-tight {
-    font-family: Arial, Helvetica, sans-serif !important;
-    font-size: 16px !important;
-    line-height: 1.28 !important;
-    font-weight: 400 !important;
-    letter-spacing: 0 !important;
-    text-transform: uppercase !important;
-    text-align: center !important;
-    color: #050505 !important;
-
-    display: block !important;
-    width: min(76%, 760px) !important;
-    max-width: 760px !important;
-    min-height: 0 !important;
-    height: auto !important;
-    max-height: none !important;
-
-    margin: 0 auto 34px !important;
-    padding: 0 10px !important;
-
-    white-space: normal !important;
-    overflow: visible !important;
-    text-overflow: clip !important;
-    word-break: normal !important;
-    overflow-wrap: break-word !important;
-    text-wrap: balance !important;
-
-    transform: none !important;
-    opacity: 1 !important;
-    position: relative !important;
-    z-index: 3 !important;
-  }
-
-  body.tela-pergunta .question-kicker {
-    font-family: Arial, Helvetica, sans-serif !important;
-    font-size: 13px !important;
-    line-height: 1.1 !important;
-    font-weight: 700 !important;
-    letter-spacing: .18em !important;
-    text-align: center !important;
-    margin: 0 auto 12px !important;
-    color: #d6a300 !important;
-  }
-
-  body.tela-pergunta #answersGrid,
-  body.tela-pergunta .answers-grid {
-    width: min(58%, 660px) !important;
-    max-width: 660px !important;
-    margin: 0 auto !important;
-    gap: 10px !important;
-    position: relative !important;
-    z-index: 5 !important;
-    overflow: visible !important;
-  }
-
-  body.tela-pergunta .answer-btn {
-    min-height: 46px !important;
-    height: auto !important;
-    max-height: none !important;
-    padding: 8px 16px !important;
-    grid-template-columns: 34px minmax(0, 1fr) !important;
-    gap: 11px !important;
-    font-family: Arial, Helvetica, sans-serif !important;
-    font-size: 15px !important;
-    line-height: 1.18 !important;
-    font-weight: 700 !important;
-    white-space: normal !important;
-    overflow: visible !important;
-    text-overflow: clip !important;
-    align-items: center !important;
-    border-radius: 999px !important;
-  }
-
-  body.tela-pergunta .answer-btn span:not(.answer-letter),
-  body.tela-pergunta .answer-btn .answer-text {
-    white-space: normal !important;
-    overflow: visible !important;
-    text-overflow: clip !important;
-    word-break: normal !important;
-    overflow-wrap: break-word !important;
-    min-width: 0 !important;
-    display: block !important;
-  }
-
-  body.tela-pergunta .answer-letter {
-    width: 30px !important;
-    height: 30px !important;
-    min-width: 30px !important;
-    font-size: 13px !important;
-    font-weight: 800 !important;
-  }
-
-  @media (max-width: 900px) {
-    body.tela-pergunta #questionText,
-    body.tela-pergunta .question-text,
-    body.tela-pergunta .question-text.show,
-    body.tela-pergunta .question-text.q-long,
-    body.tela-pergunta .question-text.q-very-long,
-    body.tela-pergunta .question-text.q-fit-long,
-    body.tela-pergunta .question-text.q-fit-very-long,
-    body.tela-pergunta .question-text.q-pixel-tight {
-      font-size: 12px !important;
-      line-height: 1.2 !important;
-      font-weight: 400 !important;
-      width: 88% !important;
-      max-width: 88% !important;
-      margin-bottom: 14px !important;
-      padding: 0 4px !important;
-    }
-
-    body.tela-pergunta .question-kicker {
-      font-size: 10px !important;
-      margin-bottom: 6px !important;
-    }
-
-    body.tela-pergunta #answersGrid,
-    body.tela-pergunta .answers-grid {
-      width: 88% !important;
-      gap: 7px !important;
-    }
-
-    body.tela-pergunta .answer-btn {
-      min-height: 38px !important;
-      padding: 6px 10px !important;
-      grid-template-columns: 26px minmax(0, 1fr) !important;
-      gap: 8px !important;
-      font-size: 12px !important;
-      line-height: 1.15 !important;
-    }
-
-    body.tela-pergunta .answer-letter {
-      width: 23px !important;
-      height: 23px !important;
-      min-width: 23px !important;
-      font-size: 11px !important;
-    }
-  }
-
-/* =============================================================
-   CORREÇÃO FINAL REAL — PERGUNTA COMPLETA E MENOR
-   Aplica por último para sobrescrever todos os blocos anteriores.
-   ============================================================= */
-body.tela-pergunta .quiz-panel {
-  overflow: visible !important;
-}
-
-body.tela-pergunta .question-text {
-  min-height: auto !important;
-  max-height: none !important;
-  height: auto !important;
-  overflow: visible !important;
-
-  margin: 0 auto 22px !important;
-  padding: 0 14px !important;
-
-  width: 100% !important;
-  max-width: 100% !important;
-
-  color: #050505 !important;
-  font-family: Arial, Helvetica, sans-serif !important;
-  font-size: 1.55rem !important;
-  line-height: 1.25 !important;
-  font-weight: 400 !important;
-  letter-spacing: 0 !important;
-  text-align: center !important;
-  text-transform: uppercase !important;
-
-  display: block !important;
-  white-space: normal !important;
-  word-break: normal !important;
-  overflow-wrap: normal !important;
-  text-shadow: none !important;
-}
-
-body.tela-pergunta .answers-grid {
-  margin-top: 0 !important;
-}
-
-body.tela-pergunta .answer-btn {
-  white-space: normal !important;
-  overflow: visible !important;
-  text-overflow: unset !important;
-}
-
-body.tela-pergunta .answer-btn span,
-body.tela-pergunta .answer-btn div,
-body.tela-pergunta .answer-btn p {
-  white-space: normal !important;
-  overflow: visible !important;
-  text-overflow: unset !important;
-}
-
-/* Desktop maior: mantém pergunta menor, sem invadir */
-@media (min-width: 901px) {
-  body.tela-pergunta .question-text {
-    font-size: 1.45rem !important;
-    line-height: 1.25 !important;
-    margin-bottom: 24px !important;
-  }
-}
-
-/* Celular/tablet: reduz proporcionalmente */
-@media (max-width: 900px) {
-  body.tela-pergunta .question-text {
-    font-size: 1rem !important;
-    line-height: 1.22 !important;
-    margin-bottom: 12px !important;
-    padding: 0 6px !important;
-  }
-}
-
-
-
-/* =============================================================
-   CORREÇÃO SEGURA FELIPE — SOMENTE TELA DE PERGUNTA
-   Não altera tela de dificuldade, botões dos níveis, JS ou player.
-   Objetivo: usar melhor a moldura branca, impedir pergunta atrás das respostas
-   e deixar respostas menores/centralizadas.
-   ============================================================= */
-body.tela-pergunta {
-  width: 100vw !important;
-  height: 100svh !important;
-  min-height: 100svh !important;
-  overflow: hidden !important;
-  background-image: url('https://charlibriano.github.io/Quiz-CBJR-V2/quiz-pergunta.jpg') !important;
-  background-repeat: no-repeat !important;
-  background-position: center center !important;
-  background-size: cover !important;
-  background-color: #000 !important;
-}
-
-body.tela-pergunta #quizScreen.active {
-  position: fixed !important;
-  inset: 0 !important;
-  width: 100vw !important;
-  height: 100svh !important;
-  min-height: 100svh !important;
-  display: block !important;
-  overflow: hidden !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  background: transparent !important;
-  z-index: 5 !important;
-}
-
-body.tela-pergunta .topbar {
-  position: fixed !important;
-  top: clamp(14px, 2.3vh, 28px) !important;
-  left: clamp(18px, 1.8vw, 36px) !important;
-  right: clamp(18px, 1.8vw, 36px) !important;
-  z-index: 40 !important;
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-}
-
-body.tela-pergunta .topbar-center,
-body.tela-pergunta .quiz-hud,
-body.tela-pergunta .quote-line,
-body.tela-pergunta .next-row,
-body.tela-pergunta #nextQuestionBtn {
-  display: none !important;
-}
-
-body.tela-pergunta .menu-btn,
-body.tela-pergunta .power-btn {
-  min-height: 42px !important;
-  padding: 0 18px !important;
-  border-radius: 999px !important;
-  background: rgba(8,8,8,.74) !important;
-  border: 1px solid rgba(241,196,15,.72) !important;
-  color: #f1c40f !important;
-  box-shadow: 0 10px 24px rgba(0,0,0,.26) !important;
-}
-
-body.tela-pergunta .quiz-panel {
-  position: fixed !important;
-  left: 43.8vw !important;
-  right: 5.2vw !important;
-  top: 9.2vh !important;
-  bottom: 4.8vh !important;
-  width: auto !important;
-  height: auto !important;
-  min-height: 0 !important;
-  margin: 0 !important;
-  padding: 6.2vh 3.2vw 5.2vh !important;
-  background: transparent !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  color: #050505 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  align-items: stretch !important;
-  overflow: hidden !important;
-  z-index: 12 !important;
-}
-
-body.tela-pergunta .quiz-panel::before,
-body.tela-pergunta .quiz-panel::after {
-  display: none !important;
-}
-
-body.tela-pergunta .question-kicker {
-  margin: 0 0 1.1vh !important;
-  color: #d6a300 !important;
-  font-family: Arial, Helvetica, sans-serif !important;
-  font-size: clamp(.72rem, .88vw, .98rem) !important;
-  font-weight: 1000 !important;
-  line-height: 1.1 !important;
-  text-align: center !important;
-  text-transform: uppercase !important;
-  letter-spacing: .18em !important;
-  text-shadow: none !important;
-  flex: 0 0 auto !important;
-}
-
-body.tela-pergunta .question-text {
-  width: 100% !important;
-  min-height: 0 !important;
-  max-height: none !important;
-  margin: 0 auto 2.6vh !important;
-  padding: 0 1.2vw !important;
-  color: #050505 !important;
-  font-family: Arial, Helvetica, sans-serif !important;
-  font-size: clamp(1.15rem, 2.05vw, 2.55rem) !important;
-  font-weight: 1000 !important;
-  line-height: 1.12 !important;
-  letter-spacing: .005em !important;
-  text-align: center !important;
-  text-transform: uppercase !important;
-  text-shadow: none !important;
-  display: block !important;
-  overflow: visible !important;
-  word-break: normal !important;
-  overflow-wrap: anywhere !important;
-  flex: 0 0 auto !important;
-}
-
-body.tela-pergunta .answers-grid {
-  width: min(68%, 660px) !important;
-  margin: 0 auto !important;
-  display: grid !important;
-  grid-template-columns: 1fr !important;
-  gap: clamp(8px, 1.15vh, 12px) !important;
-  flex: 0 0 auto !important;
-}
-
-body.tela-pergunta .answer-btn {
-  min-height: clamp(42px, 5.85vh, 58px) !important;
-  border-radius: 999px !important;
-  border: 1px solid rgba(0,0,0,.92) !important;
-  background: rgba(7,7,7,.94) !important;
-  color: #fff !important;
-  display: grid !important;
-  grid-template-columns: clamp(28px, 2.45vw, 38px) 1fr !important;
-  gap: clamp(8px, .9vw, 13px) !important;
-  align-items: center !important;
-  padding: clamp(6px, .7vw, 10px) clamp(14px, 1.55vw, 22px) !important;
-  font-size: clamp(.82rem, 1.03vw, 1.08rem) !important;
-  font-weight: 850 !important;
-  line-height: 1.12 !important;
-  box-shadow: none !important;
-  text-align: left !important;
-}
-
-body.tela-pergunta .answer-letter {
-  width: clamp(26px, 2.45vw, 34px) !important;
-  height: clamp(26px, 2.45vw, 34px) !important;
-  border: 2px solid #f1c40f !important;
-  color: #f1c40f !important;
-  background: #111 !important;
-  font-size: clamp(.72rem, .86vw, .95rem) !important;
-  font-weight: 1000 !important;
-}
-
-body.tela-pergunta .feedback-box {
-  position: static !important;
-  width: min(68%, 660px) !important;
-  margin: 1.5vh auto 0 !important;
-  padding: 10px 16px !important;
-  border-radius: 14px !important;
-  background: rgba(255,255,255,.88) !important;
-  color: #050505 !important;
-  border: 1px solid rgba(0,0,0,.22) !important;
-  text-align: center !important;
-  font-size: clamp(.72rem, .88vw, .92rem) !important;
-  line-height: 1.28 !important;
-  box-shadow: 0 8px 22px rgba(0,0,0,.10) !important;
-}
-
-@media (max-width: 1100px) {
-  body.tela-pergunta .quiz-panel {
-    left: 36vw !important;
-    right: 3vw !important;
-    top: 10vh !important;
-    bottom: 4vh !important;
-    padding: 5vh 2.2vw 4vh !important;
-  }
-  body.tela-pergunta .question-text {
-    font-size: clamp(1rem, 2.8vw, 2rem) !important;
-    margin-bottom: 2vh !important;
-  }
-  body.tela-pergunta .answers-grid,
+  /* Feedback */
   body.tela-pergunta .feedback-box {
-    width: 76% !important;
+    position: static !important;
+    left: auto !important; right: auto !important; bottom: auto !important;
+    width: 100% !important;
+    margin: 12px 0 0 !important;
+    padding: 10px 14px !important;
+    border-radius: 12px !important;
+    background: rgba(255,255,255,.96) !important;
+    color: #111 !important;
+    border: 1px solid rgba(0,0,0,.18) !important;
+    font-size: .86rem !important;
+    line-height: 1.32 !important;
+    text-align: center !important;
+    max-height: none !important;
+    overflow: visible !important;
+    opacity: 1 !important;
+    transform: none !important;
+    display: none !important;
   }
-}
 
-@media (max-width: 760px) {
-  body.tela-pergunta {
-    background-position: 23% center !important;
+  body.tela-pergunta .feedback-box.show {
+    display: block !important;
+    opacity: 1 !important;
+    transform: none !important;
+    animation: feedbackIn .3s ease both !important;
   }
-  body.tela-pergunta .topbar {
-    top: 8px !important;
+
+  /* Botão próxima pergunta */
+  body.tela-pergunta .next-row {
+    display: flex !important;
+    justify-content: center !important;
+    margin-top: 14px !important;
+  }
+
+  body.tela-pergunta .next-btn {
+    display: none !important;
+  }
+
+  body.tela-pergunta .next-btn.show {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 44px !important;
+    padding: 0 22px !important;
+    border-radius: 999px !important;
+    background: #000 !important;
+    color: #fff !important;
+    border: 2px solid #000 !important;
+    font-weight: 950 !important;
+    font-size: .9rem !important;
+    cursor: pointer !important;
+  }
+
+  /* Player de música: barra fixa no rodapé */
+  body.tela-pergunta .quiz-music-player,
+  body.tela-pergunta .quiz-music-player.is-compact,
+  body.tela-pergunta .quiz-music-player.is-expanded,
+  body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) {
+    position: fixed !important;
     left: 8px !important;
     right: 8px !important;
-  }
-  body.tela-pergunta .menu-btn,
-  body.tela-pergunta .power-btn {
-    min-height: 34px !important;
-    padding: 0 10px !important;
-    font-size: .78rem !important;
-  }
-  body.tela-pergunta .quiz-panel {
-    left: 33vw !important;
-    right: 2vw !important;
-    top: 11vh !important;
-    bottom: 4vh !important;
-    padding: 4vh 10px 3vh !important;
-  }
-  body.tela-pergunta .question-kicker {
-    font-size: 0.72rem !important;
-    letter-spacing: .12em !important;
-    margin-bottom: 6px !important;
-  }
-  body.tela-pergunta .question-text {
-    font-size: clamp(.86rem, 4vw, 1.35rem) !important;
-    line-height: 1.1 !important;
-    padding: 0 !important;
-    margin-bottom: 10px !important;
-  }
-  body.tela-pergunta .answers-grid {
-    width: 100% !important;
-    gap: 7px !important;
-  }
-  body.tela-pergunta .answer-btn {
-    min-height: 39px !important;
-    grid-template-columns: 24px 1fr !important;
-    gap: 7px !important;
-    padding: 6px 8px !important;
-    font-size: .72rem !important;
-  }
-  body.tela-pergunta .answer-letter {
-    width: 22px !important;
-    height: 22px !important;
-    font-size: 0.72rem !important;
-  }
-  body.tela-pergunta .feedback-box {
-    width: 100% !important;
-    margin-top: 8px !important;
-    padding: 8px 9px !important;
-    font-size: 0.72rem !important;
-    line-height: 1.22 !important;
-  }
-}
-</style>
-
-<script id="ajuste-final-felipe-remove-inline-margin">
-(function(){
-  function fix(){
-    const q = document.getElementById('questionText');
-    const a = document.getElementById('answersGrid');
-    if (q) {
-      q.style.removeProperty('--question-fit-size');
-      q.style.removeProperty('--question-pixel-size');
-      q.style.removeProperty('--question-fit-line');
-      q.style.removeProperty('--question-pixel-line');
-      q.style.fontSize = '';
-      q.style.lineHeight = '';
-      q.style.maxHeight = '';
-      q.style.overflow = '';
-    }
-    if (a) {
-      a.style.marginTop = '';
-    }
-  }
-  document.addEventListener('DOMContentLoaded', fix);
-  window.addEventListener('load', fix);
-  setInterval(fix, 500);
-})();
-</script>
-
-<style id="ajuste-final-felipe-pergunta-subida">
-/* =============================================================
-   AJUSTE FINAL FELIPE — SOBE SOMENTE A PERGUNTA
-   Regra aplicada por último para não mexer na dificuldade,
-   player, botões dos níveis, JS ou lógica do quiz.
-   ============================================================= */
-body.tela-pergunta .quiz-panel {
-  justify-content: flex-start !important;
-}
-
-body.tela-pergunta .question-text,
-body.tela-pergunta #questionText {
-  margin-top: -20px !important;
-}
-
-@media (max-width: 1100px) {
-  body.tela-pergunta .question-text,
-  body.tela-pergunta #questionText {
-    margin-top: -14px !important;
-  }
-}
-
-@media (max-width: 760px) {
-  body.tela-pergunta .question-text,
-  body.tela-pergunta #questionText {
-    margin-top: -8px !important;
-  }
-}
-</style>
-
-
-<style id="ajuste-definitivo-felipe-pergunta-e-respostas-separadas">
-/* =============================================================
-   AJUSTE DEFINITIVO FELIPE — FUNCIONAL
-   - NÃO mexe na tela de dificuldade
-   - NÃO mexe no player
-   - NÃO mexe na lógica do quiz
-   - Separa pergunta e respostas em áreas diferentes
-   ============================================================= */
-body.tela-pergunta .quiz-panel {
-  display: grid !important;
-  grid-template-rows: auto auto 1fr auto !important;
-  align-content: stretch !important;
-  justify-content: stretch !important;
-  overflow: hidden !important;
-}
-
-body.tela-pergunta .question-kicker,
-body.tela-pergunta #questionKicker {
-  grid-row: 1 !important;
-  align-self: start !important;
-  margin: 0 0 8px 0 !important;
-}
-
-body.tela-pergunta .question-text,
-body.tela-pergunta #questionText {
-  grid-row: 2 !important;
-  align-self: start !important;
-  margin: 0 auto !important;
-  padding: 0 12px !important;
-  width: 100% !important;
-  max-height: 28vh !important;
-  overflow: visible !important;
-  font-size: clamp(1.25rem, 2.15vw, 2.45rem) !important;
-  line-height: 1.14 !important;
-}
-
-body.tela-pergunta .answers-grid,
-body.tela-pergunta #answersGrid {
-  grid-row: 4 !important;
-  align-self: end !important;
-  width: min(62%, 650px) !important;
-  margin: 0 auto clamp(28px, 5vh, 58px) auto !important;
-  gap: clamp(9px, 1.25vh, 14px) !important;
-}
-
-body.tela-pergunta .answer-btn {
-  min-height: clamp(40px, 5.8vh, 58px) !important;
-  padding: 7px 18px !important;
-  font-size: clamp(.86rem, 1.05vw, 1.05rem) !important;
-  line-height: 1.12 !important;
-}
-
-body.tela-pergunta .answer-letter {
-  width: clamp(25px, 2.4vw, 34px) !important;
-  height: clamp(25px, 2.4vw, 34px) !important;
-  font-size: clamp(.72rem, .9vw, .9rem) !important;
-}
-
-body.tela-pergunta .feedback-box {
-  position: absolute !important;
-  left: 19% !important;
-  right: 19% !important;
-  bottom: clamp(14px, 2.5vh, 24px) !important;
-  width: auto !important;
-  margin: 0 !important;
-  z-index: 20 !important;
-}
-
-@media (max-width: 1100px) {
-  body.tela-pergunta .question-text,
-  body.tela-pergunta #questionText {
-    font-size: clamp(1.05rem, 2.8vw, 1.9rem) !important;
-    max-height: 30vh !important;
-  }
-
-  body.tela-pergunta .answers-grid,
-  body.tela-pergunta #answersGrid {
-    width: 68% !important;
-    margin-bottom: clamp(22px, 4vh, 42px) !important;
-  }
-}
-
-@media (max-width: 760px) {
-  body.tela-pergunta .quiz-panel {
-    display: grid !important;
-    grid-template-rows: auto auto 1fr auto !important;
-  }
-
-  body.tela-pergunta .question-kicker,
-  body.tela-pergunta #questionKicker {
-    margin-bottom: 5px !important;
-  }
-
-  body.tela-pergunta .question-text,
-  body.tela-pergunta #questionText {
-    font-size: clamp(.86rem, 3.9vw, 1.34rem) !important;
-    line-height: 1.1 !important;
-    max-height: 27vh !important;
-    padding: 0 !important;
-  }
-
-  body.tela-pergunta .answers-grid,
-  body.tela-pergunta #answersGrid {
-    width: 92% !important;
-    margin-bottom: clamp(10px, 2vh, 22px) !important;
-    gap: 6px !important;
-  }
-
-  body.tela-pergunta .answer-btn {
-    min-height: 38px !important;
-    padding: 6px 8px !important;
-    font-size: .72rem !important;
-    grid-template-columns: 24px 1fr !important;
-  }
-
-  body.tela-pergunta .answer-letter {
-    width: 22px !important;
-    height: 22px !important;
-    font-size: 0.72rem !important;
-  }
-}
-
-
-    /* =============================================================
-       REFINAMENTO FINAL — pergunta em negrito e leitura melhor
-       Mantém a estrutura funcional já aprovada.
-       ============================================================= */
-    body.tela-pergunta .question-text {
-      font-weight: 1000 !important;
-      line-height: 1.2 !important;
-      word-break: normal !important;
-      overflow-wrap: anywhere !important;
-      max-width: 90% !important;
-      margin-left: auto !important;
-      margin-right: auto !important;
-    }
-
-
-/* =============================================================
-   FELIPE — ANIMAÇÃO ESTILO SHOW + PEDAL SEM DESLOCAR BOTÕES
-   - mantém o layout aprovado
-   - pergunta entra com efeito de show
-   - respostas acendem como pedal, sem subir/descer e sem sobrepor
-   ============================================================= */
-@keyframes cbjrPerguntaShow {
-  0% {
-    opacity: 0;
-    transform: translateY(-16px) scale(.975);
-    filter: blur(4px);
-    letter-spacing: .04em;
-  }
-  60% {
-    opacity: 1;
-    transform: translateY(2px) scale(1.01);
-    filter: blur(0);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
-    letter-spacing: .005em;
-  }
-}
-
-@keyframes cbjrKickerLight {
-  0% {
-    opacity: 0;
-    text-shadow: 0 0 0 rgba(241,196,15,0);
-  }
-  55% {
-    opacity: 1;
-    text-shadow: 0 0 18px rgba(241,196,15,.72);
-  }
-  100% {
-    opacity: 1;
-    text-shadow: 0 0 10px rgba(241,196,15,.34);
-  }
-}
-
-@keyframes cbjrPedalAcende {
-  0% {
-    opacity: 0;
-    transform: none;
-    filter: brightness(.68);
-    border-color: rgba(0,0,0,.92);
-    box-shadow: inset 0 0 0 rgba(241,196,15,0), 0 0 0 rgba(241,196,15,0);
-  }
-  55% {
-    opacity: 1;
-    transform: none;
-    filter: brightness(1.18);
-    border-color: rgba(241,196,15,.72);
-    box-shadow: inset 0 0 18px rgba(241,196,15,.10), 0 0 20px rgba(241,196,15,.26);
-  }
-  100% {
-    opacity: 1;
-    transform: none;
-    filter: brightness(1);
-    border-color: rgba(0,0,0,.92);
-    box-shadow: none;
-  }
-}
-
-@keyframes cbjrLedPulse {
-  0% {
-    box-shadow: 0 0 0 rgba(241,196,15,0);
-    filter: brightness(.8);
-  }
-  55% {
-    box-shadow: 0 0 18px rgba(241,196,15,.86), 0 0 34px rgba(241,196,15,.30);
-    filter: brightness(1.22);
-  }
-  100% {
-    box-shadow: 0 0 10px rgba(241,196,15,.42);
-    filter: brightness(1);
-  }
-}
-
-@keyframes cbjrRespostaCertaGlow {
-  0% {
-    filter: brightness(1);
-    box-shadow: none;
-  }
-  45% {
-    filter: brightness(1.16);
-    box-shadow: 0 0 22px rgba(30,215,96,.34), inset 0 0 14px rgba(255,255,255,.10);
-  }
-  100% {
-    filter: brightness(1);
-    box-shadow: 0 0 14px rgba(30,215,96,.22);
-  }
-}
-
-@keyframes cbjrRespostaErradaGlow {
-  0% {
-    filter: brightness(1);
-    box-shadow: none;
-  }
-  45% {
-    filter: brightness(1.12);
-    box-shadow: 0 0 18px rgba(255,59,48,.30), inset 0 0 12px rgba(255,255,255,.08);
-  }
-  100% {
-    filter: brightness(1);
-    box-shadow: 0 0 10px rgba(255,59,48,.18);
-  }
-}
-
-body.tela-pergunta .question-kicker,
-body.tela-pergunta #questionKicker {
-  animation: cbjrKickerLight .55s ease both !important;
-}
-
-body.tela-pergunta .question-text,
-body.tela-pergunta #questionText {
-  transform-origin: center top !important;
-  will-change: transform, opacity, filter !important;
-}
-
-body.tela-pergunta .question-text.show,
-body.tela-pergunta #questionText.show {
-  animation: cbjrPerguntaShow .68s cubic-bezier(.18,.86,.28,1.08) both !important;
-}
-
-body.tela-pergunta .answer-btn {
-  position: relative !important;
-  overflow: hidden !important;
-  transform: none !important;
-  transform-origin: center center !important;
-  will-change: opacity, filter, box-shadow, border-color !important;
-  transition: filter .18s ease, box-shadow .18s ease, border-color .18s ease !important;
-}
-
-body.tela-pergunta .answer-btn.show {
-  animation: cbjrPedalAcende .42s ease both !important;
-  transform: none !important;
-}
-
-body.tela-pergunta .answer-btn.show .answer-letter {
-  animation: cbjrLedPulse .48s ease both !important;
-}
-
-body.tela-pergunta .answer-btn:hover:not(:disabled) {
-  transform: none !important;
-  filter: brightness(1.10) !important;
-  border-color: rgba(241,196,15,.85) !important;
-  box-shadow: 0 0 18px rgba(241,196,15,.22) !important;
-}
-
-body.tela-pergunta .answer-btn:active:not(:disabled) {
-  transform: none !important;
-  filter: brightness(1.18) !important;
-}
-
-body.tela-pergunta .answer-btn.correct {
-  transform: none !important;
-  animation: cbjrRespostaCertaGlow .42s ease both !important;
-  z-index: 1 !important;
-}
-
-body.tela-pergunta .answer-btn.wrong {
-  transform: none !important;
-  animation: cbjrRespostaErradaGlow .38s ease both !important;
-  z-index: 1 !important;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  body.tela-pergunta .question-kicker,
-  body.tela-pergunta #questionKicker,
-  body.tela-pergunta .question-text.show,
-  body.tela-pergunta #questionText.show,
-  body.tela-pergunta .answer-btn.show,
-  body.tela-pergunta .answer-btn.show .answer-letter,
-  body.tela-pergunta .answer-btn.correct,
-  body.tela-pergunta .answer-btn.wrong {
-    animation: none !important;
-    opacity: 1 !important;
+    bottom: max(8px, env(safe-area-inset-bottom, 0px)) !important;
+    top: auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    min-height: 62px !important;
+    max-height: 72px !important;
+    border-radius: 16px !important;
     transform: none !important;
-    filter: none !important;
+    opacity: .96 !important;
+    z-index: 45 !important;
+  }
+
+  body.tela-pergunta .quiz-music-player .player-content,
+  body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) .player-content {
+    display: grid !important;
+    grid-template-columns: 46px minmax(0,1fr) auto !important;
+    grid-template-areas:
+      "cover title controls"
+      "cover progress controls" !important;
+    grid-template-rows: auto auto !important;
+    gap: 2px 10px !important;
+    padding: 8px 10px !important;
+    align-items: center !important;
+  }
+
+  body.tela-pergunta .quiz-music-player .q-cover-wrap,
+  body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) .q-cover-wrap {
+    grid-area: cover !important;
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 10px !important;
+  }
+
+  body.tela-pergunta .quiz-music-player #q-current-song,
+  body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) #q-current-song {
+    grid-area: title !important;
+    font-size: .76rem !important;
+    text-align: left !important;
+    max-width: 100% !important;
+  }
+
+  body.tela-pergunta .quiz-music-player .q-progress-area,
+  body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) .q-progress-area {
+    grid-area: progress !important;
+  }
+
+  body.tela-pergunta .quiz-music-player .q-controls,
+  body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) .q-controls {
+    grid-area: controls !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+  }
+
+  body.tela-pergunta .quiz-music-player .q-volume,
+  body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) .q-volume,
+  body.tela-pergunta .quiz-music-player .q-time-display,
+  body.tela-pergunta .quiz-music-player #q-repeat-btn,
+  body.tela-pergunta .quiz-music-player #q-shuffle-btn {
+    display: none !important;
+  }
+
+  body.tela-pergunta .quiz-music-player .q-audio-btn {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    min-height: 28px !important;
+    font-size: .76rem !important;
+  }
+
+  body.tela-pergunta .quiz-music-player .q-audio-btn.q-main {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    min-height: 38px !important;
+    font-size: .9rem !important;
   }
 }
-
 </style>
+
+</body>
+
+</html>
