@@ -8319,7 +8319,10 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     align-items: center !important;
     justify-content: center !important;
     min-height: 100svh !important;
-    padding: 72px 20px 40px !important;
+    /* padding-top = altura da topbar (52px) + folga.
+       O gap extra abaixo equilibra visualmente com o topo */
+    padding: 60px 20px 20px !important;
+    box-sizing: border-box !important;
   }
 
   body.tela-dificuldade .difficulty-shell {
@@ -8478,14 +8481,14 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     top: auto !important;
     width: 100% !important;
     transform: none !important;
-    height: 72px !important;
-    min-height: 72px !important;
-    max-height: 72px !important;
+    height: 80px !important;
+    min-height: 80px !important;
+    max-height: 80px !important;
     border-radius: 0 !important;
     border: 0 !important;
-    border-top: 1px solid rgba(255,255,255,.1) !important;
-    background: #181818 !important;
-    box-shadow: 0 -2px 16px rgba(0,0,0,.8) !important;
+    border-top: 2px solid rgba(241,196,15,.3) !important;
+    background: linear-gradient(180deg, #1a1a1a, #111) !important;
+    box-shadow: 0 -4px 24px rgba(0,0,0,.9) !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
     overflow: visible !important;
@@ -8500,21 +8503,20 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
-    height: 72px !important;
+    height: 80px !important;
     width: 100% !important;
     padding: 0 !important;
     gap: 0 !important;
     overflow: hidden !important;
-    /* não há grid — flex puro */
     grid-template-columns: unset !important;
     grid-template-areas: unset !important;
   }
 
   /* Capa: flush esquerda */
   .quiz-music-player .q-cover-wrap {
-    flex: 0 0 72px !important;
-    width: 72px !important;
-    height: 72px !important;
+    flex: 0 0 80px !important;
+    width: 80px !important;
+    height: 80px !important;
     border-radius: 0 !important;
     border: 0 !important;
     overflow: hidden !important;
@@ -8561,15 +8563,27 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
-    gap: 6px !important;
-    padding: 0 16px 0 10px !important;
+    gap: 2px !important;
+    padding: 0 10px 0 8px !important;
     order: 0 !important;
     grid-area: unset !important;
   }
 
   .quiz-music-player #q-repeat-btn,
   .quiz-music-player #q-shuffle-btn {
-    display: none !important;
+    display: inline-grid !important;
+    place-items: center !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    border-radius: 50% !important;
+    border: 0 !important;
+    background: transparent !important;
+    color: rgba(255,255,255,.5) !important;
+    font-size: .9rem !important;
+    cursor: pointer !important;
+    -webkit-tap-highlight-color: rgba(255,255,255,.1) !important;
   }
 
   /* Prev / Next */
@@ -8618,7 +8632,7 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
 
   /* Padding inferior para o player não cobrir o quiz */
   body.tela-pergunta #quizScreen.active {
-    padding-bottom: calc(72px + max(4px, env(safe-area-inset-bottom, 0px))) !important;
+    padding-bottom: calc(80px + max(4px, env(safe-area-inset-bottom, 0px))) !important;
   }
 }
 
