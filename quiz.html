@@ -6779,7 +6779,14 @@ body.tela-pergunta .answer-btn {
     }
 
     function showCorrectFeedback(curiosity) {
-      showChoraoBalloon(curiosity || 'Mandou bem nessa.');
+      const msg = curiosity || 'Mandou bem nessa.';
+      showChoraoBalloon(msg);
+      // No mobile o balão está oculto — mostra a curiosidade no feedbackBox
+      const isMobile = window.innerWidth <= 760;
+      if (isMobile && els.feedbackBox) {
+        els.feedbackBox.innerHTML = `<strong>Você acertou!</strong>${escapeHtml(msg)}`;
+        els.feedbackBox.classList.add('show');
+      }
     }
 
     function showWrongFeedback(settings) {
@@ -8240,33 +8247,35 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
 <!-- /CBJR POP-UP DE CONQUISTA DESBLOQUEADA -->
 
 
-<style id="cbjr-mobile-quiz-definitivo">
+
+
+
+<style id="cbjr-mobile-quiz-definitivo-v2">
 /* ============================================================
-   QUIZ CBJR — MOBILE DEFINITIVO
-   No celular: abandona a moldura da imagem.
-   Layout limpo com card branco centralizado, scrollável.
+   QUIZ CBJR — MOBILE DEFINITIVO v2
+   Fundo limpo, player original preservado, curiosidade no card.
    ============================================================ */
 
-/* --- TELA DE PERGUNTA MOBILE --- */
+/* 1. FUNDO: sem imagem no mobile — fundo preto simples */
+@media (max-width: 760px) {
+  body.tela-pergunta {
+    background-image: none !important;
+    background-color: #0a0a0a !important;
+    background-attachment: scroll !important;
+  }
+}
+
+/* 2. LAYOUT MOBILE: scroll normal, card branco centralizado */
 @media (max-width: 760px) {
 
-  /* Fundo escuro simples, sem tentar encaixar na moldura */
   body.tela-pergunta {
     width: 100vw !important;
     min-height: 100svh !important;
     height: auto !important;
     overflow-y: auto !important;
     overflow-x: hidden !important;
-    background-image:
-      linear-gradient(180deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.88) 100%),
-      url('https://charlibriano.github.io/Quiz-CBJR-V2/quiz-pergunta.jpg') !important;
-    background-size: cover !important;
-    background-position: center center !important;
-    background-attachment: fixed !important;
-    background-color: #000 !important;
   }
 
-  /* Quiz screen: fluxo normal, scrollável */
   body.tela-pergunta #quizScreen.active {
     position: relative !important;
     inset: auto !important;
@@ -8277,7 +8286,7 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    padding: 70px 12px 100px !important;
+    padding: 66px 12px 100px !important;
     background: transparent !important;
     z-index: 5 !important;
   }
@@ -8299,18 +8308,18 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     min-height: 38px !important;
     padding: 0 12px !important;
     font-size: .82rem !important;
-    background: rgba(0,0,0,.72) !important;
+    background: rgba(20,20,20,.9) !important;
     border: 1px solid rgba(241,196,15,.72) !important;
     color: #f1c40f !important;
   }
 
-  /* Balão do Chorão: oculto no mobile, não faz sentido */
+  /* Balão do Chorão: oculto no mobile (curiosidade vai pro card) */
   body.tela-pergunta #choraoBalloon,
   body.tela-pergunta .chorao-balloon {
     display: none !important;
   }
 
-  /* HUD: visível e compacto no mobile */
+  /* HUD: visível e compacto */
   body.tela-pergunta .quiz-hud {
     display: grid !important;
     position: relative !important;
@@ -8329,15 +8338,10 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     text-align: center !important;
   }
 
-  body.tela-pergunta .hud-card small {
-    display: none !important;
-  }
+  body.tela-pergunta .hud-card small { display: none !important; }
+  body.tela-pergunta .hud-card strong { font-size: .78rem !important; }
 
-  body.tela-pergunta .hud-card strong {
-    font-size: .78rem !important;
-  }
-
-  /* Painel do quiz: card branco limpo, centralizado */
+  /* Painel principal: card branco limpo */
   body.tela-pergunta .quiz-panel {
     position: relative !important;
     left: auto !important; right: auto !important;
@@ -8348,10 +8352,10 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     max-height: none !important;
     margin: 0 auto !important;
     padding: 20px 16px 18px !important;
-    background: rgba(255,255,255,.95) !important;
+    background: rgba(255,255,255,.96) !important;
     border-radius: 20px !important;
     border: 2px solid rgba(0,0,0,.14) !important;
-    box-shadow: 0 16px 44px rgba(0,0,0,.52) !important;
+    box-shadow: 0 12px 36px rgba(0,0,0,.5) !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: stretch !important;
@@ -8362,15 +8366,10 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
   }
 
   body.tela-pergunta .quiz-panel::before,
-  body.tela-pergunta .quiz-panel::after {
-    display: none !important;
-  }
+  body.tela-pergunta .quiz-panel::after { display: none !important; }
+  body.tela-pergunta .quote-line { display: none !important; }
 
-  body.tela-pergunta .quote-line {
-    display: none !important;
-  }
-
-  /* Kicker (Pergunta X de Y) */
+  /* Kicker */
   body.tela-pergunta .question-kicker,
   body.tela-pergunta #questionKicker {
     font-size: .72rem !important;
@@ -8383,14 +8382,13 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     text-shadow: none !important;
   }
 
-  /* Pergunta: texto legível, tamanho decente */
+  /* Pergunta */
   body.tela-pergunta .question-text,
   body.tela-pergunta #questionText {
     font-family: Arial, Helvetica, sans-serif !important;
-    font-size: clamp(1rem, 4.2vw, 1.22rem) !important;
+    font-size: clamp(.96rem, 4vw, 1.18rem) !important;
     font-weight: 800 !important;
-    line-height: 1.32 !important;
-    letter-spacing: .005em !important;
+    line-height: 1.35 !important;
     text-transform: uppercase !important;
     text-align: center !important;
     color: #111 !important;
@@ -8422,7 +8420,7 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     gap: 9px !important;
   }
 
-  /* Botão de resposta */
+  /* Botões de resposta */
   body.tela-pergunta .answer-btn {
     min-height: 48px !important;
     max-height: none !important;
@@ -8438,19 +8436,13 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     padding: 10px 14px !important;
     font-size: clamp(.9rem, 3.8vw, 1.05rem) !important;
     font-weight: 700 !important;
-    line-height: 1.2 !important;
+    line-height: 1.22 !important;
     white-space: normal !important;
     overflow: visible !important;
     text-overflow: unset !important;
     transform: none !important;
     opacity: 1 !important;
     cursor: pointer !important;
-  }
-
-  body.tela-pergunta .answer-btn.show {
-    animation: respostaEntrada .4s ease forwards !important;
-    opacity: 1 !important;
-    transform: none !important;
   }
 
   body.tela-pergunta .answer-btn span:last-child {
@@ -8473,25 +8465,26 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     background: #111 !important;
   }
 
-  /* Feedback */
+  /* Feedback/curiosidade: aparece dentro do card no mobile */
   body.tela-pergunta .feedback-box {
     position: static !important;
     left: auto !important; right: auto !important; bottom: auto !important;
     width: 100% !important;
     margin: 12px 0 0 !important;
-    padding: 10px 14px !important;
+    padding: 12px 14px !important;
     border-radius: 12px !important;
-    background: rgba(255,255,255,.96) !important;
+    background: rgba(255,255,255,.98) !important;
     color: #111 !important;
     border: 1px solid rgba(0,0,0,.18) !important;
-    font-size: .86rem !important;
-    line-height: 1.32 !important;
+    font-size: .9rem !important;
+    line-height: 1.38 !important;
     text-align: center !important;
     max-height: none !important;
     overflow: visible !important;
     opacity: 1 !important;
     transform: none !important;
     display: none !important;
+    box-shadow: 0 4px 14px rgba(0,0,0,.1) !important;
   }
 
   body.tela-pergunta .feedback-box.show {
@@ -8501,17 +8494,22 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     animation: feedbackIn .3s ease both !important;
   }
 
-  /* Botão próxima pergunta */
+  body.tela-pergunta .feedback-box strong {
+    display: block !important;
+    margin-bottom: 5px !important;
+    font-family: "Elektrix", Arial, sans-serif !important;
+    color: #000 !important;
+    font-size: 1rem !important;
+  }
+
+  /* Próxima pergunta */
   body.tela-pergunta .next-row {
     display: flex !important;
     justify-content: center !important;
     margin-top: 14px !important;
   }
 
-  body.tela-pergunta .next-btn {
-    display: none !important;
-  }
-
+  body.tela-pergunta .next-btn { display: none !important; }
   body.tela-pergunta .next-btn.show {
     display: inline-flex !important;
     align-items: center !important;
@@ -8527,25 +8525,26 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     cursor: pointer !important;
   }
 
-  /* Player de música: barra fixa no rodapé */
+  /* 3. PLAYER: posição e layout originais preservados, apenas adaptados */
   body.tela-pergunta .quiz-music-player,
   body.tela-pergunta .quiz-music-player.is-compact,
   body.tela-pergunta .quiz-music-player.is-expanded,
   body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) {
     position: fixed !important;
-    left: 8px !important;
-    right: 8px !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
     bottom: max(8px, env(safe-area-inset-bottom, 0px)) !important;
     top: auto !important;
-    width: auto !important;
+    width: min(calc(100vw - 16px), 480px) !important;
     min-width: 0 !important;
     max-width: none !important;
     min-height: 62px !important;
-    max-height: 72px !important;
+    max-height: none !important;
     border-radius: 16px !important;
-    transform: none !important;
-    opacity: .96 !important;
+    opacity: .97 !important;
     z-index: 45 !important;
+    display: block !important;
   }
 
   body.tela-pergunta .quiz-music-player .player-content,
@@ -8556,62 +8555,61 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
       "cover title controls"
       "cover progress controls" !important;
     grid-template-rows: auto auto !important;
-    gap: 2px 10px !important;
+    gap: 3px 10px !important;
     padding: 8px 10px !important;
     align-items: center !important;
   }
 
-  body.tela-pergunta .quiz-music-player .q-cover-wrap,
-  body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) .q-cover-wrap {
+  body.tela-pergunta .quiz-music-player .q-cover-wrap {
     grid-area: cover !important;
     width: 44px !important;
     height: 44px !important;
     border-radius: 10px !important;
   }
 
-  body.tela-pergunta .quiz-music-player #q-current-song,
-  body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) #q-current-song {
+  body.tela-pergunta .quiz-music-player #q-current-song {
     grid-area: title !important;
-    font-size: .76rem !important;
+    font-size: .78rem !important;
     text-align: left !important;
     max-width: 100% !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
   }
 
-  body.tela-pergunta .quiz-music-player .q-progress-area,
-  body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) .q-progress-area {
+  body.tela-pergunta .quiz-music-player .q-progress-area {
     grid-area: progress !important;
+    min-width: 0 !important;
   }
 
-  body.tela-pergunta .quiz-music-player .q-controls,
-  body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) .q-controls {
+  body.tela-pergunta .quiz-music-player .q-controls {
     grid-area: controls !important;
     display: flex !important;
     align-items: center !important;
-    gap: 4px !important;
+    gap: 5px !important;
   }
 
+  /* Volume e botões extras: ocultos no mobile para não poluir */
   body.tela-pergunta .quiz-music-player .q-volume,
-  body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) .q-volume,
-  body.tela-pergunta .quiz-music-player .q-time-display,
-  body.tela-pergunta .quiz-music-player #q-repeat-btn,
-  body.tela-pergunta .quiz-music-player #q-shuffle-btn {
+  body.tela-pergunta .quiz-music-player .q-time-display {
     display: none !important;
   }
 
   body.tela-pergunta .quiz-music-player .q-audio-btn {
-    width: 28px !important;
-    height: 28px !important;
-    min-width: 28px !important;
-    min-height: 28px !important;
-    font-size: .76rem !important;
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    min-height: 30px !important;
+    font-size: .78rem !important;
   }
 
   body.tela-pergunta .quiz-music-player .q-audio-btn.q-main {
-    width: 38px !important;
-    height: 38px !important;
-    min-width: 38px !important;
-    min-height: 38px !important;
-    font-size: .9rem !important;
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    font-size: 1rem !important;
+    background: #fff !important;
+    color: #000 !important;
   }
 }
 </style>
