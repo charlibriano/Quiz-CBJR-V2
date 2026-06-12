@@ -3898,75 +3898,60 @@
     z-index: 50 !important;
   }
 
-  /* Track grid: 2 colunas no mobile */
+  /* ── Track grid: 2 colunas, nome legível, altura compacta ── */
   .track-grid {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 7px !important;
-    padding: 8px !important;
+    gap: 5px !important;
+    padding: 6px !important;
     max-height: none !important;
     overflow: visible !important;
   }
 
-  /* Botão de faixa: compacto, com número */
   .track-btn {
-    min-height: 52px !important;
-    height: auto !important;
-    border-radius: 12px !important;
-    padding: 8px 10px !important;
-    font-size: clamp(.78rem, 3.2vw, .9rem) !important;
-    line-height: 1.2 !important;
-    white-space: normal !important;
-    overflow: visible !important;
-    text-overflow: unset !important;
+    min-height: 38px !important;
+    height: 38px !important;
+    border-radius: 8px !important;
+    padding: 0 10px !important;
+    font-size: .72rem !important;
+    font-weight: 600 !important;
+    line-height: 1.15 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
     display: flex !important;
     align-items: center !important;
-    gap: 7px !important;
     text-align: left !important;
-    border: 1px solid rgba(241,196,15,.28) !important;
-    background: linear-gradient(160deg, rgba(22,22,22,.97), rgba(8,8,8,.99)) !important;
-    color: #fff !important;
+    border: 1px solid rgba(241,196,15,.2) !important;
+    background: rgba(20,20,20,.98) !important;
+    color: rgba(255,255,255,.82) !important;
     cursor: pointer !important;
     -webkit-tap-highlight-color: rgba(241,196,15,.12) !important;
+    transition: background .1s, border-color .1s !important;
   }
 
-  /* Número da faixa (counter via CSS) */
-  .track-grid {
-    counter-reset: track-counter !important;
+  .track-btn::before { display: none !important; }
+
+  .track-btn:active:not(:disabled) {
+    background: rgba(241,196,15,.14) !important;
+    border-color: rgba(241,196,15,.6) !important;
+    color: #fff !important;
   }
 
-  .track-btn {
-    counter-increment: track-counter !important;
-    position: relative !important;
-  }
-
-  .track-btn::before {
-    content: counter(track-counter, decimal-leading-zero) !important;
-    flex-shrink: 0 !important;
-    font-size: .62rem !important;
-    font-weight: 900 !important;
-    color: rgba(241,196,15,.55) !important;
-    font-family: monospace !important;
-    line-height: 1 !important;
-    min-width: 22px !important;
-    padding-top: 1px !important;
-  }
-
-  /* Estados correto/errado */
   .track-btn.correct {
     background: rgba(13,120,54,.92) !important;
     border-color: #1ed760 !important;
-    box-shadow: 0 0 14px rgba(30,215,96,.25) !important;
+    color: #fff !important;
   }
 
   .track-btn.wrong {
     background: rgba(132,24,20,.92) !important;
     border-color: #ff3b30 !important;
-    box-shadow: 0 0 14px rgba(255,59,48,.2) !important;
+    color: rgba(255,255,255,.5) !important;
   }
 
   .track-btn:disabled {
-    opacity: .45 !important;
+    opacity: .35 !important;
     cursor: default !important;
   }
 }
