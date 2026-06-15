@@ -3787,12 +3787,12 @@
   #albumGrid{display:flex!important;flex-direction:row!important;gap:14px!important;padding:8px 20px 24px!important;overflow-x:auto!important;overflow-y:visible!important;-webkit-overflow-scrolling:touch!important;scroll-snap-type:x mandatory!important;scrollbar-width:none!important;width:100vw!important;max-width:100vw!important;box-sizing:border-box!important;grid-template-columns:unset!important;align-items:start!important}
   #albumGrid::-webkit-scrollbar{display:none!important}
 
-  .album-option{flex:0 0 72vw!important;width:72vw!important;min-width:72vw!important;max-width:300px!important;scroll-snap-align:center!important;border-radius:22px!important;border:0!important;background:transparent!important;padding:0!important;display:flex!important;flex-direction:column!important;height:auto!important;min-height:0!important;aspect-ratio:unset!important;cursor:pointer!important;transition:transform .2s ease!important;grid-template-columns:unset!important;overflow:hidden!important;position:relative!important}
-  .album-option img{width:100%!important;aspect-ratio:1!important;object-fit:cover!important;border-radius:22px!important;display:block!important;background:#111!important;box-shadow:0 14px 44px rgba(0,0,0,.72)!important;transition:transform .2s ease,box-shadow .2s ease!important}
-  .album-option strong{display:block!important;margin-top:11px!important;font-size:.9rem!important;font-weight:900!important;color:#fff!important;line-height:1.2!important;padding:0 4px!important}
-  .album-option small{font-size:.72rem!important;color:rgba(241,196,15,.8)!important;margin-top:4px!important;display:block!important;font-weight:700!important;padding:0 4px!important}
-  .album-option:active:not(:disabled) img{transform:scale(.97)!important;box-shadow:0 0 32px rgba(241,196,15,.3),0 14px 44px rgba(0,0,0,.7)!important}
-  .album-option.locked{opacity:.3!important;filter:grayscale(.9)!important}
+  #albumGrid .album-option{flex:0 0 72vw!important;width:72vw!important;min-width:72vw!important;max-width:300px!important;scroll-snap-align:center!important;border-radius:22px!important;border:0!important;background:transparent!important;padding:0!important;display:flex!important;flex-direction:column!important;height:auto!important;min-height:0!important;aspect-ratio:unset!important;cursor:pointer!important;transition:transform .2s ease!important;grid-template-columns:unset!important;overflow:hidden!important;position:relative!important}
+  #albumGrid .album-option img{width:100%!important;aspect-ratio:1!important;object-fit:cover!important;border-radius:22px!important;display:block!important;background:#111!important;box-shadow:0 14px 44px rgba(0,0,0,.72)!important;height:auto!important;max-height:none!important;transition:transform .2s ease,box-shadow .2s ease!important}
+  #albumGrid .album-option strong{display:block!important;margin-top:11px!important;font-size:.9rem!important;font-weight:900!important;color:#fff!important;line-height:1.2!important;padding:0 4px!important}
+  #albumGrid .album-option small{font-size:.72rem!important;color:rgba(241,196,15,.8)!important;margin-top:4px!important;display:block!important;font-weight:700!important;padding:0 4px!important}
+  #albumGrid .album-option:active:not(:disabled) img{transform:scale(.97)!important;box-shadow:0 0 32px rgba(241,196,15,.3),0 14px 44px rgba(0,0,0,.7)!important}
+  #albumGrid .album-option.locked{opacity:.3!important;filter:grayscale(.9)!important}
 
   /* Tela do jogo */
   body.radio-playing:not(.has-intro){overflow-y:auto!important}
