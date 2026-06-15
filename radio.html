@@ -3845,7 +3845,8 @@
     display: flex !important;
     flex-direction: column !important;
     gap: 14px !important;
-    overflow-x: hidden !important;
+    overflow-x: visible !important;
+    overflow-y: auto !important;
   }
 
   .select-screen h1 {
@@ -3918,22 +3919,27 @@
   .radio-progress { padding: 0 14px !important; }
 
   /* ── CARROSSEL DE CDs ── */
-  .album-grid {
+  /* Override do @media(max-width:620px) que força grid-template-columns */
+  .album-grid,
+  .select-screen .album-grid {
     display: flex !important;
     flex-direction: row !important;
     gap: 12px !important;
     padding: 4px 20px 16px !important;
     overflow-x: auto !important;
     overflow-y: visible !important;
-    scroll-snap-type: x mandatory !important;
     -webkit-overflow-scrolling: touch !important;
+    scroll-snap-type: x mandatory !important;
     scrollbar-width: none !important;
     height: auto !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
     grid-template-columns: unset !important;
     align-items: start !important;
   }
 
-  .album-grid::-webkit-scrollbar { display: none !important; }
+  .album-grid::-webkit-scrollbar,
+  .select-screen .album-grid::-webkit-scrollbar { display: none !important; }
 
   .album-option {
     flex: 0 0 148px !important;
@@ -4140,7 +4146,6 @@
     padding: 0 !important;
     max-height: none !important;
     overflow: visible !important;
-    counter-reset: opt !important;
   }
 
   .track-grid {
@@ -4151,48 +4156,34 @@
   }
 
   html body.radio-quiz-4 .quiz-4-btn {
-    counter-increment: opt !important;
-    position: relative !important;
-    min-height: 64px !important;
+    min-height: 58px !important;
     height: auto !important;
     border-radius: 14px !important;
-    padding: 10px 10px 10px 44px !important;
-    font-size: .8rem !important;
+    padding: 12px 14px !important;
+    font-size: .84rem !important;
     font-weight: 700 !important;
-    line-height: 1.25 !important;
+    line-height: 1.28 !important;
     white-space: normal !important;
-    text-align: left !important;
+    text-align: center !important;
     border: 1.5px solid rgba(255,255,255,.1) !important;
     background: rgba(28,28,28,.98) !important;
     color: rgba(255,255,255,.88) !important;
     cursor: pointer !important;
     display: flex !important;
     align-items: center !important;
+    justify-content: center !important;
     width: 100% !important;
     box-sizing: border-box !important;
     transition: border-color .12s, background .12s, transform .1s !important;
     -webkit-tap-highlight-color: transparent !important;
     overflow: visible !important;
+    position: static !important;
+    counter-increment: none !important;
   }
 
   html body.radio-quiz-4 .quiz-4-btn::before {
-    content: counter(opt, upper-alpha) !important;
-    position: absolute !important;
-    left: 10px !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-    width: 26px !important;
-    height: 26px !important;
-    min-width: 26px !important;
-    border-radius: 50% !important;
-    background: rgba(241,196,15,.1) !important;
-    border: 1.5px solid rgba(241,196,15,.4) !important;
-    color: #f1c40f !important;
-    font-size: .7rem !important;
-    font-weight: 900 !important;
-    display: grid !important;
-    place-items: center !important;
-    line-height: 1 !important;
+    display: none !important;
+    content: "" !important;
   }
 
   html body.radio-quiz-4 .quiz-4-btn:active:not(:disabled) {
