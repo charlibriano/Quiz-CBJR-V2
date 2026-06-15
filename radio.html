@@ -5045,12 +5045,8 @@ async function playCurrent(isAuto = false) {
 }
 
 function resetTrackButtonsForNextRound() {
-  document.querySelectorAll('.track-btn').forEach(btn => {
-    if (!btn.classList.contains('revealed')) {
-      btn.disabled = false;
-    }
-    btn.classList.remove('correct','wrong');
-  });
+  // Gera 4 novas opções para a faixa atual (currentTrack já foi atualizado)
+  buildOptions();
 }
 
 async function startNextTrackInsideUserClick(feedbackText) {
