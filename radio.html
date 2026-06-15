@@ -3825,43 +3825,130 @@
   body.radio-playing:not(.has-intro) .primary{height:46px!important;padding:0 24px!important;border-radius:999px!important;flex:1!important;max-width:200px!important}
   body.radio-playing:not(.has-intro) .secondary{height:46px!important;padding:0 16px!important;border-radius:999px!important}
 
-  /* ── Tela de resultado: bottom sheet simples ── */
-  .overlay {
+  /* ── Tela de resultado: bottom sheet ── */
+  html body #finishOverlay,
+  html body #finishOverlay.overlay,
+  html body #finishOverlay.overlay.show,
+  html body #finishOverlay.overlay.unlock-success,
+  html body #finishOverlay.overlay.unlock-fail,
+  html body #finishOverlay.overlay.radio-complete {
     padding: 0 !important;
     align-items: flex-end !important;
+    overflow: hidden !important;
   }
 
-  .overlay-card {
+  html body #finishOverlay .overlay-card {
     width: 100% !important;
     max-width: 100% !important;
+    min-width: 0 !important;
     max-height: 88svh !important;
+    height: auto !important;
     overflow-y: auto !important;
+    overflow-x: hidden !important;
     border-radius: 24px 24px 0 0 !important;
-    padding: 6px 14px 28px !important;
+    padding: 6px 14px 24px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
   }
 
-  .overlay-card::before {
+  html body #finishOverlay .overlay-card::before {
     content: "" !important;
     display: block !important;
     width: 36px !important;
     height: 4px !important;
     background: rgba(255,255,255,.2) !important;
     border-radius: 999px !important;
-    margin: 6px auto 14px !important;
+    margin: 6px auto 12px !important;
+    flex-shrink: 0 !important;
   }
 
-  .overlay-card .actions {
+  html body #finishOverlay .overlay-card .actions {
     display: flex !important;
     flex-direction: column !important;
     gap: 10px !important;
     margin-top: 14px !important;
+    padding: 0 !important;
   }
 
-  .overlay-card .actions button {
+  html body #finishOverlay .overlay-card .actions button,
+  html body #finishOverlay .overlay-card .actions .primary,
+  html body #finishOverlay .overlay-card .actions .secondary {
     width: 100% !important;
+    min-height: 48px !important;
     height: 48px !important;
     border-radius: 12px !important;
     font-size: .9rem !important;
+    padding: 0 16px !important;
+  }
+
+  /* Compactar o unlock-hero no mobile */
+  html body #finishOverlay .unlock-hero {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 10px !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  html body #finishOverlay .unlock-cover,
+  html body #finishOverlay .unlock-stage-cover {
+    width: 100px !important;
+    height: 100px !important;
+    max-width: 100px !important;
+    max-height: 100px !important;
+    margin: 0 auto !important;
+  }
+
+  html body #finishOverlay .unlock-cover img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 16px !important;
+  }
+
+  html body #finishOverlay .performance-row {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  html body #finishOverlay .performance-card {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 12px !important;
+    box-sizing: border-box !important;
+  }
+
+  html body #finishOverlay .performance-stats {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 6px !important;
+    font-size: .76rem !important;
+    flex-wrap: unset !important;
+  }
+
+  html body #finishOverlay .ranking-card {
+    width: 100% !important;
+    padding: 12px !important;
+    box-sizing: border-box !important;
+  }
+
+  html body #finishOverlay .epic-actions,
+  html body #finishOverlay .actions.epic-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    padding: 0 !important;
+    margin-top: 14px !important;
+  }
+
+  html body #finishOverlay .actions.epic-actions .primary,
+  html body #finishOverlay .actions.epic-actions .secondary {
+    width: 100% !important;
+    min-height: 48px !important;
+    border-radius: 12px !important;
   }
 
 
