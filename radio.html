@@ -3825,31 +3825,21 @@
   body.radio-playing:not(.has-intro) .primary{height:46px!important;padding:0 24px!important;border-radius:999px!important;flex:1!important;max-width:200px!important}
   body.radio-playing:not(.has-intro) .secondary{height:46px!important;padding:0 16px!important;border-radius:999px!important}
 
-  /* ── Tela de resultado: overlay full-screen mobile ── */
+  /* ── Tela de resultado: bottom sheet simples ── */
   .overlay {
     padding: 0 !important;
     align-items: flex-end !important;
-    background: rgba(0,0,0,.75) !important;
   }
 
   .overlay-card {
     width: 100% !important;
     max-width: 100% !important;
-    border-radius: 28px 28px 0 0 !important;
-    padding: 8px 16px 32px !important;
-    max-height: 92svh !important;
+    max-height: 88svh !important;
     overflow-y: auto !important;
-    background: linear-gradient(180deg, #111 0%, #080808 100%) !important;
-    box-shadow: 0 -8px 40px rgba(0,0,0,.8) !important;
-    animation: slideUp .35s cubic-bezier(.18,.86,.28,1.04) both !important;
+    border-radius: 24px 24px 0 0 !important;
+    padding: 6px 14px 28px !important;
   }
 
-  @keyframes slideUp {
-    from { transform: translateY(100%); opacity: 0; }
-    to   { transform: translateY(0);    opacity: 1; }
-  }
-
-  /* Handle decorativo */
   .overlay-card::before {
     content: "" !important;
     display: block !important;
@@ -3857,197 +3847,68 @@
     height: 4px !important;
     background: rgba(255,255,255,.2) !important;
     border-radius: 999px !important;
-    margin: 8px auto 16px !important;
+    margin: 6px auto 14px !important;
   }
 
-  /* Capa do CD revelada no topo do card */
-  .overlay-card h2 {
-    font-family: "Elektrix", Arial, sans-serif !important;
-    font-size: clamp(1.4rem, 7vw, 2rem) !important;
-    color: #f1c40f !important;
-    text-align: center !important;
-    margin: 0 0 6px !important;
-    text-shadow: 0 0 24px rgba(241,196,15,.4) !important;
-    line-height: 1 !important;
-  }
-
-  #finishText {
-    text-align: center !important;
-    color: rgba(255,255,255,.6) !important;
-    font-size: .84rem !important;
-    line-height: 1.45 !important;
-    margin: 0 0 14px !important;
-  }
-
-  /* Performance card */
-  .performance-row {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-  }
-
-  .performance-card {
-    border-radius: 18px !important;
-    padding: 16px !important;
-    margin: 0 !important;
-  }
-
-  .performance-kicker {
-    font-size: .65rem !important;
-    letter-spacing: .14em !important;
-  }
-
-  .performance-rank {
-    font-size: clamp(1.8rem, 10vw, 2.6rem) !important;
-    line-height: .88 !important;
-    margin: 8px 0 4px !important;
-  }
-
-  .performance-phrase {
-    font-size: .82rem !important;
-    line-height: 1.38 !important;
-  }
-
-  .performance-meter {
-    margin: 10px 0 8px !important;
-    height: 8px !important;
-    border-radius: 999px !important;
-  }
-
-  .performance-stats {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 6px !important;
-    font-size: .76rem !important;
-  }
-
-  /* Ranking card */
-  .ranking-card {
-    border-radius: 16px !important;
-    padding: 14px !important;
-  }
-
-  .ranking-kicker {
-    font-size: .68rem !important;
-  }
-
-  .ranking-number {
-    font-size: clamp(2rem, 11vw, 3rem) !important;
-  }
-
-  /* Unlock hero (quando desbloqueia CD) */
-  .unlock-hero {
-    flex-direction: column !important;
-    align-items: center !important;
-    text-align: center !important;
-    gap: 14px !important;
-  }
-
-  .unlock-stage-cover {
-    width: 120px !important;
-    height: 120px !important;
-  }
-
-  .unlock-cover {
-    width: 120px !important;
-    height: 120px !important;
-    border-radius: 18px !important;
-  }
-
-  .unlock-cover img {
-    width: 100% !important;
-    height: 100% !important;
-    border-radius: 18px !important;
-    object-fit: cover !important;
-  }
-
-  .unlock-info h2 {
-    font-size: clamp(1.3rem, 6vw, 1.8rem) !important;
-    color: #f1c40f !important;
-    margin: 8px 0 6px !important;
-  }
-
-  .unlock-subtitle {
-    font-size: .8rem !important;
-    color: rgba(255,255,255,.65) !important;
-    line-height: 1.45 !important;
-  }
-
-  /* Botões de ação no resultado */
   .overlay-card .actions {
     display: flex !important;
     flex-direction: column !important;
     gap: 10px !important;
-    margin-top: 16px !important;
+    margin-top: 14px !important;
   }
 
-  .overlay-card .actions .primary,
-  .overlay-card .actions .secondary {
+  .overlay-card .actions button {
     width: 100% !important;
-    height: 50px !important;
-    border-radius: 14px !important;
-    font-size: .92rem !important;
-    justify-content: center !important;
-  }
-
-  .overlay-card .actions .primary {
-    background: #f1c40f !important;
-    color: #000 !important;
-    border: 0 !important;
-    font-weight: 900 !important;
-    box-shadow: 0 0 20px rgba(241,196,15,.25) !important;
-  }
-
-  .overlay-card .actions .secondary {
-    background: rgba(255,255,255,.06) !important;
-    border: 1px solid rgba(255,255,255,.15) !important;
-    color: rgba(255,255,255,.8) !important;
+    height: 48px !important;
+    border-radius: 12px !important;
+    font-size: .9rem !important;
   }
 
 
-  /* ── Feedback animado acerto/erro ── */
-  .cbjr-feedback {
+  /* ── Feedback animado (elemento criado no body via JS) ── */
+  .cbjr-feedback-float {
     position: fixed !important;
-    top: 50% !important;
+    top: 40% !important;
     left: 50% !important;
-    transform: translate(-50%, -50%) scale(.8) !important;
-    z-index: 80 !important;
+    transform: translateX(-50%) !important;
+    z-index: 999 !important;
     pointer-events: none !important;
     font-family: "Elektrix", Arial, sans-serif !important;
-    font-size: clamp(1.6rem, 9vw, 2.4rem) !important;
+    font-size: clamp(1.8rem, 10vw, 2.6rem) !important;
     font-weight: 900 !important;
     letter-spacing: .04em !important;
     text-align: center !important;
     padding: 14px 28px !important;
     border-radius: 20px !important;
-    opacity: 0 !important;
-    transition: none !important;
     white-space: nowrap !important;
+    opacity: 0 !important;
+    display: none !important;
   }
 
-  .cbjr-feedback.show-correct {
-    background: rgba(13,120,54,.95) !important;
+  .cbjr-feedback-float.correct {
+    display: block !important;
+    background: rgba(13,120,54,.96) !important;
     color: #1ed760 !important;
     border: 2px solid #1ed760 !important;
-    box-shadow: 0 0 40px rgba(30,215,96,.4) !important;
+    box-shadow: 0 0 40px rgba(30,215,96,.5) !important;
     animation: cbjrFbIn .9s ease forwards !important;
   }
 
-  .cbjr-feedback.show-wrong {
-    background: rgba(100,18,14,.95) !important;
-    color: #ff3b30 !important;
+  .cbjr-feedback-float.wrong {
+    display: block !important;
+    background: rgba(100,18,14,.96) !important;
+    color: #ff6b6b !important;
     border: 2px solid #ff3b30 !important;
-    box-shadow: 0 0 40px rgba(255,59,48,.35) !important;
+    box-shadow: 0 0 40px rgba(255,59,48,.45) !important;
     animation: cbjrFbIn .9s ease forwards !important;
   }
 
   @keyframes cbjrFbIn {
-    0%   { opacity:0; transform:translate(-50%,-50%) scale(.7); }
-    20%  { opacity:1; transform:translate(-50%,-50%) scale(1.08); }
-    40%  { transform:translate(-50%,-50%) scale(.96); }
-    60%  { opacity:1; transform:translate(-50%,-50%) scale(1); }
+    0%   { opacity:0; transform:translateX(-50%) scale(.7); }
+    20%  { opacity:1; transform:translateX(-50%) scale(1.1); }
+    50%  { opacity:1; transform:translateX(-50%) scale(1); }
     80%  { opacity:1; }
-    100% { opacity:0; transform:translate(-50%,-50%) scale(1); }
+    100% { opacity:0; transform:translateX(-50%) scale(.95); }
   }
 
 
@@ -5267,6 +5128,19 @@ function triggerCinematicFeedback(type) {
   setTimeout(() => document.body.classList.remove(bodyClass), 760);
 }
 
+function showCbjrFeedback(text, type) {
+  var el = document.getElementById('cbjrFeedbackFloat');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'cbjrFeedbackFloat';
+    document.body.appendChild(el);
+  }
+  el.textContent = text;
+  el.className = 'cbjr-feedback-float ' + type;
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => { el.className = 'cbjr-feedback-float'; }, 900);
+}
+
 function chooseAnswer(btn) {
   if(answered || !currentTrack) return;
   answered = true;
@@ -5280,16 +5154,11 @@ function chooseAnswer(btn) {
     correct++;
     btn.classList.add('correct');
     btn.classList.add('revealed');
-    feedbackText = `Acertou! Era: ${currentTrack.title}`;
+    feedbackText = 'Acertou! Essa você viveu no som.';
     triggerCinematicFeedback('correct');
     // Feedback animado mobile
     if (window.innerWidth <= 760) {
-      const fb = document.getElementById('cbjrFeedback');
-      if (fb) {
-        fb.textContent = 'Isso ai!';
-        fb.className = 'cbjr-feedback show-correct';
-        setTimeout(() => { fb.className = 'cbjr-feedback'; }, 950);
-      }
+      showCbjrFeedback('Isso ai!', 'correct');
     }
   } else {
     wrong++;
@@ -5298,12 +5167,7 @@ function chooseAnswer(btn) {
     triggerCinematicFeedback('wrong');
     // Feedback animado mobile
     if (window.innerWidth <= 760) {
-      const fb = document.getElementById('cbjrFeedback');
-      if (fb) {
-        fb.textContent = 'Vacilou!';
-        fb.className = 'cbjr-feedback show-wrong';
-        setTimeout(() => { fb.className = 'cbjr-feedback'; }, 950);
-      }
+      showCbjrFeedback('Vacilou!', 'wrong');
     }
   }
 
