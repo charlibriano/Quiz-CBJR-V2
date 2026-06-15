@@ -3821,6 +3821,12 @@
   body.radio-playing:not(.has-intro) .primary{height:46px!important;padding:0 24px!important;border-radius:999px!important;flex:1!important;max-width:200px!important}
   body.radio-playing:not(.has-intro) .secondary{height:46px!important;padding:0 16px!important;border-radius:999px!important}
 }
+
+  /* Ocultar mode-select-wrap no mobile — toggle fica na topbar */
+  .mode-select-wrap {
+    display: none !important;
+  }
+
 </style></head>
 <body class="has-intro">
 <div id="radioIntro" class="radio-intro" aria-label="Entrada da Rádio CBJR">
@@ -4971,8 +4977,6 @@ function chooseAnswer(btn) {
   } else {
     wrong++;
     btn.classList.add('wrong');
-    const right = [...document.querySelectorAll('.track-btn')].find(b => b.dataset.title === expected);
-    if(right) right.classList.add('correct');
     feedbackText = `Vacilou! Era: ${expected}.`;
     triggerCinematicFeedback('wrong');
   }
