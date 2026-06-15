@@ -3825,197 +3825,6 @@
   body.radio-playing:not(.has-intro) .primary{height:46px!important;padding:0 24px!important;border-radius:999px!important;flex:1!important;max-width:200px!important}
   body.radio-playing:not(.has-intro) .secondary{height:46px!important;padding:0 16px!important;border-radius:999px!important}
 
-  /* ── Tela de resultado: full screen centralizado ── */
-  html body #finishOverlay {
-    padding: 12px !important;
-    align-items: center !important;
-    justify-content: center !important;
-    overflow: auto !important;
-  }
-
-  html body #finishOverlay .overlay-card {
-    width: 100% !important;
-    max-width: 420px !important;
-    max-height: 94svh !important;
-    overflow-y: auto !important;
-    border-radius: 24px !important;
-    padding: 0 0 24px !important;
-    margin: auto !important;
-    box-sizing: border-box !important;
-  }
-
-  /* Layout mobile simplificado */
-  .cbjr-result-mobile {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 14px !important;
-    padding: 12px 16px 0 !important;
-  }
-
-  /* Sem handle — não é mais bottom sheet */
-  .cbjr-result-mobile::before {
-    display: none !important;
-  }
-
-  /* Pontuação central */
-  .cbjr-result-score {
-    text-align: center !important;
-    padding: 8px 0 !important;
-  }
-
-  .cbjr-result-pct {
-    display: block !important;
-    font-family: "Elektrix", Arial, sans-serif !important;
-    font-size: clamp(3rem, 18vw, 5rem) !important;
-    font-weight: 900 !important;
-    color: #f1c40f !important;
-    line-height: 1 !important;
-    text-shadow: 0 0 32px rgba(241,196,15,.5) !important;
-  }
-
-  .cbjr-result-label {
-    display: block !important;
-    font-family: "Elektrix", Arial, sans-serif !important;
-    font-size: clamp(1.2rem, 6vw, 1.8rem) !important;
-    color: #fff !important;
-    margin: 4px 0 6px !important;
-  }
-
-  .cbjr-result-phrase {
-    font-size: .82rem !important;
-    color: rgba(255,255,255,.55) !important;
-    line-height: 1.4 !important;
-    margin: 0 !important;
-  }
-
-  /* Stats: 3 colunas */
-  .cbjr-result-stats {
-    display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 8px !important;
-  }
-
-  .cbjr-result-stats > div {
-    background: rgba(255,255,255,.05) !important;
-    border: 1px solid rgba(255,255,255,.08) !important;
-    border-radius: 14px !important;
-    padding: 12px 8px !important;
-    text-align: center !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 4px !important;
-  }
-
-  .cbjr-result-stats span {
-    font-family: "Elektrix", Arial, sans-serif !important;
-    font-size: 1.4rem !important;
-    font-weight: 900 !important;
-    color: #f1c40f !important;
-    line-height: 1 !important;
-  }
-
-  .cbjr-result-stats small {
-    font-size: .68rem !important;
-    color: rgba(255,255,255,.45) !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: .08em !important;
-  }
-
-  /* Barra de progresso */
-  .cbjr-result-meter {
-    height: 6px !important;
-    background: rgba(255,255,255,.1) !important;
-    border-radius: 999px !important;
-    overflow: hidden !important;
-  }
-
-  .cbjr-result-meter > div {
-    height: 100% !important;
-    background: linear-gradient(90deg, #1ed760, #f1c40f) !important;
-    border-radius: 999px !important;
-    transition: width .6s ease !important;
-  }
-
-  /* Unlock: capa + info em linha */
-  .cbjr-unlock-header {
-    display: flex !important;
-    gap: 14px !important;
-    align-items: center !important;
-    background: rgba(241,196,15,.06) !important;
-    border: 1px solid rgba(241,196,15,.18) !important;
-    border-radius: 18px !important;
-    padding: 12px !important;
-  }
-
-  .cbjr-unlock-cover {
-    width: 100px !important;
-    height: 100px !important;
-    min-width: 100px !important;
-    border-radius: 16px !important;
-    object-fit: cover !important;
-    display: block !important;
-    box-shadow: 0 8px 28px rgba(0,0,0,.7) !important;
-  }
-
-  .cbjr-unlock-info {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 4px !important;
-    min-width: 0 !important;
-  }
-
-  .cbjr-unlock-badge {
-    font-size: .62rem !important;
-    font-weight: 900 !important;
-    letter-spacing: .14em !important;
-    text-transform: uppercase !important;
-    color: #1ed760 !important;
-  }
-
-  .cbjr-unlock-name {
-    font-family: "Elektrix", Arial, sans-serif !important;
-    font-size: clamp(.95rem, 4.5vw, 1.3rem) !important;
-    color: #f1c40f !important;
-    line-height: 1.1 !important;
-    display: block !important;
-  }
-
-  .cbjr-unlock-year {
-    font-size: .72rem !important;
-    color: rgba(255,255,255,.5) !important;
-  }
-
-  /* Botões */
-  .cbjr-result-actions {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-  }
-
-  .cbjr-result-actions .primary {
-    width: 100% !important;
-    height: 50px !important;
-    border-radius: 14px !important;
-    font-size: .92rem !important;
-    background: #f1c40f !important;
-    color: #000 !important;
-    border: 0 !important;
-    font-weight: 900 !important;
-    cursor: pointer !important;
-  }
-
-  .cbjr-result-actions .secondary {
-    width: 100% !important;
-    height: 50px !important;
-    border-radius: 14px !important;
-    font-size: .88rem !important;
-    background: rgba(255,255,255,.06) !important;
-    border: 1px solid rgba(255,255,255,.14) !important;
-    color: rgba(255,255,255,.8) !important;
-    cursor: pointer !important;
-  }
-
   /* ── Feedback animado (elemento criado no body via JS) ── */  /* ── Feedback animado (elemento criado no body via JS) ── */
   .cbjr-feedback-float {
     position: fixed !important;
@@ -5023,6 +4832,11 @@ function renderUnlockSuccess(nextAlbum, hitGoal) {
   const globalPercent = Math.round(((Math.max(getUnlockedAlbumIndex(), currentAlbumIndex + 1) + 1) / RADIO_ALBUMS.length) * 100);
 
   if (window.innerWidth <= 760) {
+    const overlay2 = document.getElementById('finishOverlay');
+    if (overlay2) {
+      overlay2.style.cssText = 'position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.92);display:grid;place-items:center;padding:16px;box-sizing:border-box;overflow:auto';
+    }
+    card.style.cssText = 'width:100%;max-width:420px;border-radius:24px;overflow:hidden;background:#111;box-shadow:0 20px 60px rgba(0,0,0,.8)';
     card.innerHTML = `
       <img class="cbjr-unlock-cover-hero" src="${coverUrl(nextAlbum)}" alt="${albumName}" onerror="this.onerror=null;this.src=PAGES_BASE + encodeURIComponent(nextAlbum.cover);">
       <div class="cbjr-result-mobile">
@@ -5077,6 +4891,11 @@ function renderFinishSimple(title, text, showNext, nextAlbum) {
   const rank = getPerformanceRank(correct, wrong, total);
 
   if (window.innerWidth <= 760) {
+    const overlay = document.getElementById('finishOverlay');
+    if (overlay) {
+      overlay.style.cssText = 'position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.92);display:grid;place-items:center;padding:16px;box-sizing:border-box;overflow:auto';
+    }
+    card.style.cssText = 'width:100%;max-width:420px;border-radius:24px;overflow:hidden;background:#111;box-shadow:0 20px 60px rgba(0,0,0,.8)';
     card.innerHTML = `
       <div class="cbjr-result-mobile">
         <div class="cbjr-result-score">
