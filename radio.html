@@ -3762,21 +3762,13 @@
 
 </style>
 
-<style id="radio-mobile-v3">
+<style id="radio-mobile-v4">
 /* ═══════════════════════════════════════════════════════════════════
-   RÁDIO CBJR — REDESIGN MOBILE v3
-   Layout: scroll normal, sem position:fixed nos elementos do jogo
+   RÁDIO CBJR — MOBILE v4
+   Cirúrgico: não toca no cover-wrap nem na revelação da capa
    ═══════════════════════════════════════════════════════════════════ */
 
 @media (max-width: 760px) {
-
-  /* ── BASE ── */
-  html, body { overflow-x: hidden !important; }
-
-  .page {
-    padding: 0 !important;
-    min-height: 100svh !important;
-  }
 
   /* ── TOPBAR FIXA ── */
   .topbar {
@@ -3810,7 +3802,7 @@
   }
 
   .mode-pill {
-    font-family: 'Elektrix', Arial, sans-serif !important;
+    font-family: "Elektrix", Arial, sans-serif !important;
     font-size: 1.15rem !important;
     color: #f1c40f !important;
     text-shadow: 0 0 18px rgba(241,196,15,.5) !important;
@@ -3840,48 +3832,49 @@
     color: #f1c40f !important;
   }
 
-  /* ═══════════════════════════════════════════════════════════════════
-     TELA DE SELEÇÃO
-     ═══════════════════════════════════════════════════════════════════ */
+  /* ── SELECT SCREEN ── */
   .select-screen {
     width: 100% !important;
     margin: 0 !important;
-    padding: 62px 14px 24px !important;
+    padding: 62px 0 24px !important;
     border-radius: 0 !important;
     border: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
     min-height: 100svh !important;
-    overflow-y: auto !important;
     display: flex !important;
     flex-direction: column !important;
     gap: 14px !important;
+    overflow-x: hidden !important;
   }
 
   .select-screen h1 {
-    font-family: 'Elektrix', Arial, sans-serif !important;
-    font-size: clamp(1.9rem, 10vw, 2.6rem) !important;
+    font-family: "Elektrix", Arial, sans-serif !important;
+    font-size: clamp(2rem, 11vw, 3rem) !important;
     color: #f1c40f !important;
     text-align: center !important;
     margin: 0 !important;
-    text-shadow: 0 0 28px rgba(241,196,15,.45), 2px 3px 0 rgba(0,0,0,.8) !important;
-    line-height: .9 !important;
+    padding: 0 16px !important;
+    text-shadow: 0 0 32px rgba(241,196,15,.45), 2px 3px 0 rgba(0,0,0,.8) !important;
+    line-height: .88 !important;
   }
 
   .select-screen > p {
-    font-size: .78rem !important;
-    color: rgba(255,255,255,.45) !important;
+    font-size: .76rem !important;
+    color: rgba(255,255,255,.42) !important;
     text-align: center !important;
     margin: 0 !important;
+    padding: 0 16px !important;
     font-style: italic !important;
   }
 
-  /* Toggle Normal / Hard */
+  /* Toggle Normal/Hard */
   .mode-select-wrap {
     display: flex !important;
     flex-direction: row !important;
     gap: 8px !important;
     padding: 10px 14px !important;
+    margin: 0 14px !important;
     background: rgba(241,196,15,.06) !important;
     border: 1px solid rgba(241,196,15,.2) !important;
     border-radius: 14px !important;
@@ -3922,47 +3915,57 @@
 
   .mode-help { display: none !important; }
 
-  /* Progresso dos CDs */
-  .radio-progress { margin: 0 !important; }
+  .radio-progress { padding: 0 14px !important; }
 
-  /* ── ALBUM GRID: 2 colunas ── */
+  /* ── CARROSSEL DE CDs ── */
   .album-grid {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
+    display: flex !important;
+    flex-direction: row !important;
     gap: 12px !important;
+    padding: 4px 20px 16px !important;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
     height: auto !important;
-    overflow: visible !important;
+    grid-template-columns: unset !important;
     align-items: start !important;
   }
 
+  .album-grid::-webkit-scrollbar { display: none !important; }
+
   .album-option {
-    position: relative !important;
+    flex: 0 0 148px !important;
+    width: 148px !important;
+    min-width: 148px !important;
+    scroll-snap-align: start !important;
+    border-radius: 18px !important;
+    border: 1.5px solid rgba(255,255,255,.08) !important;
+    border-top: 1.5px solid rgba(241,196,15,.28) !important;
+    background: linear-gradient(160deg, rgba(28,22,4,.92), rgba(8,8,8,.97)) !important;
+    padding: 8px 8px 12px !important;
     display: flex !important;
     flex-direction: column !important;
-    border-radius: 18px !important;
-    padding: 8px 8px 12px !important;
-    cursor: pointer !important;
     height: auto !important;
     min-height: 0 !important;
     aspect-ratio: unset !important;
-    border: 1.5px solid rgba(255,255,255,.08) !important;
-    border-top-color: rgba(241,196,15,.3) !important;
-    background: linear-gradient(160deg, rgba(28,24,4,.9), rgba(8,8,8,.96)) !important;
+    cursor: pointer !important;
     transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease !important;
+    position: relative !important;
     overflow: hidden !important;
   }
 
-  /* Brilho no topo */
+  /* Brilho no topo do card */
   .album-option::before {
     content: "" !important;
     position: absolute !important;
     top: 0 !important; left: 15% !important; right: 15% !important;
     height: 1px !important;
-    background: linear-gradient(90deg, transparent, rgba(241,196,15,.55), transparent) !important;
+    background: linear-gradient(90deg, transparent, rgba(241,196,15,.5), transparent) !important;
     display: block !important;
     font-size: 0 !important;
   }
-
   .album-option::after { display: none !important; }
 
   .album-option:active:not(:disabled) {
@@ -3988,143 +3991,107 @@
   .album-option strong {
     display: block !important;
     margin-top: 8px !important;
-    font-size: .78rem !important;
+    font-size: .76rem !important;
     font-weight: 900 !important;
     color: #fff !important;
     line-height: 1.2 !important;
   }
 
   .album-option small {
-    font-size: .66rem !important;
-    color: rgba(241,196,15,.75) !important;
+    font-size: .65rem !important;
+    color: rgba(241,196,15,.72) !important;
     margin-top: 3px !important;
     display: block !important;
     font-weight: 700 !important;
   }
 
   /* ═══════════════════════════════════════════════════════════════════
-     TELA DO JOGO — layout scroll normal, sem position:fixed
+     TELA DO JOGO — layout flow normal, SEM tocar no cover-wrap
      ═══════════════════════════════════════════════════════════════════ */
   body.radio-playing:not(.has-intro) {
     overflow-y: auto !important;
   }
 
-  /* Stage: flex coluna, começa abaixo da topbar */
   body.radio-playing:not(.has-intro) .stage {
     width: 100% !important;
     max-width: 100% !important;
     margin: 52px 0 0 !important;
-    padding: 0 !important;
+    padding: 12px 12px 24px !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 0 !important;
+    gap: 10px !important;
     grid-template-columns: unset !important;
     align-items: stretch !important;
   }
 
-  /* ── HERO DO ÁLBUM: capa grande com gradiente ── */
+  /* Album card: linha horizontal compacta, capa pequena à esq */
   body.radio-playing:not(.has-intro) .album-card {
-    position: relative !important;
-    border-radius: 0 !important;
-    border: 0 !important;
-    padding: 0 !important;
-    background: #000 !important;
+    display: grid !important;
+    grid-template-columns: 72px 1fr !important;
+    gap: 12px !important;
+    align-items: center !important;
+    border-radius: 16px !important;
+    padding: 12px !important;
+    border: 1px solid rgba(241,196,15,.18) !important;
+    background: rgba(14,14,14,.95) !important;
     box-shadow: none !important;
-    overflow: hidden !important;
-    display: block !important;
-    grid-template-columns: unset !important;
-    height: 220px !important;
-    flex-shrink: 0 !important;
   }
 
+  /* cover-wrap: tamanho fixo, preserva o mecanismo de revelação */
   body.radio-playing:not(.has-intro) .cover-wrap {
-    position: absolute !important;
-    inset: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    border-radius: 0 !important;
-    border: 0 !important;
-    box-shadow: none !important;
-    aspect-ratio: unset !important;
+    width: 72px !important;
+    height: 72px !important;
+    min-width: 72px !important;
+    border-radius: 12px !important;
     overflow: hidden !important;
+    flex-shrink: 0 !important;
+    aspect-ratio: unset !important;
+    position: relative !important;
   }
 
+  /* A img dentro do cover-wrap: não mexer no filter/transform que a revelação usa */
   body.radio-playing:not(.has-intro) .cover-wrap img {
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
-    object-position: center 20% !important;
-    filter: brightness(.6) saturate(1.1) !important;
+    display: block !important;
   }
 
-  /* Gradiente sobre a capa */
-  body.radio-playing:not(.has-intro) .cover-wrap::after {
-    content: "" !important;
-    position: absolute !important;
-    inset: 0 !important;
-    background: linear-gradient(180deg,
-      rgba(0,0,0,.1) 0%,
-      rgba(0,0,0,.2) 50%,
-      rgba(0,0,0,.92) 100%) !important;
-    z-index: 1 !important;
-  }
-
-  /* Meta: nome do álbum sobre a capa */
   body.radio-playing:not(.has-intro) .album-meta {
-    position: absolute !important;
-    bottom: 14px !important;
-    left: 16px !important;
-    right: 16px !important;
-    margin: 0 !important;
     text-align: left !important;
-    z-index: 2 !important;
+    margin: 0 !important;
   }
 
   body.radio-playing:not(.has-intro) .album-meta h1 {
-    font-size: clamp(1.1rem, 5.5vw, 1.5rem) !important;
+    font-size: clamp(.95rem, 4.5vw, 1.2rem) !important;
     margin: 0 !important;
     color: #fff !important;
-    text-shadow: 0 2px 10px rgba(0,0,0,.9) !important;
     line-height: 1.1 !important;
   }
 
   body.radio-playing:not(.has-intro) .album-meta p {
-    font-size: .74rem !important;
-    color: rgba(255,255,255,.65) !important;
-    margin: 3px 0 0 !important;
+    font-size: .72rem !important;
+    color: rgba(255,255,255,.55) !important;
+    margin: 4px 0 0 !important;
   }
 
-  /* ── PAINEL DO JOGO: abaixo da capa, fundo escuro ── */
+  /* Radio panel */
   body.radio-playing:not(.has-intro) .radio-panel {
-    position: relative !important;
-    border-radius: 24px 24px 0 0 !important;
-    border: 0 !important;
-    border-top: 1px solid rgba(241,196,15,.18) !important;
-    background: linear-gradient(180deg, #111, #080808) !important;
-    box-shadow: 0 -8px 32px rgba(0,0,0,.8) !important;
-    padding: 18px 14px 24px !important;
+    border-radius: 20px !important;
+    border: 1px solid rgba(241,196,15,.14) !important;
+    background: linear-gradient(180deg, rgba(16,16,16,.98), rgba(6,6,6,1)) !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,.7) !important;
+    padding: 16px 14px 18px !important;
     min-height: 0 !important;
     display: flex !important;
     flex-direction: column !important;
     gap: 10px !important;
     grid-template-rows: unset !important;
-    margin-top: -20px !important;
-    z-index: 2 !important;
   }
 
-  /* Handle decorativo */
-  body.radio-playing:not(.has-intro) .radio-panel::before {
-    content: "" !important;
-    display: block !important;
-    width: 36px !important;
-    height: 4px !important;
-    border-radius: 999px !important;
-    background: rgba(255,255,255,.18) !important;
-    margin: -6px auto 6px !important;
-    flex-shrink: 0 !important;
+  body.radio-playing:not(.has-intro) .radio-title {
+    text-align: center !important;
   }
-
-  body.radio-playing:not(.has-intro) .radio-title { text-align: center !important; }
 
   body.radio-playing:not(.has-intro) .radio-title small {
     font-size: .62rem !important;
@@ -4133,22 +4100,15 @@
   }
 
   body.radio-playing:not(.has-intro) .radio-title h2 {
-    font-size: clamp(1rem, 5vw, 1.25rem) !important;
+    font-size: clamp(1rem, 5vw, 1.3rem) !important;
     margin: 6px 0 0 !important;
     text-shadow: none !important;
   }
 
-  /* Equalizador */
-  body.radio-playing:not(.has-intro) .live-radio-eq {
-    justify-content: center !important;
-  }
-
-  /* Status: 4 cards compactos */
   body.radio-playing:not(.has-intro) .status-row {
     display: grid !important;
     grid-template-columns: repeat(4, 1fr) !important;
     gap: 6px !important;
-    flex-shrink: 0 !important;
   }
 
   body.radio-playing:not(.has-intro) .status-card {
@@ -4168,7 +4128,7 @@
     min-height: 0 !important;
   }
 
-  /* ── 4 OPÇÕES: grid 2x2 com letra A/B/C/D ── */
+  /* ── 4 OPÇÕES ── */
   html body.radio-quiz-4 .track-grid,
   html body.radio-quiz-4.radio-playing .track-grid,
   html body.radio-quiz-4.radio-tracks-many .track-grid,
@@ -4201,7 +4161,6 @@
     font-weight: 700 !important;
     line-height: 1.25 !important;
     white-space: normal !important;
-    overflow: visible !important;
     text-align: left !important;
     border: 1.5px solid rgba(255,255,255,.1) !important;
     background: rgba(28,28,28,.98) !important;
@@ -4213,9 +4172,9 @@
     box-sizing: border-box !important;
     transition: border-color .12s, background .12s, transform .1s !important;
     -webkit-tap-highlight-color: transparent !important;
+    overflow: visible !important;
   }
 
-  /* Letra A B C D */
   html body.radio-quiz-4 .quiz-4-btn::before {
     content: counter(opt, upper-alpha) !important;
     position: absolute !important;
@@ -4242,7 +4201,6 @@
     background: rgba(241,196,15,.09) !important;
   }
 
-  /* Correto */
   html body.radio-quiz-4 .quiz-4-btn.correct {
     background: rgba(13,120,54,.9) !important;
     border-color: #1ed760 !important;
@@ -4259,15 +4217,14 @@
 
   @keyframes cbjrCorrect {
     0%   { transform: scale(1); }
-    45%  { transform: scale(1.04); box-shadow: 0 0 28px rgba(30,215,96,.45); }
+    45%  { transform: scale(1.04); }
     100% { transform: scale(1); }
   }
 
-  /* Errado */
   html body.radio-quiz-4 .quiz-4-btn.wrong {
     background: rgba(132,24,20,.9) !important;
     border-color: #ff3b30 !important;
-    color: rgba(255,255,255,.55) !important;
+    color: rgba(255,255,255,.5) !important;
     animation: cbjrWrong .32s ease !important;
   }
 
@@ -4289,7 +4246,6 @@
     cursor: default !important;
   }
 
-  /* Ações */
   body.radio-playing:not(.has-intro) .actions {
     display: flex !important;
     gap: 8px !important;
