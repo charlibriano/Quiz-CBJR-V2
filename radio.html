@@ -3801,34 +3801,88 @@
     margin: 0 !important;
   }
 
-  /* Toggle Normal/Hard — linha compacta no topo */
+  /* ── Seleção de modo: card destacado, obrigatório antes do CD ── */
   .mode-select-wrap {
     display: flex !important;
-    gap: 8px !important;
-    justify-content: center !important;
-    padding: 0 !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    padding: 14px 16px !important;
     margin: 0 !important;
+    background: rgba(241,196,15,.06) !important;
+    border: 1px solid rgba(241,196,15,.22) !important;
+    border-radius: 16px !important;
   }
+
+  .mode-select-wrap::before {
+    content: "Escolha o modo antes de começar" !important;
+    display: block !important;
+    font-size: .7rem !important;
+    font-weight: 900 !important;
+    letter-spacing: .14em !important;
+    text-transform: uppercase !important;
+    color: rgba(241,196,15,.7) !important;
+    text-align: center !important;
+  }
+
+  /* Botões lado a lado */
+  .mode-select-wrap > div,
+  .mode-select-wrap > span { display: none !important; }
 
   .mode-choice {
     flex: 1 !important;
-    max-width: 140px !important;
-    height: 38px !important;
-    border-radius: 999px !important;
-    font-size: .82rem !important;
+    height: 48px !important;
+    border-radius: 12px !important;
+    font-size: .88rem !important;
     font-weight: 900 !important;
-    border: 1.5px solid rgba(255,255,255,.18) !important;
+    border: 1.5px solid rgba(255,255,255,.15) !important;
     background: rgba(255,255,255,.05) !important;
     color: rgba(255,255,255,.55) !important;
     cursor: pointer !important;
+    transition: all .15s ease !important;
+    letter-spacing: .03em !important;
+  }
+
+  /* Row dos dois botões */
+  .mode-select-wrap {
+    flex-direction: column !important;
+  }
+
+  /* Colocar os dois botões lado a lado via sub-wrapper */
+  #modeNormalBtn, #modeHardBtn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* Container dos dois botões em linha */
+  .mode-select-wrap > #modeNormalBtn,
+  .mode-select-wrap > #modeHardBtn {
+    width: calc(50% - 5px) !important;
+    float: left !important;
+  }
+
+  .mode-select-wrap {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    flex-direction: row !important;
+    gap: 10px !important;
+  }
+
+  /* Label acima, full-width */
+  .mode-select-wrap::before {
+    width: 100% !important;
+    flex: 0 0 100% !important;
   }
 
   .mode-choice.active {
     background: #f1c40f !important;
     border-color: #f1c40f !important;
     color: #000 !important;
-    box-shadow: 0 0 16px rgba(241,196,15,.3) !important;
+    box-shadow: 0 0 18px rgba(241,196,15,.35) !important;
   }
+
+  /* Descrição do modo — ocultar no mobile */
+  .mode-help { display: none !important; }
 
   /* Grid de álbuns: 2 colunas */
   .album-grid {
