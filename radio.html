@@ -3824,6 +3824,287 @@
   body.radio-playing:not(.has-intro) .actions{display:flex!important;gap:8px!important;justify-content:center!important}
   body.radio-playing:not(.has-intro) .primary{height:46px!important;padding:0 24px!important;border-radius:999px!important;flex:1!important;max-width:200px!important}
   body.radio-playing:not(.has-intro) .secondary{height:46px!important;padding:0 16px!important;border-radius:999px!important}
+
+  /* ── Tela de resultado: overlay full-screen mobile ── */
+  .overlay {
+    padding: 0 !important;
+    align-items: flex-end !important;
+    background: rgba(0,0,0,.75) !important;
+  }
+
+  .overlay-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 28px 28px 0 0 !important;
+    padding: 8px 16px 32px !important;
+    max-height: 92svh !important;
+    overflow-y: auto !important;
+    background: linear-gradient(180deg, #111 0%, #080808 100%) !important;
+    box-shadow: 0 -8px 40px rgba(0,0,0,.8) !important;
+    animation: slideUp .35s cubic-bezier(.18,.86,.28,1.04) both !important;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  /* Handle decorativo */
+  .overlay-card::before {
+    content: "" !important;
+    display: block !important;
+    width: 36px !important;
+    height: 4px !important;
+    background: rgba(255,255,255,.2) !important;
+    border-radius: 999px !important;
+    margin: 8px auto 16px !important;
+  }
+
+  /* Capa do CD revelada no topo do card */
+  .overlay-card h2 {
+    font-family: "Elektrix", Arial, sans-serif !important;
+    font-size: clamp(1.4rem, 7vw, 2rem) !important;
+    color: #f1c40f !important;
+    text-align: center !important;
+    margin: 0 0 6px !important;
+    text-shadow: 0 0 24px rgba(241,196,15,.4) !important;
+    line-height: 1 !important;
+  }
+
+  #finishText {
+    text-align: center !important;
+    color: rgba(255,255,255,.6) !important;
+    font-size: .84rem !important;
+    line-height: 1.45 !important;
+    margin: 0 0 14px !important;
+  }
+
+  /* Performance card */
+  .performance-row {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .performance-card {
+    border-radius: 18px !important;
+    padding: 16px !important;
+    margin: 0 !important;
+  }
+
+  .performance-kicker {
+    font-size: .65rem !important;
+    letter-spacing: .14em !important;
+  }
+
+  .performance-rank {
+    font-size: clamp(1.8rem, 10vw, 2.6rem) !important;
+    line-height: .88 !important;
+    margin: 8px 0 4px !important;
+  }
+
+  .performance-phrase {
+    font-size: .82rem !important;
+    line-height: 1.38 !important;
+  }
+
+  .performance-meter {
+    margin: 10px 0 8px !important;
+    height: 8px !important;
+    border-radius: 999px !important;
+  }
+
+  .performance-stats {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 6px !important;
+    font-size: .76rem !important;
+  }
+
+  /* Ranking card */
+  .ranking-card {
+    border-radius: 16px !important;
+    padding: 14px !important;
+  }
+
+  .ranking-kicker {
+    font-size: .68rem !important;
+  }
+
+  .ranking-number {
+    font-size: clamp(2rem, 11vw, 3rem) !important;
+  }
+
+  /* Unlock hero (quando desbloqueia CD) */
+  .unlock-hero {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 14px !important;
+  }
+
+  .unlock-stage-cover {
+    width: 120px !important;
+    height: 120px !important;
+  }
+
+  .unlock-cover {
+    width: 120px !important;
+    height: 120px !important;
+    border-radius: 18px !important;
+  }
+
+  .unlock-cover img {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 18px !important;
+    object-fit: cover !important;
+  }
+
+  .unlock-info h2 {
+    font-size: clamp(1.3rem, 6vw, 1.8rem) !important;
+    color: #f1c40f !important;
+    margin: 8px 0 6px !important;
+  }
+
+  .unlock-subtitle {
+    font-size: .8rem !important;
+    color: rgba(255,255,255,.65) !important;
+    line-height: 1.45 !important;
+  }
+
+  /* Botões de ação no resultado */
+  .overlay-card .actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    margin-top: 16px !important;
+  }
+
+  .overlay-card .actions .primary,
+  .overlay-card .actions .secondary {
+    width: 100% !important;
+    height: 50px !important;
+    border-radius: 14px !important;
+    font-size: .92rem !important;
+    justify-content: center !important;
+  }
+
+  .overlay-card .actions .primary {
+    background: #f1c40f !important;
+    color: #000 !important;
+    border: 0 !important;
+    font-weight: 900 !important;
+    box-shadow: 0 0 20px rgba(241,196,15,.25) !important;
+  }
+
+  .overlay-card .actions .secondary {
+    background: rgba(255,255,255,.06) !important;
+    border: 1px solid rgba(255,255,255,.15) !important;
+    color: rgba(255,255,255,.8) !important;
+  }
+
+
+  /* ── Feedback animado acerto/erro ── */
+  .cbjr-feedback {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) scale(.8) !important;
+    z-index: 80 !important;
+    pointer-events: none !important;
+    font-family: "Elektrix", Arial, sans-serif !important;
+    font-size: clamp(1.6rem, 9vw, 2.4rem) !important;
+    font-weight: 900 !important;
+    letter-spacing: .04em !important;
+    text-align: center !important;
+    padding: 14px 28px !important;
+    border-radius: 20px !important;
+    opacity: 0 !important;
+    transition: none !important;
+    white-space: nowrap !important;
+  }
+
+  .cbjr-feedback.show-correct {
+    background: rgba(13,120,54,.95) !important;
+    color: #1ed760 !important;
+    border: 2px solid #1ed760 !important;
+    box-shadow: 0 0 40px rgba(30,215,96,.4) !important;
+    animation: cbjrFbIn .9s ease forwards !important;
+  }
+
+  .cbjr-feedback.show-wrong {
+    background: rgba(100,18,14,.95) !important;
+    color: #ff3b30 !important;
+    border: 2px solid #ff3b30 !important;
+    box-shadow: 0 0 40px rgba(255,59,48,.35) !important;
+    animation: cbjrFbIn .9s ease forwards !important;
+  }
+
+  @keyframes cbjrFbIn {
+    0%   { opacity:0; transform:translate(-50%,-50%) scale(.7); }
+    20%  { opacity:1; transform:translate(-50%,-50%) scale(1.08); }
+    40%  { transform:translate(-50%,-50%) scale(.96); }
+    60%  { opacity:1; transform:translate(-50%,-50%) scale(1); }
+    80%  { opacity:1; }
+    100% { opacity:0; transform:translate(-50%,-50%) scale(1); }
+  }
+
+
+  /* ── Barra de progresso ── */
+  .cbjr-progress-bar {
+    position: relative !important;
+    height: 8px !important;
+    background: rgba(255,255,255,.08) !important;
+    border-radius: 999px !important;
+    overflow: hidden !important;
+    display: block !important;
+  }
+
+  .cbjr-progress-fill {
+    position: absolute !important;
+    left: 0 !important; top: 0 !important; bottom: 0 !important;
+    width: 0% !important;
+    background: linear-gradient(90deg, #1ed760, #f1c40f) !important;
+    border-radius: 999px !important;
+    transition: width .4s ease !important;
+    box-shadow: 0 0 10px rgba(30,215,96,.35) !important;
+  }
+
+  .cbjr-progress-label {
+    position: absolute !important;
+    right: 6px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    font-size: .58rem !important;
+    font-weight: 900 !important;
+    color: rgba(255,255,255,.6) !important;
+    line-height: 1 !important;
+  }
+
+  /* ── Dots do carrossel ── */
+  .cbjr-carousel-dots {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    padding: 4px 0 0 !important;
+  }
+
+  .cbjr-dot {
+    width: 6px !important;
+    height: 6px !important;
+    border-radius: 50% !important;
+    background: rgba(255,255,255,.22) !important;
+    transition: background .2s, transform .2s !important;
+    display: inline-block !important;
+  }
+
+  .cbjr-dot.active {
+    background: #f1c40f !important;
+    transform: scale(1.35) !important;
+    box-shadow: 0 0 8px rgba(241,196,15,.5) !important;
+  }
+
 }
 </style></head>
 <body class="has-intro">
@@ -3852,6 +4133,7 @@
 
     <div id="radioProgress" class="radio-progress" aria-label="Progresso dos CDs"></div>
     <div id="albumGrid" class="album-grid"></div>
+    <div class="cbjr-carousel-dots" id="carouselDots"></div>
   </section>
 
   <main id="gameStage" class="stage hidden">
@@ -3884,8 +4166,13 @@
         <div class="status-card"><small>Erros</small><strong id="statusWrong">0</strong></div>
         <div class="status-card"><small>Restam</small><strong id="statusLeft">0</strong></div>
       </div>
+      <div class="cbjr-progress-bar" id="cbjrProgressBar" aria-label="Progresso no CD">
+        <div class="cbjr-progress-fill" id="cbjrProgressFill"></div>
+        <span class="cbjr-progress-label" id="cbjrProgressLabel">0%</span>
+      </div>
       <div id="message" class="message">Clique em tocar quando estiver pronto.</div>
       <div id="trackGrid" class="track-grid"></div>
+      <div id="cbjrFeedback" class="cbjr-feedback" aria-live="polite"></div>
       <div class="actions">
         <button id="playBtn" class="primary" type="button">▶ Tocar faixa</button>
         <button id="nextBtn" class="secondary hidden" type="button">Próxima música</button>
@@ -4744,6 +5031,24 @@ function renderAlbums() {
     `;
   }).join('');
   document.querySelectorAll('.album-option:not(.locked)').forEach(btn => btn.addEventListener('click', () => startAlbum(Number(btn.dataset.index))));
+
+  // Dots do carrossel
+  if (window.innerWidth <= 760) {
+    const dotsContainer = document.getElementById('carouselDots');
+    if (dotsContainer) {
+      const total = RADIO_ALBUMS.length;
+      dotsContainer.innerHTML = Array.from({length: total}, (_, i) => `<span class="cbjr-dot" data-idx="${i}"></span>`).join('');
+      const grid = document.getElementById('albumGrid');
+      if (grid) {
+        grid.addEventListener('scroll', () => {
+          const idx = Math.round(grid.scrollLeft / grid.offsetWidth * (total / (grid.scrollWidth / grid.offsetWidth)));
+          dotsContainer.querySelectorAll('.cbjr-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+        }, { passive: true });
+        // Ativar o primeiro
+        dotsContainer.querySelector('.cbjr-dot')?.classList.add('active');
+      }
+    }
+  }
 }
 
 function updateCoverReveal(pulse = false) {
@@ -4819,6 +5124,15 @@ function updateStatus() {
   $('statusCorrect').textContent = correct;
   $('statusWrong').textContent = wrong;
   $('statusLeft').textContent = pool.length;
+  // Atualizar barra de progresso mobile
+  if (window.innerWidth <= 760 && currentAlbum) {
+    const total = currentAlbum.tracks.length;
+    const pct = Math.round((correct / total) * 100);
+    const fill = document.getElementById('cbjrProgressFill');
+    const label = document.getElementById('cbjrProgressLabel');
+    if (fill) fill.style.width = pct + '%';
+    if (label) label.textContent = pct + '%';
+  }
 }
 function pickTrack(autoPlay = false) {
   answered = false;
@@ -4966,13 +5280,31 @@ function chooseAnswer(btn) {
     correct++;
     btn.classList.add('correct');
     btn.classList.add('revealed');
-    feedbackText = 'Acertou! Essa você viveu no som.';
+    feedbackText = `Acertou! Era: ${currentTrack.title}`;
     triggerCinematicFeedback('correct');
+    // Feedback animado mobile
+    if (window.innerWidth <= 760) {
+      const fb = document.getElementById('cbjrFeedback');
+      if (fb) {
+        fb.textContent = 'Isso ai!';
+        fb.className = 'cbjr-feedback show-correct';
+        setTimeout(() => { fb.className = 'cbjr-feedback'; }, 950);
+      }
+    }
   } else {
     wrong++;
     btn.classList.add('wrong');
     feedbackText = `Vacilou! Era: ${expected}.`;
     triggerCinematicFeedback('wrong');
+    // Feedback animado mobile
+    if (window.innerWidth <= 760) {
+      const fb = document.getElementById('cbjrFeedback');
+      if (fb) {
+        fb.textContent = 'Vacilou!';
+        fb.className = 'cbjr-feedback show-wrong';
+        setTimeout(() => { fb.className = 'cbjr-feedback'; }, 950);
+      }
+    }
   }
 
   pool.shift();
