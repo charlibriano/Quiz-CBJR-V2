@@ -3822,9 +3822,19 @@
   body.radio-playing:not(.has-intro) .secondary{height:46px!important;padding:0 16px!important;border-radius:999px!important}
 }
 
-  /* Ocultar mode-select-wrap no mobile — toggle fica na topbar */
-  .mode-select-wrap {
+  /* Ocultar mode-select-wrap no mobile — especificidade máxima */
+  html body .mode-select-wrap,
+  html body:not(.has-intro) .mode-select-wrap,
+  html body.has-intro .mode-select-wrap {
     display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    position: static !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    opacity: 0 !important;
   }
 
 </style></head>
