@@ -4077,7 +4077,10 @@
   <div class="topbar">
     <a class="back-btn" href="index.html?skipIntro=true">← Menu</a>
     <div class="mode-pill">Rádio CBJR</div>
-    <button class="small-btn" id="changeAlbumBtn" type="button">Trocar CD</button>
+    <div style="display:flex;gap:6px;align-items:center;">
+      <button class="small-btn" id="topbarModeBtn" type="button">Normal</button>
+      <button class="small-btn" id="changeAlbumBtn" type="button">Trocar CD</button>
+    </div>
   </div>
 
   <section id="selectScreen" class="select-screen">
@@ -5318,6 +5321,13 @@ function showSelect() {
 setRadioMode(currentRadioMode);
 $('modeNormalBtn')?.addEventListener('click', () => setRadioMode('normal'));
 $('modeHardBtn')?.addEventListener('click', () => setRadioMode('hard'));
+
+// Toggle Normal/Hard na topbar
+document.getElementById('topbarModeBtn')?.addEventListener('click', function() {
+  setRadioMode(currentRadioMode === 'hard' ? 'normal' : 'hard');
+});
+// Inicializar visual do botão com o modo que estava salvo
+setRadioMode(currentRadioMode);
 $('playBtn').addEventListener('click', playCurrent);
 $('nextBtn').addEventListener('click', nextTrack);
 $('restartAlbumBtn').addEventListener('click', () => { if (autoNextTimer) { clearTimeout(autoNextTimer); autoNextTimer = null; } startAlbum(currentAlbumIndex); });
