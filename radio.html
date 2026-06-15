@@ -3826,12 +3826,7 @@
   body.radio-playing:not(.has-intro) .secondary{height:46px!important;padding:0 16px!important;border-radius:999px!important}
 
   /* ── Tela de resultado: bottom sheet ── */
-  html body #finishOverlay,
-  html body #finishOverlay.overlay,
-  html body #finishOverlay.overlay.show,
-  html body #finishOverlay.overlay.unlock-success,
-  html body #finishOverlay.overlay.unlock-fail,
-  html body #finishOverlay.overlay.radio-complete {
+  html body #finishOverlay {
     padding: 0 !important;
     align-items: flex-end !important;
     overflow: hidden !important;
@@ -3840,119 +3835,193 @@
   html body #finishOverlay .overlay-card {
     width: 100% !important;
     max-width: 100% !important;
-    min-width: 0 !important;
-    max-height: 88svh !important;
-    height: auto !important;
+    max-height: 85svh !important;
     overflow-y: auto !important;
-    overflow-x: hidden !important;
     border-radius: 24px 24px 0 0 !important;
-    padding: 6px 14px 24px !important;
+    padding: 0 0 32px !important;
     margin: 0 !important;
     box-sizing: border-box !important;
   }
 
-  html body #finishOverlay .overlay-card::before {
+  /* Layout mobile simplificado */
+  .cbjr-result-mobile {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    padding: 14px 16px 0 !important;
+  }
+
+  /* Handle */
+  .cbjr-result-mobile::before {
     content: "" !important;
     display: block !important;
     width: 36px !important;
     height: 4px !important;
     background: rgba(255,255,255,.2) !important;
     border-radius: 999px !important;
-    margin: 6px auto 12px !important;
-    flex-shrink: 0 !important;
-  }
-
-  html body #finishOverlay .overlay-card .actions {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-    margin-top: 14px !important;
-    padding: 0 !important;
-  }
-
-  html body #finishOverlay .overlay-card .actions button,
-  html body #finishOverlay .overlay-card .actions .primary,
-  html body #finishOverlay .overlay-card .actions .secondary {
-    width: 100% !important;
-    min-height: 48px !important;
-    height: 48px !important;
-    border-radius: 12px !important;
-    font-size: .9rem !important;
-    padding: 0 16px !important;
-  }
-
-  /* Compactar o unlock-hero no mobile */
-  html body #finishOverlay .unlock-hero {
-    flex-direction: column !important;
-    align-items: center !important;
-    text-align: center !important;
-    gap: 10px !important;
-    grid-template-columns: 1fr !important;
-  }
-
-  html body #finishOverlay .unlock-cover,
-  html body #finishOverlay .unlock-stage-cover {
-    width: 100px !important;
-    height: 100px !important;
-    max-width: 100px !important;
-    max-height: 100px !important;
     margin: 0 auto !important;
   }
 
-  html body #finishOverlay .unlock-cover img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-    border-radius: 16px !important;
+  /* Pontuação central */
+  .cbjr-result-score {
+    text-align: center !important;
+    padding: 8px 0 !important;
   }
 
-  html body #finishOverlay .performance-row {
+  .cbjr-result-pct {
+    display: block !important;
+    font-family: "Elektrix", Arial, sans-serif !important;
+    font-size: clamp(3rem, 18vw, 5rem) !important;
+    font-weight: 900 !important;
+    color: #f1c40f !important;
+    line-height: 1 !important;
+    text-shadow: 0 0 32px rgba(241,196,15,.5) !important;
+  }
+
+  .cbjr-result-label {
+    display: block !important;
+    font-family: "Elektrix", Arial, sans-serif !important;
+    font-size: clamp(1.2rem, 6vw, 1.8rem) !important;
+    color: #fff !important;
+    margin: 4px 0 6px !important;
+  }
+
+  .cbjr-result-phrase {
+    font-size: .82rem !important;
+    color: rgba(255,255,255,.55) !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+  }
+
+  /* Stats: 3 colunas */
+  .cbjr-result-stats {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  .cbjr-result-stats > div {
+    background: rgba(255,255,255,.05) !important;
+    border: 1px solid rgba(255,255,255,.08) !important;
+    border-radius: 14px !important;
+    padding: 12px 8px !important;
+    text-align: center !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 8px !important;
-    width: 100% !important;
-    grid-template-columns: 1fr !important;
+    gap: 4px !important;
   }
 
-  html body #finishOverlay .performance-card {
-    width: 100% !important;
-    margin: 0 !important;
+  .cbjr-result-stats span {
+    font-family: "Elektrix", Arial, sans-serif !important;
+    font-size: 1.4rem !important;
+    font-weight: 900 !important;
+    color: #f1c40f !important;
+    line-height: 1 !important;
+  }
+
+  .cbjr-result-stats small {
+    font-size: .68rem !important;
+    color: rgba(255,255,255,.45) !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: .08em !important;
+  }
+
+  /* Barra de progresso */
+  .cbjr-result-meter {
+    height: 6px !important;
+    background: rgba(255,255,255,.1) !important;
+    border-radius: 999px !important;
+    overflow: hidden !important;
+  }
+
+  .cbjr-result-meter > div {
+    height: 100% !important;
+    background: linear-gradient(90deg, #1ed760, #f1c40f) !important;
+    border-radius: 999px !important;
+    transition: width .6s ease !important;
+  }
+
+  /* Unlock: capa + info em linha */
+  .cbjr-unlock-header {
+    display: flex !important;
+    gap: 14px !important;
+    align-items: center !important;
+    background: rgba(241,196,15,.06) !important;
+    border: 1px solid rgba(241,196,15,.18) !important;
+    border-radius: 18px !important;
     padding: 12px !important;
-    box-sizing: border-box !important;
   }
 
-  html body #finishOverlay .performance-stats {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 6px !important;
-    font-size: .76rem !important;
-    flex-wrap: unset !important;
+  .cbjr-unlock-cover {
+    width: 80px !important;
+    height: 80px !important;
+    min-width: 80px !important;
+    border-radius: 14px !important;
+    object-fit: cover !important;
+    display: block !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,.6) !important;
   }
 
-  html body #finishOverlay .ranking-card {
-    width: 100% !important;
-    padding: 12px !important;
-    box-sizing: border-box !important;
+  .cbjr-unlock-info {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    min-width: 0 !important;
   }
 
-  html body #finishOverlay .epic-actions,
-  html body #finishOverlay .actions.epic-actions {
+  .cbjr-unlock-badge {
+    font-size: .62rem !important;
+    font-weight: 900 !important;
+    letter-spacing: .14em !important;
+    text-transform: uppercase !important;
+    color: #1ed760 !important;
+  }
+
+  .cbjr-unlock-name {
+    font-family: "Elektrix", Arial, sans-serif !important;
+    font-size: clamp(.95rem, 4.5vw, 1.3rem) !important;
+    color: #f1c40f !important;
+    line-height: 1.1 !important;
+    display: block !important;
+  }
+
+  .cbjr-unlock-year {
+    font-size: .72rem !important;
+    color: rgba(255,255,255,.5) !important;
+  }
+
+  /* Botões */
+  .cbjr-result-actions {
     display: flex !important;
     flex-direction: column !important;
     gap: 10px !important;
-    padding: 0 !important;
-    margin-top: 14px !important;
   }
 
-  html body #finishOverlay .actions.epic-actions .primary,
-  html body #finishOverlay .actions.epic-actions .secondary {
+  .cbjr-result-actions .primary {
     width: 100% !important;
-    min-height: 48px !important;
-    border-radius: 12px !important;
+    height: 50px !important;
+    border-radius: 14px !important;
+    font-size: .92rem !important;
+    background: #f1c40f !important;
+    color: #000 !important;
+    border: 0 !important;
+    font-weight: 900 !important;
+    cursor: pointer !important;
   }
 
+  .cbjr-result-actions .secondary {
+    width: 100% !important;
+    height: 50px !important;
+    border-radius: 14px !important;
+    font-size: .88rem !important;
+    background: rgba(255,255,255,.06) !important;
+    border: 1px solid rgba(255,255,255,.14) !important;
+    color: rgba(255,255,255,.8) !important;
+    cursor: pointer !important;
+  }
 
-  /* ── Feedback animado (elemento criado no body via JS) ── */
+  /* ── Feedback animado (elemento criado no body via JS) ── */  /* ── Feedback animado (elemento criado no body via JS) ── */
   .cbjr-feedback-float {
     position: fixed !important;
     top: 40% !important;
@@ -4914,45 +4983,94 @@ function renderUnlockSuccess(nextAlbum, hitGoal) {
   const albumName = albumDisplayName(nextAlbum);
   const percent = Math.round((correct / currentAlbum.tracks.length) * 100);
   const globalPercent = Math.round(((Math.max(getUnlockedAlbumIndex(), currentAlbumIndex + 1) + 1) / RADIO_ALBUMS.length) * 100);
-  card.innerHTML = `
-    <div class="unlock-sparks" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-    <div class="unlock-hero epic-unlock">
-      <div class="unlock-stage-cover">
-        <div class="unlock-cover epic-cover"><img src="${coverUrl(nextAlbum)}" alt="Capa de ${albumName}" onerror="this.onerror=null;this.src=PAGES_BASE + encodeURIComponent(nextAlbum.cover);"></div>
-      </div>
-      <div class="unlock-info epic-info">
-        <span class="unlock-kicker epic-kicker">Novo CD liberado</span>
-        <h2>${albumName}</h2>
-        <p class="unlock-subtitle">Você bateu a meta do CD anterior com ${percent}% de acerto. O próximo capítulo da Rádio CBJR acabou de entrar no ar.</p>
-        <div class="unlock-progress-mini" aria-label="Progresso geral da Rádio" style="--unlock-percent:${globalPercent}%"><span style="width:${globalPercent}%"></span></div>
-        <div class="unlock-stats epic-stats">
-          <span class="unlock-chip epic-chip">${nextAlbum.year || 'CBJR'}</span>
-          <span class="unlock-chip epic-chip">${nextAlbum.tracks.length} faixas</span>
-          <span class="unlock-chip epic-chip">Meta: ${hitGoal} acertos</span>
-          <span class="unlock-chip epic-chip">Rádio ${globalPercent}% liberada</span>
+
+  if (window.innerWidth <= 760) {
+    card.innerHTML = `
+      <div class="cbjr-result-mobile">
+        <div class="cbjr-unlock-header">
+          <img class="cbjr-unlock-cover" src="${coverUrl(nextAlbum)}" alt="${albumName}" onerror="this.onerror=null;this.src=PAGES_BASE + encodeURIComponent(nextAlbum.cover);">
+          <div class="cbjr-unlock-info">
+            <span class="cbjr-unlock-badge">Novo CD Liberado</span>
+            <strong class="cbjr-unlock-name">${albumName}</strong>
+            <span class="cbjr-unlock-year">${nextAlbum.year} • ${nextAlbum.tracks.length} faixas</span>
+          </div>
+        </div>
+        <div class="cbjr-result-stats">
+          <div><span>${percent}%</span><small>Acerto</small></div>
+          <div><span>${correct}</span><small>Acertos</small></div>
+          <div><span>${wrong}</span><small>Erros</small></div>
+        </div>
+        <div class="cbjr-result-meter"><div style="width:${percent}%"></div></div>
+        <div class="cbjr-result-actions">
+          <button id="finishNextAlbum" class="primary" type="button">Tocar ${albumName}</button>
+          <button id="finishChooseAlbum" class="secondary" type="button">Escolher outro CD</button>
         </div>
       </div>
-    </div>
-    ${renderPerformanceCard(correct, wrong, currentAlbum.tracks.length)}
-    <div class="actions epic-actions">
-      <button id="finishNextAlbum" class="primary" type="button">Tocar ${albumName}</button>
-      <button id="finishChooseAlbum" class="secondary" type="button">Escolher outro CD</button>
-    </div>
-  `;
+    `;
+  } else {
+    card.innerHTML = `
+      <div class="unlock-sparks" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="unlock-hero epic-unlock">
+        <div class="unlock-stage-cover">
+          <div class="unlock-cover epic-cover"><img src="${coverUrl(nextAlbum)}" alt="Capa de ${albumName}" onerror="this.onerror=null;this.src=PAGES_BASE + encodeURIComponent(nextAlbum.cover);"></div>
+        </div>
+        <div class="unlock-info epic-info">
+          <span class="unlock-kicker epic-kicker">Novo CD liberado</span>
+          <h2>${albumName}</h2>
+          <p class="unlock-subtitle">Você bateu a meta do CD anterior com ${percent}% de acerto.</p>
+          <div class="unlock-stats epic-stats">
+            <span class="unlock-chip epic-chip">${nextAlbum.year || 'CBJR'}</span>
+            <span class="unlock-chip epic-chip">${nextAlbum.tracks.length} faixas</span>
+          </div>
+        </div>
+      </div>
+      ${renderPerformanceCard(correct, wrong, currentAlbum.tracks.length)}
+      <div class="actions epic-actions">
+        <button id="finishNextAlbum" class="primary" type="button">Tocar ${albumName}</button>
+        <button id="finishChooseAlbum" class="secondary" type="button">Escolher outro CD</button>
+      </div>
+    `;
+  }
   bindFinishButtons();
 }
 
 function renderFinishSimple(title, text, showNext, nextAlbum) {
   const card = document.querySelector('#finishOverlay .overlay-card');
-  card.innerHTML = `
-    <h2 id="finishTitle">${title}</h2>
-    <p id="finishText">${text}</p>
-    ${renderPerformanceCard(correct, wrong, currentAlbum?.tracks?.length || 1)}
-    <div class="actions">
-      <button id="finishNextAlbum" class="primary" type="button" style="display:${showNext ? 'inline-flex' : 'none'}">${showNext && nextAlbum ? 'Tocar ' + albumDisplayName(nextAlbum) : 'Próximo CD'}</button>
-      <button id="finishChooseAlbum" class="secondary" type="button">Escolher outro CD</button>
-    </div>
-  `;
+  const total = currentAlbum?.tracks?.length || 1;
+  const pct = Math.round((correct / total) * 100);
+  const rank = getPerformanceRank(correct, wrong, total);
+
+  if (window.innerWidth <= 760) {
+    card.innerHTML = `
+      <div class="cbjr-result-mobile">
+        <div class="cbjr-result-score">
+          <span class="cbjr-result-pct">${pct}%</span>
+          <span class="cbjr-result-label">${rank.title}</span>
+          <p class="cbjr-result-phrase">${rank.phrase}</p>
+        </div>
+        <div class="cbjr-result-stats">
+          <div><span>${correct}</span><small>Acertos</small></div>
+          <div><span>${wrong}</span><small>Erros</small></div>
+          <div><span>${total}</span><small>Faixas</small></div>
+        </div>
+        <div class="cbjr-result-meter"><div style="width:${pct}%"></div></div>
+        <div class="cbjr-result-actions">
+          ${showNext && nextAlbum ? `<button id="finishNextAlbum" class="primary" type="button">Tocar ${albumDisplayName(nextAlbum)}</button>` : ''}
+          <button id="finishChooseAlbum" class="secondary" type="button">Escolher outro CD</button>
+        </div>
+      </div>
+    `;
+  } else {
+    card.innerHTML = `
+      <h2 id="finishTitle">${title}</h2>
+      <p id="finishText">${text}</p>
+      ${renderPerformanceCard(correct, wrong, total)}
+      <div class="actions">
+        <button id="finishNextAlbum" class="primary" type="button" style="display:${showNext ? 'inline-flex' : 'none'}">${showNext && nextAlbum ? 'Tocar ' + albumDisplayName(nextAlbum) : 'Próximo CD'}</button>
+        <button id="finishChooseAlbum" class="secondary" type="button">Escolher outro CD</button>
+      </div>
+    `;
+  }
   bindFinishButtons();
 }
 
