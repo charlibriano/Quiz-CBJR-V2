@@ -3825,21 +3825,22 @@
   body.radio-playing:not(.has-intro) .primary{height:46px!important;padding:0 24px!important;border-radius:999px!important;flex:1!important;max-width:200px!important}
   body.radio-playing:not(.has-intro) .secondary{height:46px!important;padding:0 16px!important;border-radius:999px!important}
 
-  /* ── Tela de resultado: bottom sheet ── */
+  /* ── Tela de resultado: full screen centralizado ── */
   html body #finishOverlay {
-    padding: 0 !important;
-    align-items: flex-end !important;
-    overflow: hidden !important;
+    padding: 12px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: auto !important;
   }
 
   html body #finishOverlay .overlay-card {
     width: 100% !important;
-    max-width: 100% !important;
-    max-height: 85svh !important;
+    max-width: 420px !important;
+    max-height: 94svh !important;
     overflow-y: auto !important;
-    border-radius: 24px 24px 0 0 !important;
-    padding: 0 0 32px !important;
-    margin: 0 !important;
+    border-radius: 24px !important;
+    padding: 0 0 24px !important;
+    margin: auto !important;
     box-sizing: border-box !important;
   }
 
@@ -3847,19 +3848,13 @@
   .cbjr-result-mobile {
     display: flex !important;
     flex-direction: column !important;
-    gap: 16px !important;
-    padding: 14px 16px 0 !important;
+    gap: 14px !important;
+    padding: 12px 16px 0 !important;
   }
 
-  /* Handle */
+  /* Sem handle — não é mais bottom sheet */
   .cbjr-result-mobile::before {
-    content: "" !important;
-    display: block !important;
-    width: 36px !important;
-    height: 4px !important;
-    background: rgba(255,255,255,.2) !important;
-    border-radius: 999px !important;
-    margin: 0 auto !important;
+    display: none !important;
   }
 
   /* Pontuação central */
@@ -3954,13 +3949,13 @@
   }
 
   .cbjr-unlock-cover {
-    width: 80px !important;
-    height: 80px !important;
-    min-width: 80px !important;
-    border-radius: 14px !important;
+    width: 100px !important;
+    height: 100px !important;
+    min-width: 100px !important;
+    border-radius: 16px !important;
     object-fit: cover !important;
     display: block !important;
-    box-shadow: 0 8px 24px rgba(0,0,0,.6) !important;
+    box-shadow: 0 8px 28px rgba(0,0,0,.7) !important;
   }
 
   .cbjr-unlock-info {
@@ -4120,6 +4115,49 @@
     background: #f1c40f !important;
     transform: scale(1.35) !important;
     box-shadow: 0 0 8px rgba(241,196,15,.5) !important;
+  }
+
+
+  /* Capa grande no topo do resultado */
+  .cbjr-unlock-cover-hero {
+    width: 100% !important;
+    aspect-ratio: 1 !important;
+    object-fit: cover !important;
+    display: block !important;
+    border-radius: 24px 24px 0 0 !important;
+    max-height: 42vw !important;
+    object-position: center top !important;
+  }
+
+  .cbjr-unlock-info-block {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 3px !important;
+    text-align: center !important;
+  }
+
+  .cbjr-unlock-badge {
+    font-size: .65rem !important;
+    font-weight: 900 !important;
+    letter-spacing: .14em !important;
+    text-transform: uppercase !important;
+    color: #1ed760 !important;
+    display: block !important;
+  }
+
+  .cbjr-unlock-name {
+    font-family: "Elektrix", Arial, sans-serif !important;
+    font-size: clamp(1.1rem, 5.5vw, 1.6rem) !important;
+    color: #f1c40f !important;
+    line-height: 1.1 !important;
+    display: block !important;
+    text-shadow: 0 0 20px rgba(241,196,15,.3) !important;
+  }
+
+  .cbjr-unlock-year {
+    font-size: .72rem !important;
+    color: rgba(255,255,255,.5) !important;
+    display: block !important;
   }
 
 }
@@ -4986,14 +5024,12 @@ function renderUnlockSuccess(nextAlbum, hitGoal) {
 
   if (window.innerWidth <= 760) {
     card.innerHTML = `
+      <img class="cbjr-unlock-cover-hero" src="${coverUrl(nextAlbum)}" alt="${albumName}" onerror="this.onerror=null;this.src=PAGES_BASE + encodeURIComponent(nextAlbum.cover);">
       <div class="cbjr-result-mobile">
-        <div class="cbjr-unlock-header">
-          <img class="cbjr-unlock-cover" src="${coverUrl(nextAlbum)}" alt="${albumName}" onerror="this.onerror=null;this.src=PAGES_BASE + encodeURIComponent(nextAlbum.cover);">
-          <div class="cbjr-unlock-info">
-            <span class="cbjr-unlock-badge">Novo CD Liberado</span>
-            <strong class="cbjr-unlock-name">${albumName}</strong>
-            <span class="cbjr-unlock-year">${nextAlbum.year} • ${nextAlbum.tracks.length} faixas</span>
-          </div>
+        <div class="cbjr-unlock-info-block">
+          <span class="cbjr-unlock-badge">✦ Novo CD Liberado</span>
+          <strong class="cbjr-unlock-name">${albumName}</strong>
+          <span class="cbjr-unlock-year">${nextAlbum.year} • ${nextAlbum.tracks.length} faixas</span>
         </div>
         <div class="cbjr-result-stats">
           <div><span>${percent}%</span><small>Acerto</small></div>
