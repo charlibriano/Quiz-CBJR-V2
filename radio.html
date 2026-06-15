@@ -3761,508 +3761,6 @@
   }
 
 </style>
-
-<style id="radio-mobile-v4">
-/* ═══════════════════════════════════════════════════════════════════
-   RÁDIO CBJR — MOBILE v4
-   Cirúrgico: não toca no cover-wrap nem na revelação da capa
-   ═══════════════════════════════════════════════════════════════════ */
-
-@media (max-width: 760px) {
-
-  /* ── TOPBAR FIXA ── */
-  .topbar {
-    position: fixed !important;
-    top: 0 !important; left: 0 !important; right: 0 !important;
-    height: 52px !important;
-    padding: 0 12px !important;
-    background: rgba(0,0,0,.94) !important;
-    backdrop-filter: blur(14px) !important;
-    -webkit-backdrop-filter: blur(14px) !important;
-    border-bottom: 1px solid rgba(241,196,15,.15) !important;
-    z-index: 60 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    border-radius: 0 !important;
-  }
-
-  .back-btn {
-    min-height: 34px !important;
-    padding: 0 12px !important;
-    font-size: .76rem !important;
-    border-radius: 999px !important;
-    background: transparent !important;
-    border: 1px solid rgba(241,196,15,.35) !important;
-    color: #f1c40f !important;
-    font-weight: 900 !important;
-    text-decoration: none !important;
-    display: inline-flex !important;
-    align-items: center !important;
-  }
-
-  .mode-pill {
-    font-family: "Elektrix", Arial, sans-serif !important;
-    font-size: 1.15rem !important;
-    color: #f1c40f !important;
-    text-shadow: 0 0 18px rgba(241,196,15,.5) !important;
-  }
-
-  .topbar > div:last-child {
-    display: flex !important;
-    gap: 6px !important;
-    align-items: center !important;
-  }
-
-  .small-btn {
-    min-height: 32px !important;
-    padding: 0 11px !important;
-    font-size: .72rem !important;
-    border-radius: 999px !important;
-    background: rgba(255,255,255,.07) !important;
-    border: 1px solid rgba(255,255,255,.18) !important;
-    color: #fff !important;
-    font-weight: 900 !important;
-    cursor: pointer !important;
-    white-space: nowrap !important;
-  }
-
-  #topbarModeBtn {
-    border-color: rgba(241,196,15,.4) !important;
-    color: #f1c40f !important;
-  }
-
-  /* ── SELECT SCREEN ── */
-  .select-screen {
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 62px 0 24px !important;
-    border-radius: 0 !important;
-    border: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    min-height: 100svh !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 14px !important;
-    overflow-x: visible !important;
-    overflow-y: auto !important;
-  }
-
-  .select-screen h1 {
-    font-family: "Elektrix", Arial, sans-serif !important;
-    font-size: clamp(2rem, 11vw, 3rem) !important;
-    color: #f1c40f !important;
-    text-align: center !important;
-    margin: 0 !important;
-    padding: 0 16px !important;
-    text-shadow: 0 0 32px rgba(241,196,15,.45), 2px 3px 0 rgba(0,0,0,.8) !important;
-    line-height: .88 !important;
-  }
-
-  .select-screen > p {
-    font-size: .76rem !important;
-    color: rgba(255,255,255,.42) !important;
-    text-align: center !important;
-    margin: 0 !important;
-    padding: 0 16px !important;
-    font-style: italic !important;
-  }
-
-  /* Toggle Normal/Hard */
-  .mode-select-wrap {
-    display: flex !important;
-    flex-direction: row !important;
-    gap: 8px !important;
-    padding: 10px 14px !important;
-    margin: 0 14px !important;
-    background: rgba(241,196,15,.06) !important;
-    border: 1px solid rgba(241,196,15,.2) !important;
-    border-radius: 14px !important;
-    align-items: center !important;
-    flex-wrap: nowrap !important;
-  }
-
-  .mode-select-wrap::before {
-    content: "Modo:" !important;
-    font-size: .68rem !important;
-    font-weight: 900 !important;
-    color: rgba(241,196,15,.65) !important;
-    letter-spacing: .1em !important;
-    text-transform: uppercase !important;
-    white-space: nowrap !important;
-    flex-shrink: 0 !important;
-  }
-
-  .mode-choice {
-    flex: 1 !important;
-    height: 38px !important;
-    border-radius: 10px !important;
-    font-size: .84rem !important;
-    font-weight: 900 !important;
-    border: 1.5px solid rgba(255,255,255,.12) !important;
-    background: rgba(255,255,255,.04) !important;
-    color: rgba(255,255,255,.45) !important;
-    cursor: pointer !important;
-    transition: all .15s ease !important;
-  }
-
-  .mode-choice.active {
-    background: #f1c40f !important;
-    border-color: #f1c40f !important;
-    color: #000 !important;
-    box-shadow: 0 0 18px rgba(241,196,15,.3) !important;
-  }
-
-  .mode-help { display: none !important; }
-
-  .radio-progress { padding: 0 14px !important; }
-
-  /* ── CARROSSEL DE CDs ── */
-  /* Override do @media(max-width:620px) que força grid-template-columns */
-  .album-grid,
-  .select-screen .album-grid {
-    display: flex !important;
-    flex-direction: row !important;
-    gap: 12px !important;
-    padding: 4px 20px 16px !important;
-    overflow-x: auto !important;
-    overflow-y: visible !important;
-    -webkit-overflow-scrolling: touch !important;
-    scroll-snap-type: x mandatory !important;
-    scrollbar-width: none !important;
-    height: auto !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-    grid-template-columns: unset !important;
-    align-items: start !important;
-  }
-
-  .album-grid::-webkit-scrollbar,
-  .select-screen .album-grid::-webkit-scrollbar { display: none !important; }
-
-  .album-option {
-    flex: 0 0 148px !important;
-    width: 148px !important;
-    min-width: 148px !important;
-    scroll-snap-align: start !important;
-    border-radius: 18px !important;
-    border: 1.5px solid rgba(255,255,255,.08) !important;
-    border-top: 1.5px solid rgba(241,196,15,.28) !important;
-    background: linear-gradient(160deg, rgba(28,22,4,.92), rgba(8,8,8,.97)) !important;
-    padding: 8px 8px 12px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    height: auto !important;
-    min-height: 0 !important;
-    aspect-ratio: unset !important;
-    cursor: pointer !important;
-    transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease !important;
-    position: relative !important;
-    overflow: hidden !important;
-  }
-
-  /* Brilho no topo do card */
-  .album-option::before {
-    content: "" !important;
-    position: absolute !important;
-    top: 0 !important; left: 15% !important; right: 15% !important;
-    height: 1px !important;
-    background: linear-gradient(90deg, transparent, rgba(241,196,15,.5), transparent) !important;
-    display: block !important;
-    font-size: 0 !important;
-  }
-  .album-option::after { display: none !important; }
-
-  .album-option:active:not(:disabled) {
-    transform: scale(.96) !important;
-    border-color: rgba(241,196,15,.55) !important;
-    box-shadow: 0 0 22px rgba(241,196,15,.2) !important;
-  }
-
-  .album-option.locked {
-    opacity: .35 !important;
-    filter: grayscale(.85) !important;
-  }
-
-  .album-option img {
-    width: 100% !important;
-    aspect-ratio: 1 !important;
-    object-fit: cover !important;
-    border-radius: 12px !important;
-    display: block !important;
-    background: #111 !important;
-  }
-
-  .album-option strong {
-    display: block !important;
-    margin-top: 8px !important;
-    font-size: .76rem !important;
-    font-weight: 900 !important;
-    color: #fff !important;
-    line-height: 1.2 !important;
-  }
-
-  .album-option small {
-    font-size: .65rem !important;
-    color: rgba(241,196,15,.72) !important;
-    margin-top: 3px !important;
-    display: block !important;
-    font-weight: 700 !important;
-  }
-
-  /* ═══════════════════════════════════════════════════════════════════
-     TELA DO JOGO — layout flow normal, SEM tocar no cover-wrap
-     ═══════════════════════════════════════════════════════════════════ */
-  body.radio-playing:not(.has-intro) {
-    overflow-y: auto !important;
-  }
-
-  body.radio-playing:not(.has-intro) .stage {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 52px 0 0 !important;
-    padding: 12px 12px 24px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-    grid-template-columns: unset !important;
-    align-items: stretch !important;
-  }
-
-  /* Album card: linha horizontal compacta, capa pequena à esq */
-  body.radio-playing:not(.has-intro) .album-card {
-    display: grid !important;
-    grid-template-columns: 72px 1fr !important;
-    gap: 12px !important;
-    align-items: center !important;
-    border-radius: 16px !important;
-    padding: 12px !important;
-    border: 1px solid rgba(241,196,15,.18) !important;
-    background: rgba(14,14,14,.95) !important;
-    box-shadow: none !important;
-  }
-
-  /* cover-wrap: tamanho fixo, preserva o mecanismo de revelação */
-  body.radio-playing:not(.has-intro) .cover-wrap {
-    width: 72px !important;
-    height: 72px !important;
-    min-width: 72px !important;
-    border-radius: 12px !important;
-    overflow: hidden !important;
-    flex-shrink: 0 !important;
-    aspect-ratio: unset !important;
-    position: relative !important;
-  }
-
-  /* A img dentro do cover-wrap: não mexer no filter/transform que a revelação usa */
-  body.radio-playing:not(.has-intro) .cover-wrap img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-    display: block !important;
-  }
-
-  body.radio-playing:not(.has-intro) .album-meta {
-    text-align: left !important;
-    margin: 0 !important;
-  }
-
-  body.radio-playing:not(.has-intro) .album-meta h1 {
-    font-size: clamp(.95rem, 4.5vw, 1.2rem) !important;
-    margin: 0 !important;
-    color: #fff !important;
-    line-height: 1.1 !important;
-  }
-
-  body.radio-playing:not(.has-intro) .album-meta p {
-    font-size: .72rem !important;
-    color: rgba(255,255,255,.55) !important;
-    margin: 4px 0 0 !important;
-  }
-
-  /* Radio panel */
-  body.radio-playing:not(.has-intro) .radio-panel {
-    border-radius: 20px !important;
-    border: 1px solid rgba(241,196,15,.14) !important;
-    background: linear-gradient(180deg, rgba(16,16,16,.98), rgba(6,6,6,1)) !important;
-    box-shadow: 0 8px 32px rgba(0,0,0,.7) !important;
-    padding: 16px 14px 18px !important;
-    min-height: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-    grid-template-rows: unset !important;
-  }
-
-  body.radio-playing:not(.has-intro) .radio-title {
-    text-align: center !important;
-  }
-
-  body.radio-playing:not(.has-intro) .radio-title small {
-    font-size: .62rem !important;
-    padding: 4px 10px !important;
-    letter-spacing: .12em !important;
-  }
-
-  body.radio-playing:not(.has-intro) .radio-title h2 {
-    font-size: clamp(1rem, 5vw, 1.3rem) !important;
-    margin: 6px 0 0 !important;
-    text-shadow: none !important;
-  }
-
-  body.radio-playing:not(.has-intro) .status-row {
-    display: grid !important;
-    grid-template-columns: repeat(4, 1fr) !important;
-    gap: 6px !important;
-  }
-
-  body.radio-playing:not(.has-intro) .status-card {
-    padding: 6px 4px !important;
-    border-radius: 10px !important;
-    background: rgba(255,255,255,.05) !important;
-    border: 1px solid rgba(255,255,255,.07) !important;
-  }
-
-  body.radio-playing:not(.has-intro) .status-card small { font-size: .58rem !important; }
-  body.radio-playing:not(.has-intro) .status-card strong { font-size: .9rem !important; }
-
-  body.radio-playing:not(.has-intro) .message {
-    font-size: .76rem !important;
-    color: rgba(255,255,255,.55) !important;
-    text-align: center !important;
-    min-height: 0 !important;
-  }
-
-  /* ── 4 OPÇÕES ── */
-  html body.radio-quiz-4 .track-grid,
-  html body.radio-quiz-4.radio-playing .track-grid,
-  html body.radio-quiz-4.radio-tracks-many .track-grid,
-  html body.radio-quiz-4.radio-tracks-supermany .track-grid {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    grid-template-rows: auto !important;
-    gap: 8px !important;
-    padding: 0 !important;
-    max-height: none !important;
-    overflow: visible !important;
-  }
-
-  .track-grid {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    max-height: none !important;
-    overflow: visible !important;
-  }
-
-  html body.radio-quiz-4 .quiz-4-btn {
-    min-height: 58px !important;
-    height: auto !important;
-    border-radius: 14px !important;
-    padding: 12px 14px !important;
-    font-size: .84rem !important;
-    font-weight: 700 !important;
-    line-height: 1.28 !important;
-    white-space: normal !important;
-    text-align: center !important;
-    border: 1.5px solid rgba(255,255,255,.1) !important;
-    background: rgba(28,28,28,.98) !important;
-    color: rgba(255,255,255,.88) !important;
-    cursor: pointer !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-    transition: border-color .12s, background .12s, transform .1s !important;
-    -webkit-tap-highlight-color: transparent !important;
-    overflow: visible !important;
-    position: static !important;
-    counter-increment: none !important;
-  }
-
-  html body.radio-quiz-4 .quiz-4-btn::before {
-    display: none !important;
-    content: "" !important;
-  }
-
-  html body.radio-quiz-4 .quiz-4-btn:active:not(:disabled) {
-    transform: scale(.97) !important;
-    border-color: rgba(241,196,15,.55) !important;
-    background: rgba(241,196,15,.09) !important;
-  }
-
-  html body.radio-quiz-4 .quiz-4-btn.correct {
-    background: rgba(13,120,54,.9) !important;
-    border-color: #1ed760 !important;
-    color: #fff !important;
-    box-shadow: 0 0 18px rgba(30,215,96,.28) !important;
-    animation: cbjrCorrect .38s ease !important;
-  }
-
-  html body.radio-quiz-4 .quiz-4-btn.correct::before {
-    background: #1ed760 !important;
-    border-color: #1ed760 !important;
-    color: #000 !important;
-  }
-
-  @keyframes cbjrCorrect {
-    0%   { transform: scale(1); }
-    45%  { transform: scale(1.04); }
-    100% { transform: scale(1); }
-  }
-
-  html body.radio-quiz-4 .quiz-4-btn.wrong {
-    background: rgba(132,24,20,.9) !important;
-    border-color: #ff3b30 !important;
-    color: rgba(255,255,255,.5) !important;
-    animation: cbjrWrong .32s ease !important;
-  }
-
-  html body.radio-quiz-4 .quiz-4-btn.wrong::before {
-    background: #ff3b30 !important;
-    border-color: #ff3b30 !important;
-    color: #fff !important;
-  }
-
-  @keyframes cbjrWrong {
-    0%,100%{ transform: translateX(0); }
-    20%    { transform: translateX(-6px); }
-    60%    { transform: translateX(5px); }
-    80%    { transform: translateX(-3px); }
-  }
-
-  html body.radio-quiz-4 .quiz-4-btn:disabled {
-    opacity: .38 !important;
-    cursor: default !important;
-  }
-
-  body.radio-playing:not(.has-intro) .actions {
-    display: flex !important;
-    gap: 8px !important;
-    justify-content: center !important;
-    flex-wrap: wrap !important;
-  }
-
-  body.radio-playing:not(.has-intro) .primary {
-    height: 46px !important;
-    padding: 0 24px !important;
-    font-size: .9rem !important;
-    border-radius: 999px !important;
-    flex: 1 !important;
-    max-width: 200px !important;
-  }
-
-  body.radio-playing:not(.has-intro) .secondary {
-    height: 46px !important;
-    padding: 0 16px !important;
-    font-size: .84rem !important;
-    border-radius: 999px !important;
-  }
-}
-</style>
-
-
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1JCN94Y3P0"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -4270,7 +3768,60 @@
     gtag('js', new Date());
     gtag('config', 'G-1JCN94Y3P0');
   </script>
-</head>
+
+<style id="cbjr-radio-mobile">
+@media (max-width: 760px) {
+  .topbar{position:fixed!important;top:0!important;left:0!important;right:0!important;height:52px!important;padding:0 12px!important;background:rgba(0,0,0,.94)!important;backdrop-filter:blur(14px)!important;-webkit-backdrop-filter:blur(14px)!important;border-bottom:1px solid rgba(241,196,15,.15)!important;z-index:60!important;display:flex!important;align-items:center!important;justify-content:space-between!important;border-radius:0!important}
+  .back-btn{min-height:34px!important;padding:0 12px!important;font-size:.76rem!important;border-radius:999px!important;background:transparent!important;border:1px solid rgba(241,196,15,.35)!important;color:#f1c40f!important;font-weight:900!important;text-decoration:none!important;display:inline-flex!important;align-items:center!important;box-shadow:none!important}
+  .mode-pill{font-family:"Elektrix",Arial,sans-serif!important;font-size:1.15rem!important;color:#f1c40f!important;text-shadow:0 0 18px rgba(241,196,15,.5)!important}
+  .small-btn{min-height:32px!important;padding:0 11px!important;font-size:.72rem!important;border-radius:999px!important;background:rgba(255,255,255,.07)!important;border:1px solid rgba(255,255,255,.18)!important;color:#fff!important;font-weight:900!important;cursor:pointer!important;white-space:nowrap!important}
+  .page{padding:0!important}
+  .select-screen{width:100vw!important;max-width:100vw!important;margin:0!important;padding:60px 0 24px!important;border-radius:0!important;border:0!important;background:transparent!important;box-shadow:none!important;min-height:100svh!important;display:flex!important;flex-direction:column!important;gap:14px!important;overflow:visible!important}
+  .select-screen h1{font-family:"Elektrix",Arial,sans-serif!important;font-size:clamp(2rem,11vw,3rem)!important;color:#f1c40f!important;text-align:center!important;margin:0!important;padding:0 16px!important;line-height:.88!important}
+  .select-screen > p{font-size:.76rem!important;color:rgba(255,255,255,.42)!important;text-align:center!important;margin:0!important;padding:0 16px!important}
+  .mode-select-wrap{display:flex!important;flex-direction:row!important;gap:8px!important;padding:10px 14px!important;margin:0 14px!important;background:rgba(241,196,15,.06)!important;border:1px solid rgba(241,196,15,.2)!important;border-radius:14px!important;align-items:center!important}
+  .mode-select-wrap::before{content:"Modo:"!important;font-size:.68rem!important;font-weight:900!important;color:rgba(241,196,15,.65)!important;letter-spacing:.1em!important;text-transform:uppercase!important;white-space:nowrap!important;flex-shrink:0!important}
+  .mode-choice{flex:1!important;height:38px!important;border-radius:10px!important;font-size:.84rem!important;font-weight:900!important;border:1.5px solid rgba(255,255,255,.12)!important;background:rgba(255,255,255,.04)!important;color:rgba(255,255,255,.45)!important;cursor:pointer!important}
+  .mode-choice.active{background:#f1c40f!important;border-color:#f1c40f!important;color:#000!important;box-shadow:0 0 18px rgba(241,196,15,.3)!important}
+  .mode-help{display:none!important}
+  .radio-progress{padding:0 14px!important;margin:0!important}
+  #albumGrid{display:flex!important;flex-direction:row!important;gap:12px!important;padding:4px 20px 12px!important;overflow-x:auto!important;overflow-y:visible!important;-webkit-overflow-scrolling:touch!important;scroll-snap-type:x mandatory!important;scrollbar-width:none!important;width:100vw!important;max-width:100vw!important;box-sizing:border-box!important;grid-template-columns:unset!important;align-items:start!important}
+  #albumGrid::-webkit-scrollbar{display:none!important}
+  .album-option{flex:0 0 148px!important;width:148px!important;min-width:148px!important;max-width:148px!important;scroll-snap-align:start!important;border-radius:18px!important;border:1.5px solid rgba(255,255,255,.08)!important;border-top:1.5px solid rgba(241,196,15,.28)!important;background:linear-gradient(160deg,rgba(28,22,4,.92),rgba(8,8,8,.97))!important;padding:8px 8px 12px!important;display:flex!important;flex-direction:column!important;height:auto!important;min-height:0!important;aspect-ratio:unset!important;cursor:pointer!important;transition:transform .15s ease,border-color .15s ease!important;grid-template-columns:unset!important}
+  .album-option:active:not(:disabled){transform:scale(.96)!important;border-color:rgba(241,196,15,.55)!important;box-shadow:0 0 22px rgba(241,196,15,.2)!important}
+  .album-option.locked{opacity:.35!important;filter:grayscale(.85)!important}
+  .album-option img{width:100%!important;aspect-ratio:1!important;object-fit:cover!important;border-radius:12px!important;display:block!important;background:#111!important}
+  .album-option strong{display:block!important;margin-top:8px!important;font-size:.76rem!important;font-weight:900!important;color:#fff!important;line-height:1.2!important}
+  .album-option small{font-size:.65rem!important;color:rgba(241,196,15,.72)!important;margin-top:3px!important;display:block!important;font-weight:700!important}
+  body.radio-playing:not(.has-intro){overflow-y:auto!important}
+  body.radio-playing:not(.has-intro) .stage{width:100%!important;max-width:100%!important;margin:52px 0 0!important;padding:12px!important;display:flex!important;flex-direction:column!important;gap:10px!important;grid-template-columns:unset!important}
+  body.radio-playing:not(.has-intro) .album-card{display:grid!important;grid-template-columns:72px 1fr!important;gap:12px!important;align-items:center!important;border-radius:16px!important;padding:12px!important;border:1px solid rgba(241,196,15,.15)!important;background:rgba(14,14,14,.95)!important;box-shadow:none!important}
+  body.radio-playing:not(.has-intro) .cover-wrap{width:72px!important;height:72px!important;min-width:72px!important;border-radius:12px!important;aspect-ratio:unset!important;overflow:hidden!important;flex-shrink:0!important}
+  body.radio-playing:not(.has-intro) .album-meta{text-align:left!important;margin:0!important}
+  body.radio-playing:not(.has-intro) .album-meta h1{font-size:clamp(.95rem,4.5vw,1.2rem)!important;margin:0!important;line-height:1.1!important}
+  body.radio-playing:not(.has-intro) .album-meta p{font-size:.72rem!important;color:rgba(255,255,255,.55)!important;margin:4px 0 0!important}
+  body.radio-playing:not(.has-intro) .radio-panel{border-radius:20px!important;border:1px solid rgba(241,196,15,.14)!important;background:linear-gradient(180deg,rgba(16,16,16,.98),rgba(6,6,6,1))!important;box-shadow:0 8px 32px rgba(0,0,0,.7)!important;padding:16px 14px 18px!important;min-height:0!important;display:flex!important;flex-direction:column!important;gap:10px!important;grid-template-rows:unset!important}
+  body.radio-playing:not(.has-intro) .radio-title{text-align:center!important}
+  body.radio-playing:not(.has-intro) .radio-title small{font-size:.62rem!important;padding:4px 10px!important}
+  body.radio-playing:not(.has-intro) .radio-title h2{font-size:clamp(1rem,5vw,1.3rem)!important;margin:6px 0 0!important;text-shadow:none!important}
+  body.radio-playing:not(.has-intro) .status-row{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:6px!important}
+  body.radio-playing:not(.has-intro) .status-card{padding:6px 4px!important;border-radius:10px!important;background:rgba(255,255,255,.05)!important;border:1px solid rgba(255,255,255,.07)!important}
+  body.radio-playing:not(.has-intro) .status-card small{font-size:.58rem!important}
+  body.radio-playing:not(.has-intro) .status-card strong{font-size:.9rem!important}
+  body.radio-playing:not(.has-intro) .message{font-size:.76rem!important;color:rgba(255,255,255,.55)!important;text-align:center!important;min-height:0!important}
+  html body.radio-quiz-4 #trackGrid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;padding:0!important;max-height:none!important;overflow:visible!important}
+  html body.radio-quiz-4 .quiz-4-btn{min-height:58px!important;height:auto!important;border-radius:14px!important;padding:12px 14px!important;font-size:.84rem!important;font-weight:700!important;line-height:1.28!important;white-space:normal!important;text-align:center!important;border:1.5px solid rgba(255,255,255,.1)!important;background:rgba(28,28,28,.98)!important;color:rgba(255,255,255,.88)!important;cursor:pointer!important;display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;box-sizing:border-box!important;-webkit-tap-highlight-color:transparent!important;overflow:visible!important}
+  html body.radio-quiz-4 .quiz-4-btn:active:not(:disabled){transform:scale(.97)!important;border-color:rgba(241,196,15,.55)!important;background:rgba(241,196,15,.09)!important}
+  html body.radio-quiz-4 .quiz-4-btn.correct{background:rgba(13,120,54,.9)!important;border-color:#1ed760!important;color:#fff!important;box-shadow:0 0 18px rgba(30,215,96,.28)!important;animation:cbjrC .38s ease!important}
+  @keyframes cbjrC{0%{transform:scale(1)}45%{transform:scale(1.04)}100%{transform:scale(1)}}
+  html body.radio-quiz-4 .quiz-4-btn.wrong{background:rgba(132,24,20,.9)!important;border-color:#ff3b30!important;color:rgba(255,255,255,.5)!important;animation:cbjrW .32s ease!important}
+  @keyframes cbjrW{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(5px)}}
+  html body.radio-quiz-4 .quiz-4-btn:disabled{opacity:.38!important;cursor:default!important}
+  body.radio-playing:not(.has-intro) .actions{display:flex!important;gap:8px!important;justify-content:center!important}
+  body.radio-playing:not(.has-intro) .primary{height:46px!important;padding:0 24px!important;border-radius:999px!important;flex:1!important;max-width:200px!important}
+  body.radio-playing:not(.has-intro) .secondary{height:46px!important;padding:0 16px!important;border-radius:999px!important}
+}
+</style></head>
 <body class="has-intro">
 <div id="radioIntro" class="radio-intro" aria-label="Entrada da Rádio CBJR">
   <div class="radio-intro-content">
@@ -4287,10 +3838,8 @@
   <div class="topbar">
     <a class="back-btn" href="index.html?skipIntro=true">← Menu</a>
     <div class="mode-pill">Rádio CBJR</div>
-    <div style="display:flex;gap:6px;align-items:center;">
-      <button class="small-btn" id="topbarModeBtn" type="button">Normal</button>
-      <button class="small-btn" id="changeAlbumBtn" type="button">Trocar CD</button>
-    </div>
+    <button class="small-btn" id="topbarModeBtn" type="button">Normal</button>
+    <button class="small-btn" id="changeAlbumBtn" type="button">Trocar CD</button>
   </div>
 
   <section id="selectScreen" class="select-screen">
@@ -4601,16 +4150,6 @@ function setRadioMode(mode) {
     help.textContent = currentRadioMode === 'hard'
       ? 'Hard: a faixa começa em um trecho aleatório — começo, meio ou final.'
       : 'Normal: a música começa do início.';
-  }
-  // Atualizar botão toggle da topbar
-  const tb = $('topbarModeBtn');
-  if (tb) {
-    const isHard = currentRadioMode === 'hard';
-    tb.textContent = isHard ? 'Hard 🔥' : 'Normal';
-    tb.style.background = isHard ? 'rgba(231,76,60,.85)' : 'rgba(255,255,255,.08)';
-    tb.style.borderColor = isHard ? '#e74c3c' : 'rgba(255,255,255,.22)';
-    tb.style.color = '#fff';
-    tb.style.fontWeight = '900';
   }
 }
 
@@ -5260,24 +4799,14 @@ function startAlbum(index) {
   $('albumYear').textContent = currentAlbum.year ? `Ano: ${currentAlbum.year}` : '';
   updateCoverReveal(false);
   updateStatus();
-  pickTrack(); // pickTrack já chama buildOptions() internamente
+  pickTrack();
 }
 function buildOptions() {
-  // Gera 4 opções: 1 correta (currentTrack) + 3 incorretas aleatórias do CD
   if (!currentTrack) return;
-
   const allTracks = currentAlbum.tracks.map(t => cleanSongName(t.title));
   const correct4 = currentTrack.title;
-
-  // 3 opções erradas — embaralhadas, sem repetir a correta
-  const wrong4 = allTracks
-    .filter(t => t !== correct4)
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 3);
-
-  // Montar as 4 e embaralhar
+  const wrong4 = allTracks.filter(t => t !== correct4).sort(() => Math.random() - 0.5).slice(0, 3);
   const options = [correct4, ...wrong4].sort(() => Math.random() - 0.5);
-
   document.body.classList.add('radio-quiz-4');
   document.body.classList.remove('radio-tracks-many','radio-tracks-supermany');
   $('trackGrid').innerHTML = options.map(title => `
@@ -5312,7 +4841,7 @@ function pickTrack(autoPlay = false) {
   currentTrack._hardSegment = currentRadioMode === 'hard' ? hardSegmentLabel() : 'começo';
   audio.src = currentTrack.url;
   audio.currentTime = 0;
-  buildOptions(); // Gera 4 novas opções para esta faixa
+  buildOptions();
   $('message').textContent = radioStarted
     ? modeStatusText('Nova faixa no ar… descubra qual música está tocando.')
     : modeStatusText('Clique em tocar e escolha nas opções qual faixa está no som.');
@@ -5344,7 +4873,6 @@ async function playCurrent(isAuto = false) {
 }
 
 function resetTrackButtonsForNextRound() {
-  // Gera 4 novas opções para a faixa atual (currentTrack já foi atualizado)
   buildOptions();
 }
 
@@ -5531,13 +5059,6 @@ function showSelect() {
 setRadioMode(currentRadioMode);
 $('modeNormalBtn')?.addEventListener('click', () => setRadioMode('normal'));
 $('modeHardBtn')?.addEventListener('click', () => setRadioMode('hard'));
-
-// Toggle Normal/Hard na topbar
-document.getElementById('topbarModeBtn')?.addEventListener('click', function() {
-  setRadioMode(currentRadioMode === 'hard' ? 'normal' : 'hard');
-});
-// Inicializar visual do botão com o modo que estava salvo
-setRadioMode(currentRadioMode);
 $('playBtn').addEventListener('click', playCurrent);
 $('nextBtn').addEventListener('click', nextTrack);
 $('restartAlbumBtn').addEventListener('click', () => { if (autoNextTimer) { clearTimeout(autoNextTimer); autoNextTimer = null; } startAlbum(currentAlbumIndex); });
@@ -6050,29 +5571,52 @@ renderAlbums();
 </script>
 <!-- /CBJR POP-UP DE CONQUISTA DESBLOQUEADA -->
 
-
-<script id="radio-mobile-js">
-/* Pular intro automaticamente no mobile */
-(function() {
-  if (window.innerWidth <= 760) {
-    document.addEventListener('DOMContentLoaded', function() {
-      // Aguarda o init da página e pula a intro
-      setTimeout(function() {
-        if (typeof fecharIntroRadio === 'function') {
-          fecharIntroRadio();
-        } else {
-          // Fallback: esconder o elemento diretamente
-          var intro = document.getElementById('radioIntro');
-          if (intro) {
-            intro.style.display = 'none';
-            document.body.classList.remove('has-intro');
-          }
-        }
-      }, 80);
+<script>
+(function(){
+  if(window.innerWidth<=760){
+    document.addEventListener('DOMContentLoaded',function(){
+      setTimeout(function(){
+        if(typeof fecharIntroRadio==='function') fecharIntroRadio();
+        else { var el=document.getElementById('radioIntro'); if(el){el.style.display='none'; document.body.classList.remove('has-intro');} }
+      },80);
     });
   }
 })();
 </script>
 
+<script>
+(function(){
+  function syncTopbarBtn(){
+    var btn=document.getElementById('topbarModeBtn');
+    if(!btn) return;
+    var hard=currentRadioMode==='hard';
+    btn.textContent=hard?'Hard':'Normal';
+    btn.style.background=hard?'rgba(200,40,30,.8)':'rgba(255,255,255,.07)';
+    btn.style.borderColor=hard?'#e74c3c':'rgba(241,196,15,.35)';
+    btn.style.color=hard?'#fff':'#f1c40f';
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    var orig=setRadioMode;
+    setRadioMode=function(m){orig(m);syncTopbarBtn();};
+    document.getElementById('topbarModeBtn').addEventListener('click',function(){
+      setRadioMode(currentRadioMode==='hard'?'normal':'hard');
+    });
+    syncTopbarBtn();
+  });
+})();
+</script>
+
+<script>
+(function(){
+  if(window.innerWidth<=760){
+    document.addEventListener('DOMContentLoaded',function(){
+      setTimeout(function(){
+        if(typeof fecharIntroRadio==='function') fecharIntroRadio();
+        else{var e=document.getElementById('radioIntro');if(e){e.style.display='none';document.body.classList.remove('has-intro');}}
+      },80);
+    });
+  }
+})();
+</script>
 </body>
 </html>
