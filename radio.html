@@ -3848,6 +3848,48 @@ html body.radio-quiz-4.radio-tracks-supermany #trackGrid {
   html body.radio-quiz-4 .quiz-4-btn:disabled { opacity:.38 !important; cursor:default !important; }
 }
 </style>
+<style id="cbjr-radio-mobile">
+@media (max-width: 760px) {
+  .topbar{position:fixed!important;top:0!important;left:0!important;right:0!important;height:52px!important;padding:0 12px!important;background:rgba(0,0,0,.94)!important;backdrop-filter:blur(14px)!important;border-bottom:1px solid rgba(241,196,15,.15)!important;z-index:60!important;display:flex!important;align-items:center!important;justify-content:space-between!important;border-radius:0!important}
+  .back-btn{min-height:34px!important;padding:0 12px!important;font-size:.76rem!important;border-radius:999px!important;background:transparent!important;border:1px solid rgba(241,196,15,.35)!important;color:#f1c40f!important;font-weight:900!important;text-decoration:none!important;display:inline-flex!important;align-items:center!important}
+  .mode-pill{font-family:"Elektrix",Arial,sans-serif!important;font-size:1.15rem!important;color:#f1c40f!important;text-shadow:0 0 18px rgba(241,196,15,.5)!important}
+  .small-btn{min-height:32px!important;padding:0 11px!important;font-size:.72rem!important;border-radius:999px!important;background:rgba(255,255,255,.07)!important;border:1px solid rgba(255,255,255,.18)!important;color:#fff!important;font-weight:900!important;cursor:pointer!important;white-space:nowrap!important}
+  .page{padding:0!important}
+  .select-screen{width:100vw!important;max-width:100vw!important;margin:0!important;padding:60px 0 24px!important;border-radius:0!important;border:0!important;background:transparent!important;box-shadow:none!important;min-height:100svh!important;display:flex!important;flex-direction:column!important;gap:14px!important;overflow:visible!important}
+  .select-screen h1{font-family:"Elektrix",Arial,sans-serif!important;font-size:clamp(2rem,11vw,3rem)!important;color:#f1c40f!important;text-align:center!important;margin:0!important;padding:0 16px!important;line-height:.88!important}
+  .select-screen > p{font-size:.76rem!important;color:rgba(255,255,255,.42)!important;text-align:center!important;margin:0!important;padding:0 16px!important}
+  .radio-progress{padding:0 14px!important;margin:0!important}
+  #albumGrid{display:flex!important;flex-direction:row!important;gap:14px!important;padding:8px 20px 20px!important;overflow-x:auto!important;overflow-y:visible!important;-webkit-overflow-scrolling:touch!important;scroll-snap-type:x mandatory!important;scrollbar-width:none!important;width:100vw!important;max-width:100vw!important;box-sizing:border-box!important;grid-template-columns:unset!important;align-items:start!important}
+  #albumGrid::-webkit-scrollbar{display:none!important}
+  #albumGrid .album-option{flex:0 0 72vw!important;width:72vw!important;min-width:72vw!important;max-width:300px!important;scroll-snap-align:center!important;border-radius:22px!important;border:0!important;background:transparent!important;padding:0!important;display:flex!important;flex-direction:column!important;height:auto!important;min-height:0!important;aspect-ratio:unset!important;cursor:pointer!important;transition:transform .15s ease!important;overflow:hidden!important;position:relative!important}
+  #albumGrid .album-option img{width:100%!important;aspect-ratio:1!important;object-fit:cover!important;border-radius:22px!important;display:block!important;background:#111!important;box-shadow:0 14px 44px rgba(0,0,0,.72)!important}
+  #albumGrid .album-option strong{display:block!important;margin-top:11px!important;font-size:.9rem!important;font-weight:900!important;color:#fff!important;line-height:1.2!important;padding:0 4px!important}
+  #albumGrid .album-option small{font-size:.72rem!important;color:rgba(241,196,15,.8)!important;margin-top:4px!important;display:block!important;font-weight:700!important;padding:0 4px!important}
+  #albumGrid .album-option:active:not(:disabled) img{transform:scale(.96)!important;box-shadow:0 0 32px rgba(241,196,15,.3)!important}
+  #albumGrid .album-option.locked{opacity:.3!important;filter:grayscale(.9)!important}
+  .cbjr-carousel-dots{display:flex!important;justify-content:center!important;gap:6px!important;padding:4px 0 0!important}
+  .cbjr-dot{width:6px!important;height:6px!important;border-radius:50%!important;background:rgba(255,255,255,.22)!important;transition:background .2s,transform .2s!important;display:inline-block!important}
+  .cbjr-dot.active{background:#f1c40f!important;transform:scale(1.35)!important;box-shadow:0 0 8px rgba(241,196,15,.5)!important}
+  body.radio-playing:not(.has-intro){overflow-y:auto!important}
+  body.radio-playing:not(.has-intro) .stage{width:100%!important;max-width:100%!important;margin:52px 0 0!important;padding:12px!important;display:flex!important;flex-direction:column!important;gap:10px!important;grid-template-columns:unset!important}
+  body.radio-playing:not(.has-intro) .album-card{display:grid!important;grid-template-columns:72px 1fr!important;gap:12px!important;align-items:center!important;border-radius:16px!important;padding:12px!important;border:1px solid rgba(241,196,15,.15)!important;background:rgba(14,14,14,.95)!important;box-shadow:none!important}
+  body.radio-playing:not(.has-intro) .cover-wrap{width:72px!important;height:72px!important;min-width:72px!important;border-radius:12px!important;aspect-ratio:unset!important;overflow:hidden!important;flex-shrink:0!important}
+  body.radio-playing:not(.has-intro) .album-meta{text-align:left!important;margin:0!important}
+  body.radio-playing:not(.has-intro) .album-meta h1{font-size:clamp(.95rem,4.5vw,1.2rem)!important;margin:0!important;line-height:1.1!important}
+  body.radio-playing:not(.has-intro) .album-meta p{font-size:.72rem!important;color:rgba(255,255,255,.55)!important;margin:4px 0 0!important}
+  body.radio-playing:not(.has-intro) .radio-panel{border-radius:20px!important;border:1px solid rgba(241,196,15,.14)!important;background:linear-gradient(180deg,rgba(16,16,16,.98),rgba(6,6,6,1))!important;box-shadow:0 8px 32px rgba(0,0,0,.7)!important;padding:16px 14px 18px!important;min-height:0!important;display:flex!important;flex-direction:column!important;gap:10px!important;grid-template-rows:unset!important}
+  body.radio-playing:not(.has-intro) .radio-title{text-align:center!important}
+  body.radio-playing:not(.has-intro) .radio-title h2{font-size:clamp(1rem,5vw,1.3rem)!important;margin:6px 0 0!important;text-shadow:none!important}
+  body.radio-playing:not(.has-intro) .status-row{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:6px!important}
+  body.radio-playing:not(.has-intro) .status-card{padding:6px 4px!important;border-radius:10px!important;background:rgba(255,255,255,.05)!important;border:1px solid rgba(255,255,255,.07)!important}
+  body.radio-playing:not(.has-intro) .status-card small{font-size:.58rem!important}
+  body.radio-playing:not(.has-intro) .status-card strong{font-size:.9rem!important}
+  body.radio-playing:not(.has-intro) .message{font-size:.76rem!important;color:rgba(255,255,255,.55)!important;text-align:center!important;min-height:0!important}
+  body.radio-playing:not(.has-intro) .actions{display:flex!important;gap:8px!important;justify-content:center!important}
+  body.radio-playing:not(.has-intro) .primary{height:46px!important;padding:0 24px!important;border-radius:999px!important;flex:1!important;max-width:200px!important}
+  body.radio-playing:not(.has-intro) .secondary{height:46px!important;padding:0 16px!important;border-radius:999px!important}
+}
+</style>
 </head>
 <body class="has-intro">
 <div id="radioIntro" class="radio-intro" aria-label="Entrada da Rádio CBJR">
@@ -3865,17 +3907,14 @@ html body.radio-quiz-4.radio-tracks-supermany #trackGrid {
   <div class="topbar">
     <a class="back-btn" href="index.html?skipIntro=true">← Menu</a>
     <div class="mode-pill">Rádio CBJR</div>
+    <button class="small-btn" id="topbarModeBtn" type="button">Normal</button>
     <button class="small-btn" id="changeAlbumBtn" type="button">Trocar CD</button>
   </div>
 
   <section id="selectScreen" class="select-screen">
     <h1>Escolha o CD</h1>
     <p>Toque em um álbum, ouça a música e selecione qual faixa está tocando.</p>
-    <div class="mode-select-wrap" aria-label="Escolha o modo da Rádio">
-      <button id="modeNormalBtn" class="mode-choice active" type="button" data-mode="normal">Modo Normal</button>
-      <button id="modeHardBtn" class="mode-choice" type="button" data-mode="hard">Modo Hard</button>
-      <span id="modeHelp" class="mode-help">Normal: a música começa do início.</span>
-    </div>
+
     <div id="radioProgress" class="radio-progress" aria-label="Progresso dos CDs"></div>
     <div id="albumGrid" class="album-grid"></div>
   </section>
@@ -5597,5 +5636,46 @@ renderAlbums();
 </script>
 <!-- /CBJR POP-UP DE CONQUISTA DESBLOQUEADA -->
 
+<script>
+(function(){
+  // Toggle modo na topbar
+  function syncModeBtn(){
+    var btn=document.getElementById('topbarModeBtn');
+    if(!btn) return;
+    var hard=currentRadioMode==='hard';
+    btn.textContent=hard?'Hard':'Normal';
+    btn.style.background=hard?'rgba(200,40,30,.85)':'rgba(255,255,255,.07)';
+    btn.style.borderColor=hard?'#e74c3c':'rgba(241,196,15,.35)';
+    btn.style.color=hard?'#fff':'#f1c40f';
+  }
+  window.addEventListener('load',function(){
+    // Botão de modo
+    var orig=setRadioMode;
+    setRadioMode=function(m){orig(m);syncModeBtn();};
+    var modeBtn=document.getElementById('topbarModeBtn');
+    if(modeBtn) modeBtn.addEventListener('click',function(){
+      setRadioMode(currentRadioMode==='hard'?'normal':'hard');
+    });
+    syncModeBtn();
+    // Dots do carrossel
+    var grid=document.getElementById('albumGrid');
+    if(grid && window.innerWidth<=760){
+      var dots=document.createElement('div');
+      dots.className='cbjr-carousel-dots';
+      grid.parentNode.insertBefore(dots,grid.nextSibling);
+      var total=RADIO_ALBUMS.length;
+      dots.innerHTML=Array.from({length:total},function(_,i){
+        return '<span class="cbjr-dot'+(i===0?' active':'')+'"></span>';
+      }).join('');
+      grid.addEventListener('scroll',function(){
+        var idx=Math.round(grid.scrollLeft/(grid.offsetWidth*0.72));
+        dots.querySelectorAll('.cbjr-dot').forEach(function(d,i){
+          d.classList.toggle('active',i===Math.min(idx,total-1));
+        });
+      },{passive:true});
+    }
+  });
+})();
+</script>
 </body>
 </html>
