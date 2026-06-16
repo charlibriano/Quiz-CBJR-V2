@@ -5508,12 +5508,6 @@ document.addEventListener('DOMContentLoaded', () => {
   abrirSelecaoDeCdsPorUrl();
 });
 
-const enterRadioBtn = document.getElementById('enterRadioBtn');
-if (enterRadioBtn) {
-  enterRadioBtn.onclick = fecharIntroRadio;
-  enterRadioBtn.addEventListener('click', fecharIntroRadio);
-}
-
 renderAlbums();
 </script>
 
@@ -5967,19 +5961,6 @@ renderAlbums();
 })();
 </script>
 <!-- /CBJR POP-UP DE CONQUISTA DESBLOQUEADA -->
-
-<script>
-(function(){
-  if(window.innerWidth<=760){
-    document.addEventListener('DOMContentLoaded',function(){
-      setTimeout(function(){
-        if(typeof fecharIntroRadio==='function') fecharIntroRadio();
-        else { var el=document.getElementById('radioIntro'); if(el){el.style.display='none'; document.body.classList.remove('has-intro');} }
-      },80);
-    });
-  }
-})();
-</script>
 
 <script>
 // Toggle modo na topbar
