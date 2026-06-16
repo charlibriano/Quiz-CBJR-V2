@@ -3828,22 +3828,23 @@
   /* ── Tela de resultado: bottom sheet ── */
   html body #finishOverlay {
     padding: 0 !important;
-    align-items: flex-end !important;
-    overflow: hidden !important;
+    align-items: stretch !important;
+    overflow-y: auto !important;
+    background: #000 !important;
   }
 
   html body #finishOverlay .overlay-card {
     width: 100% !important;
     max-width: 100% !important;
-    max-height: 92svh !important;
+    min-height: 100svh !important;
+    max-height: none !important;
     overflow-y: auto !important;
-    border-radius: 24px 24px 0 0 !important;
+    border-radius: 0 !important;
     padding: 0 !important;
     margin: 0 !important;
     box-sizing: border-box !important;
-    background: #0a0a0a !important;
+    background: #000 !important;
     border: 0 !important;
-    border-top: 1px solid rgba(241,196,15,.18) !important;
   }
 
   /* Layout mobile simplificado */
@@ -3863,14 +3864,7 @@
   }
 
   .cbjr-result-mobile::before {
-    content: "" !important;
-    display: block !important;
-    width: 40px !important;
-    height: 4px !important;
-    background: rgba(255,255,255,.22) !important;
-    border-radius: 999px !important;
-    margin: 12px auto 0 !important;
-    flex-shrink: 0 !important;
+    display: none !important;
   }
 
   /* ── HERO: capa grande + gradiente embaixo ── */
@@ -3878,10 +3872,10 @@
     position: relative !important;
     width: 100% !important;
     aspect-ratio: 1 / 1 !important;
-    max-height: 52vw !important;
+    max-height: 100vw !important;
     overflow: hidden !important;
     flex-shrink: 0 !important;
-    margin-top: 10px !important;
+    margin-top: 0 !important;
   }
 
   .cbjr-result-hero img {
@@ -4039,33 +4033,41 @@
   .cbjr-result-actions {
     display: flex !important;
     flex-direction: column !important;
+    align-items: center !important;
     gap: 9px !important;
-    padding: 14px 16px 28px !important;
+    padding: 14px 16px 36px !important;
   }
 
   .cbjr-result-actions .primary {
-    width: 100% !important;
+    width: min(320px, 88vw) !important;
     height: 52px !important;
-    border-radius: 14px !important;
+    border-radius: 999px !important;
     font-size: .92rem !important;
     background: #f1c40f !important;
     color: #000 !important;
     border: 0 !important;
     font-weight: 1000 !important;
     cursor: pointer !important;
-    box-shadow: 0 0 24px rgba(241,196,15,.28) !important;
+    box-shadow: 0 0 28px rgba(241,196,15,.35) !important;
     letter-spacing: .01em !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
   }
 
   .cbjr-result-actions .secondary {
-    width: 100% !important;
+    width: min(320px, 88vw) !important;
     height: 48px !important;
-    border-radius: 14px !important;
+    border-radius: 999px !important;
     font-size: .88rem !important;
     background: rgba(255,255,255,.055) !important;
-    border: 1px solid rgba(255,255,255,.14) !important;
+    border: 1px solid rgba(255,255,255,.18) !important;
     color: rgba(255,255,255,.8) !important;
     cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
   /* ── Score mode (sem unlock) ── */
