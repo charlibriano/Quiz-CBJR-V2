@@ -5984,14 +5984,11 @@ renderAlbums();
     sync();
   });
 })();
-// Pular intro no mobile
+// Pular intro no mobile — após tudo carregar
 if (window.innerWidth <= 760) {
-  if (typeof fecharIntroRadio === 'function') {
-    fecharIntroRadio();
-  } else {
-    var _intro = document.getElementById('radioIntro');
-    if (_intro) { _intro.style.display = 'none'; document.body.classList.remove('has-intro'); }
-  }
+  window.addEventListener('load', function() {
+    if (typeof fecharIntroRadio === 'function') fecharIntroRadio();
+  });
 }
 </script>
 </body>
