@@ -2575,6 +2575,167 @@ button:hover{
     gtag('js', new Date());
     gtag('config', 'G-1JCN94Y3P0');
   </script>
+
+<style id="letras-mobile">
+@media (max-width: 760px) {
+
+  /* ── Topbar ── */
+  .topbar {
+    position: fixed !important;
+    top: 0 !important; left: 0 !important; right: 0 !important;
+    height: 52px !important;
+    background: rgba(0,0,0,.94) !important;
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
+    border-bottom: 1px solid rgba(241,196,15,.15) !important;
+    z-index: 60 !important;
+    border-radius: 0 !important;
+  }
+
+  /* ── Tela de seleção ── */
+  .letters-main,
+  #letters-main {
+    padding-top: 60px !important;
+  }
+
+  #selection-screen {
+    padding: 0 0 24px !important;
+  }
+
+  .section-head {
+    padding: 16px 16px 10px !important;
+    text-align: center !important;
+  }
+
+  .section-head h2 {
+    font-family: "Elektrix", Arial, sans-serif !important;
+    font-size: clamp(1.8rem, 9vw, 2.6rem) !important;
+    color: #f1c40f !important;
+    text-shadow: 0 0 28px rgba(241,196,15,.4) !important;
+    margin: 0 0 4px !important;
+  }
+
+  .section-head p {
+    display: block !important;
+    font-size: .76rem !important;
+    color: rgba(255,255,255,.42) !important;
+    margin: 0 !important;
+  }
+
+  /* ── Carrossel de capas ── */
+  #album-grid {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 14px !important;
+    padding: 8px 20px 20px !important;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    -webkit-overflow-scrolling: touch !important;
+    scroll-snap-type: x mandatory !important;
+    scrollbar-width: none !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
+    grid-template-columns: unset !important;
+    align-items: start !important;
+  }
+
+  #album-grid::-webkit-scrollbar { display: none !important; }
+
+  /* Card de álbum: 72vw para mostrar 1.2 na tela */
+  #album-grid .album-card {
+    flex: 0 0 72vw !important;
+    width: 72vw !important;
+    min-width: 72vw !important;
+    max-width: 300px !important;
+    scroll-snap-align: center !important;
+    border-radius: 22px !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    cursor: pointer !important;
+    transition: transform .15s ease !important;
+    border: 1.5px solid rgba(255,255,255,.08) !important;
+    border-top: 1.5px solid rgba(241,196,15,.28) !important;
+    background: rgba(18,18,18,.9) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 0 !important;
+  }
+
+  #album-grid .album-card:active:not(.locked) {
+    transform: scale(.97) !important;
+    border-color: rgba(241,196,15,.55) !important;
+    box-shadow: 0 0 22px rgba(241,196,15,.2) !important;
+  }
+
+  #album-grid .album-card.locked {
+    opacity: .32 !important;
+    filter: grayscale(.85) !important;
+  }
+
+  /* Capa: quadrada, full-width */
+  #album-grid .album-card img {
+    width: 100% !important;
+    aspect-ratio: 1 !important;
+    object-fit: cover !important;
+    border-radius: 0 !important;
+    display: block !important;
+    background: #111 !important;
+  }
+
+  /* Info: nome + status abaixo da capa */
+  #album-grid .album-card .album-info {
+    padding: 10px 12px 14px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+  }
+
+  #album-grid .album-card .album-info h3 {
+    font-family: "Elektrix", Arial, sans-serif !important;
+    font-size: .92rem !important;
+    font-weight: 900 !important;
+    color: #fff !important;
+    margin: 0 !important;
+    line-height: 1.2 !important;
+  }
+
+  #album-grid .album-card .album-status {
+    font-size: .68rem !important;
+    font-weight: 700 !important;
+    letter-spacing: .08em !important;
+    text-transform: uppercase !important;
+    color: rgba(255,255,255,.45) !important;
+  }
+
+  #album-grid .album-card .album-status.done {
+    color: #1ed760 !important;
+  }
+
+  /* Dots de navegação */
+  .letras-dots {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    padding: 4px 0 0 !important;
+  }
+
+  .letras-dot {
+    width: 6px !important;
+    height: 6px !important;
+    border-radius: 50% !important;
+    background: rgba(255,255,255,.22) !important;
+    transition: background .2s, transform .2s !important;
+    display: inline-block !important;
+  }
+
+  .letras-dot.active {
+    background: #f1c40f !important;
+    transform: scale(1.35) !important;
+    box-shadow: 0 0 8px rgba(241,196,15,.5) !important;
+  }
+}
+</style>
 </head>
 <body>
   <a class="floating-back" href="index.html?skipIntro=true">← Voltar</a>
@@ -2815,6 +2976,27 @@ button:hover{
           startLettersMode(albumId);
         });
       });
+
+      // Dots do carrossel mobile
+      if (window.innerWidth <= 760) {
+        let dotsEl = document.getElementById('letrasDots');
+        if (!dotsEl) {
+          dotsEl = document.createElement('div');
+          dotsEl.id = 'letrasDots';
+          dotsEl.className = 'letras-dots';
+          els.albumGrid.parentNode.insertBefore(dotsEl, els.albumGrid.nextSibling);
+        }
+        const total = ALBUMS.length;
+        dotsEl.innerHTML = Array.from({length: total}, (_, i) =>
+          `<span class="letras-dot${i === 0 ? ' active' : ''}" data-i="${i}"></span>`
+        ).join('');
+        els.albumGrid.addEventListener('scroll', () => {
+          const idx = Math.round(els.albumGrid.scrollLeft / (els.albumGrid.offsetWidth * 0.72));
+          dotsEl.querySelectorAll('.letras-dot').forEach((d, i) =>
+            d.classList.toggle('active', i === Math.min(idx, total - 1))
+          );
+        }, { passive: true });
+      }
 
       showOnly('selection');
     }
