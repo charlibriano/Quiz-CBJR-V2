@@ -4123,7 +4123,19 @@
   }
 
 }
-</style></head>
+</style><style>
+@media (max-width: 760px) {
+  #radioIntro { display: none !important; }
+  body.has-intro .page {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    filter: none !important;
+    transform: none !important;
+  }
+  body.has-intro { overflow: auto !important; }
+}
+</style>
+</head>
 <body class="has-intro">
 <div id="radioIntro" class="radio-intro" aria-label="Entrada da Rádio CBJR">
   <div class="radio-intro-content">
