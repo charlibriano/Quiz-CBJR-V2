@@ -5986,14 +5986,23 @@ renderAlbums();
 })();
 // Pular intro no mobile
 (function(){
-  if(window.innerWidth<=760){
-    document.addEventListener('DOMContentLoaded',function(){
-      setTimeout(function(){
-        if(typeof fecharIntroRadio==='function') fecharIntroRadio();
-        else{var e=document.getElementById('radioIntro');if(e){e.style.display='none';document.body.classList.remove('has-intro');}}
-      },80);
-    });
+  if(window.innerWidth > 760) return;
+  function skipIntro(){
+    if(typeof fecharIntroRadio==='function'){
+      fecharIntroRadio();
+    } else {
+      var e=document.getElementById('radioIntro');
+      if(e){ e.style.display='none'; document.body.classList.remove('has-intro'); }
+    }
   }
+  // Tentar imediatamente, no DOMContentLoaded e com delays crescentes
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',function(){ setTimeout(skipIntro,100); });
+  } else {
+    setTimeout(skipIntro,100);
+  }
+  setTimeout(skipIntro,500);
+  setTimeout(skipIntro,1200);
 })();
 </script>
 </body>
