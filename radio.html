@@ -3835,43 +3835,249 @@
   html body #finishOverlay .overlay-card {
     width: 100% !important;
     max-width: 100% !important;
-    max-height: 85svh !important;
+    max-height: 92svh !important;
     overflow-y: auto !important;
     border-radius: 24px 24px 0 0 !important;
-    padding: 0 0 32px !important;
+    padding: 0 !important;
     margin: 0 !important;
     box-sizing: border-box !important;
+    background: #0a0a0a !important;
+    border: 0 !important;
+    border-top: 1px solid rgba(241,196,15,.18) !important;
   }
 
   /* Layout mobile simplificado */
+  /* ─────────────────────────────────────────────────────
+     TELA DE RESULTADO MOBILE — REDESIGN PROFISSIONAL
+     Capa grande em destaque, layout cinematográfico.
+     ───────────────────────────────────────────────── */
+
+  /* Handle pill */
   .cbjr-result-mobile {
     display: flex !important;
     flex-direction: column !important;
-    gap: 16px !important;
-    padding: 14px 16px 0 !important;
+    gap: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    border-radius: 24px 24px 0 0 !important;
   }
 
-  /* Handle */
   .cbjr-result-mobile::before {
     content: "" !important;
     display: block !important;
-    width: 36px !important;
+    width: 40px !important;
     height: 4px !important;
-    background: rgba(255,255,255,.2) !important;
+    background: rgba(255,255,255,.22) !important;
     border-radius: 999px !important;
-    margin: 0 auto !important;
+    margin: 12px auto 0 !important;
+    flex-shrink: 0 !important;
   }
 
-  /* Pontuação central */
-  .cbjr-result-score {
+  /* ── HERO: capa grande + gradiente embaixo ── */
+  .cbjr-result-hero {
+    position: relative !important;
+    width: 100% !important;
+    aspect-ratio: 1 / 1 !important;
+    max-height: 52vw !important;
+    overflow: hidden !important;
+    flex-shrink: 0 !important;
+    margin-top: 10px !important;
+  }
+
+  .cbjr-result-hero img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+    border-radius: 0 !important;
+    transition: transform .4s ease !important;
+  }
+
+  .cbjr-result-hero::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: linear-gradient(
+      to bottom,
+      transparent 30%,
+      rgba(0,0,0,.78) 100%
+    ) !important;
+    pointer-events: none !important;
+  }
+
+  /* Badge "NOVO CD LIBERADO" sobre a capa */
+  .cbjr-result-hero-badge {
+    position: absolute !important;
+    top: 12px !important;
+    left: 12px !important;
+    z-index: 2 !important;
+    background: #1ed760 !important;
+    color: #001b09 !important;
+    font-size: .62rem !important;
+    font-weight: 1000 !important;
+    letter-spacing: .14em !important;
+    text-transform: uppercase !important;
+    padding: 5px 10px !important;
+    border-radius: 999px !important;
+    box-shadow: 0 0 18px rgba(30,215,96,.45) !important;
+  }
+
+  /* Pontuação sobreposta à capa (canto direito inferior) */
+  .cbjr-result-hero-score {
+    position: absolute !important;
+    bottom: 12px !important;
+    right: 14px !important;
+    z-index: 2 !important;
+    text-align: right !important;
+    line-height: 1 !important;
+  }
+
+  .cbjr-result-hero-pct {
+    display: block !important;
+    font-family: "Elektrix", Arial, sans-serif !important;
+    font-size: clamp(2.8rem, 16vw, 4.5rem) !important;
+    color: #f1c40f !important;
+    text-shadow: 0 0 28px rgba(241,196,15,.55), 0 2px 14px rgba(0,0,0,.9) !important;
+    line-height: .9 !important;
+  }
+
+  .cbjr-result-hero-rank {
+    display: block !important;
+    font-family: "Elektrix", Arial, sans-serif !important;
+    font-size: clamp(.85rem, 4.5vw, 1.1rem) !important;
+    color: rgba(255,255,255,.88) !important;
+    text-shadow: 0 2px 10px rgba(0,0,0,.9) !important;
+    margin-top: 2px !important;
+  }
+
+  /* ── Título do CD liberado (sob a capa) ── */
+  .cbjr-result-albuminfo {
+    padding: 14px 16px 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+  }
+
+  .cbjr-result-albumname {
+    font-family: "Elektrix", Arial, sans-serif !important;
+    font-size: clamp(1.2rem, 6vw, 1.7rem) !important;
+    color: #f1c40f !important;
+    line-height: 1.05 !important;
+    display: block !important;
+    text-shadow: 0 0 18px rgba(241,196,15,.25) !important;
+  }
+
+  .cbjr-result-albumyear {
+    font-size: .72rem !important;
+    color: rgba(255,255,255,.48) !important;
+    font-weight: 700 !important;
+    letter-spacing: .06em !important;
+  }
+
+  /* Frase de desempenho */
+  .cbjr-result-phrase {
+    font-size: .80rem !important;
+    color: rgba(255,255,255,.52) !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    padding: 6px 16px 0 !important;
+  }
+
+  /* ── Stats: 3 colunas ── */
+  .cbjr-result-stats {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+    padding: 12px 16px 0 !important;
+  }
+
+  .cbjr-result-stats > div {
+    background: rgba(255,255,255,.055) !important;
+    border: 1px solid rgba(255,255,255,.09) !important;
+    border-radius: 14px !important;
+    padding: 10px 8px !important;
     text-align: center !important;
-    padding: 8px 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 3px !important;
+  }
+
+  .cbjr-result-stats span {
+    font-family: "Elektrix", Arial, sans-serif !important;
+    font-size: 1.55rem !important;
+    font-weight: 900 !important;
+    color: #f1c40f !important;
+    line-height: 1 !important;
+  }
+
+  .cbjr-result-stats small {
+    font-size: .64rem !important;
+    color: rgba(255,255,255,.42) !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: .09em !important;
+  }
+
+  /* ── Barra de progresso ── */
+  .cbjr-result-meter {
+    height: 5px !important;
+    background: rgba(255,255,255,.09) !important;
+    border-radius: 999px !important;
+    overflow: hidden !important;
+    margin: 12px 16px 0 !important;
+  }
+
+  .cbjr-result-meter > div {
+    height: 100% !important;
+    background: linear-gradient(90deg, #1ed760, #f1c40f) !important;
+    border-radius: 999px !important;
+    transition: width .65s ease !important;
+    box-shadow: 0 0 10px rgba(241,196,15,.28) !important;
+  }
+
+  /* ── Botões ── */
+  .cbjr-result-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 9px !important;
+    padding: 14px 16px 28px !important;
+  }
+
+  .cbjr-result-actions .primary {
+    width: 100% !important;
+    height: 52px !important;
+    border-radius: 14px !important;
+    font-size: .92rem !important;
+    background: #f1c40f !important;
+    color: #000 !important;
+    border: 0 !important;
+    font-weight: 1000 !important;
+    cursor: pointer !important;
+    box-shadow: 0 0 24px rgba(241,196,15,.28) !important;
+    letter-spacing: .01em !important;
+  }
+
+  .cbjr-result-actions .secondary {
+    width: 100% !important;
+    height: 48px !important;
+    border-radius: 14px !important;
+    font-size: .88rem !important;
+    background: rgba(255,255,255,.055) !important;
+    border: 1px solid rgba(255,255,255,.14) !important;
+    color: rgba(255,255,255,.8) !important;
+    cursor: pointer !important;
+  }
+
+  /* ── Score mode (sem unlock) ── */
+  .cbjr-result-score {
+    padding: 18px 16px 0 !important;
+    text-align: center !important;
   }
 
   .cbjr-result-pct {
     display: block !important;
     font-family: "Elektrix", Arial, sans-serif !important;
-    font-size: clamp(3rem, 18vw, 5rem) !important;
+    font-size: clamp(3.5rem, 20vw, 5.5rem) !important;
     font-weight: 900 !important;
     color: #f1c40f !important;
     line-height: 1 !important;
@@ -3886,63 +4092,7 @@
     margin: 4px 0 6px !important;
   }
 
-  .cbjr-result-phrase {
-    font-size: .82rem !important;
-    color: rgba(255,255,255,.55) !important;
-    line-height: 1.4 !important;
-    margin: 0 !important;
-  }
-
-  /* Stats: 3 colunas */
-  .cbjr-result-stats {
-    display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 8px !important;
-  }
-
-  .cbjr-result-stats > div {
-    background: rgba(255,255,255,.05) !important;
-    border: 1px solid rgba(255,255,255,.08) !important;
-    border-radius: 14px !important;
-    padding: 12px 8px !important;
-    text-align: center !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 4px !important;
-  }
-
-  .cbjr-result-stats span {
-    font-family: "Elektrix", Arial, sans-serif !important;
-    font-size: 1.4rem !important;
-    font-weight: 900 !important;
-    color: #f1c40f !important;
-    line-height: 1 !important;
-  }
-
-  .cbjr-result-stats small {
-    font-size: .68rem !important;
-    color: rgba(255,255,255,.45) !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: .08em !important;
-  }
-
-  /* Barra de progresso */
-  .cbjr-result-meter {
-    height: 6px !important;
-    background: rgba(255,255,255,.1) !important;
-    border-radius: 999px !important;
-    overflow: hidden !important;
-  }
-
-  .cbjr-result-meter > div {
-    height: 100% !important;
-    background: linear-gradient(90deg, #1ed760, #f1c40f) !important;
-    border-radius: 999px !important;
-    transition: width .6s ease !important;
-  }
-
-  /* Unlock: capa + info em linha */
+  /* Unlock legado (mantido para fallback) */
   .cbjr-unlock-header {
     display: flex !important;
     gap: 14px !important;
@@ -3951,6 +4101,7 @@
     border: 1px solid rgba(241,196,15,.18) !important;
     border-radius: 18px !important;
     padding: 12px !important;
+    margin: 0 16px !important;
   }
 
   .cbjr-unlock-cover {
@@ -3989,36 +4140,6 @@
   .cbjr-unlock-year {
     font-size: .72rem !important;
     color: rgba(255,255,255,.5) !important;
-  }
-
-  /* Botões */
-  .cbjr-result-actions {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-  }
-
-  .cbjr-result-actions .primary {
-    width: 100% !important;
-    height: 50px !important;
-    border-radius: 14px !important;
-    font-size: .92rem !important;
-    background: #f1c40f !important;
-    color: #000 !important;
-    border: 0 !important;
-    font-weight: 900 !important;
-    cursor: pointer !important;
-  }
-
-  .cbjr-result-actions .secondary {
-    width: 100% !important;
-    height: 50px !important;
-    border-radius: 14px !important;
-    font-size: .88rem !important;
-    background: rgba(255,255,255,.06) !important;
-    border: 1px solid rgba(255,255,255,.14) !important;
-    color: rgba(255,255,255,.8) !important;
-    cursor: pointer !important;
   }
 
   /* ── Feedback animado (elemento criado no body via JS) ── */  /* ── Feedback animado (elemento criado no body via JS) ── */
@@ -4998,13 +5119,17 @@ function renderUnlockSuccess(nextAlbum, hitGoal) {
   if (window.innerWidth <= 760) {
     card.innerHTML = `
       <div class="cbjr-result-mobile">
-        <div class="cbjr-unlock-header">
-          <img class="cbjr-unlock-cover" src="${coverUrl(nextAlbum)}" alt="${albumName}" onerror="this.onerror=null;this.src=PAGES_BASE + encodeURIComponent(nextAlbum.cover);">
-          <div class="cbjr-unlock-info">
-            <span class="cbjr-unlock-badge">Novo CD Liberado</span>
-            <strong class="cbjr-unlock-name">${albumName}</strong>
-            <span class="cbjr-unlock-year">${nextAlbum.year} • ${nextAlbum.tracks.length} faixas</span>
+        <div class="cbjr-result-hero">
+          <span class="cbjr-result-hero-badge">Novo CD Liberado 🔓</span>
+          <img src="${coverUrl(nextAlbum)}" alt="${albumName}" onerror="this.onerror=null;this.src=PAGES_BASE + encodeURIComponent(nextAlbum.cover);">
+          <div class="cbjr-result-hero-score">
+            <span class="cbjr-result-hero-pct">${percent}%</span>
+            <span class="cbjr-result-hero-rank">de acerto</span>
           </div>
+        </div>
+        <div class="cbjr-result-albuminfo">
+          <strong class="cbjr-result-albumname">${albumName}</strong>
+          <span class="cbjr-result-albumyear">${nextAlbum.year} · ${nextAlbum.tracks.length} faixas</span>
         </div>
         <div class="cbjr-result-stats">
           <div><span>${percent}%</span><small>Acerto</small></div>
@@ -5013,7 +5138,7 @@ function renderUnlockSuccess(nextAlbum, hitGoal) {
         </div>
         <div class="cbjr-result-meter"><div style="width:${percent}%"></div></div>
         <div class="cbjr-result-actions">
-          <button id="finishNextAlbum" class="primary" type="button">Tocar ${albumName}</button>
+          <button id="finishNextAlbum" class="primary" type="button">▶ Tocar ${albumName}</button>
           <button id="finishChooseAlbum" class="secondary" type="button">Escolher outro CD</button>
         </div>
       </div>
@@ -5052,13 +5177,24 @@ function renderFinishSimple(title, text, showNext, nextAlbum) {
   const rank = getPerformanceRank(correct, wrong, total);
 
   if (window.innerWidth <= 760) {
+    const _curCover = currentAlbum ? coverUrl(currentAlbum) : '';
+    const _curName  = currentAlbum ? albumDisplayName(currentAlbum) : '';
+    const _curYear  = currentAlbum ? (currentAlbum.year || '') : '';
+    const _curTracks = currentAlbum ? currentAlbum.tracks.length : total;
     card.innerHTML = `
       <div class="cbjr-result-mobile">
-        <div class="cbjr-result-score">
-          <span class="cbjr-result-pct">${pct}%</span>
-          <span class="cbjr-result-label">${rank.title}</span>
-          <p class="cbjr-result-phrase">${rank.phrase}</p>
+        <div class="cbjr-result-hero">
+          <img src="${_curCover}" alt="${_curName}" onerror="this.onerror=null;">
+          <div class="cbjr-result-hero-score">
+            <span class="cbjr-result-hero-pct">${pct}%</span>
+            <span class="cbjr-result-hero-rank">${rank.title}</span>
+          </div>
         </div>
+        <div class="cbjr-result-albuminfo">
+          <strong class="cbjr-result-albumname">${_curName}</strong>
+          <span class="cbjr-result-albumyear">${_curYear} · ${_curTracks} faixas</span>
+        </div>
+        <p class="cbjr-result-phrase">${rank.phrase}</p>
         <div class="cbjr-result-stats">
           <div><span>${correct}</span><small>Acertos</small></div>
           <div><span>${wrong}</span><small>Erros</small></div>
@@ -5066,7 +5202,7 @@ function renderFinishSimple(title, text, showNext, nextAlbum) {
         </div>
         <div class="cbjr-result-meter"><div style="width:${pct}%"></div></div>
         <div class="cbjr-result-actions">
-          ${showNext && nextAlbum ? `<button id="finishNextAlbum" class="primary" type="button">Tocar ${albumDisplayName(nextAlbum)}</button>` : ''}
+          ${showNext && nextAlbum ? `<button id="finishNextAlbum" class="primary" type="button">▶ Tocar ${albumDisplayName(nextAlbum)}</button>` : ''}
           <button id="finishChooseAlbum" class="secondary" type="button">Escolher outro CD</button>
         </div>
       </div>
