@@ -3212,6 +3212,259 @@ button:hover{
   }
 }
 </style>
+
+<style id="unlock-screen-compact-v2">
+/* ═══════════════════════════════════════════════════════
+   TELA DE CONQUISTA — LAYOUT COMPACTO E PROFISSIONAL
+   Cabe na viewport sem scroll após concluir o disco.
+   ═══════════════════════════════════════════════════════ */
+
+/* Wrapper da final-screen: centraliza e usa o espaço disponível */
+.final-screen {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 100% !important;
+  padding: 12px !important;
+}
+
+/* ── UNLOCK SCREEN (concluiu o álbum) ── */
+.unlock-screen {
+  display: grid !important;
+  grid-template-columns: 1fr 190px !important;
+  gap: 20px !important;
+  align-items: center !important;
+  width: min(860px, 100%) !important;
+  min-height: unset !important;
+  padding: 22px 24px !important;
+  border-radius: 22px !important;
+}
+
+/* Coluna esquerda */
+.unlock-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.unlock-kicker {
+  font-size: .68rem !important;
+  padding: 5px 10px !important;
+  letter-spacing: .10em !important;
+}
+
+.unlock-copy h2 {
+  margin: 0 !important;
+  font-size: clamp(1.4rem, 3.2vw, 2.4rem) !important;
+  line-height: .90 !important;
+  text-shadow: 0 0 18px rgba(255,217,26,.32), 3px 3px 0 rgba(0,0,0,.72) !important;
+}
+
+.unlock-copy > p:not(.unlock-frase) {
+  margin: 0 !important;
+  color: rgba(255,255,255,.82) !important;
+  font-size: .82rem !important;
+  line-height: 1.35 !important;
+}
+
+/* Frase motivacional: oculta para economizar espaço */
+.unlock-frase {
+  display: none !important;
+}
+
+/* Citação do Chorão: compacta */
+.chorão-quote {
+  margin: 0 !important;
+  padding: 9px 12px !important;
+  border-left: 3px solid var(--yellow) !important;
+  border-radius: 10px !important;
+  background: rgba(255,255,255,.04) !important;
+  font-size: .76rem !important;
+  line-height: 1.4 !important;
+  font-style: italic !important;
+  color: rgba(255,255,255,.78) !important;
+  box-shadow: none !important;
+  animation: none !important;
+}
+
+/* Card de ranking: compacto e integrado */
+.letters-ranking-card {
+  margin: 0 !important;
+  width: 100% !important;
+  border-radius: 14px !important;
+  padding: 10px 12px !important;
+  background: rgba(0,0,0,.42) !important;
+  border: 1px solid rgba(30,215,96,.28) !important;
+  box-shadow: none !important;
+  text-align: left !important;
+}
+
+.letters-ranking-card strong {
+  font-size: .88rem !important;
+  margin-bottom: 3px !important;
+  display: block !important;
+}
+
+.letters-ranking-card p {
+  font-size: .72rem !important;
+  margin: 0 0 8px !important;
+  color: rgba(255,255,255,.62) !important;
+  line-height: 1.3 !important;
+}
+
+.letters-ranking-row {
+  gap: 6px !important;
+}
+
+.letters-ranking-row input {
+  min-height: 34px !important;
+  font-size: .78rem !important;
+  padding: 0 10px !important;
+}
+
+.letters-ranking-row button {
+  min-height: 34px !important;
+  padding: 0 12px !important;
+  font-size: .78rem !important;
+}
+
+.letters-ranking-status {
+  margin-top: 6px !important;
+  font-size: .70rem !important;
+  min-height: 14px !important;
+}
+
+.letters-ranking-link {
+  font-size: .72rem !important;
+  margin-top: 6px !important;
+}
+
+/* Botões de ação */
+.unlock-actions {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 7px !important;
+  margin-top: 4px !important;
+}
+
+.unlock-actions button,
+.unlock-actions a {
+  min-height: 34px !important;
+  padding: 0 13px !important;
+  font-size: .76rem !important;
+  border-radius: 10px !important;
+}
+
+/* Coluna direita: capa */
+.unlock-cover-area {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.unlock-badge {
+  padding: 5px 10px !important;
+  font-size: .65rem !important;
+  letter-spacing: .07em !important;
+}
+
+.unlock-cover-frame {
+  width: 155px !important;
+  aspect-ratio: 1 !important;
+  padding: 7px !important;
+  border-radius: 16px !important;
+  transform: rotate(1.5deg) !important;
+}
+
+.unlock-cover-area > span {
+  font-size: .65rem !important;
+  color: rgba(255,255,255,.55) !important;
+  text-transform: uppercase !important;
+  letter-spacing: .08em !important;
+  font-weight: 900 !important;
+}
+
+.unlock-glow {
+  width: 130px !important;
+  height: 130px !important;
+  right: 24px !important;
+}
+
+/* ── FINAL-BOX (limite de erros) ── */
+.final-box {
+  width: min(540px, 100%) !important;
+  padding: clamp(16px, 3vw, 24px) !important;
+  border-radius: 20px !important;
+}
+
+.final-box h2 {
+  font-size: clamp(1.5rem, 3vw, 2.2rem) !important;
+  margin: 0 0 8px !important;
+}
+
+.final-box > p {
+  margin: 0 0 14px !important;
+  font-size: .86rem !important;
+  line-height: 1.45 !important;
+  color: rgba(255,255,255,.78) !important;
+}
+
+.final-actions {
+  gap: 8px !important;
+}
+
+.final-actions button,
+.final-actions a {
+  min-height: 36px !important;
+  padding: 0 14px !important;
+  font-size: .80rem !important;
+  border-radius: 10px !important;
+}
+
+/* ── RESPONSIVO ── */
+@media (max-width: 680px) {
+  .unlock-screen {
+    grid-template-columns: 1fr !important;
+    padding: 16px !important;
+    gap: 12px !important;
+  }
+
+  .unlock-cover-area {
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+  }
+
+  .unlock-cover-frame {
+    width: 84px !important;
+    border-radius: 12px !important;
+  }
+
+  .unlock-copy h2 {
+    font-size: clamp(1.2rem, 6vw, 1.75rem) !important;
+  }
+}
+
+@media (max-height: 700px) and (min-width: 681px) {
+  .unlock-screen {
+    padding: 16px 20px !important;
+    gap: 14px !important;
+  }
+
+  .unlock-copy h2 {
+    font-size: clamp(1.2rem, 2.8vw, 1.9rem) !important;
+  }
+
+  .chorão-quote {
+    display: none !important;
+  }
+
+  .unlock-cover-frame {
+    width: 124px !important;
+  }
+}
+</style>
 </head>
 <body>
   <a class="floating-back" href="index.html?skipIntro=true">← Voltar</a>
