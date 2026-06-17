@@ -2576,142 +2576,26 @@ button:hover{
     gtag('config', 'G-1JCN94Y3P0');
   </script>
 
+<style id="letras-mobile">
+@media (max-width: 760px) {
 
-
-<style id="lm-mobile-all">
-@media (max-width: 820px) {
-
-  /* ── GAME SCREEN ── */
-  .lm-game {
-    display: flex; flex-direction: column; gap: 7px;
-    padding: 6px 10px 16px; background: #080808;
-    min-height: calc(100svh - 60px); box-sizing: border-box;
-  }
-  .lm-header {
-    display: grid; grid-template-columns: 56px 1fr 50px;
-    gap: 10px; align-items: center;
-    padding: 10px 12px; border-radius: 16px;
-    background: rgba(255,255,255,.055);
-    border: 1px solid rgba(255,255,255,.10);
-  }
-  .lm-cover {
-    width: 56px; height: 56px; border-radius: 10px;
-    object-fit: cover; border: 1px solid rgba(255,255,255,.14);
-    box-shadow: 0 6px 18px rgba(0,0,0,.5); display: block;
-  }
-  .lm-album-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-  .lm-album-label { font-size: .56rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; color: #f1c40f; opacity: .72; }
-  .lm-album-name { font-family: "Elektrix", Arial, sans-serif; font-size: clamp(.72rem,3.5vw,.88rem); color: #fff; line-height: 1.15; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .lm-progress-text { font-size: .62rem; color: rgba(255,255,255,.45); font-weight: 700; margin-top: 2px; }
-  .lm-mini-bar { height: 3px; background: rgba(255,255,255,.12); border-radius: 999px; overflow: hidden; margin-top: 4px; }
-  .lm-mini-bar i { display: block; height: 100%; background: linear-gradient(90deg,#f1c40f,#fff1a6); border-radius: inherit; }
-
-  .lm-timer-wrap { position: relative; width: 48px; height: 48px; display: grid; place-items: center; flex-shrink: 0; }
-  .lm-timer-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .lm-timer-num { position: relative; z-index: 2; font-family: "Elektrix", Arial, sans-serif; font-size: 1.1rem; color: #fff; line-height: 1; text-align: center; transition: color .3s; }
-
-  .lm-stats { display: flex; align-items: center; justify-content: center; gap: 0; padding: 6px 12px; border-radius: 10px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); }
-  .lm-stats > div { flex: 1; text-align: center; display: flex; flex-direction: column; gap: 1px; }
-  .lm-stats > div span { font-family: "Elektrix", Arial, sans-serif; font-size: 1.05rem; color: #f1c40f; line-height: 1; }
-  .lm-stats > div small { font-size: .58rem; color: rgba(255,255,255,.4); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
-  .lm-stat-sep { width: 1px; height: 28px; background: rgba(255,255,255,.12); flex: 0 0 1px; margin: 0 4px; }
-
-  .lm-phrase-wrap { position: relative; padding: 14px 28px; border-radius: 16px; border: 1px solid rgba(241,196,15,.28); background: radial-gradient(circle at 50% 0%,rgba(241,196,15,.08),transparent 55%),rgba(0,0,0,.52); text-align: center; display: flex; align-items: center; justify-content: center; min-height: 90px; }
-  .lm-quote { position: absolute; font-family: Georgia,serif; font-size: 2.6rem; line-height: 1; color: rgba(241,196,15,.45); pointer-events: none; font-weight: 900; }
-  .lm-ql { left: 8px; top: 2px; }
-  .lm-qr { right: 8px; bottom: -6px; }
-  .lm-phrase { font-size: clamp(.82rem,3.8vw,.98rem); line-height: 1.42; color: rgba(255,255,255,.95); font-weight: 700; text-shadow: 0 2px 12px rgba(0,0,0,.75); position: relative; z-index: 1; word-break: break-word; }
-
-  .lm-choice-label { text-align: center; font-size: .70rem; font-weight: 900; text-transform: uppercase; letter-spacing: .10em; color: rgba(255,255,255,.45); margin: 0; }
-
-  .lm-options { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
-  .lm-options .option-btn, .lm-options .track-choice {
-    min-height: 48px !important; border-radius: 12px !important; padding: 8px 9px !important;
-    font-size: .78rem !important; font-weight: 800 !important; line-height: 1.18 !important;
-    text-align: left !important; display: flex !important; align-items: center !important; gap: 8px !important;
-    background: rgba(255,255,255,.06) !important; border: 1px solid rgba(255,255,255,.12) !important;
-    color: #fff !important; cursor: pointer !important; transition: .15s ease !important;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.08) !important;
-    -webkit-tap-highlight-color: transparent !important;
-  }
-  .lm-options .option-btn:active:not(:disabled), .lm-options .track-choice:active:not(:disabled) { transform: scale(.97) !important; border-color: rgba(241,196,15,.55) !important; background: rgba(241,196,15,.09) !important; }
-  .lm-options .option-btn.correct, .lm-options .track-choice.correct { background: rgba(30,215,96,.18) !important; border-color: #1ed760 !important; box-shadow: 0 0 16px rgba(30,215,96,.22) !important; }
-  .lm-options .option-btn.incorrect, .lm-options .track-choice.incorrect { background: rgba(255,59,48,.16) !important; border-color: #ff3b30 !important; }
-  .lm-options .option-btn:disabled, .lm-options .track-choice:disabled { opacity: .42 !important; cursor: default !important; }
-  .lm-options .choice-dot { width: 14px !important; height: 14px !important; border-radius: 50% !important; border: 1.5px solid rgba(255,255,255,.28) !important; flex-shrink: 0 !important; }
-  .lm-options .track-choice.correct .choice-dot { background: #1ed760 !important; border-color: #1ed760 !important; box-shadow: 0 0 10px rgba(30,215,96,.6) !important; }
-  .lm-options .track-choice.incorrect .choice-dot { background: #ff3b30 !important; border-color: #ff3b30 !important; }
-  .lm-options strong { font-size: .80rem !important; line-height: 1.2 !important; color: #fff !important; flex: 1 !important; }
-
-  .lm-feedback { text-align: center !important; font-size: .80rem !important; font-weight: 900 !important; min-height: 20px !important; margin: 0 !important; color: rgba(255,255,255,.72) !important; }
-  .lm-exit { width: 100%; min-height: 40px; border-radius: 999px; border: 1px solid rgba(255,255,255,.13); background: rgba(255,255,255,.04); color: rgba(255,255,255,.55); font-size: .78rem; font-weight: 900; cursor: pointer; margin-top: 2px; }
-
-  /* ── RESULT SCREEN ── */
-  #final-screen { display: flex !important; flex-direction: column !important; min-height: unset !important; padding: 0 !important; align-items: stretch !important; }
-
-  .lm-result { display: flex; flex-direction: column; gap: 8px; padding: 0 0 20px; background: #060606; min-height: 100svh; box-sizing: border-box; }
-
-  .lm-result-hero { position: relative; width: 100%; aspect-ratio: 1/1; max-height: 46vw; overflow: hidden; flex-shrink: 0; }
-  .lm-result-hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .lm-result-hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom,transparent 25%,rgba(6,6,6,.85) 100%); pointer-events: none; }
-
-  .lm-result-badge { position: absolute; top: 10px; left: 10px; z-index: 2; background: #1ed760; color: #001b09; font-size: .58rem; font-weight: 1000; letter-spacing: .13em; text-transform: uppercase; padding: 5px 10px; border-radius: 999px; box-shadow: 0 0 14px rgba(30,215,96,.45); }
-  .lm-result-badge-fail { background: #ff3b30 !important; color: #fff !important; box-shadow: 0 0 14px rgba(255,59,48,.4) !important; }
-
-  .lm-result-hero-score { position: absolute; bottom: 10px; right: 12px; z-index: 2; text-align: right; line-height: 1; }
-  .lm-result-pct { display: block; font-family: "Elektrix",Arial,sans-serif; font-size: clamp(2.6rem,14vw,4rem); color: #f1c40f; text-shadow: 0 0 24px rgba(241,196,15,.55),0 2px 12px rgba(0,0,0,.9); line-height: .9; }
-  .lm-result-pct-label { display: block; font-size: .68rem; color: rgba(255,255,255,.75); font-weight: 700; text-shadow: 0 2px 8px rgba(0,0,0,.9); margin-top: 2px; }
-
-  .lm-result-info { padding: 2px 14px 0; display: flex; flex-direction: column; gap: 2px; }
-  .lm-result-title { font-family: "Elektrix",Arial,sans-serif; font-size: clamp(1.1rem,5.5vw,1.5rem); color: #f1c40f; line-height: 1.05; display: block; }
-  .lm-result-sub { font-size: .72rem; color: rgba(255,255,255,.45); font-weight: 700; }
-
-  .lm-result-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; padding: 0 14px; }
-  .lm-result-stats > div { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.09); border-radius: 12px; padding: 8px 6px; text-align: center; display: flex; flex-direction: column; gap: 2px; }
-  .lm-result-stats span { font-family: "Elektrix",Arial,sans-serif; font-size: 1.3rem; color: #f1c40f; line-height: 1; }
-  .lm-result-stats small { font-size: .58rem; color: rgba(255,255,255,.38); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
-
-  .lm-result-ranking { margin: 0 14px; padding: 10px 12px; border-radius: 14px; border: 1px solid rgba(241,196,15,.22); background: rgba(0,0,0,.45); }
-  .lm-result-ranking-label { font-size: .70rem; font-weight: 900; color: #f1c40f; text-transform: uppercase; letter-spacing: .06em; margin: 0 0 8px; }
-  .lm-result-ranking-row { display: grid; grid-template-columns: 1fr auto; gap: 6px; }
-  .lm-result-input { min-height: 38px; border-radius: 999px; border: 1px solid rgba(255,255,255,.16); background: rgba(0,0,0,.55); color: #fff; padding: 0 12px; font-size: .82rem; font-weight: 700; outline: none; }
-  .lm-result-input:focus { border-color: rgba(241,196,15,.65); }
-  .lm-result-send { min-height: 38px; padding: 0 14px; border-radius: 999px; border: 0; background: #f1c40f; color: #000; font-weight: 900; font-size: .80rem; cursor: pointer; white-space: nowrap; }
-  .lm-result-ranking-status { font-size: .68rem; color: rgba(255,255,255,.5); font-weight: 700; margin-top: 6px; min-height: 14px; }
-  .lm-result-ranking-link { display: inline-block; margin-top: 4px; font-size: .70rem; color: rgba(241,196,15,.75); font-weight: 900; text-decoration: none; }
-
-  .lm-result-actions { display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 0 14px; }
-  .lm-result-btn-primary { width: 100%; height: 50px; border-radius: 14px; border: 0; background: #f1c40f; color: #000; font-size: .9rem; font-weight: 1000; cursor: pointer; box-shadow: 0 0 22px rgba(241,196,15,.28); }
-  .lm-result-btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; width: 100%; }
-  .lm-result-btn-ghost { height: 44px; border-radius: 12px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.055); color: rgba(255,255,255,.78); font-size: .80rem; font-weight: 800; cursor: pointer; }
-  .lm-result-btn-back { font-size: .72rem; color: rgba(255,255,255,.35); font-weight: 700; text-decoration: none; padding: 4px 0; }
-}
-</style>
-
-<style id="lm-selection-mobile-fix">
-@media (max-width: 820px) {
-  /* Esconde o sidebar (intro-card) na selecao de albums */
-  .intro-card.pro-sidebar {
-    display: none !important;
-  }
-
-  /* Content ocupa tudo */
-  .pro-stage {
-    display: block !important;
-    grid-template-columns: unset !important;
-    padding: 0 !important;
-    gap: 0 !important;
-  }
-
-  .content-card.pro-content {
-    min-height: unset !important;
-    padding: 0 !important;
-    border: 0 !important;
+  /* ── Topbar ── */
+  .topbar {
+    position: fixed !important;
+    top: 0 !important; left: 0 !important; right: 0 !important;
+    height: 52px !important;
+    background: rgba(0,0,0,.94) !important;
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
+    border-bottom: 1px solid rgba(241,196,15,.15) !important;
+    z-index: 60 !important;
     border-radius: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    width: 100% !important;
-    max-width: 100% !important;
+  }
+
+  /* ── Tela de seleção ── */
+  .letters-main,
+  #letters-main {
+    padding-top: 60px !important;
   }
 
   #selection-screen {
@@ -2727,16 +2611,18 @@ button:hover{
     font-family: "Elektrix", Arial, sans-serif !important;
     font-size: clamp(1.8rem, 9vw, 2.6rem) !important;
     color: #f1c40f !important;
+    text-shadow: 0 0 28px rgba(241,196,15,.4) !important;
     margin: 0 0 4px !important;
   }
 
   .section-head p {
+    display: block !important;
     font-size: .76rem !important;
     color: rgba(255,255,255,.42) !important;
     margin: 0 !important;
   }
 
-  /* Carrossel horizontal de capas */
+  /* ── Carrossel de capas ── */
   #album-grid {
     display: flex !important;
     flex-direction: row !important;
@@ -2751,32 +2637,35 @@ button:hover{
     max-width: 100vw !important;
     box-sizing: border-box !important;
     grid-template-columns: unset !important;
+    align-items: start !important;
   }
 
   #album-grid::-webkit-scrollbar { display: none !important; }
 
+  /* Card de álbum: 72vw para mostrar 1.2 na tela */
   #album-grid .album-card {
     flex: 0 0 72vw !important;
     width: 72vw !important;
     min-width: 72vw !important;
     max-width: 300px !important;
     scroll-snap-align: center !important;
-    border-radius: 20px !important;
+    border-radius: 22px !important;
     min-height: 0 !important;
     overflow: hidden !important;
     cursor: pointer !important;
+    transition: transform .15s ease !important;
     border: 1.5px solid rgba(255,255,255,.08) !important;
-    border-top: 1.5px solid rgba(241,196,15,.25) !important;
+    border-top: 1.5px solid rgba(241,196,15,.28) !important;
     background: rgba(18,18,18,.9) !important;
     display: flex !important;
     flex-direction: column !important;
     padding: 0 !important;
-    transition: transform .15s ease !important;
   }
 
   #album-grid .album-card:active:not(.locked) {
     transform: scale(.97) !important;
     border-color: rgba(241,196,15,.55) !important;
+    box-shadow: 0 0 22px rgba(241,196,15,.2) !important;
   }
 
   #album-grid .album-card.locked {
@@ -2784,6 +2673,7 @@ button:hover{
     filter: grayscale(.85) !important;
   }
 
+  /* Capa: quadrada, full-width */
   #album-grid .album-card img {
     width: 100% !important;
     aspect-ratio: 1 !important;
@@ -2793,6 +2683,7 @@ button:hover{
     background: #111 !important;
   }
 
+  /* Info: nome + status abaixo da capa */
   #album-grid .album-card .album-info {
     padding: 10px 12px 14px !important;
     display: flex !important;
@@ -2819,6 +2710,505 @@ button:hover{
 
   #album-grid .album-card .album-status.done {
     color: #1ed760 !important;
+  }
+
+  /* Dots de navegação */
+  .letras-dots {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    padding: 4px 0 0 !important;
+  }
+
+  .letras-dot {
+    width: 6px !important;
+    height: 6px !important;
+    border-radius: 50% !important;
+    background: rgba(255,255,255,.22) !important;
+    transition: background .2s, transform .2s !important;
+    display: inline-block !important;
+  }
+
+  .letras-dot.active {
+    background: #f1c40f !important;
+    transform: scale(1.35) !important;
+    box-shadow: 0 0 8px rgba(241,196,15,.5) !important;
+  }
+}
+</style>
+
+<style id="mobile-letras-fix">
+/* ═══════════════════════════════════════════════════════
+   CORREÇÃO MOBILE — MODO LETRAS
+   Layout limpo em coluna única, trecho e botões visíveis.
+   ═══════════════════════════════════════════════════════ */
+@media (max-width: 820px) {
+
+  .letras-pro {
+    width: calc(100% - 16px) !important;
+    padding: 8px 0 14px !important;
+    gap: 8px !important;
+    margin: 0 auto !important;
+  }
+
+  .floating-back {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    display: inline-flex !important;
+    min-height: 36px !important;
+    padding: 7px 14px !important;
+    font-size: .82rem !important;
+    margin: 0 0 4px 4px !important;
+  }
+
+  .rules-top { display: none !important; }
+
+  .pro-stage {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .intro-card.pro-sidebar {
+    min-height: unset !important;
+    display: block !important;
+    padding: 16px !important;
+    border-radius: 18px !important;
+  }
+
+  .mode-kicker { font-size: .92rem !important; margin-bottom: 2px !important; }
+  .intro-card h1 { font-size: clamp(2.6rem, 14vw, 4rem) !important; line-height: .82 !important; }
+  .title-stroke { width: 64px !important; margin: 12px 0 10px !important; }
+  .subtitle { font-size: .82rem !important; line-height: 1.35 !important; }
+  .progress-widget, .sequence-box { display: none !important; }
+
+  .content-card.pro-content {
+    min-height: unset !important;
+    padding: 14px !important;
+    border-radius: 18px !important;
+  }
+
+  .album-grid {
+    grid-template-columns: repeat(2, minmax(0,1fr)) !important;
+    gap: 10px !important;
+  }
+
+  .album-card { min-height: unset !important; border-radius: 14px !important; padding: 8px !important; }
+
+  /* ── Tela do jogo ── */
+  .game-pro-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    min-height: unset !important;
+  }
+
+  .game-side {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+    order: -1 !important;
+  }
+
+  .timer-card, .score-card { display: none !important; }
+
+  .album-now {
+    display: grid !important;
+    grid-template-columns: 64px 1fr !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 12px !important;
+    border-radius: 16px !important;
+    text-align: left !important;
+  }
+
+  .album-now > span { display: none !important; }
+  .album-now img { width: 64px !important; height: 64px !important; border-radius: 10px !important; }
+  .album-now h3 { font-size: .82rem !important; margin: 0 0 4px !important; text-transform: none !important; }
+  .album-now p { font-size: .72rem !important; }
+  .album-mini-bar { margin: 6px 0 0 !important; }
+
+  .exit-button {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    min-height: 38px !important;
+    font-size: .82rem !important;
+    border-radius: 999px !important;
+    margin-top: 2px !important;
+  }
+
+  .lyrics-arena {
+    min-height: unset !important;
+    padding: 14px 12px !important;
+    border-radius: 16px !important;
+  }
+
+  .arena-title { gap: 8px !important; margin-bottom: 10px !important; }
+  .arena-title span { width: 28px !important; }
+  .arena-title h2 { font-size: 1rem !important; }
+
+  /* TRECHO DA LETRA — o problema principal */
+  .pro-phrase {
+    min-height: unset !important;
+    padding: 20px 36px !important;
+    font-size: clamp(1rem, 4.8vw, 1.25rem) !important;
+    line-height: 1.45 !important;
+    border-radius: 14px !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    overflow: visible !important;
+    text-align: center !important;
+  }
+
+  .quote-left { font-size: 2.4rem !important; left: 8px !important; top: 8px !important; }
+  .quote-right { font-size: 2.4rem !important; right: 8px !important; bottom: 4px !important; }
+
+  .mini-progress { margin: 10px 0 12px !important; height: 5px !important; }
+  .choice-title { font-size: .82rem !important; margin-bottom: 8px !important; }
+
+  .pro-options {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  .track-choice {
+    min-height: 48px !important;
+    padding: 10px 12px !important;
+    border-radius: 12px !important;
+  }
+
+  .track-choice strong { font-size: .84rem !important; line-height: 1.2 !important; }
+  .choice-dot { width: 16px !important; height: 16px !important; }
+
+  .cbjr-feedback {
+    margin-top: 8px !important;
+    min-height: 40px !important;
+    padding: 8px 12px !important;
+    border-radius: 12px !important;
+  }
+  .cbjr-feedback span { font-size: .80rem !important; }
+}
+</style>
+
+<style id="lm-mobile-game">
+/* ═══════════════════════════════════════════════════════════
+   MODO LETRAS — TELA DE JOGO MOBILE REDESIGN PROFISSIONAL
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 820px) {
+
+  /* Container geral do jogo */
+  .lm-game {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding: 6px 10px 16px;
+    min-height: calc(100svh - 60px);
+    background: #080808;
+    box-sizing: border-box;
+  }
+
+  /* ── CABEÇALHO: capa + info + timer ── */
+  .lm-header {
+    display: grid;
+    grid-template-columns: 56px 1fr 52px;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 12px;
+    border-radius: 16px;
+    background: rgba(255,255,255,.055);
+    border: 1px solid rgba(255,255,255,.10);
+  }
+
+  .lm-cover {
+    width: 56px;
+    height: 56px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 1px solid rgba(255,255,255,.14);
+    box-shadow: 0 6px 18px rgba(0,0,0,.5);
+    display: block;
+    flex-shrink: 0;
+  }
+
+  .lm-album-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .lm-album-label {
+    font-size: .56rem;
+    font-weight: 900;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #f1c40f;
+    opacity: .72;
+  }
+
+  .lm-album-name {
+    font-family: "Elektrix", Arial, sans-serif;
+    font-size: clamp(.72rem, 3.5vw, .88rem);
+    color: #fff;
+    line-height: 1.15;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .lm-progress-text {
+    font-size: .62rem;
+    color: rgba(255,255,255,.45);
+    font-weight: 700;
+    margin-top: 2px;
+  }
+
+  .lm-mini-bar {
+    height: 3px;
+    background: rgba(255,255,255,.12);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+
+  .lm-mini-bar i {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, #f1c40f, #fff1a6);
+    border-radius: inherit;
+    box-shadow: 0 0 8px rgba(241,196,15,.4);
+  }
+
+  /* Timer circular SVG */
+  .lm-timer-wrap {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+
+  .lm-timer-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .lm-timer-num {
+    position: relative;
+    z-index: 2;
+    font-family: "Elektrix", Arial, sans-serif;
+    font-size: 1.1rem;
+    color: #fff;
+    line-height: 1;
+    text-align: center;
+    transition: color .3s;
+  }
+
+  /* ── STATS STRIP ── */
+  .lm-stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding: 6px 12px;
+    border-radius: 10px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.08);
+  }
+
+  .lm-stats > div {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .lm-stats > div span {
+    font-family: "Elektrix", Arial, sans-serif;
+    font-size: 1.05rem;
+    color: #f1c40f;
+    line-height: 1;
+  }
+
+  .lm-stats > div small {
+    font-size: .58rem;
+    color: rgba(255,255,255,.4);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+
+  .lm-stat-sep {
+    width: 1px;
+    height: 28px;
+    background: rgba(255,255,255,.12);
+    flex: 0 0 1px;
+    margin: 0 4px;
+  }
+
+  /* ── TRECHO DA LETRA ── */
+  .lm-phrase-wrap {
+    position: relative;
+    padding: 14px 28px;
+    border-radius: 16px;
+    border: 1px solid rgba(241,196,15,.28);
+    background:
+      radial-gradient(circle at 50% 0%, rgba(241,196,15,.08), transparent 55%),
+      rgba(0,0,0,.52);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.07), 0 0 18px rgba(241,196,15,.06);
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 90px;
+  }
+
+  .lm-quote {
+    position: absolute;
+    font-family: Georgia, serif;
+    font-size: 2.6rem;
+    line-height: 1;
+    color: rgba(241,196,15,.45);
+    pointer-events: none;
+    font-weight: 900;
+  }
+
+  .lm-ql { left: 8px; top: 2px; }
+  .lm-qr { right: 8px; bottom: -6px; }
+
+  .lm-phrase {
+    font-size: clamp(.82rem, 3.8vw, .98rem);
+    line-height: 1.42;
+    color: rgba(255,255,255,.95);
+    font-weight: 700;
+    text-shadow: 0 2px 12px rgba(0,0,0,.75);
+    position: relative;
+    z-index: 1;
+    word-break: break-word;
+  }
+
+  /* ── LABEL ── */
+  .lm-choice-label {
+    text-align: center;
+    font-size: .70rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .10em;
+    color: rgba(255,255,255,.45);
+    margin: 0;
+  }
+
+  /* ── OPÇÕES 2×2 ── */
+  .lm-options {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  /* Reutiliza .option-btn.track-choice mas com nova aparência */
+  .lm-options .option-btn,
+  .lm-options .track-choice {
+    min-height: 48px !important;
+    border-radius: 12px !important;
+    padding: 8px 9px !important;
+    font-size: .78rem !important;
+    font-weight: 800 !important;
+    line-height: 1.18 !important;
+    text-align: left !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    background: rgba(255,255,255,.06) !important;
+    border: 1px solid rgba(255,255,255,.12) !important;
+    color: #fff !important;
+    cursor: pointer !important;
+    transition: .15s ease !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.08) !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  .lm-options .option-btn:active:not(:disabled),
+  .lm-options .track-choice:active:not(:disabled) {
+    transform: scale(.97) !important;
+    border-color: rgba(241,196,15,.55) !important;
+    background: rgba(241,196,15,.09) !important;
+  }
+
+  .lm-options .option-btn.correct,
+  .lm-options .track-choice.correct {
+    background: rgba(30,215,96,.18) !important;
+    border-color: #1ed760 !important;
+    box-shadow: 0 0 16px rgba(30,215,96,.22) !important;
+  }
+
+  .lm-options .option-btn.incorrect,
+  .lm-options .track-choice.incorrect {
+    background: rgba(255,59,48,.16) !important;
+    border-color: #ff3b30 !important;
+    box-shadow: 0 0 14px rgba(255,59,48,.18) !important;
+  }
+
+  .lm-options .option-btn:disabled,
+  .lm-options .track-choice:disabled {
+    opacity: .42 !important;
+    cursor: default !important;
+  }
+
+  .lm-options .choice-dot {
+    width: 14px !important;
+    height: 14px !important;
+    border-radius: 50% !important;
+    border: 1.5px solid rgba(255,255,255,.28) !important;
+    flex-shrink: 0 !important;
+  }
+
+  .lm-options .track-choice.correct .choice-dot {
+    background: #1ed760 !important;
+    border-color: #1ed760 !important;
+    box-shadow: 0 0 10px rgba(30,215,96,.6) !important;
+  }
+
+  .lm-options .track-choice.incorrect .choice-dot {
+    background: #ff3b30 !important;
+    border-color: #ff3b30 !important;
+  }
+
+  .lm-options strong {
+    font-size: .80rem !important;
+    line-height: 1.2 !important;
+    color: #fff !important;
+    flex: 1 !important;
+  }
+
+  /* ── FEEDBACK ── */
+  .lm-feedback {
+    text-align: center !important;
+    font-size: .80rem !important;
+    font-weight: 900 !important;
+    min-height: 20px !important;
+    margin: 0 !important;
+    color: rgba(255,255,255,.72) !important;
+  }
+
+  /* ── BOTÃO VOLTAR ── */
+  .lm-exit {
+    width: 100%;
+    min-height: 42px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.15);
+    background: rgba(255,255,255,.05);
+    color: rgba(255,255,255,.62);
+    font-size: .80rem;
+    font-weight: 900;
+    cursor: pointer;
+    margin-top: 2px;
   }
 }
 </style>
@@ -3201,7 +3591,7 @@ button:hover{
             <div class="lm-header">
               <img class="lm-cover" src="${coverUrl(album)}" alt="${album.name}">
               <div class="lm-album-info">
-                <span class="lm-album-label">ALBUM ATUAL</span>
+                <span class="lm-album-label">ÁLBUM ATUAL</span>
                 <strong class="lm-album-name">${album.name}</strong>
                 <span class="lm-progress-text">${lettersMode.currentIndex + 1} / ${lettersMode.questions.length} trechos</span>
                 <div class="lm-mini-bar"><i style="width:${progressPercent}%"></i></div>
@@ -3225,64 +3615,33 @@ button:hover{
               <div><span>${lettersMode.correct * 150}</span><small>Pontos</small></div>
             </div>
             <div class="lm-phrase-wrap">
-              <span class="lm-quote lm-ql">&ldquo;</span>
+              <span class="lm-quote lm-ql">“</span>
               <div class="lm-phrase">${q.phrase}</div>
-              <span class="lm-quote lm-qr">&rdquo;</span>
+              <span class="lm-quote lm-qr">”</span>
             </div>
             <p class="lm-choice-label">Escolha a faixa correta</p>
             <div class="lm-options">${optionsHtml}</div>
             <p id="feedback-message" class="feedback lm-feedback"></p>
-            <button class="lm-exit" id="exit-game-btn">Voltar aos albums</button>
+            <button class="lm-exit" id="exit-game-btn">← Voltar aos álbuns</button>
           </div>
         `;
       } else {
-<div class="game-pro-layout">
+        els.game.innerHTML = `
+        <div class="game-pro-layout">
           <section class="lyrics-arena">
-            <div class="arena-title">
-              <span></span>
-              <h2>Qual é a música?</h2>
-              <span></span>
-            </div>
-
+            <div class="arena-title"><span></span><h2>Qual é a música?</h2><span></span></div>
             <div class="phrase-box pro-phrase">
-              <span class="quote-left">“</span>
-              <div>${q.phrase}</div>
-              <span class="quote-right">”</span>
+              <span class="quote-left">“</span><div>${q.phrase}</div><span class="quote-right">”</span>
             </div>
-
-            <div class="mini-progress" aria-hidden="true">
-              <i style="width:${progressPercent}%"></i>
-            </div>
-
+            <div class="mini-progress" aria-hidden="true"><i style="width:${progressPercent}%"></i></div>
             <h3 class="choice-title">Escolha a faixa correta</h3>
             <div class="options-grid pro-options">${optionsHtml}</div>
-
             <p id="feedback-message" class="feedback"></p>
           </section>
-
           <aside class="game-side">
-            <div class="timer-card">
-              <span>Tempo</span>
-              <div class="timer-ring">
-                <strong id="letters-timer">${lettersMode.timePerQuestion}</strong>
-                <small>segundos</small>
-              </div>
-            </div>
-
-            <div class="score-card">
-              <span>Pontuação</span>
-              <strong>${lettersMode.correct * 150}</strong>
-              <small>${lettersMode.correct} acertos • ${lettersMode.errors}/${lettersMode.maxErrors} erros</small>
-            </div>
-
-            <div class="album-now">
-              <span>Álbum atual</span>
-              <h3>${album.name}</h3>
-              <img src="${coverUrl(album)}" alt="${album.name}">
-              <div class="album-mini-bar"><i style="width:${progressPercent}%"></i></div>
-              <p>${lettersMode.currentIndex + 1} / ${lettersMode.questions.length} trechos</p>
-            </div>
-
+            <div class="timer-card"><span>Tempo</span><div class="timer-ring"><strong id="letters-timer">${lettersMode.timePerQuestion}</strong><small>segundos</small></div></div>
+            <div class="score-card"><span>Pontuação</span><strong>${lettersMode.correct * 150}</strong><small>${lettersMode.correct} acertos • ${lettersMode.errors}/${lettersMode.maxErrors} erros</small></div>
+            <div class="album-now"><span>Álbum atual</span><h3>${album.name}</h3><img src="${coverUrl(album)}" alt="${album.name}"><div class="album-mini-bar"><i style="width:${progressPercent}%"></i></div><p>${lettersMode.currentIndex + 1} / ${lettersMode.questions.length} trechos</p></div>
             <button class="exit-button" id="exit-game-btn">Voltar aos álbuns</button>
           </aside>
         </div>
@@ -3301,19 +3660,20 @@ button:hover{
     function startLettersTimer() {
       clearInterval(lettersMode.timer);
       let timeLeft = lettersMode.timePerQuestion;
-      const CIRC = 113;
+      const CIRCUMFERENCE = 113;
       lettersMode.timer = setInterval(() => {
         timeLeft--;
         const timerEl = document.getElementById('letters-timer');
         const arc = document.getElementById('lm-timer-arc');
-        if (timerEl) {
-          timerEl.textContent = timeLeft;
-          timerEl.style.color = timeLeft > 6 ? '#fff' : timeLeft > 3 ? '#ff9500' : '#ff3b30';
-        }
+        const numEl = timerEl;
+        if (timerEl) timerEl.textContent = timeLeft;
         if (arc) {
           const ratio = timeLeft / lettersMode.timePerQuestion;
-          arc.style.strokeDashoffset = CIRC * (1 - ratio);
+          arc.style.strokeDashoffset = CIRCUMFERENCE * (1 - ratio);
           arc.style.stroke = ratio > .4 ? '#f1c40f' : ratio > .2 ? '#ff9500' : '#ff3b30';
+        }
+        if (numEl) {
+          numEl.style.color = timeLeft > 6 ? '#fff' : timeLeft > 3 ? '#ff9500' : '#ff3b30';
         }
         if (timeLeft <= 0) {
           clearInterval(lettersMode.timer);
@@ -3484,7 +3844,7 @@ const cbjrFeedback = {
         if (!isTimeout && selectedOption === value) {
           btn.classList.add(selectedOption === q.correct ? 'correct' : 'incorrect');
         }
-        // Nao revela a resposta certa quando erra
+        // Não revela a resposta certa quando o usuário erra
         btn.disabled = true;
       });
 
@@ -3660,7 +4020,6 @@ const cbjrFeedback = {
       const total = lettersMode.questions.length;
       const album = lettersMode.albumMap[lettersMode.currentAlbumId];
       const completedAlbum = lettersMode.errors < lettersMode.maxErrors;
-      const pct = Math.round((lettersMode.correct / Math.max(1, total)) * 100);
 
       if (completedAlbum) saveCompletedAlbum(lettersMode.currentAlbumId);
 
@@ -3669,110 +4028,78 @@ const cbjrFeedback = {
 
       const nextAlbumId = lettersMode.albumOrder.find(id => !completed.includes(id));
       const nextAlbum = nextAlbumId ? lettersMode.albumMap[nextAlbumId] : null;
-      const isMobile = window.innerWidth <= 820;
-      const savedName = escapeAttr(localStorage.getItem('lettersCBJR_playerName') || '');
-      const scorePreview = calculateLettersOnlineScore(lettersMode.correct || 0, lettersMode.errors || 0, total, completedAlbum);
 
-      if (isMobile) {
-        const hasNextAlbum = completedAlbum && Boolean(nextAlbum);
-        const coverImg = coverUrl(hasNextAlbum ? nextAlbum : album);
-        const coverAlt = hasNextAlbum ? nextAlbum.name : album.name;
-        const headline = completedAlbum ? (hasNextAlbum ? nextAlbum.name : 'Todos os albums!') : album.name;
-        const sub = completedAlbum
-          ? `${lettersMode.correct} acertos em ${total} trechos`
-          : `${lettersMode.correct} de ${total} certos`;
-        const badge = completedAlbum
-          ? (hasNextAlbum ? 'NOVO ALBUM LIBERADO' : 'MODO DOMINADO')
-          : 'GAME OVER';
-        const badgeClass = completedAlbum ? '' : ' lm-result-badge-fail';
-
+      if (completedAlbum) {
+        const hasNextAlbum = Boolean(nextAlbum);
         els.final.innerHTML = `
-          <div class="lm-result">
-            <div class="lm-result-hero">
-              <img src="${coverImg}" alt="${coverAlt}">
-              <span class="lm-result-badge${badgeClass}">${badge}</span>
-              <div class="lm-result-hero-score">
-                <span class="lm-result-pct">${pct}%</span>
-                <span class="lm-result-pct-label">${completedAlbum ? 'concluido' : 'de acerto'}</span>
-              </div>
-            </div>
-            <div class="lm-result-info">
-              <strong class="lm-result-title">${headline}</strong>
-              <span class="lm-result-sub">${sub}</span>
-            </div>
-            <div class="lm-result-stats">
-              <div><span>${lettersMode.correct}</span><small>Acertos</small></div>
-              <div><span>${lettersMode.errors}</span><small>Erros</small></div>
-              <div><span>${scorePreview}</span><small>Pontos</small></div>
-            </div>
-            <div class="lm-result-ranking">
-              <p class="lm-result-ranking-label">Ranking Online &mdash; ${scorePreview} pts</p>
-              <div class="lm-result-ranking-row">
-                <input id="lettersPlayerName" class="lm-result-input" maxlength="24" placeholder="Seu nome" value="${savedName}">
-                <button id="lettersSubmitScoreBtn" class="lm-result-send" type="button" onclick="submitLettersScoreOnline()">Enviar</button>
-              </div>
-              <div id="lettersRankingStatus" class="lm-result-ranking-status"></div>
-              <a class="lm-result-ranking-link" href="ranking.html?from=letras">Ver ranking completo &rsaquo;</a>
-            </div>
-            <div class="lm-result-actions">
-              ${hasNextAlbum ? `<button class="lm-result-btn-primary" id="next-album-btn">Jogar proximo album</button>` : ''}
-              ${!completedAlbum ? '<button class="lm-result-btn-primary" id="restart-btn">Tentar novamente</button>' : ''}
-              <div class="lm-result-btn-row">
-                <button class="lm-result-btn-ghost" id="albums-btn">Escolher album</button>
-                ${completedAlbum ? '<button class="lm-result-btn-ghost" id="restart-btn">Repetir</button>' : ''}
-              </div>
-              <a class="lm-result-btn-back" href="index.html?skipIntro=true">Voltar ao painel</a>
-            </div>
-          </div>
-        `;
-      } else {
-        const hasNextAlbum = completedAlbum && Boolean(nextAlbum);
-        if (completedAlbum) {
-          els.final.innerHTML = `
-            <div class="unlock-screen">
-              <div class="unlock-glow"></div>
-              <div class="unlock-copy">
-                <span class="unlock-kicker">${hasNextAlbum ? 'Novo album liberado' : 'Modo Letras dominado'}</span>
-                <h2>${hasNextAlbum ? nextAlbum.name : 'Todos os albums concluidos'}</h2>
-                <p>Voce concluiu <strong>${album.name}</strong> com <strong>${lettersMode.correct}</strong> acertos em <strong>${total}</strong> trechos.</p>
-                ${renderLettersRankingCard(true)}
-                <div class="unlock-actions">
-                  ${hasNextAlbum ? '<button class="primary-button" id="next-album-btn">Jogar album liberado</button>' : ''}
-                  <button class="ghost-button" id="albums-btn">Escolher album</button>
-                  <button class="ghost-button" id="restart-btn">Repetir</button>
-                  <a class="ghost-button" style="text-decoration:none;display:inline-flex;align-items:center;" href="index.html?skipIntro=true">Voltar ao painel</a>
-                </div>
-              </div>
-              <div class="unlock-cover-area">
-                <div class="unlock-badge">LIBERADO</div>
-                <div class="unlock-cover-frame"><img src="${coverUrl(hasNextAlbum ? nextAlbum : album)}" alt="${hasNextAlbum ? nextAlbum.name : album.name}"></div>
-              </div>
-            </div>
-          `;
-          setTimeout(() => { document.querySelector('.unlock-screen')?.classList.add('is-visible'); }, 60);
-        } else {
-          els.final.innerHTML = `
-            <div class="final-box">
-              <h2>Fim de jogo!</h2>
-              <p>Voce chegou ao limite de erros em <strong>${album.name}</strong>.<br>Acertos: <strong>${lettersMode.correct}</strong> de <strong>${total}</strong>.</p>
-              ${renderLettersRankingCard(false)}
-              <div class="final-actions">
-                <button class="primary-button" id="restart-btn">Tentar novamente</button>
-                <button class="ghost-button" id="albums-btn">Escolher album</button>
+          <div class="unlock-screen">
+            <div class="unlock-glow"></div>
+
+            <div class="unlock-copy">
+              <span class="unlock-kicker">${hasNextAlbum ? 'Novo álbum liberado' : 'Modo Letras dominado'}</span>
+              <h2>${hasNextAlbum ? nextAlbum.name : 'Todos os álbuns concluídos'}</h2>
+              <p>
+                Você concluiu <strong>${album.name}</strong> com
+                <strong>${lettersMode.correct}</strong> acertos em <strong>${total}</strong> trechos.
+              </p>
+              <p class="unlock-frase">
+                ${hasNextAlbum
+                  ? 'Mais um disco entrou no caminho. Aperte o play na memória e siga para o próximo desafio.'
+                  : 'Você fechou todos os discos disponíveis no Modo Letras. Essa sequência ficou pesada!'}
+              </p>
+
+              <blockquote class="chorão-quote">
+                “${getRandomChoraoQuote()}”
+              </blockquote>
+
+              ${renderLettersRankingCard(true)}
+
+              <div class="unlock-actions">
+                ${hasNextAlbum ? '<button class="primary-button" id="next-album-btn">Jogar álbum liberado</button>' : ''}
+                <button class="ghost-button" id="albums-btn">Escolher álbum</button>
+                <button class="ghost-button" id="restart-btn">Repetir álbum atual</button>
                 <a class="ghost-button" style="text-decoration:none;display:inline-flex;align-items:center;" href="index.html?skipIntro=true">Voltar ao painel</a>
               </div>
             </div>
-          `;
-        }
+
+            <div class="unlock-cover-area">
+              <div class="unlock-badge">LIBERADO</div>
+              <div class="unlock-cover-frame">
+                <img src="${coverUrl(hasNextAlbum ? nextAlbum : album)}" alt="${hasNextAlbum ? nextAlbum.name : album.name}">
+              </div>
+              <span>${hasNextAlbum ? 'Próximo disco' : 'Último disco concluído'}</span>
+            </div>
+          </div>
+        `;
+
+        const nextBtn = document.getElementById('next-album-btn');
+        if (nextBtn && hasNextAlbum) nextBtn.addEventListener('click', () => startLettersMode(nextAlbumId));
+        document.getElementById('restart-btn').addEventListener('click', () => startLettersMode(lettersMode.currentAlbumId));
+        document.getElementById('albums-btn').addEventListener('click', showSelection);
+
+        setTimeout(() => {
+          document.querySelector('.unlock-screen')?.classList.add('is-visible');
+        }, 60);
+
+        showOnly('final');
+        return;
       }
 
-      const nextBtn = document.getElementById('next-album-btn');
-      if (nextBtn) nextBtn.addEventListener('click', () => startLettersMode(nextAlbumId));
-      const restartBtn = document.getElementById('restart-btn');
-      if (restartBtn) restartBtn.addEventListener('click', () => startLettersMode(lettersMode.currentAlbumId));
-      const albumsBtn = document.getElementById('albums-btn');
-      if (albumsBtn) albumsBtn.addEventListener('click', showSelection);
+      els.final.innerHTML = `
+        <div class="final-box">
+          <h2>Fim de jogo!</h2>
+          <p>Você chegou ao limite de erros em <strong>${album.name}</strong>.<br><br>Acertos: <strong>${lettersMode.correct}</strong> de <strong>${total}</strong>.</p>
+          ${renderLettersRankingCard(false)}
+          <div class="final-actions">
+            <button class="primary-button" id="restart-btn">Tentar novamente</button>
+            <button class="ghost-button" id="albums-btn">Escolher álbum</button>
+            <a class="ghost-button" style="text-decoration:none;display:inline-flex;align-items:center;" href="index.html?skipIntro=true">Voltar ao painel</a>
+          </div>
+        </div>
+      `;
 
+      document.getElementById('restart-btn').addEventListener('click', () => startLettersMode(lettersMode.currentAlbumId));
+      document.getElementById('albums-btn').addEventListener('click', showSelection);
       showOnly('final');
     }
 
