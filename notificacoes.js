@@ -121,25 +121,24 @@ async function publish(type, payload) {
 }
 
 // ── Engancha no sistema de conquistas já existente em cada página ──
-// A Rádio, Quiz e Letras definem window.CBJRAchievementPopup após o DOM
-// Usamos polling para não depender de ordem de carregamento dos scripts
+// O fluxo real é: localStorage.setItem → cbjrAchievementSetItem → enqueue → showNext
+// CBJRAchievementPopup.show é apenas um alias para enqueue — mas conquistas do Quiz
+// vão direto pelo localStorage watcher sem passar pelo .show
+// Por isso interceptamos AMBOS: o .show E o localStorage.setItem
 
 function hookAchievementPopup() {
   let hooked = false;
 
-  function tryHook() {
+  // Hook 1: intercepta CBJRAchievementPopup.show (usado por chamadas diretas)
+  function tryHookShow() {
     if (hooked) return;
     const popup = window.CBJRAchievementPopup;
     if (!popup || typeof popup.show !== 'function') return;
 
     hooked = true;
     const original = popup.show.bind(popup);
-
     popup.show = function(item) {
-      // Chama o popup original normalmente — não quebra nada
       original(item);
-
-      // Publica a notificação no Firebase
       publish('achievement', {
         achievementId:   item.id    || '',
         achievementName: item.name  || resolveLabel(item.id || ''),
@@ -149,13 +148,70 @@ function hookAchievementPopup() {
     };
   }
 
-  // Tenta imediatamente e depois a cada 200ms por até 10s
-  tryHook();
+  // Hook 2: intercepta localStorage.setItem para capturar conquistas
+  // que vão direto pelo watcher (quiz, letras, rádio)
+  const WATCH_KEYS = ['radioCBJR_achievements_v1', 'cobjr_quiz_achievements', 'cbjr_letters_completed'];
+  const CATALOG_MAP = {
+    radioCBJR_achievements_v1: 'radio',
+    cobjr_quiz_achievements:   'quiz',
+    cbjr_letters_completed:    'letras'
+  };
+
+  function safeJson(v, fallback) { try { return JSON.parse(v || ''); } catch(_) { return fallback; } }
+
+  function findNewIds(key, oldVal, newVal) {
+    if (key === 'cbjr_letters_completed') {
+      const oldArr = new Set(safeJson(oldVal, []));
+      return safeJson(newVal, []).filter(id => !oldArr.has(id));
+    }
+    const oldObj = safeJson(oldVal, {});
+    const newObj = safeJson(newVal, {});
+    return Object.keys(newObj).filter(id => newObj[id] && !oldObj[id]);
+  }
+
+  // Guarda snapshot dos valores atuais
+  const prev = {};
+  WATCH_KEYS.forEach(k => { prev[k] = localStorage.getItem(k); });
+
+  // Aguarda o watcher nativo da página ser instalado antes de sobrescrever
+  // (o watcher da página já interceptou — vamos sobrescrever depois dele)
+  let lsHooked = false;
+  function tryHookLocalStorage() {
+    if (lsHooked) return;
+    // Só instala depois que o watcher da página já está ativo
+    const existing = localStorage.setItem;
+    if (!existing || existing === Storage.prototype.setItem) return; // ainda não foi patchado
+
+    lsHooked = true;
+    const prevSetItem = localStorage.setItem.bind(localStorage);
+    localStorage.setItem = function cbjrNotifSetItem(key, value) {
+      const oldValue = prev[key] ?? localStorage.getItem(key);
+      prevSetItem(key, value);
+      prev[key] = value;
+
+      if (WATCH_KEYS.includes(key)) {
+        const newIds = findNewIds(key, oldValue, value);
+        newIds.forEach(id => {
+          publish('achievement', {
+            achievementId:   id,
+            achievementName: resolveLabel(id),
+            achievementIcon: CATALOG[id]?.emoji || '🏆',
+            source:          CATALOG_MAP[key] || 'cbjr',
+          });
+        });
+      }
+    };
+  }
+
+  // Polling para ambos os hooks
+  tryHookShow();
+  tryHookLocalStorage();
   const interval = setInterval(() => {
-    tryHook();
-    if (hooked) clearInterval(interval);
+    tryHookShow();
+    tryHookLocalStorage();
+    if (hooked && lsHooked) clearInterval(interval);
   }, 200);
-  setTimeout(() => clearInterval(interval), 10000);
+  setTimeout(() => clearInterval(interval), 12000);
 }
 
 // ── Escuta notificações de outros usuários ──
