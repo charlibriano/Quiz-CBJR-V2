@@ -12,7 +12,7 @@
 
 import { initializeApp, getApps, getApp }
   from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getDatabase, ref, push, set, onChildAdded, serverTimestamp, query, limitToLast }
+import { getDatabase, ref, push, set, onValue, serverTimestamp }
   from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
 // ── Config (mesmo projeto já usado em todos os arquivos) ──
@@ -29,7 +29,8 @@ const FIREBASE_CONFIG = {
 const NOTIF_PATH    = 'notifications/feed';
 const MAX_LISTEN    = 30;    // escuta só as últimas 30 notificações
 const NOTIF_TTL_MS  = 8000;  // ms que o toast fica visível
-const MY_SESSION_ID = Math.random().toString(36).slice(2); // id único desta aba
+const MY_SESSION_ID = Math.random().toString(36).slice(2);
+window._cbjrMySessionId = MY_SESSION_ID; // expõe para debug
 const PAGE_KEY = (()=>{
   const p = location.pathname.split('/').pop().replace('.html','');
   return { radio: 'Rádio CBJR', quiz: 'Quiz CBJR', letras: 'Modo Letras',
@@ -387,25 +388,36 @@ function showNotif({ playerName, playerPhoto, achievementName, achievementIcon, 
 
 // ── Escuta o feed de notificações ──
 function startListening() {
-  const feedQuery = query(ref(db, NOTIF_PATH), limitToLast(MAX_LISTEN));
+  const feedRef = ref(db, NOTIF_PATH);
+  const seen = new Set();
+  let lastTs = Date.now();
 
-  onChildAdded(feedQuery, snap => {
-    const n = snap.val();
-    if (!n) return;
-    // Ignora própria sessão
-    if (n.sessionId === MY_SESSION_ID) return;
-    // Ignora notificações com mais de 5 minutos (evita flood ao carregar)
-    if (Date.now() - (n.ts || 0) > 300000) return;
+  // Usa onValue em vez de onChildAdded — mais confiável em mobile
+  onValue(feedRef, snap => {
+    if (!snap.exists()) return;
+    snap.forEach(child => {
+      const n = child.val();
+      const key = child.key;
+      if (!n || seen.has(key)) return;
+      seen.add(key);
 
-    if (n.type === 'achievement') {
-      showNotif({
-        playerName:      n.playerName     || 'Um fã',
-        playerPhoto:     n.playerPhoto    || '',
-        achievementName: n.achievementName || resolveLabel(n.achievementId || ''),
-        achievementIcon: n.achievementIcon || '🏆',
-        page:            n.page           || 'CBJR',
-      });
-    }
+      // Ignora própria sessão
+      if (n.sessionId === MY_SESSION_ID) return;
+      // Ignora notificações com mais de 5 minutos
+      if (Date.now() - (n.ts || 0) > 300000) return;
+      // Ignora notificações anteriores ao carregamento da página
+      if ((n.ts || 0) < lastTs - 5000) return;
+
+      if (n.type === 'achievement') {
+        showNotif({
+          playerName:      n.playerName     || 'Um fã',
+          playerPhoto:     n.playerPhoto    || '',
+          achievementName: n.achievementName || resolveLabel(n.achievementId || ''),
+          achievementIcon: n.achievementIcon || '🏆',
+          page:            n.page           || 'CBJR',
+        });
+      }
+    });
   });
 }
 
