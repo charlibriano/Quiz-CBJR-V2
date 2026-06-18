@@ -207,14 +207,14 @@ function injectStyles() {
       flex-direction: column;
       gap: 10px;
       pointer-events: none;
+      max-width: min(380px, calc(100vw - 28px));
     }
 
     .cbjr-notif {
       display: flex;
       align-items: center;
       gap: 11px;
-      min-width: 260px;
-      max-width: min(380px, calc(100vw - 28px));
+      width: 100%;
       padding: 11px 14px;
       border-radius: 18px;
       border: 1px solid rgba(241,196,15,.45);
@@ -230,6 +230,8 @@ function injectStyles() {
       pointer-events: auto;
       cursor: default;
       animation: cbjrNotifIn .32s cubic-bezier(.2,.85,.25,1.15) both;
+      position: relative;
+      overflow: hidden;
     }
 
     .cbjr-notif.leaving {
@@ -245,7 +247,7 @@ function injectStyles() {
     }
 
     .cbjr-notif-avatar {
-      width: 34px; height: 34px;
+      width: 36px; height: 36px;
       border-radius: 50%;
       border: 1.5px solid rgba(241,196,15,.55);
       overflow: hidden;
@@ -264,28 +266,25 @@ function injectStyles() {
     .cbjr-notif-body { min-width: 0; flex: 1; }
 
     .cbjr-notif-line1 {
-      color: rgba(255,255,255,.62);
-      font-size: .70rem;
+      color: rgba(255,255,255,.55);
+      font-size: .68rem;
       font-weight: 900;
       text-transform: uppercase;
       letter-spacing: .07em;
-      margin-bottom: 2px;
-    }
-
-    .cbjr-notif-line2 {
-      color: #fff;
-      font-weight: 1000;
-      font-size: .82rem;
-      line-height: 1.2;
+      margin-bottom: 3px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .cbjr-notif-icon {
-      font-size: 1.3rem;
-      flex: 0 0 auto;
-      filter: drop-shadow(0 0 6px rgba(241,196,15,.5));
+    .cbjr-notif-line2 {
+      color: #fff;
+      font-weight: 1000;
+      font-size: .84rem;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .cbjr-notif-progress {
@@ -293,7 +292,7 @@ function injectStyles() {
       bottom: 0; left: 0;
       height: 2px;
       border-radius: 0 0 18px 18px;
-      background: linear-gradient(90deg, var(--yellow, #f1c40f), transparent);
+      background: linear-gradient(90deg, #f1c40f, transparent);
       animation: cbjrProgress linear forwards;
     }
 
@@ -302,9 +301,32 @@ function injectStyles() {
       to   { width: 0%; }
     }
 
-    @media (max-width: 560px) {
-      #cbjrNotifStack { top: 12px; right: 12px; left: 12px; }
-      .cbjr-notif { min-width: unset; width: 100%; }
+    /* Mobile: aparece embaixo, largura total */
+    @media (max-width: 600px) {
+      #cbjrNotifStack {
+        top: auto;
+        bottom: 80px;
+        right: 12px;
+        left: 12px;
+        max-width: 100%;
+        align-items: stretch;
+      }
+
+      @keyframes cbjrNotifIn {
+        from { transform: translateY(16px) scale(.96); opacity: 0; }
+        to   { transform: translateY(0) scale(1); opacity: 1; }
+      }
+      @keyframes cbjrNotifOut {
+        to { transform: translateY(16px) scale(.96); opacity: 0; }
+      }
+
+      .cbjr-notif {
+        border-radius: 16px;
+        padding: 10px 13px;
+      }
+
+      .cbjr-notif-line1 { font-size: .65rem; }
+      .cbjr-notif-line2 { font-size: .80rem; }
     }
   `;
   document.head.appendChild(style);
