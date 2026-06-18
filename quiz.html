@@ -336,6 +336,24 @@
     .level-normal { --accent: #f1c40f; }
     .level-hard { --accent: #ff3b30; }
 
+    /* Badge de progresso salvo no card de dificuldade */
+    .quiz-progress-badge {
+      display: block;
+      margin-top: 8px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(30,215,96,.40);
+      background: rgba(30,215,96,.10);
+      color: #1ed760;
+      font-size: .65rem;
+      font-weight: 1000;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
     /* =========================
        TELA DE PERGUNTAS
        ========================= */
@@ -6491,9 +6509,35 @@ body.tela-pergunta .answer-btn {
         if (!state.levels.length) {
           throw new Error('O perguntas.json não possui níveis válidos.');
         }
+
+        // Mostra progresso salvo nos cards de dificuldade
+        renderSavedProgress();
       } catch (error) {
         showFatalError(error.message);
       }
+    }
+
+    function renderSavedProgress() {
+      const progress = loadProgress();
+      const diffMap = { facil: 'facil', normal: 'normal', dificil: 'dificil' };
+      document.querySelectorAll('.level-card').forEach(card => {
+        const diff = card.dataset.difficulty;
+        if (!diff) return;
+        const highScore = Number(progress[`highScore_${diff}`] || 0);
+        const highLevel = Number(progress[`highestLevel_${diff}`] || 0);
+        const total     = state.levels.length;
+        if (!highLevel && !highScore) return;
+
+        // Remove badge anterior se existir
+        card.querySelector('.quiz-progress-badge')?.remove();
+
+        const badge = document.createElement('span');
+        badge.className = 'quiz-progress-badge';
+        badge.innerHTML = highLevel >= total
+          ? `✓ Concluído · ${highScore} pts`
+          : `Nível ${highLevel}/${total} · ${highScore} pts`;
+        card.appendChild(badge);
+      });
     }
 
     function attachEvents() {
@@ -6616,13 +6660,19 @@ body.tela-pergunta .answer-btn {
 
       const settings = difficultySettings[difficulty] || difficultySettings.normal;
       state.difficulty = difficulty;
-      state.currentLevelIndex = 0;
       state.score = 0;
       state.globalHits = 0;
       state.totalAnswered = 0;
       state.wrongs = 0;
       state.powerups.fifty = settings.fifty;
       state.powerups.skip = settings.skip;
+
+      // Retoma do nível salvo se for a mesma dificuldade
+      const progress = loadProgress();
+      const savedLevel = progress.lastDifficulty === difficulty
+        ? Math.min(Number(progress.lastLevelIndex || 0), state.levels.length - 1)
+        : 0;
+      state.currentLevelIndex = savedLevel;
 
       document.body.classList.remove('tela-dificuldade');
       document.body.classList.add('tela-pergunta');
@@ -6632,7 +6682,12 @@ body.tela-pergunta .answer-btn {
       els.quizScreen.style.display = 'block';
       els.resultOverlay.classList.remove('show');
 
-      startLevel(0);
+      startLevel(savedLevel);
+
+      // Avisa o jogador se retomou de onde parou
+      if (savedLevel > 0) {
+        showToast(`Continuando do nível ${savedLevel + 1} 🎸`);
+      }
     }
 
     function startLevel(levelIndex) {
@@ -6854,6 +6909,100 @@ body.tela-pergunta .answer-btn {
       }
     }
 
+    // ═══════════════════════════════════════════════════════
+    // PROGRESSO DO QUIZ — salva/carrega nível e pontuação
+    // ═══════════════════════════════════════════════════════
+
+    const PROGRESS_KEY = 'cobjr_quiz_progress_v1';
+    const ACHIEVE_KEY  = 'cobjr_quiz_achievements';
+
+    function loadProgress() {
+      try { return JSON.parse(localStorage.getItem(PROGRESS_KEY) || '{}'); } catch(_) { return {}; }
+    }
+
+    function saveProgress(patch) {
+      const current = loadProgress();
+      const updated = { ...current, ...patch, updatedAt: Date.now() };
+      localStorage.setItem(PROGRESS_KEY, JSON.stringify(updated));
+    }
+
+    function getHighScore(difficulty) {
+      return Number(loadProgress()[`highScore_${difficulty}`] || 0);
+    }
+
+    function getHighestLevel(difficulty) {
+      return Number(loadProgress()[`highestLevel_${difficulty}`] || 0);
+    }
+
+    function unlockAchievement(id) {
+      try {
+        const current = JSON.parse(localStorage.getItem(ACHIEVE_KEY) || '{}');
+        if (current[id]) return; // já desbloqueada
+        current[id] = { unlockedAt: Date.now(), source: 'quiz' };
+        localStorage.setItem(ACHIEVE_KEY, JSON.stringify(current));
+      } catch(_) {}
+    }
+
+    function checkAchievements() {
+      const lvl   = state.currentLevelIndex + 1;
+      const total = state.levels.length;
+
+      // Primeiro nível concluído
+      if (lvl >= 1 && state.levelApproved) unlockAchievement('first_level_completed');
+
+      // Nível 3
+      if (lvl >= 3 && state.levelApproved) unlockAchievement('level_3_completed');
+
+      // Nível 5
+      if (lvl >= 5 && state.levelApproved) unlockAchievement('level_5_completed');
+
+      // Todos os níveis principais (sem contar secreto)
+      if (state.levelApproved && lvl >= total - 1) unlockAchievement('all_main_levels_completed');
+
+      // Quiz completo (último nível aprovado)
+      if (state.levelApproved && lvl >= total) unlockAchievement('all_levels_completed');
+
+      // Nível secreto (último nível, dificuldade difícil)
+      if (state.levelApproved && lvl >= total && state.difficulty === 'dificil') {
+        unlockAchievement('secret_level_completed');
+      }
+
+      // Novo recorde de pontuação
+      const prev = getHighScore(state.difficulty);
+      if (state.score > prev) unlockAchievement('new_high_score');
+
+      // Combos acumulados globais
+      const totalHits = state.globalHits || 0;
+      if (totalHits >= 3)  unlockAchievement('combo_3x');
+      if (totalHits >= 5)  unlockAchievement('combo_5x');
+      if (totalHits >= 7)  unlockAchievement('combo_7x');
+      if (totalHits >= 10) unlockAchievement('combo_10x');
+    }
+
+    function persistProgress() {
+      const diff = state.difficulty;
+      const lvl  = state.currentLevelIndex + 1;
+
+      // Salva nível mais alto atingido
+      if (state.levelApproved) {
+        const prev = getHighestLevel(diff);
+        if (lvl > prev) saveProgress({ [`highestLevel_${diff}`]: lvl });
+      }
+
+      // Salva pontuação máxima
+      const prev = getHighScore(diff);
+      if (state.score > prev) {
+        saveProgress({ [`highScore_${diff}`]: state.score });
+      }
+
+      // Salva o nível em que parou (para retomar)
+      saveProgress({
+        lastDifficulty:   diff,
+        lastLevelIndex:   state.levelApproved ? state.currentLevelIndex : Math.max(0, state.currentLevelIndex - 1),
+        lastScore:        state.score
+      });
+    }
+
     function finishLevel(forceFail = false) {
       const total = state.currentQuestions.length;
       const settings = difficultySettings[state.difficulty] || difficultySettings.normal;
@@ -6862,6 +7011,10 @@ body.tela-pergunta .answer-btn {
       state.levelApproved = approved;
       const levelNumber = state.currentLevelIndex + 1;
       const phasePhrase = approved ? getLevelPassPhrase() : getGameOverPhrase();
+
+      // ── Persiste progresso e conquistas ──
+      persistProgress();
+      checkAchievements();
 
       els.resultTitle.textContent = approved ? `Nível ${levelNumber} completo` : `Nível ${levelNumber} incompleto`;
 
@@ -6907,6 +7060,8 @@ body.tela-pergunta .answer-btn {
       state.wrongs = 0;
       state.powerups.fifty = (difficultySettings[state.difficulty] || difficultySettings.normal).fifty;
       state.powerups.skip = (difficultySettings[state.difficulty] || difficultySettings.normal).skip;
+      // Reinicia do zero e limpa o nível salvo
+      saveProgress({ lastLevelIndex: 0, lastDifficulty: state.difficulty, lastScore: 0 });
       startLevel(0);
     }
 
