@@ -121,21 +121,15 @@ async function publish(type, payload) {
 }
 
 // ── Engancha no sistema de conquistas já existente em cada página ──
-// O fluxo real é: localStorage.setItem → cbjrAchievementSetItem → enqueue → showNext
-// CBJRAchievementPopup.show é apenas um alias para enqueue — mas conquistas do Quiz
-// vão direto pelo localStorage watcher sem passar pelo .show
-// Por isso interceptamos AMBOS: o .show E o localStorage.setItem
-
 function hookAchievementPopup() {
-  let hooked = false;
+  let showHooked = false;
 
-  // Hook 1: intercepta CBJRAchievementPopup.show (usado por chamadas diretas)
+  // Hook 1: intercepta CBJRAchievementPopup.show
   function tryHookShow() {
-    if (hooked) return;
+    if (showHooked) return;
     const popup = window.CBJRAchievementPopup;
     if (!popup || typeof popup.show !== 'function') return;
-
-    hooked = true;
+    showHooked = true;
     const original = popup.show.bind(popup);
     popup.show = function(item) {
       original(item);
@@ -148,16 +142,12 @@ function hookAchievementPopup() {
     };
   }
 
-  // Hook 2: intercepta localStorage.setItem para capturar conquistas
-  // que vão direto pelo watcher (quiz, letras, rádio)
+  // Hook 2: observa mudanças no localStorage SEM tocar no watcher existente
+  // Guarda snapshot e compara a cada 500ms — simples e não quebra nada
   const WATCH_KEYS = ['radioCBJR_achievements_v1', 'cobjr_quiz_achievements', 'cbjr_letters_completed'];
-  const CATALOG_MAP = {
-    radioCBJR_achievements_v1: 'radio',
-    cobjr_quiz_achievements:   'quiz',
-    cbjr_letters_completed:    'letras'
-  };
+  const SOURCE_MAP = { radioCBJR_achievements_v1:'radio', cobjr_quiz_achievements:'quiz', cbjr_letters_completed:'letras' };
 
-  function safeJson(v, fallback) { try { return JSON.parse(v || ''); } catch(_) { return fallback; } }
+  function safeJson(v, fb) { try { return JSON.parse(v||''); } catch(_) { return fb; } }
 
   function findNewIds(key, oldVal, newVal) {
     if (key === 'cbjr_letters_completed') {
@@ -169,47 +159,33 @@ function hookAchievementPopup() {
     return Object.keys(newObj).filter(id => newObj[id] && !oldObj[id]);
   }
 
-  // Guarda snapshot dos valores atuais
+  // Snapshot inicial
   const prev = {};
   WATCH_KEYS.forEach(k => { prev[k] = localStorage.getItem(k); });
 
-  // Aguarda o watcher nativo da página ser instalado antes de sobrescrever
-  // (o watcher da página já interceptou — vamos sobrescrever depois dele)
-  let lsHooked = false;
-  function tryHookLocalStorage() {
-    if (lsHooked) return;
-    // Só instala depois que o watcher da página já está ativo
-    const existing = localStorage.setItem;
-    if (!existing || existing === Storage.prototype.setItem) return; // ainda não foi patchado
-
-    lsHooked = true;
-    const prevSetItem = localStorage.setItem.bind(localStorage);
-    localStorage.setItem = function cbjrNotifSetItem(key, value) {
-      const oldValue = prev[key] ?? localStorage.getItem(key);
-      prevSetItem(key, value);
-      prev[key] = value;
-
-      if (WATCH_KEYS.includes(key)) {
-        const newIds = findNewIds(key, oldValue, value);
-        newIds.forEach(id => {
-          publish('achievement', {
-            achievementId:   id,
-            achievementName: resolveLabel(id),
-            achievementIcon: CATALOG[id]?.emoji || '🏆',
-            source:          CATALOG_MAP[key] || 'cbjr',
-          });
+  // Polling leve — compara a cada 600ms, só publica se houve mudança real
+  setInterval(() => {
+    WATCH_KEYS.forEach(key => {
+      const current = localStorage.getItem(key);
+      if (current === prev[key]) return;
+      const newIds = findNewIds(key, prev[key], current);
+      prev[key] = current;
+      newIds.forEach(id => {
+        publish('achievement', {
+          achievementId:   id,
+          achievementName: resolveLabel(id),
+          achievementIcon: CATALOG[id]?.emoji || '🏆',
+          source:          SOURCE_MAP[key] || 'cbjr',
         });
-      }
-    };
-  }
+      });
+    });
+  }, 600);
 
-  // Polling para ambos os hooks
+  // Polling para o hook do .show
   tryHookShow();
-  tryHookLocalStorage();
   const interval = setInterval(() => {
     tryHookShow();
-    tryHookLocalStorage();
-    if (hooked && lsHooked) clearInterval(interval);
+    if (showHooked) clearInterval(interval);
   }, 200);
   setTimeout(() => clearInterval(interval), 12000);
 }
