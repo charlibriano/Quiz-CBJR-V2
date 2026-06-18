@@ -121,55 +121,41 @@ async function publish(type, payload) {
 }
 
 // ── Engancha no sistema de conquistas já existente em cada página ──
-// As páginas já patcham o localStorage.setItem e chamam window.CBJRAchievementPopup
-// Vamos monkeypatch o popup para capturar cada novo unlock
+// A Rádio, Quiz e Letras definem window.CBJRAchievementPopup após o DOM
+// Usamos polling para não depender de ordem de carregamento dos scripts
 
 function hookAchievementPopup() {
-  const original = window.CBJRAchievementPopup?.show;
+  let hooked = false;
 
-  function intercept(item) {
-    // Chama o popup original normalmente
-    original?.call(window.CBJRAchievementPopup, item);
+  function tryHook() {
+    if (hooked) return;
+    const popup = window.CBJRAchievementPopup;
+    if (!popup || typeof popup.show !== 'function') return;
 
-    // Publica a notificação
-    publish('achievement', {
-      achievementId: item.id || '',
-      achievementName: item.name || resolveLabel(item.id || ''),
-      achievementIcon: item.icon || '🏆',
-      source: item.source || 'cbjr',
-    });
+    hooked = true;
+    const original = popup.show.bind(popup);
+
+    popup.show = function(item) {
+      // Chama o popup original normalmente — não quebra nada
+      original(item);
+
+      // Publica a notificação no Firebase
+      publish('achievement', {
+        achievementId:   item.id    || '',
+        achievementName: item.name  || resolveLabel(item.id || ''),
+        achievementIcon: item.icon  || '🏆',
+        source:          item.source || 'cbjr',
+      });
+    };
   }
 
-  if (window.CBJRAchievementPopup) {
-    window.CBJRAchievementPopup.show = intercept;
-  } else {
-    // CBJRAchievementPopup pode ser criado depois — observa
-    let defined = false;
-    Object.defineProperty(window, 'CBJRAchievementPopup', {
-      configurable: true,
-      set(val) {
-        if (!defined) {
-          defined = true;
-          Object.defineProperty(window, 'CBJRAchievementPopup', {
-            configurable: true, writable: true, value: val
-          });
-          if (val?.show) {
-            const orig = val.show.bind(val);
-            val.show = (item) => {
-              orig(item);
-              publish('achievement', {
-                achievementId: item.id || '',
-                achievementName: item.name || resolveLabel(item.id || ''),
-                achievementIcon: item.icon || '🏆',
-                source: item.source || 'cbjr',
-              });
-            };
-          }
-        }
-      },
-      get() { return undefined; }
-    });
-  }
+  // Tenta imediatamente e depois a cada 200ms por até 10s
+  tryHook();
+  const interval = setInterval(() => {
+    tryHook();
+    if (hooked) clearInterval(interval);
+  }, 200);
+  setTimeout(() => clearInterval(interval), 10000);
 }
 
 // ── Escuta notificações de outros usuários ──
