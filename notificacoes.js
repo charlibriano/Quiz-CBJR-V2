@@ -301,30 +301,12 @@ function injectStyles() {
       to   { width: 0%; }
     }
 
-    /* Mobile: aparece embaixo, largura total */
+    /* Mobile: estilos do card quando em tela pequena */
     @media (max-width: 600px) {
-      #cbjrNotifStack {
-        top: auto;
-        bottom: 80px;
-        right: 12px;
-        left: 12px;
-        max-width: 100%;
-        align-items: stretch;
-      }
-
-      @keyframes cbjrNotifIn {
-        from { transform: translateY(16px) scale(.96); opacity: 0; }
-        to   { transform: translateY(0) scale(1); opacity: 1; }
-      }
-      @keyframes cbjrNotifOut {
-        to { transform: translateY(16px) scale(.96); opacity: 0; }
-      }
-
       .cbjr-notif {
         border-radius: 16px;
         padding: 10px 13px;
       }
-
       .cbjr-notif-line1 { font-size: .65rem; }
       .cbjr-notif-line2 { font-size: .80rem; }
     }
@@ -338,6 +320,13 @@ function getStack() {
   if (!stack) {
     stack = document.createElement('div');
     stack.id = 'cbjrNotifStack';
+    // Detecta mobile via largura real da tela
+    const isMobile = window.innerWidth <= 600;
+    if (isMobile) {
+      stack.style.cssText = 'position:fixed;bottom:80px;left:12px;right:12px;z-index:99999;display:flex;flex-direction:column;gap:10px;pointer-events:none;';
+    } else {
+      stack.style.cssText = 'position:fixed;top:18px;right:18px;z-index:99999;display:flex;flex-direction:column;gap:10px;pointer-events:none;max-width:380px;';
+    }
     document.body.appendChild(stack);
   }
   return stack;
