@@ -69,74 +69,49 @@
 
 /* CONTADOR ONLINE — COMUNIDADE CBJR */
 .online-now{
-  position: relative;
+  position:relative;
   display:inline-flex;align-items:center;gap:8px;
   margin-top:10px;border:1px solid rgba(30,215,96,.38);
   border-radius:999px;background:rgba(0,0,0,.62);
   color:#fff;padding:8px 13px;font-weight:1000;
-  box-shadow:0 0 22px rgba(30,215,96,.10), inset 0 1px 0 rgba(255,255,255,.06);
+  box-shadow:0 0 22px rgba(30,215,96,.10),inset 0 1px 0 rgba(255,255,255,.06);
   width:max-content;max-width:100%;
-  cursor:pointer;
-  user-select:none;
+  cursor:pointer;user-select:none;
 }
 .online-dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green),0 0 26px rgba(30,215,96,.38);flex:0 0 auto;}
 .online-now strong{color:var(--green);font-family:Elektrix,Arial,sans-serif;font-size:1.16em;line-height:1;text-shadow:0 0 12px rgba(30,215,96,.42);}
-.online-now span:not(.online-dot):not(.online-caret){color:rgba(255,255,255,.78);font-size:.78rem;letter-spacing:.07em;text-transform:uppercase;}
-.online-caret{color:rgba(255,255,255,.55)!important;font-size:.7rem!important;letter-spacing:0!important;text-transform:none!important;transition:transform .2s;}
+.online-now > span:not(.online-dot):not(.online-caret){color:rgba(255,255,255,.78);font-size:.78rem;letter-spacing:.07em;text-transform:uppercase;}
+.online-caret{color:rgba(255,255,255,.50)!important;font-size:.68rem!important;letter-spacing:0!important;text-transform:none!important;transition:transform .2s;}
 .online-now.open .online-caret{transform:rotate(180deg);}
 
-/* Popover de quem está online */
 .online-popover{
   display:none;
-  position:absolute;
-  left:0;top:calc(100% + 10px);
+  position:absolute;left:0;top:calc(100% + 10px);
   z-index:200;
-  min-width:240px;max-width:320px;
-  border:1px solid rgba(30,215,96,.38);
-  border-radius:18px;
-  background:rgba(3,3,3,.96);
-  box-shadow:0 18px 54px rgba(0,0,0,.72),0 0 28px rgba(30,215,96,.08),inset 0 1px 0 rgba(255,255,255,.07);
+  min-width:250px;max-width:330px;
+  border:1px solid rgba(30,215,96,.35);border-radius:18px;
+  background:rgba(3,3,3,.97);
+  box-shadow:0 18px 54px rgba(0,0,0,.78),0 0 24px rgba(30,215,96,.07),inset 0 1px 0 rgba(255,255,255,.07);
   backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  padding:12px;
-  pointer-events:none;
+  padding:12px;pointer-events:none;
 }
 .online-now.open .online-popover{display:block;pointer-events:auto;}
-
-.online-popover-title{
-  font-size:.62rem;font-weight:1000;text-transform:uppercase;letter-spacing:.10em;
-  color:rgba(255,255,255,.48);margin:0 0 10px;
-}
-
-.online-fan-row{
-  display:grid;grid-template-columns:32px 1fr;
-  gap:8px;align-items:center;
-  padding:6px 4px;
-  border-radius:10px;
-  transition:.15s ease;
-}
-.online-fan-row:not(:last-child){ border-bottom:1px solid rgba(255,255,255,.06); }
-
-.online-fan-avatar{
-  width:32px;height:32px;border-radius:50%;
-  display:grid;place-items:center;
-  background:linear-gradient(135deg,rgba(241,196,15,.9),rgba(0,0,0,.8));
-  border:1.5px solid rgba(241,196,15,.60);
-  font-weight:1000;color:#000;font-size:.72rem;
-  overflow:hidden;flex:0 0 auto;
-}
+.online-popover-title{font-size:.60rem;font-weight:1000;text-transform:uppercase;letter-spacing:.10em;color:rgba(255,255,255,.42);margin:0 0 10px;}
+.online-fan-row{display:grid;grid-template-columns:34px 1fr;gap:9px;align-items:center;padding:6px 2px;}
+.online-fan-row+.online-fan-row{border-top:1px solid rgba(255,255,255,.06);}
+.online-fan-avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,rgba(241,196,15,.9),rgba(0,0,0,.8));border:1.5px solid rgba(241,196,15,.55);font-weight:1000;color:#000;font-size:.72rem;overflow:hidden;flex:0 0 auto;}
 .online-fan-avatar img{width:100%;height:100%;object-fit:cover;}
-
-.online-fan-name{font-weight:1000;color:#fff;font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.online-fan-sub{font-size:.66rem;color:rgba(255,255,255,.48);font-weight:800;margin-top:1px;}
-
-.online-fan-you .online-fan-name::after{
-  content:" (você)";color:var(--green);font-size:.68rem;
-}
 .online-fan-you .online-fan-avatar{border-color:rgba(30,215,96,.72);}
-
-.online-popover-empty{color:rgba(255,255,255,.52);font-size:.78rem;font-weight:850;text-align:center;padding:6px 0;}
-
-@media(max-width:760px){.online-now{padding:7px 10px;font-size:.82rem}.online-now span:not(.online-dot):not(.online-caret){font-size:.68rem}.online-popover{left:50%;transform:translateX(-50%);min-width:220px;}}
+.online-fan-name{font-weight:1000;color:#fff;font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.online-fan-you .online-fan-name::after{content:" (você)";color:var(--green);font-size:.68rem;font-weight:900;}
+.online-fan-devices{display:inline-block;margin-left:5px;padding:1px 6px;border-radius:999px;background:rgba(30,215,96,.15);border:1px solid rgba(30,215,96,.35);color:var(--green);font-size:.58rem;font-weight:1000;letter-spacing:.06em;vertical-align:middle;}
+.online-fan-sub{font-size:.65rem;color:rgba(255,255,255,.44);font-weight:800;margin-top:1px;}
+.online-popover-empty{color:rgba(255,255,255,.48);font-size:.78rem;font-weight:850;text-align:center;padding:4px 0;}
+@media(max-width:760px){
+  .online-now{padding:7px 10px;font-size:.82rem;}
+  .online-now > span:not(.online-dot):not(.online-caret){font-size:.68rem;}
+  .online-popover{left:50%;transform:translateX(-50%);min-width:220px;}
+}
 
 
 /* CARTÃO DO JOGADOR CBJR */
@@ -418,142 +393,135 @@ function setupOnlinePresence(){
   if(!onlineEl) return;
 
   const pageKey = 'fans';
+  let sessionRef = null;
+  let onlineUsers = [];
 
-  // ── Identidade do visitante ──
-  // Prioridade: Google Auth → localStorage do fã → anônimo
+  // ── helpers ──
+  function esc(s){ return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
+  function initials(name){ return String(name||'CB').trim().split(/\s+/).filter(Boolean).slice(0,2).map(p=>p[0]?.toUpperCase()).join('')||'CB'; }
+
   function getIdentity(){
     const user = window.CBJR_AUTH_USER;
-    if(user){
-      return {
-        name:  user.displayName || 'Fã CBJR',
-        photo: user.photoURL    || '',
-        city:  localStorage.getItem('cbjr_fan_city') || '',
-        uid:   user.uid
-      };
+    if(user && user.displayName){
+      return { name: user.displayName, photo: user.photoURL||'', city: localStorage.getItem('cbjr_fan_city')||'', uid: user.uid };
     }
-    const name = localStorage.getItem('cbjr_fan_name') || 'Fã anônimo';
     return {
-      name,
+      name:  localStorage.getItem('cbjr_fan_name') || 'Fã anônimo',
       photo: localStorage.getItem('cbjr_fan_photo') || '',
       city:  localStorage.getItem('cbjr_fan_city')  || '',
-      uid:   null
+      uid:   ''
     };
   }
 
-  // ── Registra presença no Realtime DB ──
-  let sessionRef = null;
-
-  function registerPresence(){
-    if(sessionRef) return; // já registrado
+  // ── Cria UM único nó de presença e o mantém atualizado ──
+  function register(){
     const id = getIdentity();
+    const payload = { name: id.name, photo: id.photo, city: id.city, uid: id.uid, page: pageKey, joinedAt: rtdbServerTimestamp() };
+
+    if(sessionRef){
+      // Já existe: só atualiza os dados (não cria nó novo)
+      dbSet(sessionRef, payload).catch(()=>{});
+      return;
+    }
+
+    // Primeira vez: cria o nó e configura onDisconnect
     sessionRef = dbPush(dbRef(realtimeDb, `presence/${pageKey}`));
-    dbSet(sessionRef, {
-      name:      id.name,
-      photo:     id.photo,
-      city:      id.city,
-      uid:       id.uid || '',
-      page:      pageKey,
-      joinedAt:  rtdbServerTimestamp()
-    }).catch(()=>{});
+    dbSet(sessionRef, payload).catch(()=>{});
     onDisconnect(sessionRef).remove();
-    window.addEventListener('beforeunload', ()=>{ dbSet(sessionRef, null).catch(()=>{}); });
+    window.addEventListener('beforeunload', ()=>{ try{ dbSet(sessionRef, null); }catch(_){} });
   }
 
-  // Registra imediatamente (mesmo anônimo)
-  registerPresence();
+  // Registra agora (com dados que já temos)
+  register();
 
-  // Re-registra quando o Google Auth responde com nome/foto real
-  window.addEventListener('cbjr-auth-change', ()=>{
-    if(sessionRef){
-      const id = getIdentity();
-      dbSet(sessionRef, {
-        name:     id.name,
-        photo:    id.photo,
-        city:     id.city,
-        uid:      id.uid || '',
-        page:     pageKey,
-        joinedAt: rtdbServerTimestamp()
-      }).catch(()=>{});
-    }
-  });
+  // Quando o Google Auth responder, atualiza o mesmo nó
+  window.addEventListener('cbjr-auth-change', ()=>{ register(); });
 
-  // ── Escuta quem está online e renderiza ──
-  let onlineUsers = [];
-  let myKey = sessionRef ? sessionRef.key : null;
-
-  // Captura a chave do próprio nó após o push
-  sessionRef && Object.defineProperty(sessionRef, 'key', {
-    get(){ return this._key; },
-    set(v){ this._key = v; myKey = v; }
-  });
-
+  // ── Escuta presença em tempo real ──
   onValue(dbRef(realtimeDb, `presence/${pageKey}`), snap => {
     onlineUsers = [];
-    if(snap.exists()){
-      snap.forEach(child => {
-        const d = child.val();
-        onlineUsers.push({ key: child.key, ...d });
-      });
-    }
-    // Atualiza contador
-    onlineEl.textContent = String(onlineUsers.length);
-    // Atualiza popover (se aberto)
+    if(snap.exists()) snap.forEach(child => onlineUsers.push({ key: child.key, ...child.val() }));
+    // Conta usuários únicos (agrupa multi-device pelo uid)
+    const uniqueCount = new Set(onlineUsers.map(u => u.uid || u.key)).size;
+    onlineEl.textContent = String(uniqueCount);
     if(badge.classList.contains('open')) renderPopover();
   }, ()=>{ onlineEl.textContent = '0'; });
 
-  // ── Popover ──
-  function escHtml(s){ return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
-
-  function initials(name){
-    return String(name||'CB').trim().split(/\s+/).filter(Boolean).slice(0,2).map(p=>p[0]?.toUpperCase()).join('')||'CB';
-  }
-
+  // ── Renderiza popover — agrupa por uid ──
   function renderPopover(){
     if(!popover) return;
     if(!onlineUsers.length){
-      popover.innerHTML = `<p class="online-popover-title">Quem está online</p><p class="online-popover-empty">Nenhum fã identificado ainda.</p>`;
+      popover.innerHTML = `<p class="online-popover-title">Online agora</p><p class="online-popover-empty">Nenhum fã identificado ainda.</p>`;
       return;
     }
-    const myUid  = window.CBJR_AUTH_USER?.uid || null;
-    const myName = localStorage.getItem('cbjr_fan_name') || (window.CBJR_AUTH_USER?.displayName) || '';
 
-    const rows = onlineUsers.map(u => {
-      const isMe = (myUid && u.uid === myUid) || (!myUid && u.name === myName && myName);
+    const myUid = window.CBJR_AUTH_USER?.uid || '';
+    const myKey = sessionRef?.key || '';
+
+    // Agrupa por uid (logados) ou por chave (anônimos)
+    const grouped = new Map();
+    onlineUsers.forEach(u => {
+      const groupKey = u.uid || u.key; // uid agrupa multi-device; sem uid cada sessão é única
+      if(grouped.has(groupKey)){
+        grouped.get(groupKey).devices++;
+      } else {
+        grouped.set(groupKey, { ...u, devices: 1 });
+      }
+    });
+
+    const rows = [...grouped.values()].map(u => {
+      const isMe = (myUid && u.uid === myUid) || (!myUid && u.key === myKey);
       const avatar = u.photo
-        ? `<img src="${escHtml(u.photo)}" alt="${escHtml(u.name)}" onerror="this.style.display='none'">`
-        : escHtml(initials(u.name));
-      return `
-        <div class="online-fan-row${isMe ? ' online-fan-you' : ''}">
-          <div class="online-fan-avatar">${avatar}</div>
-          <div>
-            <div class="online-fan-name">${escHtml(u.name)}</div>
-            ${u.city ? `<div class="online-fan-sub">${escHtml(u.city)}</div>` : ''}
-          </div>
-        </div>`;
+        ? `<img src="${esc(u.photo)}" alt="${esc(u.name)}" onerror="this.style.display='none'">`
+        : esc(initials(u.name));
+      const deviceBadge = u.devices > 1
+        ? `<span class="online-fan-devices">${u.devices} dispositivos</span>`
+        : '';
+      return `<div class="online-fan-row${isMe ? ' online-fan-you' : ''}">
+        <div class="online-fan-avatar">${avatar}</div>
+        <div>
+          <div class="online-fan-name">${esc(u.name)}${deviceBadge}</div>
+          ${u.city ? `<div class="online-fan-sub">${esc(u.city)}</div>` : ''}
+        </div>
+      </div>`;
     }).join('');
 
+    // Contador real = nós únicos agrupados
+    onlineEl.textContent = String(grouped.size);
     popover.innerHTML = `<p class="online-popover-title">🟢 Online agora</p>${rows}`;
   }
 
-  // Toggle ao clicar no badge
+  // ── Toggle popover ──
   badge && badge.addEventListener('click', e => {
     e.stopPropagation();
     const open = badge.classList.toggle('open');
     if(open) renderPopover();
   });
-
-  // Fecha ao clicar fora
-  document.addEventListener('click', e => {
-    if(badge && !badge.contains(e.target)) badge.classList.remove('open');
-  });
-
-  // Fecha com Escape
-  document.addEventListener('keydown', e => {
-    if(e.key === 'Escape') badge?.classList.remove('open');
-  });
+  document.addEventListener('click', e => { if(badge && !badge.contains(e.target)) badge.classList.remove('open'); });
+  document.addEventListener('keydown', e => { if(e.key==='Escape') badge?.classList.remove('open'); });
 }
 
-loadLocal();startRealtime();setupOnlinePresence();
+// Limpa nós de presença órfãos (sem joinedAt ou com mais de 10 min)
+async function cleanStalePresence(){
+  try{
+    const snap = await new Promise(resolve => {
+      const r = dbRef(realtimeDb, `presence/fans`);
+      onValue(r, resolve, { onlyOnce: true });
+    });
+    if(!snap.exists()) return;
+    const now = Date.now();
+    const TEN_MIN = 10 * 60 * 1000;
+    snap.forEach(child => {
+      const d = child.val();
+      const ts = d.joinedAt || 0;
+      if(!ts || (now - ts) > TEN_MIN){
+        dbSet(dbRef(realtimeDb, `presence/fans/${child.key}`), null).catch(()=>{});
+      }
+    });
+  }catch(_){}
+}
+
+loadLocal();cleanStalePresence();startRealtime();setupOnlinePresence();
 </script>
 
 
