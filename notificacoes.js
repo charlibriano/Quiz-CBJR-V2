@@ -394,8 +394,8 @@ function startListening() {
     if (!n) return;
     // Ignora própria sessão
     if (n.sessionId === MY_SESSION_ID) return;
-    // Ignora notificações com mais de 30 segundos (evita flood de notificações antigas ao carregar)
-    if (Date.now() - (n.ts || 0) > 30000) return;
+    // Ignora notificações com mais de 5 minutos (evita flood ao carregar)
+    if (Date.now() - (n.ts || 0) > 300000) return;
 
     if (n.type === 'achievement') {
       showNotif({
@@ -420,4 +420,12 @@ if (document.readyState === 'loading') {
 function init() {
   hookAchievementPopup();
   startListening();
+  window._cbjrNotifLoaded = true;
+  // Indicador visual temporário de debug — remove após confirmar funcionamento
+  const dbg = document.createElement('div');
+  dbg.id = 'cbjr-notif-debug';
+  dbg.style.cssText = 'position:fixed;bottom:4px;left:4px;z-index:99999;background:rgba(30,215,96,.18);border:1px solid rgba(30,215,96,.4);border-radius:8px;padding:3px 8px;font-size:.6rem;color:#1ed760;font-family:monospace;pointer-events:none;';
+  dbg.textContent = '🟢 notif ativo';
+  document.body.appendChild(dbg);
+  setTimeout(() => dbg.remove(), 8000);
 }
