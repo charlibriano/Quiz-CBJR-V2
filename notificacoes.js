@@ -387,16 +387,15 @@ function showNotif({ playerName, playerPhoto, achievementName, achievementIcon, 
 
 // ── Escuta o feed de notificações ──
 function startListening() {
-  // Marca o timestamp de início — ignora notificações antigas
-  const startTs = Date.now();
   const feedQuery = query(ref(db, NOTIF_PATH), limitToLast(MAX_LISTEN));
 
   onChildAdded(feedQuery, snap => {
     const n = snap.val();
     if (!n) return;
-    // Ignora própria sessão e notificações anteriores ao carregamento
+    // Ignora própria sessão
     if (n.sessionId === MY_SESSION_ID) return;
-    if ((n.ts || 0) < startTs - 3000) return; // tolera 3s de latência
+    // Ignora notificações com mais de 30 segundos (evita flood de notificações antigas ao carregar)
+    if (Date.now() - (n.ts || 0) > 30000) return;
 
     if (n.type === 'achievement') {
       showNotif({
