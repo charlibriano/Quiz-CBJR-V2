@@ -36,6 +36,8 @@
 .player-card-title{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid rgba(241,196,15,.38);border-radius:999px;background:rgba(241,196,15,.10);padding:7px 12px;font-weight:1000;color:#fff;margin-bottom:12px}
 .player-card-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:12px 0}
 .player-card-stat{border:1px solid rgba(255,255,255,.12);border-radius:16px;background:rgba(255,255,255,.055);padding:10px}.player-card-stat small{display:block;color:rgba(255,255,255,.58);font-size:0.72rem;font-weight:1000;text-transform:uppercase;letter-spacing:.08em}.player-card-stat strong{display:block;margin-top:5px;color:#1ed760;font-size:1.05rem}.player-card-medals{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:12px}.player-card-medal{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(241,196,15,.36);background:rgba(0,0,0,.55);font-size:1.18rem}
+.player-card-profile-btn{display:flex;align-items:center;justify-content:center;margin-top:14px;padding:10px 20px;border-radius:999px;background:linear-gradient(90deg,#1ed760,#0fa84a);color:#050505;font-weight:1000;font-size:.82rem;text-decoration:none;letter-spacing:.04em;transition:.15s ease;}
+.player-card-profile-btn:hover{filter:brightness(1.1);transform:scale(1.03);}
 
 </style>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1JCN94Y3P0"></script>
@@ -85,6 +87,7 @@
       <div class="player-card-stat"><small>Aproveitamento</small><strong id="playerCardAccuracy">0%</strong></div>
     </div>
     <div id="playerCardMedals" class="player-card-medals"></div>
+    <a id="playerCardProfileLink" href="perfil.html" class="player-card-profile-btn" target="_blank">Ver perfil completo →</a>
   </article>
 </div>
 
@@ -192,6 +195,12 @@ function openPlayerCardFromRanking(index){
   document.getElementById('playerCardMode').textContent=modeLabel(e);
   document.getElementById('playerCardAccuracy').textContent=(e.accuracy||0)+'%';
   document.getElementById('playerCardMedals').innerHTML=medalsFromEntry(e,index+1).map(m=>`<span class="player-card-medal">${m}</span>`).join('');
+  // Link para perfil público
+  const profileLink = document.getElementById('playerCardProfileLink');
+  if(profileLink){
+    if(e.uid){ profileLink.href=`perfil.html?uid=${encodeURIComponent(e.uid)}`; profileLink.style.display='flex'; }
+    else { profileLink.style.display='none'; }
+  }
   modal.classList.add('show');modal.setAttribute('aria-hidden','false');
 }
 function closePlayerCard(){const modal=document.getElementById('playerCardModal');modal?.classList.remove('show');modal?.setAttribute('aria-hidden','true');}
