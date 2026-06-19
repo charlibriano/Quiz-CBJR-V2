@@ -198,8 +198,20 @@ function openPlayerCardFromRanking(index){
   // Link para perfil público
   const profileLink = document.getElementById('playerCardProfileLink');
   if(profileLink){
-    if(e.uid){ profileLink.href=`perfil.html?uid=${encodeURIComponent(e.uid)}`; profileLink.style.display='flex'; }
-    else { profileLink.style.display='none'; }
+    if(e.uid){
+      profileLink.href=`perfil.html?uid=${encodeURIComponent(e.uid)}`;
+    } else {
+      // Sem uid — passa dados básicos do ranking via URL
+      const params = new URLSearchParams({
+        name: e.name || '',
+        score: e.score || 0,
+        accuracy: e.accuracy || 0,
+        mode: e.mode || e.gameMode || '',
+        rank: index + 1
+      });
+      profileLink.href=`perfil.html?${params.toString()}`;
+    }
+    profileLink.style.display='flex';
   }
   modal.classList.add('show');modal.setAttribute('aria-hidden','false');
 }
