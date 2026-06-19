@@ -246,8 +246,121 @@ function render(user,rank='#--'){
   $('recentAchievements').innerHTML=latest.length?latest.map(a=>`<span class="pill" title="+${a.xp} XP">${a.icon} ${a.title}</span>`).join(''):'<span class="muted">Nenhuma conquista recente ainda.</span>';
 }
 function showToast(html){const t=$('toast');t.innerHTML=html;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3600)}
-$('logoutBtn').addEventListener('click',async()=>{await signOut(auth);location.href='index.html'});
-onAuthStateChanged(auth,async user=>{if(!user){location.href='index.html';return}renderUser(user);await loadCloud(user);render(user);const rank=await rankingPos(user);render(user,rank);showToast('📊 Perfil atualizado com seu progresso CBJR.');});
+
+// ── MODO PERFIL PÚBLICO (?uid=xxx) ──
+const PUBLIC_UID = new URLSearchParams(location.search).get('uid');
+
+async function loadPublicProfile(uid) {
+  // Adapta UI para modo público
+  document.title = 'Perfil do Fã — CBJR';
+  $('profileEmail').textContent = 'Perfil público';
+  const logoutBtn = $('logoutBtn');
+  if(logoutBtn) logoutBtn.style.display = 'none';
+  // Esconde missões diárias (são pessoais)
+  const missionsSection = document.querySelector('.section:has(#missionsList)');
+  if(missionsSection) missionsSection.style.display = 'none';
+
+  try {
+    // Carrega dados do Firestore
+    const userDoc = await getDoc(doc(db, 'usuarios', uid));
+    const progressDoc = await getDoc(doc(db, 'usuarios', uid, 'progresso', 'geral'));
+
+    if (!userDoc.exists() && !progressDoc.exists()) {
+      setText('profileName', 'Fã não encontrado');
+      setText('profileEmail', 'Este perfil não está disponível.');
+      return;
+    }
+
+    const userData = userDoc.exists() ? userDoc.data() : {};
+    const progressData = progressDoc.exists() ? progressDoc.data() : {};
+
+    // Avatar e nome
+    const name = userData.nome || progressData.displayName || progressData.lettersCBJR_playerName || 'Fã CBJR';
+    const photo = userData.foto || progressData.photoURL || '';
+    const email = userData.email || '';
+
+    $('profileAvatar').innerHTML = photo
+      ? `<img class="avatar" src="${photo}" alt="${name}">`
+      : `<div class="avatar-fallback">${initials(name, email)}</div>`;
+    setText('profileName', name);
+    setText('profileEmail', 'Fã do Charlie Brown Jr.');
+
+    // Reconstrói contexto de progresso a partir dos dados do Firestore
+    const radioIndex = Math.max(0, Number(progressData.radioCBJRUnlockedAlbumIndex_v2 || 0));
+    const radioMode = String(progressData.radioCBJRMode || 'normal').toLowerCase();
+    const letras = safeJson(progressData.cbjr_letters_completed || '[]', []);
+    const radioAch = countObjectKeys(progressData.radioCBJR_achievements_v1 || '{}');
+    const quizAch = countObjectKeys(progressData.cobjr_quiz_achievements || '{}');
+    const letrasCount = Array.isArray(letras) ? letras.length : 0;
+    const radioLiberados = Math.min(13, radioIndex + 1);
+    const xp = Math.max(0, Number(progressData.cbjr_xp_total || 0));
+    const conquistas = radioAch + quizAch + letrasCount;
+
+    // Stats
+    const level = getLevel(xp);
+    setText('profileLevel', level.name);
+    setText('profileLevelNote', level.next ? `Faltam ${level.missing} XP para ${level.next.name}.` : 'Nível máximo alcançado.');
+    setText('statXP', `${xp} XP`);
+    setText('statRadio', `${radioLiberados}/13`);
+    setText('statLetras', `${letrasCount}/13`);
+    setText('statConquistas', conquistas);
+    setText('statMode', radioMode === 'hard' ? 'Hard' : 'Normal');
+
+    const radioPercent = percentOf(radioLiberados, 13);
+    const letrasPercent = percentOf(letrasCount, 13);
+    const achPercent = percentOf(conquistas, 50);
+    const percent = Math.round((radioPercent + letrasPercent + achPercent) / 3);
+    setText('statProgress', `${percent}%`);
+    setText('xpLine', level.next ? `${xp} / ${level.nextMin} XP` : `${xp} XP`);
+    setText('xpNote', level.next ? `Faltam ${level.missing} XP para ${level.next.name}.` : 'Nível máximo!');
+    setBar('xpBar', level.progress);
+    setBar('radioBar', radioPercent);
+    setBar('letrasBar', letrasPercent);
+    setBar('achBar', achPercent);
+    setText('radioPct', `${radioPercent}%`);
+    setText('letrasPct', `${letrasPercent}%`);
+    setText('achPct', `${achPercent}%`);
+
+    // Ranking
+    const rank = await rankingPos({ uid });
+    setText('statRanking', rank);
+    setText('statNextLevel', level.next ? level.next.name : 'Máximo');
+
+    // Medalhas e showcase
+    const p = { xp, radioLiberados, radioMode, letrasCount, radioAch, quizAch };
+    renderMedals(p, rank);
+    renderShowcase(p, rank);
+
+    // Conquistas recentes (auto achievements do Firestore)
+    const autoSaved = safeJson(progressData.cbjr_auto_achievements_v1 || '{}', {});
+    const autoList = AUTO_ACHIEVEMENTS
+      .filter(a => autoSaved[a.id])
+      .sort((a, b) => (autoSaved[b.id]?.unlockedAt || 0) - (autoSaved[a.id]?.unlockedAt || 0))
+      .slice(0, 8);
+    $('recentAchievements').innerHTML = autoList.length
+      ? autoList.map(a => `<span class="pill" title="+${a.xp} XP">${a.icon} ${a.title}</span>`).join('')
+      : '<span class="muted">Nenhuma conquista registrada ainda.</span>';
+
+    // Título
+    const title = getPublicTitle(p, rank);
+    const badge = $('profileTitleBadge');
+    if(badge) { badge.style.display = 'inline-flex'; badge.innerHTML = `<span>${title.icon}</span><strong>${title.text}</strong>`; }
+
+  } catch(e) {
+    console.error('Erro ao carregar perfil público:', e);
+    setText('profileName', 'Erro ao carregar');
+    setText('profileEmail', 'Não foi possível carregar este perfil.');
+  }
+}
+
+if(PUBLIC_UID) {
+  // Modo público — não precisa de auth
+  loadPublicProfile(PUBLIC_UID);
+} else {
+  // Modo próprio — precisa de login
+  $('logoutBtn').addEventListener('click',async()=>{await signOut(auth);location.href='index.html'});
+  onAuthStateChanged(auth,async user=>{if(!user){location.href='index.html';return}renderUser(user);await loadCloud(user);render(user);const rank=await rankingPos(user);render(user,rank);showToast('📊 Perfil atualizado com seu progresso CBJR.');});
+}
 </script>
 </body>
 </html>
