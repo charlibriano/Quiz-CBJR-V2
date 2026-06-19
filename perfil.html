@@ -249,6 +249,10 @@ function showToast(html){const t=$('toast');t.innerHTML=html;t.classList.add('sh
 
 // ── MODO PERFIL PÚBLICO (?uid=xxx) ──
 const PUBLIC_UID = new URLSearchParams(location.search).get('uid');
+const PARAMS = new URLSearchParams(location.search);
+const PUBLIC_NAME = PARAMS.get('name');
+const PUBLIC_SCORE = PARAMS.get('score');
+const PUBLIC_RANK = PARAMS.get('rank');
 
 async function loadPublicProfile(uid) {
   // Adapta UI para modo público
@@ -354,8 +358,34 @@ async function loadPublicProfile(uid) {
 }
 
 if(PUBLIC_UID) {
-  // Modo público — não precisa de auth
+  // Modo público completo — carrega do Firestore
   loadPublicProfile(PUBLIC_UID);
+} else if(PUBLIC_NAME) {
+  // Modo público simplificado — só dados do ranking
+  document.title = `${PUBLIC_NAME} — Perfil CBJR`;
+  const logoutBtn = $('logoutBtn');
+  if(logoutBtn) logoutBtn.style.display = 'none';
+  $('profileAvatar').innerHTML = `<div class="avatar-fallback">${initials(PUBLIC_NAME,'')}</div>`;
+  setText('profileName', PUBLIC_NAME);
+  setText('profileEmail', 'Fã do Charlie Brown Jr.');
+  setText('statRanking', PUBLIC_RANK ? `#${PUBLIC_RANK}` : '--');
+  setText('statXP', PUBLIC_SCORE ? `${PUBLIC_SCORE} pts` : '--');
+  setText('statMode', PARAMS.get('mode') || '--');
+  setText('statProgress', PARAMS.get('accuracy') ? `${PARAMS.get('accuracy')}%` : '--');
+  setText('statRadio', '--');
+  setText('statLetras', '--');
+  setText('statConquistas', '--');
+  setText('profileLevel', 'Fã CBJR');
+  setText('profileLevelNote', 'Este fã ainda não conectou uma conta Google.');
+  // Esconde seções que dependem de dados completos
+  document.querySelectorAll('.section').forEach(s => {
+    if(!s.querySelector('#statRanking') && !s.querySelector('#medalsGrid')) s.style.display='none';
+  });
+  $('medalsGrid').innerHTML = '<p class="muted" style="grid-column:1/-1;text-align:center">Este fã ainda não conectou uma conta Google para exibir medalhas.</p>';
+  $('medalShowcase').innerHTML = '';
+  $('recentAchievements').innerHTML = '<span class="muted">Sem conquistas registradas.</span>';
+  const badge = $('profileTitleBadge');
+  if(badge) badge.style.display = 'none';
 } else {
   // Modo próprio — precisa de login
   $('logoutBtn').addEventListener('click',async()=>{await signOut(auth);location.href='index.html'});
