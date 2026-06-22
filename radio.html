@@ -4531,6 +4531,7 @@ function checkDailyParam() {
   }
 }
 
+function setUnlockedAlbumIndex(index) {
   const safeIndex = Math.max(0, Math.min(index, RADIO_ALBUMS.length - 1));
   localStorage.setItem(UNLOCK_STORAGE_KEY, String(safeIndex));
   try { window.CBJRCloudProgress?.save?.({ radioLastUnlockedAlbumIndex: safeIndex }); } catch(e) {}
