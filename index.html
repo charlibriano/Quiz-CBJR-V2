@@ -5877,7 +5877,22 @@
 // ═══════════════════════════════════════════
 (function initDailyChallenge(){
   const ALBUMS_COUNT = 13; // total de CDs na Rádio
-  const COVER_BASE = 'https://charlibriano.github.io/Quiz-CBJR-V2/'; // ajuste se necessário
+  const COVER_BASE = 'https://charlibriano.github.io/Quiz-CBJR-V2/'; // base das capas
+  const COVERS = [
+    'https://charlibriano.github.io/Quiz-CBJR-V2/CD 1.jpeg',
+    'https://charlibriano.github.io/Quiz-CBJR-V2/CD 2.jpeg',
+    'https://charlibriano.github.io/Quiz-CBJR-V2/CD 3.jpeg',
+    'https://charlibriano.github.io/Quiz-CBJR-V2/CD 4.jpeg',
+    'https://charlibriano.github.io/Quiz-CBJR-V2/CD 5.jpeg',
+    'https://charlibriano.github.io/Quiz-CBJR-V2/CD 6.jpeg',
+    'https://charlibriano.github.io/Quiz-CBJR-V2/CD 7.jpeg',
+    'https://charlibriano.github.io/Quiz-CBJR-V2/CD 8.jpeg',
+    'https://charlibriano.github.io/Quiz-CBJR-V2/CD 9.jpeg',
+    'https://charlibriano.github.io/Quiz-CBJR-V2/CD 10.jpeg',
+    'https://charlibriano.github.io/Quiz-CBJR-V2/CD 11.jpeg',
+    'https://charlibriano.github.io/Quiz-CBJR-V2/CD 12.jpeg',
+    'https://charlibriano.github.io/Quiz-CBJR-V2/CD 13.jpeg',
+  ];
   const DAILY_KEY = 'cbjr_daily_done_v1';
 
   // Nomes dos álbuns (mesma ordem do RADIO_ALBUMS)
@@ -5944,7 +5959,7 @@
 
     document.getElementById('dailyAlbumName').textContent = ALBUM_NAMES[idx] || `CD ${idx+1}`;
     document.getElementById('dailyAlbumYear').textContent = `${ALBUM_YEARS[idx]} · CD ${idx+1} de 13`;
-    document.getElementById('dailyCoverImg').src = `${COVER_BASE}CD ${idx+1}.jpeg`;
+    document.getElementById('dailyCoverImg').src = COVERS[idx] || COVERS[0];
     document.getElementById('dailyCoverImg').onerror = function(){ this.src=`${COVER_BASE}cbjr.png`; };
 
     const btn = document.getElementById('dailyBtn');
@@ -5956,6 +5971,8 @@
       btn.href = `radio.html?desafio=1&album=${idx}`;
     }
 
+    banner.style.display = 'grid';
+    banner.style.removeProperty('display'); // garante visibilidade
     banner.style.display = 'grid';
     updateTimer();
     setInterval(updateTimer, 1000);
