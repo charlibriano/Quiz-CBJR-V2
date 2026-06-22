@@ -802,6 +802,10 @@
   .album-option .album-badge{position:absolute;top:9px;left:9px;z-index:4;border:1px solid rgba(241,196,15,.52);background:rgba(0,0,0,.72);color:#f1c40f;border-radius:999px;padding:4px 8px;font-size:0.72rem;font-weight:1000;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 0 16px rgba(0,0,0,.5);pointer-events:none}
   .album-option .album-badge.new{border-color:rgba(30,215,96,.7);color:#1ed760;box-shadow:0 0 18px rgba(30,215,96,.22)}
   .album-option .album-badge.done{border-color:rgba(255,255,255,.45);color:#fff}
+  .album-option .album-badge.daily{border-color:rgba(241,196,15,.80);color:var(--yellow);background:rgba(241,196,15,.14);animation:dailyBadgePulse 2s ease-in-out infinite;box-shadow:0 0 18px rgba(241,196,15,.22)}
+  .album-option.daily-challenge{border-color:rgba(241,196,15,.70) !important;box-shadow:0 0 30px rgba(241,196,15,.18),0 8px 28px rgba(0,0,0,.52) !important}
+  .album-option.daily-challenge::before{background:radial-gradient(circle at 50% 0%,rgba(241,196,15,.28),transparent 48%);opacity:.80}
+  @keyframes dailyBadgePulse{0%,100%{box-shadow:0 0 10px rgba(241,196,15,.18)}50%{box-shadow:0 0 22px rgba(241,196,15,.42)}}
   .album-option .lock-icon{position:absolute;z-index:5;inset:0;display:grid;place-items:center;pointer-events:none;font-size:clamp(1.5rem,2.6vw,2.7rem);filter:drop-shadow(0 4px 16px rgba(0,0,0,.9));animation:lockPulse 1.8s ease-in-out infinite}
   .album-option.locked::after{content:"BLOQUEADO" !important;inset:auto 9px 9px 9px !important;min-height:30px !important;display:flex !important;align-items:center !important;justify-content:center !important;border:1px solid rgba(241,196,15,.28);background:rgba(0,0,0,.78) !important;border-radius:999px !important;font-size:0.72rem !important;letter-spacing:.11em !important;z-index:4 !important}
   .album-option.locked img{filter:grayscale(1) brightness(.48) contrast(1.08)}
@@ -4499,7 +4503,34 @@ function getUnlockedAlbumIndex() {
   return 0;
 }
 
-function setUnlockedAlbumIndex(index) {
+// ── Desafio Diário ──
+function getDailyAlbumIndex() {
+  // Verifica se veio de ?album=N no URL
+  const urlAlbum = Number(new URLSearchParams(location.search).get('album'));
+  if (Number.isFinite(urlAlbum) && urlAlbum >= 0 && urlAlbum < RADIO_ALBUMS.length) return urlAlbum;
+  // Fallback: seed pela data
+  const key = new Date().toISOString().slice(0, 10);
+  let hash = 0;
+  for (let i = 0; i < key.length; i++) { hash = ((hash << 5) - hash) + key.charCodeAt(i); hash |= 0; }
+  return Math.abs(hash) % RADIO_ALBUMS.length;
+}
+
+function checkDailyParam() {
+  const params = new URLSearchParams(location.search);
+  if (params.get('desafio') !== '1') return;
+  const albumIdx = getDailyAlbumIndex();
+  const unlocked = getUnlockedAlbumIndex();
+  if (albumIdx <= unlocked) {
+    // CD está desbloqueado — abre direto após renderizar
+    setTimeout(() => {
+      showToast(`🔥 Desafio do dia: CD ${albumIdx + 1}!`);
+      startAlbum(albumIdx);
+    }, 600);
+  } else {
+    showToast('🔒 Desbloqueie mais CDs para jogar o desafio de hoje!');
+  }
+}
+
   const safeIndex = Math.max(0, Math.min(index, RADIO_ALBUMS.length - 1));
   localStorage.setItem(UNLOCK_STORAGE_KEY, String(safeIndex));
   try { window.CBJRCloudProgress?.save?.({ radioLastUnlockedAlbumIndex: safeIndex }); } catch(e) {}
@@ -5232,13 +5263,18 @@ function bindFinishButtons() {
 
 function renderAlbums() {
   const unlockedIndex = getUnlockedAlbumIndex();
+  const dailyIndex = getDailyAlbumIndex(); // CD do desafio do dia
   renderProgress();
   $('albumGrid').innerHTML = RADIO_ALBUMS.map((album, index) => {
     const locked = index > unlockedIndex;
     const nextClass = index === unlockedIndex && index > 0 ? ' unlocked-next' : '';
+    const isDaily = index === dailyIndex && !locked;
+    const dailyClass = isDaily ? ' daily-challenge' : '';
+    const dailyBadge = isDaily ? '<span class="album-badge daily">🔥 Desafio do dia</span>' : '';
     return `
-      <button class="album-option${locked ? ' locked' : ''}${nextClass}" type="button" data-index="${index}" ${locked ? 'disabled aria-disabled="true"' : ''}>
+      <button class="album-option${locked ? ' locked' : ''}${nextClass}${dailyClass}" type="button" data-index="${index}" ${locked ? 'disabled aria-disabled="true"' : ''}>
         ${albumBadge(index, locked, unlockedIndex)}
+        ${dailyBadge}
         <img src="${coverUrl(album)}" alt="${albumDisplayName(album)}" onerror="this.onerror=null;this.src=PAGES_BASE + encodeURIComponent(album.cover);">
         <strong>${albumDisplayName(album)}</strong>
         <small>${album.year || ''} • ${album.tracks.length} faixas${locked ? ' • bloqueado' : ''}</small>
@@ -5589,6 +5625,13 @@ function finishAlbum() {
 
     renderAlbums();
     $('finishOverlay').classList.add('show');
+    // Marca desafio do dia como concluído se era o CD do desafio
+    if (new URLSearchParams(location.search).get('desafio') === '1' || currentAlbumIndex === getDailyAlbumIndex()) {
+      try {
+        const today = new Date().toISOString().slice(0,10);
+        localStorage.setItem('cbjr_daily_done_v1', JSON.stringify({ date: today, done: true }));
+      } catch(_) {}
+    }
     setTimeout(() => { if (typeof refreshOnlineRankingPreview === 'function') refreshOnlineRankingPreview(); }, 150);
   }, 5000);
 }
@@ -5666,7 +5709,7 @@ if (enterRadioBtn) {
 }
 
 renderAlbums();
-</script>
+checkDailyParam();
 
 
 <!-- CBJR PERFIL GOOGLE ÚNICO — sem tela de login nas páginas internas -->
