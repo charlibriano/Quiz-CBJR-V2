@@ -7068,15 +7068,15 @@ body.tela-pergunta .answer-btn {
     async function sendQuizScoreToRanking() {
       try {
         const { initializeApp, getApps, getApp } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
-        const { getFirestore, collection, doc, getDoc, setDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+        const { getFirestore, collection, addDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
 
         const firebaseConfig = {
-          apiKey: 'AIzaSyDtb8jvVd0lMRy96QfqfjAg1dBReRIoRg4',
+          apiKey: 'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
           authDomain: 'ranking-cbjr.firebaseapp.com',
           projectId: 'ranking-cbjr',
           storageBucket: 'ranking-cbjr.firebasestorage.app',
           messagingSenderId: '681180179118',
-          appId: '1:681180179118:web:3ac202c9f7ed69cf94db3f'
+          appId: '1:681180179118:web:fe10833848e8bb8194db3f'
         };
 
         const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
@@ -7097,7 +7097,16 @@ body.tela-pergunta .answer-btn {
         const playerPhoto = window.CBJR_AUTH_USER?.photoURL || '';
         const uid         = window.CBJR_AUTH_USER?.uid || '';
 
-        const payload = {
+        // Verifica recorde local antes de enviar
+        const localKey  = `cbjr_quiz_rank_best_${diff}`;
+        const prevBest  = Number(localStorage.getItem(localKey) || 0);
+        if (finalScore <= prevBest) {
+          console.log(`[Quiz Ranking] Score ${finalScore} não supera recorde local ${prevBest}`);
+          return;
+        }
+        localStorage.setItem(localKey, String(finalScore));
+
+        await addDoc(collection(db, 'ranking'), {
           name:            playerName,
           photoURL:        playerPhoto,
           uid:             uid,
@@ -7114,23 +7123,9 @@ body.tela-pergunta .answer-btn {
           timestamp:       Date.now(),
           createdAtText:   new Date().toISOString(),
           createdAt:       serverTimestamp()
-        };
+        });
 
-        // Chave única por jogador — atualiza só se score for maior
-        const key = uid
-          ? `quiz_${uid}`
-          : `quiz_anon_${btoa(encodeURIComponent(playerName.slice(0,15))).replace(/[^a-zA-Z0-9]/g,'').slice(0,20)}`;
-
-        const docRef  = doc(db, 'ranking', key);
-        const existing = await getDoc(docRef);
-        const prevScore = existing.exists() ? (existing.data().score || 0) : 0;
-
-        if (finalScore > prevScore) {
-          await setDoc(docRef, payload);
-          console.log(`[Quiz Ranking] ✅ Score enviado: ${finalScore} pts (nível ${levelsDone})`);
-        } else {
-          console.log(`[Quiz Ranking] Score ${finalScore} não supera recorde ${prevScore}`);
-        }
+        console.log(`[Quiz Ranking] ✅ Score enviado: ${finalScore} pts (nível ${levelsDone})`);
       } catch(e) {
         console.warn('[Quiz Ranking] Erro:', e.message);
       }
