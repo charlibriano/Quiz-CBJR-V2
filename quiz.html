@@ -6093,6 +6093,19 @@ body.tela-pergunta .answer-btn {
       line-height: 1.35 !important;
     }
 
+    .level-score-line {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(30,215,96,.12);
+      border: 1px solid rgba(30,215,96,.40);
+      color: #1ed760;
+      font-size: .82rem;
+      font-weight: 1000;
+      letter-spacing: .04em;
+    }
+
     #resultOverlay.quiz-finalizado .overlay-actions {
       order: 4 !important;
     }
@@ -7018,11 +7031,16 @@ body.tela-pergunta .answer-btn {
 
       els.resultTitle.textContent = approved ? `Nível ${levelNumber} completo` : `Nível ${levelNumber} incompleto`;
 
+      // Mostra pontuação acumulada no resultado de cada nível
+      const scoreLine = approved
+        ? `<span class="level-score-line">+${state.score} pts acumulados</span>`
+        : '';
+
       // Área grande: mantém frases clássicas/Chorão do projeto.
       els.resultPhrase.textContent = pickRandom(fallbackPhrases);
 
-      // Área menor: recebe as frases personalizadas da fase/desempenho.
-      els.resultText.textContent = phasePhrase;
+      // Área menor: frase + pontuação
+      els.resultText.innerHTML = `<span>${phasePhrase}</span>${scoreLine}`;
 
       els.nextLevelBtn.style.display = approved && state.currentLevelIndex < state.levels.length - 1 ? 'inline-flex' : 'none';
       els.nextLevelBtn.disabled = !(approved && state.currentLevelIndex < state.levels.length - 1);
@@ -7033,15 +7051,87 @@ body.tela-pergunta .answer-btn {
 
       if (quizFinalizado) {
         els.resultTitle.textContent = 'Quiz finalizado';
-        // Frase principal: mantém a identidade CBJR/Chorão no destaque maior.
         els.resultPhrase.textContent = state.wrongs === 0
           ? 'Dias de luta, dias de glória. Obrigado por manter o som vivo.'
           : pickRandom(fallbackPhrases);
-        // Área menor: resumo + frase personalizada pelo desempenho.
         els.resultText.innerHTML = getFinalQuizSummaryHtml();
       }
 
+      // Envia para o ranking sempre que um nível for aprovado
+      if (approved) sendQuizScoreToRanking();
+
       els.resultOverlay.classList.add('show');
+    }
+
+    // ── Envia pontuação do Quiz para o Ranking online ──
+    // Envia ao final de cada nível aprovado.
+    // Usa setDoc com uid como chave — sobrescreve só se for maior pontuação.
+    async function sendQuizScoreToRanking() {
+      try {
+        const { initializeApp, getApps, getApp } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
+        const { getFirestore, collection, doc, getDoc, addDoc, setDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+
+        const firebaseConfig = {
+          apiKey: 'AIzaSyDtb8jvVd0lMRy96QfqfjAg1dBReRIoRg4',
+          authDomain: 'ranking-cbjr.firebaseapp.com',
+          databaseURL: 'https://ranking-cbjr-default-rtdb.firebaseio.com',
+          projectId: 'ranking-cbjr',
+          storageBucket: 'ranking-cbjr.firebasestorage.app',
+          messagingSenderId: '681180179118',
+          appId: '1:681180179118:web:3ac202c9f7ed69cf94db3f'
+        };
+
+        const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+        const db  = getFirestore(app);
+
+        const answered   = state.totalAnswered || 0;
+        const hits       = state.globalHits    || 0;
+        const wrongs     = state.wrongs        || 0;
+        const accuracy   = answered ? Math.round((hits / answered) * 100) : 0;
+        const diff       = state.difficulty || 'normal';
+        const diffBonus  = diff === 'dificil' ? 500 : diff === 'facil' ? 0 : 200;
+        const levelsDone = state.currentLevelIndex + 1;
+        const finalScore = state.score + diffBonus;
+
+        const playerName  = window.CBJR_AUTH_USER?.displayName
+          || localStorage.getItem('cbjr_fan_name')
+          || 'Jogador CBJR';
+        const playerPhoto = window.CBJR_AUTH_USER?.photoURL || '';
+        const uid         = window.CBJR_AUTH_USER?.uid || '';
+
+        const payload = {
+          name:         playerName,
+          photoURL:     playerPhoto,
+          uid:          uid,
+          score:        finalScore,
+          accuracy:     accuracy,
+          correct:      hits,
+          wrong:        wrongs,
+          total:        answered,
+          levelsCompleted: levelsDone,
+          gameMode:     'quiz',
+          source:       'quiz-cbjr-v2',
+          difficulty:   diff,
+          rankTitle:    diff === 'dificil' ? 'Mestre do Quiz' : diff === 'facil' ? 'Iniciante' : 'Desafiante',
+          timestamp:    Date.now(),
+          createdAtText: new Date().toISOString(),
+          createdAt:    serverTimestamp()
+        };
+
+        if (uid) {
+          // Usuário logado — usa uid como chave, atualiza só se pontuação for maior
+          const docRef = doc(db, 'ranking', `quiz_${uid}`);
+          const existing = await getDoc(docRef);
+          if (!existing.exists() || (existing.data().score || 0) < finalScore) {
+            await setDoc(docRef, payload);
+          }
+        } else {
+          // Anônimo — sempre adiciona (sem como identificar o jogador)
+          await addDoc(collection(db, 'ranking'), payload);
+        }
+      } catch(e) {
+        console.warn('Quiz ranking:', e.message);
+      }
     }
 
     function goToNextLevel() {
