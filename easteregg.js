@@ -215,15 +215,23 @@
 
   // ── Mobile — 3 toques rápidos no título ──
   function setupMobileTap() {
-    const el = document.querySelector('h1, .site-title, header h2, nav');
+    // Usa o elemento específico se existir, senão procura h1
+    const el = document.getElementById('cbjrEggTrigger') || document.querySelector('h1');
     if (!el) return;
     let taps = 0, tapTimer = null;
     el.addEventListener('click', () => {
       taps++;
       clearTimeout(tapTimer);
-      tapTimer = setTimeout(() => { taps = 0; }, 600);
+      tapTimer = setTimeout(() => { taps = 0; }, 700);
       if (taps >= 3) { taps = 0; trigger(); }
     });
+    el.addEventListener('touchend', e => {
+      e.preventDefault();
+      taps++;
+      clearTimeout(tapTimer);
+      tapTimer = setTimeout(() => { taps = 0; }, 700);
+      if (taps >= 3) { taps = 0; trigger(); }
+    }, { passive: false });
   }
 
   if (document.readyState === 'loading') {
