@@ -7009,10 +7009,13 @@ body.tela-pergunta .answer-btn {
       }
 
       // Salva o nível em que parou (para retomar)
+      // Se aprovado, salva o PRÓXIMO nível para retomar do correto
       saveProgress({
-        lastDifficulty:   diff,
-        lastLevelIndex:   state.levelApproved ? state.currentLevelIndex : Math.max(0, state.currentLevelIndex - 1),
-        lastScore:        state.score
+        lastDifficulty: diff,
+        lastLevelIndex: state.levelApproved
+          ? state.currentLevelIndex + 1  // próximo nível
+          : Math.max(0, state.currentLevelIndex - 1),
+        lastScore: state.score
       });
     }
 
@@ -7031,15 +7034,13 @@ body.tela-pergunta .answer-btn {
 
       els.resultTitle.textContent = approved ? `Nível ${levelNumber} completo` : `Nível ${levelNumber} incompleto`;
 
-      // Mostra pontuação acumulada no resultado de cada nível
-      const scoreLine = approved
-        ? `<span class="level-score-line">+${state.score} pts acumulados</span>`
-        : '';
-
       // Área grande: mantém frases clássicas/Chorão do projeto.
       els.resultPhrase.textContent = pickRandom(fallbackPhrases);
 
-      // Área menor: frase + pontuação
+      // Área menor: frase + pontuação acumulada
+      const scoreLine = approved
+        ? `<span class="level-score-line">+${state.score} pts acumulados</span>`
+        : '';
       els.resultText.innerHTML = `<span>${phasePhrase}</span>${scoreLine}`;
 
       els.nextLevelBtn.style.display = approved && state.currentLevelIndex < state.levels.length - 1 ? 'inline-flex' : 'none';
@@ -7057,24 +7058,21 @@ body.tela-pergunta .answer-btn {
         els.resultText.innerHTML = getFinalQuizSummaryHtml();
       }
 
-      // Envia para o ranking sempre que um nível for aprovado
+      // Envia para o ranking a cada nível aprovado
       if (approved) sendQuizScoreToRanking();
 
       els.resultOverlay.classList.add('show');
     }
 
-    // ── Envia pontuação do Quiz para o Ranking online ──
-    // Envia ao final de cada nível aprovado.
-    // Usa setDoc com uid como chave — sobrescreve só se for maior pontuação.
+    // ── Envia pontuação do Quiz para o Ranking ──
     async function sendQuizScoreToRanking() {
       try {
         const { initializeApp, getApps, getApp } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
-        const { getFirestore, collection, doc, getDoc, addDoc, setDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+        const { getFirestore, collection, doc, getDoc, setDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
 
         const firebaseConfig = {
           apiKey: 'AIzaSyDtb8jvVd0lMRy96QfqfjAg1dBReRIoRg4',
           authDomain: 'ranking-cbjr.firebaseapp.com',
-          databaseURL: 'https://ranking-cbjr-default-rtdb.firebaseio.com',
           projectId: 'ranking-cbjr',
           storageBucket: 'ranking-cbjr.firebasestorage.app',
           messagingSenderId: '681180179118',
@@ -7090,8 +7088,8 @@ body.tela-pergunta .answer-btn {
         const accuracy   = answered ? Math.round((hits / answered) * 100) : 0;
         const diff       = state.difficulty || 'normal';
         const diffBonus  = diff === 'dificil' ? 500 : diff === 'facil' ? 0 : 200;
-        const levelsDone = state.currentLevelIndex + 1;
-        const finalScore = state.score + diffBonus;
+        const levelsDone = (state.currentLevelIndex || 0) + 1;
+        const finalScore = (state.score || 0) + diffBonus;
 
         const playerName  = window.CBJR_AUTH_USER?.displayName
           || localStorage.getItem('cbjr_fan_name')
@@ -7100,37 +7098,41 @@ body.tela-pergunta .answer-btn {
         const uid         = window.CBJR_AUTH_USER?.uid || '';
 
         const payload = {
-          name:         playerName,
-          photoURL:     playerPhoto,
-          uid:          uid,
-          score:        finalScore,
-          accuracy:     accuracy,
-          correct:      hits,
-          wrong:        wrongs,
-          total:        answered,
+          name:            playerName,
+          photoURL:        playerPhoto,
+          uid:             uid,
+          score:           finalScore,
+          accuracy:        accuracy,
+          correct:         hits,
+          wrong:           wrongs,
+          total:           answered,
           levelsCompleted: levelsDone,
-          gameMode:     'quiz',
-          source:       'quiz-cbjr-v2',
-          difficulty:   diff,
-          rankTitle:    diff === 'dificil' ? 'Mestre do Quiz' : diff === 'facil' ? 'Iniciante' : 'Desafiante',
-          timestamp:    Date.now(),
-          createdAtText: new Date().toISOString(),
-          createdAt:    serverTimestamp()
+          gameMode:        'quiz',
+          source:          'quiz-cbjr-v2',
+          difficulty:      diff,
+          rankTitle:       diff === 'dificil' ? 'Mestre do Quiz' : diff === 'facil' ? 'Iniciante' : 'Desafiante',
+          timestamp:       Date.now(),
+          createdAtText:   new Date().toISOString(),
+          createdAt:       serverTimestamp()
         };
 
-        if (uid) {
-          // Usuário logado — usa uid como chave, atualiza só se pontuação for maior
-          const docRef = doc(db, 'ranking', `quiz_${uid}`);
-          const existing = await getDoc(docRef);
-          if (!existing.exists() || (existing.data().score || 0) < finalScore) {
-            await setDoc(docRef, payload);
-          }
+        // Chave única por jogador — atualiza só se score for maior
+        const key = uid
+          ? `quiz_${uid}`
+          : `quiz_anon_${btoa(encodeURIComponent(playerName.slice(0,15))).replace(/[^a-zA-Z0-9]/g,'').slice(0,20)}`;
+
+        const docRef  = doc(db, 'ranking', key);
+        const existing = await getDoc(docRef);
+        const prevScore = existing.exists() ? (existing.data().score || 0) : 0;
+
+        if (finalScore > prevScore) {
+          await setDoc(docRef, payload);
+          console.log(`[Quiz Ranking] ✅ Score enviado: ${finalScore} pts (nível ${levelsDone})`);
         } else {
-          // Anônimo — sempre adiciona (sem como identificar o jogador)
-          await addDoc(collection(db, 'ranking'), payload);
+          console.log(`[Quiz Ranking] Score ${finalScore} não supera recorde ${prevScore}`);
         }
       } catch(e) {
-        console.warn('Quiz ranking:', e.message);
+        console.warn('[Quiz Ranking] Erro:', e.message);
       }
     }
 
