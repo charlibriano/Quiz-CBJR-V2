@@ -14,6 +14,8 @@ import {
   doc,
   getDoc,
   setDoc,
+  addDoc,
+  collection,
   serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
@@ -399,7 +401,28 @@ window.CBJRProgress = {
   unlockAchievement,
   setLastActivity,
   addHistory,
-  lastSnapshot: () => ({ ...lastSnapshot })
+  lastSnapshot: () => ({ ...lastSnapshot }),
+
+  // ── Envia pontuação para o ranking com auth já garantida ──
+  async submitRanking(payload) {
+    if (!currentUser) {
+      console.warn('[CBJRProgress] submitRanking: usuário não autenticado');
+      return false;
+    }
+    try {
+      await addDoc(collection(db, 'ranking'), {
+        ...payload,
+        uid:      payload.uid      || currentUser.uid,
+        name:     payload.name     || currentUser.displayName || 'Jogador CBJR',
+        photoURL: payload.photoURL || currentUser.photoURL    || '',
+        createdAt: serverTimestamp()
+      });
+      return true;
+    } catch(e) {
+      console.warn('[CBJRProgress] submitRanking erro:', e.message);
+      return false;
+    }
+  }
 };
 
 onAuthStateChanged(auth, user => {
