@@ -7067,20 +7067,21 @@ body.tela-pergunta .answer-btn {
     // ── Envia pontuação do Quiz para o Ranking ──
     async function sendQuizScoreToRanking() {
       try {
-        const { initializeApp, getApps, getApp } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
+        // Aguarda o CBJRProgress estar pronto (máx 4s)
+        await new Promise(resolve => {
+          if (window.CBJRProgress?.user) return resolve();
+          let tries = 0;
+          const t = setInterval(() => {
+            if (window.CBJRProgress?.user || ++tries > 20) { clearInterval(t); resolve(); }
+          }, 200);
+        });
+
+        const user = window.CBJRProgress?.user;
+
+        // Importa addDoc usando o mesmo app já inicializado
+        const { getApps, getApp } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
         const { getFirestore, collection, addDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
-
-        const firebaseConfig = {
-          apiKey: 'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
-          authDomain: 'ranking-cbjr.firebaseapp.com',
-          projectId: 'ranking-cbjr',
-          storageBucket: 'ranking-cbjr.firebasestorage.app',
-          messagingSenderId: '681180179118',
-          appId: '1:681180179118:web:fe10833848e8bb8194db3f'
-        };
-
-        const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-        const db  = getFirestore(app);
+        const db = getFirestore(getApps().length ? getApp() : null);
 
         const answered   = state.totalAnswered || 0;
         const hits       = state.globalHits    || 0;
@@ -7091,13 +7092,14 @@ body.tela-pergunta .answer-btn {
         const levelsDone = (state.currentLevelIndex || 0) + 1;
         const finalScore = (state.score || 0) + diffBonus;
 
-        const playerName  = window.CBJR_AUTH_USER?.displayName
+        const playerName  = user?.displayName
+          || window.CBJR_AUTH_USER?.displayName
           || localStorage.getItem('cbjr_fan_name')
           || 'Jogador CBJR';
-        const playerPhoto = window.CBJR_AUTH_USER?.photoURL || '';
-        const uid         = window.CBJR_AUTH_USER?.uid || '';
+        const playerPhoto = user?.photoURL || window.CBJR_AUTH_USER?.photoURL || '';
+        const uid         = user?.uid || window.CBJR_AUTH_USER?.uid || '';
 
-        // Verifica recorde local antes de enviar
+        // Controle de recorde local — só envia se for maior
         const localKey  = `cbjr_quiz_rank_best_${diff}`;
         const prevBest  = Number(localStorage.getItem(localKey) || 0);
         if (finalScore <= prevBest) {
@@ -7125,7 +7127,7 @@ body.tela-pergunta .answer-btn {
           createdAt:       serverTimestamp()
         });
 
-        console.log(`[Quiz Ranking] ✅ Score enviado: ${finalScore} pts (nível ${levelsDone})`);
+        console.log(`[Quiz Ranking] ✅ Score enviado: ${finalScore} pts — ${playerName} (nível ${levelsDone})`);
       } catch(e) {
         console.warn('[Quiz Ranking] Erro:', e.message);
       }
