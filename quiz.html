@@ -7066,70 +7066,53 @@ body.tela-pergunta .answer-btn {
 
     // ── Envia pontuação do Quiz para o Ranking ──
     async function sendQuizScoreToRanking() {
-      try {
-        // Aguarda o CBJRProgress estar pronto (máx 4s)
-        await new Promise(resolve => {
-          if (window.CBJRProgress?.user) return resolve();
-          let tries = 0;
-          const t = setInterval(() => {
-            if (window.CBJRProgress?.user || ++tries > 20) { clearInterval(t); resolve(); }
-          }, 200);
-        });
+      const answered   = state.totalAnswered || 0;
+      const hits       = state.globalHits    || 0;
+      const wrongs     = state.wrongs        || 0;
+      const accuracy   = answered ? Math.round((hits / answered) * 100) : 0;
+      const diff       = state.difficulty || 'normal';
+      const diffBonus  = diff === 'dificil' ? 500 : diff === 'facil' ? 0 : 200;
+      const levelsDone = (state.currentLevelIndex || 0) + 1;
+      const finalScore = (state.score || 0) + diffBonus;
 
-        const user = window.CBJRProgress?.user;
+      // Só envia se for novo recorde
+      const localKey = `cbjr_quiz_rank_best_${diff}`;
+      const prevBest = Number(localStorage.getItem(localKey) || 0);
+      if (finalScore <= prevBest) {
+        console.log(`[Quiz Ranking] Score ${finalScore} não supera recorde ${prevBest}`);
+        return;
+      }
+      localStorage.setItem(localKey, String(finalScore));
 
-        // Importa addDoc usando o mesmo app já inicializado
-        const { getApps, getApp } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
-        const { getFirestore, collection, addDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
-        const db = getFirestore(getApps().length ? getApp() : null);
+      // Aguarda CBJRProgress estar pronto (máx 5s)
+      await new Promise(resolve => {
+        if (window.CBJRProgress?.user) return resolve();
+        let tries = 0;
+        const t = setInterval(() => {
+          if (window.CBJRProgress?.user || ++tries > 25) { clearInterval(t); resolve(); }
+        }, 200);
+      });
 
-        const answered   = state.totalAnswered || 0;
-        const hits       = state.globalHits    || 0;
-        const wrongs     = state.wrongs        || 0;
-        const accuracy   = answered ? Math.round((hits / answered) * 100) : 0;
-        const diff       = state.difficulty || 'normal';
-        const diffBonus  = diff === 'dificil' ? 500 : diff === 'facil' ? 0 : 200;
-        const levelsDone = (state.currentLevelIndex || 0) + 1;
-        const finalScore = (state.score || 0) + diffBonus;
+      const payload = {
+        score:           finalScore,
+        accuracy:        accuracy,
+        correct:         hits,
+        wrong:           wrongs,
+        total:           answered,
+        levelsCompleted: levelsDone,
+        gameMode:        'quiz',
+        source:          'quiz-cbjr-v2',
+        difficulty:      diff,
+        rankTitle:       diff === 'dificil' ? 'Mestre do Quiz' : diff === 'facil' ? 'Iniciante' : 'Desafiante',
+        timestamp:       Date.now(),
+        createdAtText:   new Date().toISOString()
+      };
 
-        const playerName  = user?.displayName
-          || window.CBJR_AUTH_USER?.displayName
-          || localStorage.getItem('cbjr_fan_name')
-          || 'Jogador CBJR';
-        const playerPhoto = user?.photoURL || window.CBJR_AUTH_USER?.photoURL || '';
-        const uid         = user?.uid || window.CBJR_AUTH_USER?.uid || '';
-
-        // Controle de recorde local — só envia se for maior
-        const localKey  = `cbjr_quiz_rank_best_${diff}`;
-        const prevBest  = Number(localStorage.getItem(localKey) || 0);
-        if (finalScore <= prevBest) {
-          console.log(`[Quiz Ranking] Score ${finalScore} não supera recorde local ${prevBest}`);
-          return;
-        }
-        localStorage.setItem(localKey, String(finalScore));
-
-        await addDoc(collection(db, 'ranking'), {
-          name:            playerName,
-          photoURL:        playerPhoto,
-          uid:             uid,
-          score:           finalScore,
-          accuracy:        accuracy,
-          correct:         hits,
-          wrong:           wrongs,
-          total:           answered,
-          levelsCompleted: levelsDone,
-          gameMode:        'quiz',
-          source:          'quiz-cbjr-v2',
-          difficulty:      diff,
-          rankTitle:       diff === 'dificil' ? 'Mestre do Quiz' : diff === 'facil' ? 'Iniciante' : 'Desafiante',
-          timestamp:       Date.now(),
-          createdAtText:   new Date().toISOString(),
-          createdAt:       serverTimestamp()
-        });
-
-        console.log(`[Quiz Ranking] ✅ Score enviado: ${finalScore} pts — ${playerName} (nível ${levelsDone})`);
-      } catch(e) {
-        console.warn('[Quiz Ranking] Erro:', e.message);
+      const ok = await window.CBJRProgress?.submitRanking?.(payload);
+      if (ok) {
+        console.log(`[Quiz Ranking] ✅ ${finalScore} pts enviados (nível ${levelsDone})`);
+      } else {
+        console.warn('[Quiz Ranking] ⚠️ Não foi possível enviar — usuário não autenticado?');
       }
     }
 
