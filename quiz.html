@@ -7084,16 +7084,8 @@ body.tela-pergunta .answer-btn {
       }
       localStorage.setItem(localKey, String(finalScore));
 
-      // Aguarda CBJRProgress estar pronto (máx 5s)
-      await new Promise(resolve => {
-        if (window.CBJRProgress?.user) return resolve();
-        let tries = 0;
-        const t = setInterval(() => {
-          if (window.CBJRProgress?.user || ++tries > 25) { clearInterval(t); resolve(); }
-        }, 200);
-      });
-
-      const payload = {
+      // Usa CBJRCloudProgress.submitRanking que tem auth garantida
+      const ok = await window.CBJRCloudProgress?.submitRanking?.({
         score:           finalScore,
         accuracy:        accuracy,
         correct:         hits,
@@ -7106,13 +7098,12 @@ body.tela-pergunta .answer-btn {
         rankTitle:       diff === 'dificil' ? 'Mestre do Quiz' : diff === 'facil' ? 'Iniciante' : 'Desafiante',
         timestamp:       Date.now(),
         createdAtText:   new Date().toISOString()
-      };
+      });
 
-      const ok = await window.CBJRProgress?.submitRanking?.(payload);
       if (ok) {
         console.log(`[Quiz Ranking] ✅ ${finalScore} pts enviados (nível ${levelsDone})`);
       } else {
-        console.warn('[Quiz Ranking] ⚠️ Não foi possível enviar — usuário não autenticado?');
+        console.warn('[Quiz Ranking] ⚠️ submitRanking não disponível ainda');
       }
     }
 
@@ -8292,7 +8283,21 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     keys: PROGRESS_KEYS,
     reload: async () => currentUser && loadCloudProgress(currentUser),
     save: saveCloudProgressNow,
-    getLocal: readLocalProgress
+    getLocal: readLocalProgress,
+    submitRanking: async (payload) => {
+      if (!currentUser) { console.warn('[Quiz Ranking] sem usuário logado'); return false; }
+      try {
+        const { addDoc, collection } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+        await addDoc(collection(db, 'ranking'), {
+          ...payload,
+          uid:      currentUser.uid,
+          name:     currentUser.displayName || payload.name || 'Jogador CBJR',
+          photoURL: currentUser.photoURL    || payload.photoURL || '',
+          createdAt: (await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')).serverTimestamp()
+        });
+        return true;
+      } catch(e) { console.warn('[Quiz Ranking] erro:', e.message); return false; }
+    }
   };
 
   async function loadCloudProgress(user) {
