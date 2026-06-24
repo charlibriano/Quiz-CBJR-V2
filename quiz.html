@@ -6849,10 +6849,9 @@ body.tela-pergunta .answer-btn {
 
     function showCorrectFeedback(curiosity) {
       const msg = curiosity || '';
-      const mobile = window.innerWidth <= 760;
-
-      if (mobile) {
-        // Mobile: usa a caixa de feedback, sem balão
+      // Desktop: só o balão do Chorão. Mobile: só a caixa de feedback.
+      // Nunca os dois ao mesmo tempo para evitar duplicação.
+      if (window.innerWidth <= 760) {
         if (els.feedbackBox) {
           els.feedbackBox.innerHTML =
             '<strong>✅ Você acertou!</strong>' +
@@ -6860,11 +6859,8 @@ body.tela-pergunta .answer-btn {
           els.feedbackBox.classList.add('show');
         }
       } else {
-        // Desktop: só o balão do Chorão, sem caixa abaixo
         if (msg) showChoraoBalloon(msg);
       }
-
-      // Toast de pontuação sempre
       showToast(`+${CONFIG.scoreCorrect} pts`);
     }
 
@@ -7075,6 +7071,10 @@ body.tela-pergunta .answer-btn {
     }
 
     // ── Envia pontuação do Quiz para o Ranking ──
+    // ── GRAVAÇÃO DIRETA NO RANKING ──────────────────────────────────
+    // Não depende de CBJRCloudProgress nem de módulos externos.
+    // Usa dynamic import do Firebase direto, com o usuário do CBJR_AUTH_USER
+    // que é populado pelo script de auth (window.CBJR_AUTH_USER).
     async function sendQuizScoreToRanking() {
       const answered   = state.totalAnswered || 0;
       const hits       = state.globalHits    || 0;
@@ -7089,60 +7089,77 @@ body.tela-pergunta .answer-btn {
       const localKey = `cbjr_quiz_rank_best_${diff}`;
       const prevBest = Number(localStorage.getItem(localKey) || 0);
       if (finalScore <= prevBest) {
-        console.log(`[Quiz Ranking] Score ${finalScore} não supera recorde ${prevBest}`);
+        console.log(`[Quiz Ranking] Score ${finalScore} não supera recorde ${prevBest} — sem envio`);
         return;
       }
+
+      // Aguarda até 6s pelo usuário autenticado
+      const getUser = () => window.CBJR_AUTH_USER || null;
+      let user = getUser();
+      if (!user) {
+        await new Promise(resolve => {
+          let waited = 0;
+          const poll = setInterval(() => {
+            waited += 300;
+            user = getUser();
+            if (user || waited >= 6000) { clearInterval(poll); resolve(); }
+          }, 300);
+        });
+      }
+
+      if (!user) {
+        console.warn('[Quiz Ranking] Usuário não autenticado — pontuação não enviada ao ranking');
+        return;
+      }
+
+      // Grava recorde local só depois de confirmar que há usuário
       localStorage.setItem(localKey, String(finalScore));
 
-      const payload = {
-        score:           finalScore,
-        accuracy:        accuracy,
-        correct:         hits,
-        wrong:           wrongs,
-        total:           answered,
-        levelsCompleted: levelsDone,
-        gameMode:        'quiz',
-        source:          'quiz-cbjr-v2',
-        difficulty:      diff,
-        rankTitle:       diff === 'dificil' ? 'Mestre do Quiz' : diff === 'facil' ? 'Iniciante' : 'Desafiante',
-        timestamp:       Date.now(),
-        createdAtText:   new Date().toISOString()
-      };
+      try {
+        const { initializeApp, getApps, getApp } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
+        const { getFirestore, collection, addDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
 
-      // Aguarda CBJRCloudProgress estar pronto (módulo async pode demorar até 8s)
-      const trySubmit = async () => {
-        const submitFn = window.CBJRCloudProgress?.submitRanking;
-        if (typeof submitFn === 'function') {
-          try {
-            const ok = await submitFn(payload);
-            if (ok) {
-              console.log(`[Quiz Ranking] ✅ ${finalScore} pts enviados (nível ${levelsDone})`);
-              showToast(`🏆 +${finalScore} pts no ranking!`);
-            } else {
-              console.warn('[Quiz Ranking] ⚠️ Falha ao enviar (usuário não logado ou sem conexão)');
-            }
-          } catch (err) {
-            console.warn('[Quiz Ranking] ⚠️ Erro ao submeter:', err.message);
-          }
-          return true;
-        }
-        return false;
-      };
+        const fbConfig = {
+          apiKey: 'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
+          authDomain: 'ranking-cbjr.firebaseapp.com',
+          projectId: 'ranking-cbjr',
+          storageBucket: 'ranking-cbjr.firebasestorage.app',
+          messagingSenderId: '681180179118',
+          appId: '1:681180179118:web:fe10833848e8bb8194db3f'
+        };
+        const app = getApps().length ? getApp() : initializeApp(fbConfig);
+        const db  = getFirestore(app);
 
-      if (await trySubmit()) return;
+        await addDoc(collection(db, 'ranking'), {
+          uid:             user.uid,
+          name:            user.displayName || 'Jogador CBJR',
+          photoURL:        user.photoURL    || '',
+          email:           user.email       || '',
+          score:           finalScore,
+          accuracy:        accuracy,
+          correct:         hits,
+          wrong:           wrongs,
+          total:           answered,
+          levelsCompleted: levelsDone,
+          gameMode:        'quiz',
+          source:          'quiz-cbjr-v2',
+          difficulty:      diff,
+          rankTitle:       diff === 'dificil' ? 'Mestre do Quiz' : diff === 'facil' ? 'Iniciante' : 'Desafiante',
+          createdAt:       serverTimestamp(),
+          timestamp:       Date.now()
+        });
 
-      // Retry com polling se o módulo ainda não terminou de carregar
-      let attempts = 0;
-      const retryInterval = setInterval(async () => {
-        attempts++;
-        if (await trySubmit() || attempts >= 16) {
-          clearInterval(retryInterval);
-          if (attempts >= 16) {
-            console.warn('[Quiz Ranking] ⚠️ CBJRCloudProgress indisponível após 8s');
-          }
-        }
-      }, 500);
+        console.log(`[Quiz Ranking] ✅ ${finalScore} pts gravados no ranking (nível ${levelsDone}, ${diff})`);
+        showToast(`🏆 +${finalScore} pts no ranking!`);
+
+      } catch (err) {
+        console.error('[Quiz Ranking] ❌ Erro ao gravar no Firestore:', err.message, err);
+        showToast('⚠️ Não foi possível salvar no ranking agora.');
+        // Reverte o recorde local para tentar de novo na próxima vez
+        localStorage.setItem(localKey, String(prevBest));
+      }
     }
+    // ── /GRAVAÇÃO DIRETA NO RANKING ──────────────────────────────────
 
     function goToNextLevel() {
       if (!state.levelApproved || state.currentLevelIndex >= state.levels.length - 1) {
@@ -8328,13 +8345,13 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     submitRanking: async (payload) => {
       if (!currentUser) { console.warn('[Quiz Ranking] sem usuário logado'); return false; }
       try {
-        const { addDoc, collection, serverTimestamp: srvTs } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+        const { addDoc, collection } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
         await addDoc(collection(db, 'ranking'), {
           ...payload,
           uid:      currentUser.uid,
           name:     currentUser.displayName || payload.name || 'Jogador CBJR',
           photoURL: currentUser.photoURL    || payload.photoURL || '',
-          createdAt: srvTs()
+          createdAt: (await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')).serverTimestamp()
         });
         return true;
       } catch(e) { console.warn('[Quiz Ranking] erro:', e.message); return false; }
