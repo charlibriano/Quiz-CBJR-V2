@@ -34,7 +34,38 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle
 .showcase-empty{color:rgba(255,255,255,.58);font-weight:850;font-size:.86rem}
 .level-card{border:1px solid rgba(30,215,96,.35);border-radius:22px;background:rgba(30,215,96,.08);padding:14px 18px;min-width:210px;text-align:right}.level-card small,.card small{display:block;color:rgba(255,255,255,.58);font-weight:1000;letter-spacing:.10em;text-transform:uppercase;font-size:0.72rem}.level-card strong{display:block;color:var(--green);font-size:1.65rem;font-weight:1000}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card{border:1px solid rgba(255,255,255,.13);border-radius:20px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(0,0,0,.66));padding:15px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}.card strong{display:block;margin-top:7px;color:var(--green);font-size:clamp(1.45rem,3vw,2rem);font-weight:1000}.section{border:1px solid var(--line);border-radius:26px;background:rgba(0,0,0,.72);padding:18px;box-shadow:0 22px 70px rgba(0,0,0,.46),inset 0 1px 0 rgba(255,255,255,.05)}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.section h2{font-family:Elektrix,Arial,sans-serif;color:var(--yellow);font-size:clamp(1.7rem,3.5vw,2.9rem);line-height:.9;margin:0}.bar-shell{height:12px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden;box-shadow:inset 0 1px 4px rgba(0,0,0,.6)}.bar-fill{height:100%;width:0%;border-radius:inherit;background:linear-gradient(90deg,var(--yellow),var(--green));box-shadow:0 0 18px rgba(30,215,96,.30);transition:.4s ease}.progress-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.progress-item{display:grid;gap:8px}.progress-item span{display:flex;justify-content:space-between;color:rgba(255,255,255,.78);font-weight:1000}.missions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.mission{border:1px solid rgba(255,255,255,.13);border-radius:18px;background:rgba(255,255,255,.055);padding:13px;text-decoration:none;color:#fff;display:grid;gap:8px}.mission.done{border-color:rgba(30,215,96,.55);background:rgba(30,215,96,.10)}.mission-title{display:flex;align-items:center;gap:9px;font-weight:1000}.check{width:22px;height:22px;border-radius:50%;border:1px solid rgba(255,255,255,.25);display:grid;place-items:center;color:rgba(255,255,255,.58);font-size:.78rem}.mission.done .check{background:var(--green);color:#000;border-color:var(--green)}.mission p{margin:0;color:rgba(255,255,255,.62);font-weight:800;font-size:.82rem;line-height:1.35}.ach-list{display:flex;gap:8px;flex-wrap:wrap}.pill{border:1px solid rgba(30,215,96,.42);border-radius:999px;background:rgba(30,215,96,.10);padding:8px 11px;color:#fff;font-weight:1000;font-size:.82rem}.muted{color:rgba(255,255,255,.62);font-weight:850}.objective{border:1px solid rgba(241,196,15,.30);border-radius:20px;background:rgba(241,196,15,.08);padding:14px}.objective strong{display:block;color:var(--yellow);font-size:1.05rem;margin-bottom:4px}.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
 .medal-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}.medal{position:relative;overflow:hidden;min-height:128px;border:1px solid rgba(241,196,15,.24);border-radius:20px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(0,0,0,.76));padding:13px;display:grid;grid-template-rows:auto 1fr auto;gap:8px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 18px 46px rgba(0,0,0,.35)}.medal::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% -10%,rgba(241,196,15,.22),transparent 52%);opacity:.55;pointer-events:none}.medal>*{position:relative;z-index:2}.medal.unlocked{border-color:rgba(30,215,96,.55);box-shadow:0 0 28px rgba(30,215,96,.10),inset 0 1px 0 rgba(255,255,255,.10)}.medal.locked{opacity:.48;filter:grayscale(.75)}.medal-icon{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(241,196,15,.42);background:rgba(0,0,0,.58);font-size:1.45rem;font-weight:1000;box-shadow:0 0 20px rgba(241,196,15,.12)}.medal.unlocked .medal-icon{border-color:rgba(30,215,96,.72);box-shadow:0 0 22px rgba(30,215,96,.22)}.medal-title{font-weight:1000;color:#fff;line-height:1.1}.medal-desc{margin:0;color:rgba(255,255,255,.58);font-size:.75rem;font-weight:850;line-height:1.28}.medal-meta{display:flex;align-items:center;justify-content:space-between;gap:8px}.rarity{border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:5px 8px;font-size:0.72rem;font-weight:1000;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.76)}.rarity.comum{border-color:rgba(255,255,255,.18)}.rarity.rara{border-color:rgba(52,152,219,.42);color:#9bd7ff}.rarity.epica{border-color:rgba(155,89,182,.55);color:#ddb6ff}.rarity.lendaria{border-color:rgba(241,196,15,.58);color:var(--yellow)}.medal-xp{color:var(--green);font-weight:1000;font-size:.72rem;white-space:nowrap}.medal.locked .medal-xp{color:rgba(255,255,255,.48)}
-.toast{position:fixed;right:18px;bottom:18px;z-index:20;border:1px solid rgba(30,215,96,.45);border-radius:18px;background:rgba(0,0,0,.88);padding:14px 16px;box-shadow:0 18px 60px rgba(0,0,0,.62);display:none}.toast.show{display:block;animation:toast .25s ease}@keyframes toast{from{transform:translateY(12px);opacity:0}to{transform:translateY(0);opacity:1}}@media(max-width:900px){.medal-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.profile-hero{grid-template-columns:1fr;text-align:center;justify-items:center}.level-card{text-align:center}.grid,.progress-grid,.missions{grid-template-columns:1fr 1fr}}@media(max-width:560px){.medal-grid{grid-template-columns:1fr}.page{width:calc(100% - 18px);padding-top:10px}.topbar{gap:6px}.brand{font-size:1.65rem}.btn{min-height:44px;padding:0 11px;font-size:.78rem}.profile-hero{border-radius:22px}.avatar,.avatar-fallback{width:74px;height:74px}.grid,.progress-grid,.missions{grid-template-columns:1fr}.section{padding:14px;border-radius:20px}.section-head{align-items:flex-start;flex-direction:column}}
+.toast{position:fixed;right:18px;bottom:18px;z-index:20;border:1px solid rgba(30,215,96,.45);border-radius:18px;background:rgba(0,0,0,.88);padding:14px 16px;box-shadow:0 18px 60px rgba(0,0,0,.62);display:none}.toast.show{display:block;animation:toast .25s ease}@keyframes toast{from{transform:translateY(12px);opacity:0}to{transform:translateY(0);opacity:1}}
+.reset-section{border:1px solid rgba(255,59,48,.32);border-radius:26px;background:rgba(255,59,48,.06);padding:18px;box-shadow:0 22px 70px rgba(0,0,0,.46),inset 0 1px 0 rgba(255,255,255,.04)}
+.reset-section .section-head h2{color:rgba(255,59,48,.90)}
+.reset-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:4px}
+.reset-card{border:1px solid rgba(255,255,255,.13);border-radius:20px;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(0,0,0,.60));padding:16px;display:grid;gap:10px;align-content:start}
+.reset-card-icon{font-size:1.8rem;line-height:1}
+.reset-card-title{font-weight:1000;color:#fff;font-size:1rem;line-height:1.1}
+.reset-card-desc{color:rgba(255,255,255,.58);font-size:.80rem;font-weight:800;line-height:1.38;margin:0}
+.reset-card-keys{display:flex;flex-wrap:wrap;gap:5px;margin-top:2px}
+.reset-card-key{border:1px solid rgba(255,255,255,.16);border-radius:6px;padding:3px 7px;font-size:.66rem;font-weight:900;color:rgba(255,255,255,.55);font-family:monospace;letter-spacing:.02em}
+.reset-btn{min-height:38px;border-radius:999px;border:1px solid rgba(255,59,48,.55);background:rgba(255,59,48,.12);color:#ff6b63;font-weight:1000;cursor:pointer;font-size:.82rem;padding:0 14px;transition:.18s ease;display:inline-flex;align-items:center;justify-content:center;gap:6px;width:100%}
+.reset-btn:hover{background:rgba(255,59,48,.22);border-color:rgba(255,59,48,.80);color:#fff;transform:translateY(-1px)}
+.reset-btn:disabled{opacity:.38;cursor:not-allowed;transform:none}
+/* Modal */
+.reset-modal-bg{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.82);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;place-items:center;padding:20px}
+.reset-modal-bg.open{display:grid;animation:modalFadeIn .22s ease both}
+@keyframes modalFadeIn{from{opacity:0}to{opacity:1}}
+.reset-modal{width:min(480px,94vw);border:1px solid rgba(255,59,48,.42);border-radius:26px;background:radial-gradient(circle at 50% 0%,rgba(255,59,48,.12),transparent 42%),rgba(0,0,0,.94);padding:clamp(22px,3vw,36px);color:#fff;box-shadow:0 28px 80px rgba(0,0,0,.72),0 0 40px rgba(255,59,48,.10);text-align:center;display:grid;gap:14px}
+.reset-modal h3{margin:0;font-family:Elektrix,Arial,sans-serif;color:#ff3b30;font-size:clamp(1.8rem,5vw,2.8rem);line-height:.9;text-shadow:0 0 18px rgba(255,59,48,.38)}
+.reset-modal p{margin:0;color:rgba(255,255,255,.82);font-weight:800;line-height:1.45;font-size:.95rem}
+.reset-modal-target{display:inline-flex;align-items:center;gap:8px;margin:4px auto;border:1px solid rgba(255,59,48,.40);border-radius:999px;background:rgba(255,59,48,.12);padding:8px 16px;font-weight:1000;color:#ff9d97;font-size:.92rem}
+.reset-modal-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:4px}
+.reset-confirm-btn{min-height:46px;border-radius:999px;border:1px solid #ff3b30;background:linear-gradient(180deg,#ff3b30,#c0392b);color:#fff;font-weight:1000;cursor:pointer;padding:0 24px;font-size:.95rem;transition:.18s ease}
+.reset-confirm-btn:hover{filter:brightness(1.10);transform:translateY(-1px)}
+.reset-confirm-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.reset-cancel-btn{min-height:46px;border-radius:999px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.07);color:#fff;font-weight:1000;cursor:pointer;padding:0 24px;font-size:.95rem;transition:.18s ease}
+.reset-cancel-btn:hover{border-color:rgba(255,255,255,.50);transform:translateY(-1px)}
+.reset-warning{border:1px solid rgba(241,196,15,.35);border-radius:12px;background:rgba(241,196,15,.08);padding:10px 14px;color:rgba(241,196,15,.92);font-size:.80rem;font-weight:900;line-height:1.38;text-align:left}
+.reset-warning strong{color:var(--yellow);display:block;margin-bottom:3px}
+@media(max-width:900px){.reset-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.reset-grid{grid-template-columns:1fr}}
+@media(max-width:900px){.medal-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.profile-hero{grid-template-columns:1fr;text-align:center;justify-items:center}.level-card{text-align:center}.grid,.progress-grid,.missions{grid-template-columns:1fr 1fr}}@media(max-width:560px){.medal-grid{grid-template-columns:1fr}.page{width:calc(100% - 18px);padding-top:10px}.topbar{gap:6px}.brand{font-size:1.65rem}.btn{min-height:44px;padding:0 11px;font-size:.78rem}.profile-hero{border-radius:22px}.avatar,.avatar-fallback{width:74px;height:74px}.grid,.progress-grid,.missions{grid-template-columns:1fr}.section{padding:14px;border-radius:20px}.section-head{align-items:flex-start;flex-direction:column}}
 </style>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1JCN94Y3P0"></script>
   <script>
@@ -122,6 +153,69 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle
     </div>
   </section>
 </div>
+
+  <section class="reset-section" id="resetSection" style="display:none">
+    <div class="section-head">
+      <h2>⚠️ Reiniciar Progresso</h2>
+      <span class="muted" style="font-size:.82rem;font-weight:900">Ação permanente e irreversível</span>
+    </div>
+    <p class="muted" style="margin-bottom:14px;font-size:.86rem">Escolha o modo que deseja reiniciar do zero. Somente os dados daquele modo serão apagados — os demais continuam intactos.</p>
+    <div class="reset-grid">
+
+      <div class="reset-card">
+        <div class="reset-card-icon">📻</div>
+        <div class="reset-card-title">Rádio CBJR</div>
+        <p class="reset-card-desc">Zera CDs liberados, modo (Normal/Hard) e todas as conquistas da Rádio.</p>
+        <div class="reset-card-keys">
+          <span class="reset-card-key">radioCBJRUnlockedAlbumIndex_v2</span>
+          <span class="reset-card-key">radioCBJRMode</span>
+          <span class="reset-card-key">radioCBJR_achievements_v1</span>
+        </div>
+        <button class="reset-btn" type="button" id="resetRadioBtn">🗑️ Reiniciar Rádio</button>
+      </div>
+
+      <div class="reset-card">
+        <div class="reset-card-icon">🎵</div>
+        <div class="reset-card-title">Modo Letras</div>
+        <p class="reset-card-desc">Zera todos os álbuns completados e o nome de jogador do Modo Letras.</p>
+        <div class="reset-card-keys">
+          <span class="reset-card-key">cbjr_letters_completed</span>
+          <span class="reset-card-key">lettersCBJR_playerName</span>
+        </div>
+        <button class="reset-btn" type="button" id="resetLetrasBtn">🗑️ Reiniciar Letras</button>
+      </div>
+
+      <div class="reset-card">
+        <div class="reset-card-icon">🎮</div>
+        <div class="reset-card-title">Quiz CBJR</div>
+        <p class="reset-card-desc">Zera conquistas, progresso dos níveis e recordes de pontuação do Quiz.</p>
+        <div class="reset-card-keys">
+          <span class="reset-card-key">cobjr_quiz_achievements</span>
+          <span class="reset-card-key">cobjr_quiz_progress_v1</span>
+          <span class="reset-card-key">cbjr_quiz_rank_best_*</span>
+        </div>
+        <button class="reset-btn" type="button" id="resetQuizBtn">🗑️ Reiniciar Quiz</button>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<!-- Reset Modal -->
+<div class="reset-modal-bg" id="resetModalBg" role="dialog" aria-modal="true" aria-labelledby="resetModalTitle">
+  <div class="reset-modal">
+    <h3 id="resetModalTitle">Confirmar reset</h3>
+    <p id="resetModalDesc">Tem certeza? Esta ação não pode ser desfeita.</p>
+    <div id="resetModalTarget" class="reset-modal-target"></div>
+    <div class="reset-warning"><strong>⚠️ Isso apaga os dados locais e na nuvem</strong>Seu progresso no Firebase também será zerado para este modo. Os outros modos continuam intactos.</div>
+    <div class="reset-modal-actions">
+      <button class="reset-confirm-btn" id="resetConfirmBtn" type="button">Sim, reiniciar</button>
+      <button class="reset-cancel-btn" id="resetCancelBtn" type="button">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast" class="toast"></div>
 
 <!-- CBJR FIREBASE PROGRESS CORE V1 — sincronização por conta Google -->
@@ -386,10 +480,152 @@ if(PUBLIC_UID) {
   $('recentAchievements').innerHTML = '<span class="muted">Sem conquistas registradas.</span>';
   const badge = $('profileTitleBadge');
   if(badge) badge.style.display = 'none';
+
+// ── REINICIAR PROGRESSO ──────────────────────────────────────────
+const RESET_MODES = {
+  radio: {
+    label: '📻 Rádio CBJR',
+    keys: [
+      'radioCBJRUnlockedAlbumIndex_v2',
+      'radioCBJRMode',
+      'radioCBJR_achievements_v1'
+    ],
+    firestoreFields: {
+      radioCBJRUnlockedAlbumIndex_v2: '0',
+      radioCBJRMode: 'normal',
+      'radioCBJR_achievements_v1': '{}'
+    }
+  },
+  letras: {
+    label: '🎵 Modo Letras',
+    keys: [
+      'cbjr_letters_completed',
+      'lettersCBJR_playerName'
+    ],
+    firestoreFields: {
+      cbjr_letters_completed: '[]',
+      lettersCBJR_playerName: ''
+    }
+  },
+  quiz: {
+    label: '🎮 Quiz CBJR',
+    keys: [
+      'cobjr_quiz_achievements',
+      'cobjr_quiz_progress_v1',
+      'cbjr_quiz_rank_best_facil',
+      'cbjr_quiz_rank_best_normal',
+      'cbjr_quiz_rank_best_dificil'
+    ],
+    firestoreFields: {
+      'cobjr_quiz_achievements': '{}',
+      'cobjr_quiz_progress_v1': '{}',
+      'cbjr_quiz_rank_best_facil': '0',
+      'cbjr_quiz_rank_best_normal': '0',
+      'cbjr_quiz_rank_best_dificil': '0'
+    }
+  }
+};
+
+let pendingResetMode = null;
+let resetCurrentUser = null;
+
+function openResetModal(mode) {
+  const cfg = RESET_MODES[mode];
+  if (!cfg) return;
+  pendingResetMode = mode;
+  const bg = $('resetModalBg');
+  const desc = $('resetModalDesc');
+  const target = $('resetModalTarget');
+  if (desc) desc.textContent = 'Tem certeza que deseja apagar o progresso do modo abaixo? Esta ação não pode ser desfeita.';
+  if (target) target.innerHTML = cfg.label;
+  if (bg) bg.classList.add('open');
+  $('resetConfirmBtn')?.focus();
+}
+
+function closeResetModal() {
+  pendingResetMode = null;
+  const bg = $('resetModalBg');
+  if (bg) bg.classList.remove('open');
+}
+
+async function executeReset(mode) {
+  const cfg = RESET_MODES[mode];
+  if (!cfg) return;
+
+  const confirmBtn = $('resetConfirmBtn');
+  if (confirmBtn) { confirmBtn.disabled = true; confirmBtn.textContent = 'Apagando...'; }
+
+  // 1. Apaga do localStorage
+  cfg.keys.forEach(key => localStorage.removeItem(key));
+
+  // 2. Apaga/zera no Firestore (progresso e perfil público)
+  if (resetCurrentUser) {
+    try {
+      const progressRef = doc(db, 'usuarios', resetCurrentUser.uid, 'progresso', 'geral');
+      const userRef = doc(db, 'usuarios', resetCurrentUser.uid);
+
+      // Monta patch zerado para o Firestore
+      const patch = { updatedAt: serverTimestamp(), origem: 'perfil-reset', resetMode: mode };
+      Object.entries(cfg.firestoreFields).forEach(([k, v]) => { patch[k] = v; });
+
+      // Zera também no doc de perfil público os campos relevantes
+      const profilePatch = { updatedAt: serverTimestamp() };
+      if (mode === 'radio') {
+        profilePatch.radioAlbums = 1;
+      } else if (mode === 'letras') {
+        profilePatch.letrasAlbums = 0;
+      }
+
+      await setDoc(progressRef, patch, { merge: true });
+      await setDoc(userRef, profilePatch, { merge: true });
+
+    } catch (e) {
+      console.warn('[Reset] Erro ao zerar Firestore:', e.message);
+      showToast('⚠️ Local zerado, mas houve erro na nuvem. Tente novamente.');
+      if (confirmBtn) { confirmBtn.disabled = false; confirmBtn.textContent = 'Sim, reiniciar'; }
+      closeResetModal();
+      return;
+    }
+  }
+
+  // 3. Força re-sync do CBJRProgress se disponível
+  try {
+    if (window.CBJRProgress?.save) {
+      await window.CBJRProgress.save({ source: 'reset-mode', resetMode: mode });
+    }
+  } catch (_) {}
+
+  closeResetModal();
+  if (confirmBtn) { confirmBtn.disabled = false; confirmBtn.textContent = 'Sim, reiniciar'; }
+
+  // 4. Feedback e recalcula perfil
+  showToast(`✅ ${cfg.label} reiniciado com sucesso!`);
+  if (resetCurrentUser) {
+    render(resetCurrentUser);
+  }
+}
+
+// Wires
+document.addEventListener('DOMContentLoaded', () => {
+  $('resetRadioBtn')?.addEventListener('click', () => openResetModal('radio'));
+  $('resetLetrasBtn')?.addEventListener('click', () => openResetModal('letras'));
+  $('resetQuizBtn')?.addEventListener('click', () => openResetModal('quiz'));
+  $('resetConfirmBtn')?.addEventListener('click', () => { if (pendingResetMode) executeReset(pendingResetMode); });
+  $('resetCancelBtn')?.addEventListener('click', closeResetModal);
+  $('resetModalBg')?.addEventListener('click', (e) => { if (e.target === $('resetModalBg')) closeResetModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeResetModal(); });
+});
+// ── /REINICIAR PROGRESSO ─────────────────────────────────────────
+
 } else {
   // Modo próprio — precisa de login
   $('logoutBtn').addEventListener('click',async()=>{await signOut(auth);location.href='index.html'});
-  onAuthStateChanged(auth,async user=>{if(!user){location.href='index.html';return}renderUser(user);await loadCloud(user);render(user);const rank=await rankingPos(user);render(user,rank);showToast('📊 Perfil atualizado com seu progresso CBJR.');});
+  onAuthStateChanged(auth,async user=>{if(!user){location.href='index.html';return}
+    // Mostra seção de reset só no perfil próprio
+    const resetSec = $('resetSection');
+    if(resetSec) resetSec.style.display = '';
+    resetCurrentUser = user;
+    renderUser(user);await loadCloud(user);render(user);const rank=await rankingPos(user);render(user,rank);showToast('📊 Perfil atualizado com seu progresso CBJR.');});
 }
 </script>
 </body>
