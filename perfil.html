@@ -619,15 +619,21 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 // ── /REINICIAR PROGRESSO ─────────────────────────────────────────
 
-} else {
-  // Modo próprio — precisa de login
-  $('logoutBtn').addEventListener('click',async()=>{await signOut(auth);location.href='index.html'});
-  onAuthStateChanged(auth,async user=>{if(!user){location.href='index.html';return}
-    // Mostra seção de reset só no perfil próprio
+// Modo próprio — executa sempre que não for perfil público
+if (!PUBLIC_UID && !PUBLIC_NAME) {
+  $('logoutBtn').addEventListener('click', async () => { await signOut(auth); location.href = 'index.html'; });
+  onAuthStateChanged(auth, async user => {
+    if (!user) { location.href = 'index.html'; return; }
     const resetSec = $('resetSection');
-    if(resetSec) resetSec.style.display = '';
+    if (resetSec) resetSec.style.display = '';
     resetCurrentUser = user;
-    renderUser(user);await loadCloud(user);render(user);const rank=await rankingPos(user);render(user,rank);showToast('📊 Perfil atualizado com seu progresso CBJR.');});
+    renderUser(user);
+    await loadCloud(user);
+    render(user);
+    const rank = await rankingPos(user);
+    render(user, rank);
+    showToast('📊 Perfil atualizado com seu progresso CBJR.');
+  });
 }
 </script>
 </body>
