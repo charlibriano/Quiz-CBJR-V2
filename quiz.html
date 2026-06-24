@@ -6849,8 +6849,7 @@ body.tela-pergunta .answer-btn {
 
     function showCorrectFeedback(curiosity) {
       const msg = curiosity || '';
-      // Desktop: só o balão do Chorão. Mobile: só a caixa de feedback.
-      // Nunca os dois ao mesmo tempo para evitar duplicação.
+      // Desktop: balão do Chorão. Mobile: caixa de feedback. Nunca os dois.
       if (window.innerWidth <= 760) {
         if (els.feedbackBox) {
           els.feedbackBox.innerHTML =
@@ -7071,10 +7070,6 @@ body.tela-pergunta .answer-btn {
     }
 
     // ── Envia pontuação do Quiz para o Ranking ──
-    // ── GRAVAÇÃO DIRETA NO RANKING ──────────────────────────────────
-    // Não depende de CBJRCloudProgress nem de módulos externos.
-    // Usa dynamic import do Firebase direto, com o usuário do CBJR_AUTH_USER
-    // que é populado pelo script de auth (window.CBJR_AUTH_USER).
     async function sendQuizScoreToRanking() {
       const answered   = state.totalAnswered || 0;
       const hits       = state.globalHits    || 0;
@@ -7092,74 +7087,48 @@ body.tela-pergunta .answer-btn {
         console.log(`[Quiz Ranking] Score ${finalScore} não supera recorde ${prevBest} — sem envio`);
         return;
       }
-
-      // Aguarda até 6s pelo usuário autenticado
-      const getUser = () => window.CBJR_AUTH_USER || null;
-      let user = getUser();
-      if (!user) {
-        await new Promise(resolve => {
-          let waited = 0;
-          const poll = setInterval(() => {
-            waited += 300;
-            user = getUser();
-            if (user || waited >= 6000) { clearInterval(poll); resolve(); }
-          }, 300);
-        });
-      }
-
-      if (!user) {
-        console.warn('[Quiz Ranking] Usuário não autenticado — pontuação não enviada ao ranking');
-        return;
-      }
-
-      // Grava recorde local só depois de confirmar que há usuário
       localStorage.setItem(localKey, String(finalScore));
 
-      try {
-        const { initializeApp, getApps, getApp } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
-        const { getFirestore, collection, addDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+      // Usa window.CBJRProgress — o mesmo módulo que Rádio e Letras usam.
+      // Aguarda até 8s para o firebase-progress.js terminar de carregar e autenticar.
+      let attempts = 0;
+      const poll = setInterval(async () => {
+        attempts++;
+        const progress = window.CBJRProgress;
+        const ready = progress?.ready && typeof progress?.submitRanking === 'function';
 
-        const fbConfig = {
-          apiKey: 'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
-          authDomain: 'ranking-cbjr.firebaseapp.com',
-          projectId: 'ranking-cbjr',
-          storageBucket: 'ranking-cbjr.firebasestorage.app',
-          messagingSenderId: '681180179118',
-          appId: '1:681180179118:web:fe10833848e8bb8194db3f'
-        };
-        const app = getApps().length ? getApp() : initializeApp(fbConfig);
-        const db  = getFirestore(app);
+        if (ready || attempts >= 16) {
+          clearInterval(poll);
 
-        await addDoc(collection(db, 'ranking'), {
-          uid:             user.uid,
-          name:            user.displayName || 'Jogador CBJR',
-          photoURL:        user.photoURL    || '',
-          email:           user.email       || '',
-          score:           finalScore,
-          accuracy:        accuracy,
-          correct:         hits,
-          wrong:           wrongs,
-          total:           answered,
-          levelsCompleted: levelsDone,
-          gameMode:        'quiz',
-          source:          'quiz-cbjr-v2',
-          difficulty:      diff,
-          rankTitle:       diff === 'dificil' ? 'Mestre do Quiz' : diff === 'facil' ? 'Iniciante' : 'Desafiante',
-          createdAt:       serverTimestamp(),
-          timestamp:       Date.now()
-        });
+          if (!ready) {
+            console.warn('[Quiz Ranking] CBJRProgress não ficou pronto — pontuação não enviada');
+            return;
+          }
 
-        console.log(`[Quiz Ranking] ✅ ${finalScore} pts gravados no ranking (nível ${levelsDone}, ${diff})`);
-        showToast(`🏆 +${finalScore} pts no ranking!`);
+          const ok = await progress.submitRanking({
+            score:           finalScore,
+            accuracy:        accuracy,
+            correct:         hits,
+            wrong:           wrongs,
+            total:           answered,
+            levelsCompleted: levelsDone,
+            gameMode:        'quiz',
+            source:          'quiz-cbjr-v2',
+            difficulty:      diff,
+            rankTitle:       diff === 'dificil' ? 'Mestre do Quiz' : diff === 'facil' ? 'Iniciante' : 'Desafiante',
+            timestamp:       Date.now()
+          });
 
-      } catch (err) {
-        console.error('[Quiz Ranking] ❌ Erro ao gravar no Firestore:', err.message, err);
-        showToast('⚠️ Não foi possível salvar no ranking agora.');
-        // Reverte o recorde local para tentar de novo na próxima vez
-        localStorage.setItem(localKey, String(prevBest));
-      }
+          if (ok) {
+            console.log(`[Quiz Ranking] ✅ ${finalScore} pts gravados (nível ${levelsDone}, ${diff})`);
+            showToast(`🏆 +${finalScore} pts no ranking!`);
+          } else {
+            console.warn('[Quiz Ranking] submitRanking retornou false — verifique autenticação');
+            localStorage.setItem(localKey, String(prevBest)); // reverte para tentar de novo
+          }
+        }
+      }, 500);
     }
-    // ── /GRAVAÇÃO DIRETA NO RANKING ──────────────────────────────────
 
     function goToNextLevel() {
       if (!state.levelApproved || state.currentLevelIndex >= state.levels.length - 1) {
@@ -8111,6 +8080,9 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
   }
 </style>
 <div id="cbjrAuthProfile" class="cbjr-auth-profile" aria-live="polite"></div>
+<!-- CBJR Firebase Progress Core — mesmo módulo usado pela Rádio e Letras -->
+<script type="module" src="./firebase-progress.js"></script>
+
 <script type="module" id="cbjr-auth-profile-script">
   import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
   import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
