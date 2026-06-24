@@ -6850,12 +6850,17 @@ body.tela-pergunta .answer-btn {
     function showCorrectFeedback(curiosity) {
       const msg = curiosity || 'Mandou bem nessa.';
       showChoraoBalloon(msg);
-      if (window.innerWidth <= 760 && els.feedbackBox) {
+
+      // Mostra feedback em todos os dispositivos (não só mobile)
+      if (els.feedbackBox) {
         els.feedbackBox.innerHTML =
-          '<strong>Você acertou!</strong>' +
-          '<span class="cbjr-curiosity-body">' + escapeHtml(msg) + '</span>';
+          '<strong>✅ Você acertou!</strong>' +
+          (curiosity ? '<span class="cbjr-curiosity-body">' + escapeHtml(msg) + '</span>' : '');
         els.feedbackBox.classList.add('show');
       }
+
+      // Toast rápido de pontuação
+      showToast(`+${CONFIG.scoreCorrect} pts`);
     }
 
     function showWrongFeedback(settings) {
@@ -7084,8 +7089,7 @@ body.tela-pergunta .answer-btn {
       }
       localStorage.setItem(localKey, String(finalScore));
 
-      // Usa CBJRCloudProgress.submitRanking que tem auth garantida
-      const ok = await window.CBJRCloudProgress?.submitRanking?.({
+      const payload = {
         score:           finalScore,
         accuracy:        accuracy,
         correct:         hits,
@@ -7098,13 +7102,41 @@ body.tela-pergunta .answer-btn {
         rankTitle:       diff === 'dificil' ? 'Mestre do Quiz' : diff === 'facil' ? 'Iniciante' : 'Desafiante',
         timestamp:       Date.now(),
         createdAtText:   new Date().toISOString()
-      });
+      };
 
-      if (ok) {
-        console.log(`[Quiz Ranking] ✅ ${finalScore} pts enviados (nível ${levelsDone})`);
-      } else {
-        console.warn('[Quiz Ranking] ⚠️ submitRanking não disponível ainda');
-      }
+      // Aguarda CBJRCloudProgress estar pronto (módulo async pode demorar até 8s)
+      const trySubmit = async () => {
+        const submitFn = window.CBJRCloudProgress?.submitRanking;
+        if (typeof submitFn === 'function') {
+          try {
+            const ok = await submitFn(payload);
+            if (ok) {
+              console.log(`[Quiz Ranking] ✅ ${finalScore} pts enviados (nível ${levelsDone})`);
+              showToast(`🏆 +${finalScore} pts no ranking!`);
+            } else {
+              console.warn('[Quiz Ranking] ⚠️ Falha ao enviar (usuário não logado ou sem conexão)');
+            }
+          } catch (err) {
+            console.warn('[Quiz Ranking] ⚠️ Erro ao submeter:', err.message);
+          }
+          return true;
+        }
+        return false;
+      };
+
+      if (await trySubmit()) return;
+
+      // Retry com polling se o módulo ainda não terminou de carregar
+      let attempts = 0;
+      const retryInterval = setInterval(async () => {
+        attempts++;
+        if (await trySubmit() || attempts >= 16) {
+          clearInterval(retryInterval);
+          if (attempts >= 16) {
+            console.warn('[Quiz Ranking] ⚠️ CBJRCloudProgress indisponível após 8s');
+          }
+        }
+      }, 500);
     }
 
     function goToNextLevel() {
@@ -8168,7 +8200,11 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     'radioCBJR_achievements_v1',
     'cbjr_letters_completed',
     'lettersCBJR_playerName',
-    'cobjr_quiz_achievements'
+    'cobjr_quiz_achievements',
+    'cobjr_quiz_progress_v1',
+    'cbjr_quiz_rank_best_facil',
+    'cbjr_quiz_rank_best_normal',
+    'cbjr_quiz_rank_best_dificil'
   ];
 
   let currentUser = null;
