@@ -152,7 +152,6 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle
       <button class="btn" id="logoutBtn" type="button">🚪 Sair</button>
     </div>
   </section>
-</div>
 
   <section class="reset-section" id="resetSection" style="display:none">
     <div class="section-head">
@@ -199,6 +198,7 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle
 
     </div>
   </section>
+
 
 </div>
 
@@ -481,7 +481,10 @@ if(PUBLIC_UID) {
   const badge = $('profileTitleBadge');
   if(badge) badge.style.display = 'none';
 
+} // fim else if(PUBLIC_NAME)
+
 // ── REINICIAR PROGRESSO ──────────────────────────────────────────
+// (declarado fora do if/else para estar disponível em qualquer modo)
 const RESET_MODES = {
   radio: {
     label: '📻 Rádio CBJR',
