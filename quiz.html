@@ -6848,18 +6848,23 @@ body.tela-pergunta .answer-btn {
     }
 
     function showCorrectFeedback(curiosity) {
-      const msg = curiosity || 'Mandou bem nessa.';
-      showChoraoBalloon(msg);
+      const msg = curiosity || '';
+      const mobile = window.innerWidth <= 760;
 
-      // Mostra feedback em todos os dispositivos (não só mobile)
-      if (els.feedbackBox) {
-        els.feedbackBox.innerHTML =
-          '<strong>✅ Você acertou!</strong>' +
-          (curiosity ? '<span class="cbjr-curiosity-body">' + escapeHtml(msg) + '</span>' : '');
-        els.feedbackBox.classList.add('show');
+      if (mobile) {
+        // Mobile: usa a caixa de feedback, sem balão
+        if (els.feedbackBox) {
+          els.feedbackBox.innerHTML =
+            '<strong>✅ Você acertou!</strong>' +
+            (msg ? '<span class="cbjr-curiosity-body">' + escapeHtml(msg) + '</span>' : '');
+          els.feedbackBox.classList.add('show');
+        }
+      } else {
+        // Desktop: só o balão do Chorão, sem caixa abaixo
+        if (msg) showChoraoBalloon(msg);
       }
 
-      // Toast rápido de pontuação
+      // Toast de pontuação sempre
       showToast(`+${CONFIG.scoreCorrect} pts`);
     }
 
@@ -8323,13 +8328,13 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     submitRanking: async (payload) => {
       if (!currentUser) { console.warn('[Quiz Ranking] sem usuário logado'); return false; }
       try {
-        const { addDoc, collection } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+        const { addDoc, collection, serverTimestamp: srvTs } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
         await addDoc(collection(db, 'ranking'), {
           ...payload,
           uid:      currentUser.uid,
           name:     currentUser.displayName || payload.name || 'Jogador CBJR',
           photoURL: currentUser.photoURL    || payload.photoURL || '',
-          createdAt: (await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')).serverTimestamp()
+          createdAt: srvTs()
         });
         return true;
       } catch(e) { console.warn('[Quiz Ranking] erro:', e.message); return false; }
