@@ -6167,6 +6167,7 @@ body.tela-pergunta .answer-btn {
     <div class="topbar-actions">
       <button id="btn5050" class="power-btn" type="button"><span>50/50</span> <span id="count5050" class="power-count">0</span></button>
       <button id="btnPular" class="power-btn" type="button"><span>Pular</span> <span id="countPular" class="power-count">0</span></button>
+      <div id="cbjrAuthProfile" class="cbjr-auth-profile" aria-live="polite"></div>
     </div>
   </header>
 
@@ -8030,7 +8031,8 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
 <!-- CBJR PERFIL GOOGLE ÚNICO — sem tela de login nas páginas internas -->
 <style id="cbjr-auth-profile-style">
   .cbjr-auth-profile {
-    position: fixed; top: 18px; right: 18px; z-index: 5000;
+    position: static;
+    z-index: auto;
     display: none; font-family: Inter, Arial, Helvetica, sans-serif;
   }
   .cbjr-auth-profile.show { display: block; }
@@ -8071,7 +8073,7 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
   .cbjr-auth-menu a:hover, .cbjr-auth-menu button:hover { background: rgba(241,196,15,.14); border-color: rgba(241,196,15,.42); }
   .cbjr-auth-logout { color:#ffb3b3!important; }
   @media (max-width: 700px) {
-    .cbjr-auth-profile { top: 10px; right: 10px; }
+    /* cbjr-auth-profile: posicionado pelo topbar-actions */
     .cbjr-auth-trigger { padding: 5px; gap: 7px; }
     .cbjr-auth-trigger img, .cbjr-auth-fallback { width: 32px; height: 32px; }
     .cbjr-auth-name { max-width: 126px; font-size: .82rem; }
@@ -8079,7 +8081,6 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     .cbjr-auth-caret { font-size:.8rem; }
   }
 </style>
-<div id="cbjrAuthProfile" class="cbjr-auth-profile" aria-live="polite"></div>
 <!-- CBJR Firebase Progress Core — mesmo módulo usado pela Rádio e Letras -->
 <script type="module" src="./firebase-progress.js"></script>
 
