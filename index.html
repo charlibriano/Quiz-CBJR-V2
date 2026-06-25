@@ -14,6 +14,14 @@
   <link rel="canonical" href="https://quiz-cbjr.vercel.app/" />
   <link rel="icon" type="image/png" href="https://charlibriano.github.io/Quiz-CBJR-V2/cbjr.png" />
   <link rel="apple-touch-icon" href="https://charlibriano.github.io/Quiz-CBJR-V2/cbjr.png" />
+  <!-- PWA -->
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" content="#f1c40f" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Quiz CBJR" />
+  <link rel="apple-touch-icon" href="https://charlibriano.github.io/Quiz-CBJR-V2/cbjr.png" />
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1JCN94Y3P0"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -5737,5 +5745,16 @@
   <script type="module" src="./notificacoes.js"></script>
   <script src="./desafio.js" defer></script>
   <script src="./easteregg.js" defer></script>
+
+  <script>
+    // Registro do Service Worker — habilita instalação como PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('[PWA] Service Worker registrado:', reg.scope))
+          .catch(err => console.warn('[PWA] Falha ao registrar SW:', err));
+      });
+    }
+  </script>
 </body>
 </html>
