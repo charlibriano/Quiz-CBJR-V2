@@ -42,7 +42,11 @@
     const key = todayStr();
     let h = 0;
     for (let i = 0; i < key.length; i++) { h = Math.imul(31, h) + key.charCodeAt(i) | 0; }
-    return Math.abs(h) % ALBUMS.length;
+    const seed = Math.abs(h);
+
+    // Limita ao range de CDs desbloqueados pelo jogador
+    const unlockedCount = getUnlockedIndex() + 1; // +1 porque index é base 0
+    return seed % unlockedCount;
   }
 
   function isDone() {
