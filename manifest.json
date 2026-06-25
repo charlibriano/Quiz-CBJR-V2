@@ -1,0 +1,49 @@
+{
+  "name": "Quiz CBJR",
+  "short_name": "Quiz CBJR",
+  "description": "O quiz oficial do Charlie Brown Jr. — Rádio, Letras e Quiz para os verdadeiros fãs.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#f1c40f",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Quiz",
+      "short_name": "Quiz",
+      "description": "Jogar o Quiz CBJR",
+      "url": "/quiz.html",
+      "icons": [{ "src": "./icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Rádio",
+      "short_name": "Rádio",
+      "description": "Ouvir a Rádio CBJR",
+      "url": "/radio.html",
+      "icons": [{ "src": "./icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Ranking",
+      "short_name": "Ranking",
+      "description": "Ver o Ranking CBJR",
+      "url": "/ranking.html",
+      "icons": [{ "src": "./icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "categories": ["games", "entertainment", "music"]
+}
