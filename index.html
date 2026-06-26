@@ -5722,6 +5722,12 @@
   });
 
   // ── Modo Demo ──────────────────────────────────────────
+  // Se abriu index.html sem skipIntro, sempre volta à tela de escolha (login ou demo)
+  const _demoSkipIntro = new URLSearchParams(window.location.search).get('skipIntro') === 'true';
+  if (!_demoSkipIntro) {
+    sessionStorage.removeItem('cbjr_demo_mode');
+  }
+
   const demoLoginBtn = document.getElementById('demoLoginBtn');
   demoLoginBtn?.addEventListener('click', () => {
     sessionStorage.setItem('cbjr_demo_mode', '1');
@@ -5731,7 +5737,7 @@
     window.location.href = 'index.html?skipIntro=true';
   });
 
-  // Se estiver em modo demo, mostrar o dashboard com aviso
+  // Se estiver em modo demo (veio via skipIntro), mostrar o dashboard com aviso
   if (sessionStorage.getItem('cbjr_demo_mode') === '1') {
     setAuthView('auth-logged-in');
     if (userName) userName.textContent = 'Visitante';
