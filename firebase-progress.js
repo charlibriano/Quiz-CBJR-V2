@@ -267,6 +267,8 @@ async function saveProfile(user = currentUser, data = readLocal()) {
 }
 
 async function saveNow(extra = {}) {
+  // Modo demo: não salvar nada no Firebase
+  if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('cbjr_demo_mode') === '1') return;
   if (!currentUser || syncing) return;
   const payload = readLocal();
   const stats = calculateStats(payload);
@@ -292,6 +294,7 @@ async function saveNow(extra = {}) {
 }
 
 function scheduleSave() {
+  if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('cbjr_demo_mode') === '1') return;
   if (!ready || !currentUser || syncing) return;
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => saveNow(), 500);
