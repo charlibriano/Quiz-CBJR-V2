@@ -3466,6 +3466,7 @@ button:hover{
 }
 </style>
 </head>
+<script src="./guest-mode.js"></script>
 <body>
   <a class="floating-back" href="index.html?skipIntro=true">← Voltar</a>
 
@@ -3627,28 +3628,6 @@ button:hover{
     }
 
     function saveCompletedAlbum(albumId) {
-      // Modo demo: contar álbuns e bloquear ao atingir limite
-      if (typeof CBJR_IS_DEMO !== 'undefined' && CBJR_IS_DEMO) {
-        window._cbjrDemoLetrasCount = (window._cbjrDemoLetrasCount || 0) + 1;
-        if (window._cbjrDemoLetrasCount >= CBJR_DEMO_LETRAS_LIMIT) {
-          setTimeout(() => {
-            const overlay = document.createElement('div');
-            overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;display:grid;place-items:center;padding:20px;background:rgba(0,0,0,.88);backdrop-filter:blur(14px);';
-            overlay.innerHTML = `
-              <div style="max-width:480px;text-align:center;border:1px solid rgba(241,196,15,.4);border-radius:24px;padding:36px 28px;background:rgba(0,0,0,.92);color:#fff;">
-                <div style="font-size:2.8rem;margin-bottom:12px;">✍️</div>
-                <h2 style="color:#f1c40f;margin:0 0 12px;font-size:1.9rem;">Você manda nas letras!</h2>
-                <p style="color:rgba(255,255,255,.78);margin:0 0 24px;line-height:1.5;">Crie sua conta gratuita para completar todos os 13 álbuns, salvar seu progresso e subir no ranking.</p>
-                <a href="index.html" style="display:inline-block;background:#f1c40f;color:#000;font-weight:900;border-radius:999px;padding:14px 32px;text-decoration:none;font-size:1rem;margin-bottom:12px;" onclick="sessionStorage.removeItem('cbjr_demo_mode')">Entrar com Google — é grátis</a>
-                <br>
-                <a href="index.html" onclick="sessionStorage.removeItem('cbjr_demo_mode')" style="color:rgba(255,255,255,.5);font-size:.8rem;">Voltar ao início</a>
-              </div>
-            `;
-            document.body.appendChild(overlay);
-          }, 600);
-        }
-        return; // Não salvar no localStorage em modo demo
-      }
       const completed = getCompletedAlbums();
       if (!completed.includes(albumId)) {
         completed.push(albumId);
@@ -3703,11 +3682,15 @@ button:hover{
       const unlocked = getUnlockedAlbums();
       updateLettersDashboard(completed, unlocked);
 
+      // ── MODO VISITANTE: só o 1º álbum ──────────────────
+      const guestMode = window.CBJR_GUEST?.isGuest() && !window.CBJR_GUEST?.isLoggedIn();
+      // ──────────────────────────────────────────────────
+
       els.albumGrid.innerHTML = lettersMode.albumOrder.map((id, index) => {
         const album = lettersMode.albumMap[id];
-        const isUnlocked = unlocked.includes(id);
+        const isUnlocked = guestMode ? index === 0 : unlocked.includes(id);
         const isDone = completed.includes(id);
-        const label = isDone ? 'Concluído' : (isUnlocked ? 'Liberado' : 'Bloqueado');
+        const label = isDone ? 'Concluído' : (isUnlocked ? 'Liberado' : (guestMode && index > 0 ? 'Faça login' : 'Bloqueado'));
         const statusClass = isDone ? 'done' : (isUnlocked ? '' : 'lock');
         return `
           <article class="album-card ${isUnlocked ? '' : 'locked'}" data-album-id="${id}" aria-label="${album.name}">
@@ -3723,7 +3706,16 @@ button:hover{
       els.albumGrid.querySelectorAll('.album-card').forEach(card => {
         card.addEventListener('click', () => {
           const albumId = card.getAttribute('data-album-id');
-          if (!getUnlockedAlbums().includes(albumId)) return;
+          const guestMode = window.CBJR_GUEST?.isGuest() && !window.CBJR_GUEST?.isLoggedIn();
+          if (guestMode && !unlocked.includes(albumId) && lettersMode.albumOrder.indexOf(albumId) > 0) {
+            window.CBJR_GUEST.showModal(
+              'Mais álbuns te esperam! ✍️',
+              'No modo visitante só é possível acessar o primeiro álbum. Faça login com sua conta Google para desbloquear todos os 13 álbuns do Charlie Brown Jr.!'
+            );
+            return;
+          }
+          if (!guestMode && !getUnlockedAlbums().includes(albumId)) return;
+          if (guestMode && lettersMode.albumOrder.indexOf(albumId) > 0) return;
           startLettersMode(albumId);
         });
       });
@@ -3844,6 +3836,20 @@ button:hover{
 
     function showLettersQuestion() {
       clearInterval(lettersMode.timer);
+
+      // ── MODO VISITANTE: limite de 3 trechos respondidos ──
+      if (window.CBJR_GUEST?.isGuest() && !window.CBJR_GUEST?.isLoggedIn()) {
+        const key = 'cbjr_guest_letras_count';
+        const count = window.CBJR_GUEST.getCount(key);
+        if (count >= 3) {
+          window.CBJR_GUEST.showModal(
+            'Curtiu o Modo Letras? ✍️',
+            'Você já completou 3 trechos no modo visitante! Faça login com sua conta Google para acessar todos os 13 álbuns e salvar sua pontuação.'
+          );
+          return;
+        }
+      }
+      // ── FIM MODO VISITANTE ─────────────────────────────────
 
       if (lettersMode.currentIndex >= lettersMode.questions.length || lettersMode.errors >= lettersMode.maxErrors) {
         endLettersGame();
@@ -4127,6 +4133,11 @@ const cbjrFeedback = {
 
       if (!isTimeout && selectedOption === q.correct) {
         lettersMode.correct++;
+        // ── MODO VISITANTE: conta tentativa ──
+        if (window.CBJR_GUEST?.isGuest() && !window.CBJR_GUEST?.isLoggedIn()) {
+          window.CBJR_GUEST.incCount('cbjr_guest_letras_count');
+        }
+        // ──────────────────────────────────────
         updateLettersDashboard();
 
         const message = lettersMode.correct > 0 && lettersMode.correct % 5 === 0
@@ -4657,7 +4668,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
 
   async function saveCloudProgressNow(extra = {}) {
-    if (CBJR_IS_DEMO) return; // Modo demo: não salvar
     if (!currentUser || syncing) return;
     const payload = readLocalProgress();
     try {
@@ -4715,28 +4725,9 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
   }
 
-  // ── Modo Demo ──────────────────────────────────────────
-  const CBJR_IS_DEMO = sessionStorage.getItem('cbjr_demo_mode') === '1';
-  const CBJR_DEMO_LETRAS_LIMIT = 2; // máximo de álbuns no demo
-
-  if (CBJR_IS_DEMO) {
-    const demoBanner = document.createElement('div');
-    demoBanner.id = 'cbjr-demo-banner';
-    demoBanner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:rgba(0,0,0,.88);border-bottom:2px solid rgba(241,196,15,.55);padding:10px 18px;text-align:center;font-size:.82rem;color:#f1c40f;font-weight:700;backdrop-filter:blur(8px);';
-    demoBanner.innerHTML = '👀 <strong>Modo Demo</strong> — Letras liberadas por ' + CBJR_DEMO_LETRAS_LIMIT + ' álbuns. <a href="index.html" style="color:#fff;text-decoration:underline;margin-left:10px;">Criar conta gratuita →</a>';
-    document.body.prepend(demoBanner);
-    window._cbjrDemoLetrasCount = 0;
-  }
-  // ────────────────────────────────────────────────────────
-
   onAuthStateChanged(auth, user => {
     currentUser = user || null;
-    if (user) {
-      sessionStorage.removeItem('cbjr_demo_mode');
-      loadCloudProgress(user);
-    } else if (!CBJR_IS_DEMO) {
-      window.location.href = 'index.html';
-    }
+    if (user) loadCloudProgress(user);
   });
 
   window.addEventListener('beforeunload', () => {
