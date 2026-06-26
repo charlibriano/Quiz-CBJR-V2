@@ -6921,9 +6921,9 @@ body.tela-pergunta .answer-btn {
 
     function nextQuestion() {
       // Modo demo: incrementar e bloquear ao atingir o limite
-      if (CBJR_IS_DEMO) {
-        cbjrDemoQuizCount++;
-        if (cbjrDemoQuizCount > CBJR_DEMO_QUIZ_LIMIT) {
+      if (window.CBJR_IS_DEMO) {
+        window.cbjrDemoQuizCount++;
+        if (window.cbjrDemoQuizCount > window.CBJR_DEMO_QUIZ_LIMIT) {
           // Mostrar overlay de conversão
           if (!document.getElementById('cbjr-demo-overlay')) {
             const overlay = document.createElement('div');
@@ -8304,7 +8304,7 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
   }
 
   async function saveCloudProgressNow(extra = {}) {
-    if (CBJR_IS_DEMO) return; // Modo demo: não salvar
+    if (window.CBJR_IS_DEMO) return; // Modo demo: não salvar
     if (!currentUser || syncing) return;
     const payload = readLocalProgress();
     try {
@@ -8377,11 +8377,11 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
   }
 
   // ── Modo Demo ──────────────────────────────────────────
-  const CBJR_IS_DEMO = sessionStorage.getItem('cbjr_demo_mode') === '1';
-  const CBJR_DEMO_QUIZ_LIMIT = 5; // perguntas máximas no demo
-  let cbjrDemoQuizCount = 0;
+  window.CBJR_IS_DEMO = sessionStorage.getItem('cbjr_demo_mode') === '1';
+  window.CBJR_DEMO_QUIZ_LIMIT = 5; // perguntas máximas no demo
+  window.cbjrDemoQuizCount = 0;
 
-  if (CBJR_IS_DEMO) {
+  if (window.CBJR_IS_DEMO) {
     // Inserir banner de demo fixo no topo
     const demoBanner = document.createElement('div');
     demoBanner.id = 'cbjr-demo-banner';
@@ -8396,7 +8396,7 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     if (user) {
       sessionStorage.removeItem('cbjr_demo_mode');
       loadCloudProgress(user);
-    } else if (!CBJR_IS_DEMO) {
+    } else if (!window.CBJR_IS_DEMO) {
       // Sem login e sem demo: redirecionar
       window.location.href = 'index.html';
     }
