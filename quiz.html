@@ -6937,9 +6937,9 @@ body.tela-pergunta .answer-btn {
                 <div style="font-size:2.8rem;margin-bottom:12px;">🎸</div>
                 <h2 style="color:#f1c40f;margin:0 0 12px;font-size:1.9rem;">Você arraasou no demo!</h2>
                 <p style="color:rgba(255,255,255,.78);margin:0 0 24px;line-height:1.5;">Crie sua conta gratuita com Google para jogar sem limites, salvar seu progresso, conquistar medalhas e subir no ranking dos fãs.</p>
-                <a href="index.html" style="display:inline-block;background:#f1c40f;color:#000;font-weight:900;border-radius:999px;padding:14px 32px;text-decoration:none;font-size:1rem;margin-bottom:12px;">Entrar com Google — é grátis</a>
+                <a href="index.html" style="display:inline-block;background:#f1c40f;color:#000;font-weight:900;border-radius:999px;padding:14px 32px;text-decoration:none;font-size:1rem;margin-bottom:12px;" onclick="sessionStorage.removeItem('cbjr_demo_mode')">Entrar com Google — é grátis</a>
                 <br>
-                <a href="index.html" style="color:rgba(255,255,255,.5);font-size:.8rem;">Voltar ao início</a>
+                <a href="index.html" onclick="sessionStorage.removeItem('cbjr_demo_mode')" style="color:rgba(255,255,255,.5);font-size:.8rem;">Voltar ao início</a>
               </div>
             `;
             document.body.appendChild(overlay);
