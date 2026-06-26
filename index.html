@@ -3461,89 +3461,6 @@
       display: none !important;
     }
 
-    /* MODO DEMO: mesma visibilidade do auth-logged-in */
-    body.auth-demo .login-screen { display: none !important; }
-    body.auth-demo .app { display: flex !important; }
-    body.auth-demo .boot-screen { opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
-    body.auth-demo .player-dashboard { display: none !important; }
-    body.auth-demo .user-pill { display: none !important; }
-
-    /* Badge DEMO na topbar */
-    .demo-badge {
-      display: none;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 12px;
-      border-radius: 999px;
-      background: rgba(241,196,15,.12);
-      border: 1px solid rgba(241,196,15,.35);
-      color: #f1c40f;
-      font-size: .72rem;
-      font-weight: 950;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: .16s ease;
-      font-family: inherit;
-    }
-    .demo-badge:hover { background: rgba(241,196,15,.22); }
-    body.auth-demo .demo-badge { display: inline-flex; }
-
-    /* Botão "Entrar como Visitante" na tela de login */
-    .demo-divider {
-      display: flex; align-items: center; gap: 10px;
-      margin: 14px 0 4px;
-      color: rgba(255,255,255,.28);
-      font-size: .72rem; font-weight: 850;
-      text-transform: uppercase; letter-spacing: .08em;
-    }
-    .demo-divider::before, .demo-divider::after {
-      content: ""; flex: 1; height: 1px; background: rgba(255,255,255,.12);
-    }
-    .demo-login-btn {
-      width: 100%; min-height: 46px;
-      border: 1px solid rgba(255,255,255,.18); border-radius: 15px;
-      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.82);
-      font-weight: 850; font-size: .92rem;
-      cursor: pointer; margin-top: 4px;
-      transition: .2s ease; font-family: inherit;
-    }
-    .demo-login-btn:hover { background: rgba(255,255,255,.11); border-color: rgba(255,255,255,.32); color: #fff; }
-
-    /* Modal upgrade demo */
-    #demoUpgradeModal { display: none; }
-    #demoUpgradeModal.show { display: flex; }
-    #demoUpgradeModal .modal-card { text-align: center; max-width: 420px; }
-    #demoUpgradeModal .modal-card h2 { font-size: 1.4rem; margin-bottom: 8px; }
-    #demoUpgradeModal .modal-card p { font-size: .9rem; margin-bottom: 16px; color: rgba(255,255,255,.72); }
-    .demo-upgrade-limit {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(241,196,15,.08); border: 1px solid rgba(241,196,15,.28);
-      border-radius: 12px; padding: 10px 16px;
-      color: #f1c40f; font-size: .88rem; font-weight: 950;
-      margin-bottom: 20px;
-    }
-    .demo-upgrade-google-btn {
-      width: 100%; min-height: 52px; border: 0; border-radius: 15px;
-      display: inline-flex; align-items: center; justify-content: center; gap: 12px;
-      background: #18a097; color: #fff;
-      font-weight: 950; font-size: .98rem; cursor: pointer;
-      box-shadow: 0 18px 42px rgba(24,160,151,.22);
-      transition: .2s ease; font-family: inherit; margin-bottom: 10px;
-    }
-    .demo-upgrade-google-btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
-    .demo-upgrade-google-btn:disabled { opacity: .7; cursor: wait; transform: none; }
-    .demo-upgrade-back-btn {
-      width: 100%; min-height: 44px;
-      border: 1px solid rgba(255,255,255,.14); border-radius: 12px;
-      background: rgba(255,255,255,.06); color: rgba(255,255,255,.7);
-      font-size: .88rem; font-weight: 850; cursor: pointer;
-      transition: .16s ease; font-family: inherit;
-    }
-    .demo-upgrade-back-btn:hover { background: rgba(255,255,255,.1); color: #fff; }
-
     /* Boot screen some automaticamente quando já logado */
     body.auth-logged-in .boot-screen {
       opacity: 0 !important;
@@ -3687,6 +3604,31 @@
       color: #4285f4;
       font-weight: 950;
       font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .guest-login-btn {
+      width: 100%;
+      min-height: 48px;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 15px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: rgba(255,255,255,.07);
+      color: rgba(255,255,255,.82);
+      font-weight: 950;
+      font-size: .92rem;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: .2s ease;
+    }
+
+    .guest-login-btn:hover {
+      border-color: rgba(241,196,15,.55);
+      color: var(--yellow, #f1c40f);
+      background: rgba(241,196,15,.08);
+      transform: translateY(-1px);
     }
 
     .login-status {
@@ -4265,10 +4207,11 @@
         <span class="google-icon">G</span>
         <span>Continuar com Google</span>
       </button>
+      <button class="guest-login-btn" id="guestLoginBtn" type="button">
+        👀 Explorar como Visitante
+      </button>
       <div class="login-status" id="loginStatus">Verificando login...</div>
-      <div class="demo-divider">ou</div>
-      <button class="demo-login-btn" id="demoLoginBtn" type="button">🎮 Entrar como Visitante</button>
-      <div class="login-note" style="margin-top:12px;">No modo visitante você pode responder 5 questões no Quiz, ouvir 3 músicas na Rádio e completar 3 letras. O progresso não é salvo.</div>
+      <div class="login-note">Visitante: experimente o Quiz (5 perguntas), Rádio e Letras (1 CD cada). Para acesso completo ao ranking, conquistas e comunidade, faça login com Google.</div>
     </div>
   </section>
 
@@ -4323,7 +4266,6 @@
         </div>
         <button class="icon-btn" id="soundBtn" title="Som ambiente" aria-label="Som ambiente">♪</button>
         <button class="icon-btn" id="infoBtn" title="Sobre" aria-label="Sobre">?</button>
-        <button class="demo-badge" id="demoBadgeBtn" type="button" title="Modo Visitante — clique para fazer login">🎮 VISITANTE</button>
       </div>
     </header>
 
@@ -5414,6 +5356,26 @@
     }
   });
 
+  // ── MODO VISITANTE ─────────────────────────────────────────
+  const guestBtn = document.getElementById('guestLoginBtn');
+  guestBtn?.addEventListener('click', () => {
+    try { sessionStorage.setItem('cbjr_guest_mode', '1'); } catch (e) {}
+    setAuthView('auth-logged-in');
+    document.getElementById('loginScreen')?.style && (document.getElementById('loginScreen').style.display = 'none');
+    // Mostra banner de visitante na topbar
+    const pill = document.getElementById('userPill');
+    if (pill) {
+      pill.style.display = 'inline-flex';
+      const nameEl = document.getElementById('userName');
+      const emailEl = document.getElementById('userEmail');
+      if (nameEl) nameEl.textContent = 'Visitante';
+      if (emailEl) emailEl.textContent = 'Modo degustação';
+      const photo = document.getElementById('userPhoto');
+      if (photo) { photo.src = ''; photo.alt = '👤'; photo.style.display = 'none'; }
+    }
+  });
+  // ── FIM MODO VISITANTE ─────────────────────────────────────
+
   userPillTrigger?.addEventListener('click', (ev) => { ev.stopPropagation(); userPill?.classList.toggle('open'); });
   document.addEventListener('click', (ev) => { if (userPill && !userPill.contains(ev.target)) userPill.classList.remove('open'); });
   document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') userPill?.classList.remove('open'); });
@@ -5842,160 +5804,5 @@
       });
     }
   </script>
-  <!-- MODAL: Limite do modo visitante atingido -->
-  <div class="modal" id="demoUpgradeModal" aria-hidden="true" role="dialog">
-    <div class="modal-card">
-      <h2>⚡ Limite do Modo Visitante</h2>
-      <p id="demoUpgradeDesc">Faça login para continuar jogando e salvar seu progresso.</p>
-      <div class="demo-upgrade-limit" id="demoUpgradeLimit">🎮 Limite atingido</div>
-      <button class="demo-upgrade-google-btn" id="demoUpgradeGoogleBtn" type="button">
-        <span class="google-icon">G</span>
-        <span>Entrar com Google e continuar</span>
-      </button>
-      <button class="demo-upgrade-back-btn" id="demoUpgradeBackBtn" type="button">Voltar ao menu</button>
-      <div class="login-status" id="demoUpgradeStatus" style="margin-top:10px;"></div>
-    </div>
-  </div>
-
-  <script>
-  /* ── MODO VISITANTE (DEMO) ───────────────────────────────────────────
-     Usa sessionStorage: some ao recarregar a página → login aparece novamente.
-     Contadores por tipo: quiz (5), radio (3), letras (3).
-     Retorno com ?demo_limit=quiz|radio|letras → abre modal de upgrade.
-  ─────────────────────────────────────────────────────────────────── */
-  (function () {
-    var DEMO_KEY = 'cbjr_demo_mode';
-    var COUNTS   = { quiz: 'cbjr_demo_quiz', radio: 'cbjr_demo_radio', letras: 'cbjr_demo_letras' };
-    var LIMITS   = { quiz: 5, radio: 3, letras: 3 };
-    var MSGS     = {
-      quiz:   { icon: '🎯', label: 'Você respondeu 5 questões no Quiz.',       desc: 'Faça login para continuar o Quiz e salvar suas conquistas!' },
-      radio:  { icon: '📻', label: 'Você ouviu 3 músicas na Rádio.',           desc: 'Faça login para liberar todos os CDs da Rádio CBJR!' },
-      letras: { icon: '🎵', label: 'Você completou 3 letras no Modo Letras.',  desc: 'Faça login para liberar todos os álbuns do Modo Letras!' }
-    };
-
-    function isDemo() { return sessionStorage.getItem(DEMO_KEY) === '1'; }
-
-    function enterDemo() {
-      sessionStorage.setItem(DEMO_KEY, '1');
-      Object.values(COUNTS).forEach(function(k) { sessionStorage.setItem(k, '0'); });
-      document.body.classList.remove('auth-loading', 'auth-logged-out', 'auth-logged-in');
-      document.body.classList.add('auth-demo');
-      addDemoParamsToLinks();
-    }
-
-    function addDemoParamsToLinks() {
-      ['quiz.html','radio.html','letras.html'].forEach(function(page) {
-        document.querySelectorAll('a[href*="' + page + '"]').forEach(function(a) {
-          a.href = page + '?demo=1';
-        });
-      });
-    }
-
-    function clearDemo() {
-      sessionStorage.removeItem(DEMO_KEY);
-      Object.values(COUNTS).forEach(function(k) { sessionStorage.removeItem(k); });
-    }
-
-    /* Botão "Entrar como Visitante" na tela de login */
-    var demoLoginBtn = document.getElementById('demoLoginBtn');
-    if (demoLoginBtn) {
-      demoLoginBtn.addEventListener('click', function() { enterDemo(); });
-    }
-
-    /* Badge na topbar → abre modal */
-    var demoBadgeBtn = document.getElementById('demoBadgeBtn');
-    if (demoBadgeBtn) {
-      demoBadgeBtn.addEventListener('click', function() { openModal(null); });
-    }
-
-    /* Se sessão demo ainda ativa ao navegar de volta */
-    if (isDemo() && !document.body.classList.contains('auth-logged-in')) {
-      document.body.classList.remove('auth-loading', 'auth-logged-out');
-      document.body.classList.add('auth-demo');
-      addDemoParamsToLinks();
-    }
-
-    /* Detecta retorno de página filha com ?demo_limit= */
-    var params      = new URLSearchParams(window.location.search);
-    var demoLimit   = params.get('demo_limit');
-    var demoReturn  = params.get('demo_return');
-    if (demoLimit && isDemo()) {
-      document.body.classList.remove('auth-loading','auth-logged-out');
-      document.body.classList.add('auth-demo');
-      addDemoParamsToLinks();
-      try { window.history.replaceState({}, '', window.location.pathname); } catch(e) {}
-      window.addEventListener('DOMContentLoaded', function() { openModal(demoLimit, demoReturn); });
-    }
-
-    /* Modal de upgrade */
-    var modal          = document.getElementById('demoUpgradeModal');
-    var modalDesc      = document.getElementById('demoUpgradeDesc');
-    var modalLimit     = document.getElementById('demoUpgradeLimit');
-    var modalGoogleBtn = document.getElementById('demoUpgradeGoogleBtn');
-    var modalBackBtn   = document.getElementById('demoUpgradeBackBtn');
-    var modalStatus    = document.getElementById('demoUpgradeStatus');
-    var _returnPage    = null;
-
-    function openModal(limitType, returnPage) {
-      if (!modal) return;
-      _returnPage = returnPage || null;
-      var info = MSGS[limitType] || { icon: '🎮', label: 'Modo Visitante ativo.', desc: 'Faça login para salvar progresso e acessar tudo!' };
-      if (modalLimit)  modalLimit.textContent  = info.icon + ' ' + info.label;
-      if (modalDesc)   modalDesc.textContent   = info.desc;
-      if (modalStatus) modalStatus.textContent = '';
-      if (modalGoogleBtn) modalGoogleBtn.disabled = false;
-      modal.classList.add('show');
-      modal.setAttribute('aria-hidden', 'false');
-    }
-
-    function closeModal() {
-      if (!modal) return;
-      modal.classList.remove('show');
-      modal.setAttribute('aria-hidden', 'true');
-    }
-
-    if (modalBackBtn) modalBackBtn.addEventListener('click', closeModal);
-    if (modal) modal.addEventListener('click', function(e) { if (e.target === modal) closeModal(); });
-
-    /* Botão Google dentro do modal: usa o signInWithPopup do Firebase */
-    if (modalGoogleBtn) {
-      modalGoogleBtn.addEventListener('click', async function() {
-        try {
-          modalGoogleBtn.disabled = true;
-          if (modalStatus) modalStatus.textContent = 'Abrindo login do Google...';
-          // Importa as funções do Firebase que já foram carregadas no script principal
-          var { getAuth, GoogleAuthProvider, signInWithPopup } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');
-          var authInst = getAuth();
-          var prov     = new GoogleAuthProvider();
-          await signInWithPopup(authInst, prov);
-          // onAuthStateChanged do script principal cuida do resto
-          clearDemo();
-          if (_returnPage) {
-            var allowed = ['quiz.html','radio.html','letras.html'];
-            var safe = (_returnPage || '').replace(/[^a-zA-Z0-9._-]/g,'');
-            if (allowed.includes(safe)) { window.location.href = safe; return; }
-          }
-          closeModal();
-        } catch(err) {
-          if (modalGoogleBtn) modalGoogleBtn.disabled = false;
-          if (modalStatus) {
-            modalStatus.textContent = (err?.code || '').includes('popup-closed') ?
-              'Login cancelado. Clique novamente para tentar.' :
-              'Não foi possível entrar agora. Tente novamente.';
-          }
-        }
-      });
-    }
-
-    /* Expõe API global para as páginas filhas usarem */
-    window.CBJR_DEMO = {
-      isActive:    isDemo,
-      clear:       clearDemo,
-      openModal:   openModal,
-      getReturn:   function() { return _returnPage; }
-    };
-  })();
-  </script>
-
 </body>
 </html>
