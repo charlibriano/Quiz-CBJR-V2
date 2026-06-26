@@ -1725,32 +1725,6 @@
       }
     }
 
-    /* Botão pular intro — aparece após 5s se a tela ainda estiver aberta */
-    .boot-skip-btn {
-      position: fixed;
-      bottom: 28px;
-      right: 24px;
-      z-index: 200;
-      display: none;
-      align-items: center;
-      gap: 7px;
-      padding: 9px 18px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.22);
-      background: rgba(0,0,0,.62);
-      color: rgba(255,255,255,.78);
-      font-size: .78rem;
-      font-weight: 950;
-      letter-spacing: .05em;
-      cursor: pointer;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      transition: .18s ease;
-      font-family: inherit;
-    }
-    .boot-skip-btn:hover { background: rgba(0,0,0,.82); color: #fff; border-color: rgba(255,255,255,.42); }
-    .boot-screen.running .boot-skip-btn { display: inline-flex; }
-
 
     /* AJUSTE FELIPE — fundo cobrindo toda a tela + botão menor */
     .boot-screen {
@@ -3487,6 +3461,89 @@
       display: none !important;
     }
 
+    /* MODO DEMO: mesma visibilidade do auth-logged-in */
+    body.auth-demo .login-screen { display: none !important; }
+    body.auth-demo .app { display: flex !important; }
+    body.auth-demo .boot-screen { opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+    body.auth-demo .player-dashboard { display: none !important; }
+    body.auth-demo .user-pill { display: none !important; }
+
+    /* Badge DEMO na topbar */
+    .demo-badge {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(241,196,15,.12);
+      border: 1px solid rgba(241,196,15,.35);
+      color: #f1c40f;
+      font-size: .72rem;
+      font-weight: 950;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: .16s ease;
+      font-family: inherit;
+    }
+    .demo-badge:hover { background: rgba(241,196,15,.22); }
+    body.auth-demo .demo-badge { display: inline-flex; }
+
+    /* Botão "Entrar como Visitante" na tela de login */
+    .demo-divider {
+      display: flex; align-items: center; gap: 10px;
+      margin: 14px 0 4px;
+      color: rgba(255,255,255,.28);
+      font-size: .72rem; font-weight: 850;
+      text-transform: uppercase; letter-spacing: .08em;
+    }
+    .demo-divider::before, .demo-divider::after {
+      content: ""; flex: 1; height: 1px; background: rgba(255,255,255,.12);
+    }
+    .demo-login-btn {
+      width: 100%; min-height: 46px;
+      border: 1px solid rgba(255,255,255,.18); border-radius: 15px;
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.82);
+      font-weight: 850; font-size: .92rem;
+      cursor: pointer; margin-top: 4px;
+      transition: .2s ease; font-family: inherit;
+    }
+    .demo-login-btn:hover { background: rgba(255,255,255,.11); border-color: rgba(255,255,255,.32); color: #fff; }
+
+    /* Modal upgrade demo */
+    #demoUpgradeModal { display: none; }
+    #demoUpgradeModal.show { display: flex; }
+    #demoUpgradeModal .modal-card { text-align: center; max-width: 420px; }
+    #demoUpgradeModal .modal-card h2 { font-size: 1.4rem; margin-bottom: 8px; }
+    #demoUpgradeModal .modal-card p { font-size: .9rem; margin-bottom: 16px; color: rgba(255,255,255,.72); }
+    .demo-upgrade-limit {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(241,196,15,.08); border: 1px solid rgba(241,196,15,.28);
+      border-radius: 12px; padding: 10px 16px;
+      color: #f1c40f; font-size: .88rem; font-weight: 950;
+      margin-bottom: 20px;
+    }
+    .demo-upgrade-google-btn {
+      width: 100%; min-height: 52px; border: 0; border-radius: 15px;
+      display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+      background: #18a097; color: #fff;
+      font-weight: 950; font-size: .98rem; cursor: pointer;
+      box-shadow: 0 18px 42px rgba(24,160,151,.22);
+      transition: .2s ease; font-family: inherit; margin-bottom: 10px;
+    }
+    .demo-upgrade-google-btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+    .demo-upgrade-google-btn:disabled { opacity: .7; cursor: wait; transform: none; }
+    .demo-upgrade-back-btn {
+      width: 100%; min-height: 44px;
+      border: 1px solid rgba(255,255,255,.14); border-radius: 12px;
+      background: rgba(255,255,255,.06); color: rgba(255,255,255,.7);
+      font-size: .88rem; font-weight: 850; cursor: pointer;
+      transition: .16s ease; font-family: inherit;
+    }
+    .demo-upgrade-back-btn:hover { background: rgba(255,255,255,.1); color: #fff; }
+
     /* Boot screen some automaticamente quando já logado */
     body.auth-logged-in .boot-screen {
       opacity: 0 !important;
@@ -3648,154 +3705,6 @@
       font-size: .74rem;
       line-height: 1.4;
     }
-
-    /* ── BOTÃO DEMO ───────────────────────────────── */
-    .demo-login-btn {
-      width: 100%;
-      min-height: 46px;
-      border: 1px solid rgba(255,255,255,.18);
-      border-radius: 15px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.82);
-      font-weight: 850;
-      font-size: .92rem;
-      cursor: pointer;
-      margin-top: 10px;
-      transition: .2s ease;
-      font-family: inherit;
-    }
-
-    .demo-login-btn:hover {
-      background: rgba(255,255,255,.11);
-      border-color: rgba(255,255,255,.32);
-      color: #fff;
-    }
-
-    .demo-divider {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin: 14px 0 4px;
-      color: rgba(255,255,255,.28);
-      font-size: .72rem;
-      font-weight: 850;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-    }
-
-    .demo-divider::before,
-    .demo-divider::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: rgba(255,255,255,.12);
-    }
-
-    /* Badge "DEMO" na topbar quando em modo demo */
-    .demo-badge {
-      display: none;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(241,196,15,.12);
-      border: 1px solid rgba(241,196,15,.35);
-      color: var(--yellow);
-      font-size: .72rem;
-      font-weight: 950;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: .16s ease;
-    }
-
-    .demo-badge:hover {
-      background: rgba(241,196,15,.20);
-    }
-
-    body.auth-demo .demo-badge { display: inline-flex; }
-
-    /* No modo demo, ocultar a pill do usuário e mostrar badge */
-    body.auth-demo .user-pill { display: none !important; }
-
-    /* Demo: mostrar app igual ao auth-logged-in */
-    body.auth-demo .login-screen { display: none !important; }
-    body.auth-demo .app { display: flex !important; }
-    body.auth-demo .boot-screen { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
-    body.auth-demo .player-dashboard { display: none !important; }
-
-    /* ── MODAL UPGRADE (demo → login) ────────────── */
-    #demoUpgradeModal .modal-card {
-      text-align: center;
-      max-width: 420px;
-    }
-
-    #demoUpgradeModal .modal-card h2 {
-      font-size: 1.55rem;
-      margin-bottom: 8px;
-    }
-
-    #demoUpgradeModal .modal-card p {
-      font-size: .92rem;
-      margin-bottom: 18px;
-    }
-
-    .demo-upgrade-limit {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(241,196,15,.08);
-      border: 1px solid rgba(241,196,15,.28);
-      border-radius: 12px;
-      padding: 10px 16px;
-      color: var(--yellow);
-      font-size: .88rem;
-      font-weight: 950;
-      margin-bottom: 20px;
-    }
-
-    .demo-upgrade-google-btn {
-      width: 100%;
-      min-height: 52px;
-      border: 0;
-      border-radius: 15px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      background: #18a097;
-      color: #fff;
-      font-weight: 950;
-      font-size: .98rem;
-      cursor: pointer;
-      box-shadow: 0 18px 42px rgba(24,160,151,.22);
-      transition: .2s ease;
-      font-family: inherit;
-      margin-bottom: 10px;
-    }
-
-    .demo-upgrade-google-btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
-    .demo-upgrade-google-btn:disabled { opacity: .7; cursor: wait; transform: none; }
-
-    .demo-upgrade-continue-btn {
-      width: 100%;
-      min-height: 44px;
-      border: 1px solid rgba(255,255,255,.14);
-      border-radius: 12px;
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.7);
-      font-size: .88rem;
-      font-weight: 850;
-      cursor: pointer;
-      transition: .16s ease;
-      font-family: inherit;
-    }
-
-    .demo-upgrade-continue-btn:hover { background: rgba(255,255,255,.1); color: #fff; }
 
     .user-pill {
       display: none;
@@ -4342,10 +4251,6 @@
     if (localStorage.getItem('cbjr_google_logged') === '1') {
       document.body.classList.remove('auth-loading', 'auth-logged-out');
       document.body.classList.add('auth-logged-in');
-    } else if (sessionStorage.getItem('cbjr_demo_mode') === '1') {
-      // Sessão demo ativa: exibe o app sem exigir login
-      document.body.classList.remove('auth-loading', 'auth-logged-out');
-      document.body.classList.add('auth-demo');
     }
   } catch (e) {}
 </script>
@@ -4362,10 +4267,8 @@
       </button>
       <div class="login-status" id="loginStatus">Verificando login...</div>
       <div class="demo-divider">ou</div>
-      <button class="demo-login-btn" id="demoLoginBtn" type="button">
-        🎮 Experimentar no Modo Demo
-      </button>
-      <div class="login-note">No Modo Demo você pode responder 5 questões no Quiz, ouvir 3 músicas na Rádio e completar 3 letras — sem precisar fazer login. Seu progresso não será salvo.</div>
+      <button class="demo-login-btn" id="demoLoginBtn" type="button">🎮 Entrar como Visitante</button>
+      <div class="login-note" style="margin-top:12px;">No modo visitante você pode responder 5 questões no Quiz, ouvir 3 músicas na Rádio e completar 3 letras. O progresso não é salvo.</div>
     </div>
   </section>
 
@@ -4381,7 +4284,6 @@
       <p class="boot-subtitle" id="bootText" aria-live="polite"></p>
       <div class="boot-loader" aria-hidden="true"><span></span></div>
       <div class="boot-status" id="bootStatus">Afinando instrumentos...</div>
-      <button class="boot-skip-btn" id="bootSkipBtn" type="button" aria-label="Pular introdução">⏭ Pular intro</button>
     </div>
   </div>
 
@@ -4419,9 +4321,9 @@
             <button class="logout-btn" id="logoutBtn" type="button">🚪 Sair da conta Google</button>
           </div>
         </div>
-        <button class="demo-badge" id="demoBadgeBtn" type="button" title="Você está no Modo Demo — clique para fazer login">🎮 DEMO</button>
         <button class="icon-btn" id="soundBtn" title="Som ambiente" aria-label="Som ambiente">♪</button>
         <button class="icon-btn" id="infoBtn" title="Sobre" aria-label="Sobre">?</button>
+        <button class="demo-badge" id="demoBadgeBtn" type="button" title="Modo Visitante — clique para fazer login">🎮 VISITANTE</button>
       </div>
     </header>
 
@@ -4652,21 +4554,6 @@
     </nav>
   </div>
 
-  <!-- MODAL UPGRADE DEMO → LOGIN -->
-  <div class="modal" id="demoUpgradeModal" aria-hidden="true" role="dialog" aria-labelledby="demoUpgradeTitle">
-    <div class="modal-card">
-      <h2 id="demoUpgradeTitle">⚡ Você chegou ao limite do Demo</h2>
-      <p id="demoUpgradeDesc">Para continuar jogando e salvar seu progresso, faça login com sua conta Google. É grátis!</p>
-      <div class="demo-upgrade-limit" id="demoUpgradeLimit">🎮 Limite do modo demo atingido</div>
-      <button class="demo-upgrade-google-btn" id="demoUpgradeGoogleBtn" type="button">
-        <span class="google-icon">G</span>
-        <span>Entrar com Google e continuar</span>
-      </button>
-      <button class="demo-upgrade-continue-btn" id="demoUpgradeContinueBtn" type="button">Voltar ao menu</button>
-      <div class="login-status" id="demoUpgradeStatus" style="margin-top:10px;text-align:center;"></div>
-    </div>
-  </div>
-
   <div class="modal" id="infoModal" aria-hidden="true">
     <div class="modal-card">
       <h2>Sobre o projeto</h2>
@@ -4676,134 +4563,11 @@
     </div>
   </div>
 
-  <!-- ═══ MODO DEMO — SCRIPT COMPLETO ═══ -->
-  <script>
-    (function () {
-      var DEMO_KEY = 'cbjr_demo_mode';
-      var DEMO_COUNTS = {
-        quiz:   { key: 'cbjr_demo_quiz',   limit: 5 },
-        radio:  { key: 'cbjr_demo_radio',  limit: 3 },
-        letras: { key: 'cbjr_demo_letras', limit: 3 }
-      };
-
-      function isDemoActive() {
-        return sessionStorage.getItem(DEMO_KEY) === '1';
-      }
-
-      function applyDemoLinks() {
-        var demoPages = ['quiz.html', 'radio.html', 'letras.html'];
-        document.querySelectorAll('a[href]').forEach(function(link) {
-          var href = link.getAttribute('href') || '';
-          var base = href.split('?')[0];
-          if (demoPages.some(function(p) { return base.endsWith(p); })) {
-            link.setAttribute('href', base + '?demo=1');
-          }
-        });
-      }
-
-      function activateDemo() {
-        sessionStorage.setItem(DEMO_KEY, '1');
-        Object.values(DEMO_COUNTS).forEach(function(c) { sessionStorage.setItem(c.key, '0'); });
-        document.body.classList.remove('auth-loading', 'auth-logged-out', 'auth-logged-in');
-        document.body.classList.add('auth-demo');
-        applyDemoLinks();
-      }
-
-      // Botão demo na tela de login
-      var demoLoginBtn = document.getElementById('demoLoginBtn');
-      if (demoLoginBtn) {
-        demoLoginBtn.addEventListener('click', function() { activateDemo(); });
-      }
-
-      // Badge DEMO na topbar
-      var demoBadgeBtn = document.getElementById('demoBadgeBtn');
-      if (demoBadgeBtn) {
-        demoBadgeBtn.addEventListener('click', function() { showDemoUpgradeModal(null, null); });
-      }
-
-      // Sessão demo já ativa (navegação interna)
-      if (isDemoActive() && !document.body.classList.contains('auth-logged-in')) {
-        document.body.classList.remove('auth-loading', 'auth-logged-out');
-        document.body.classList.add('auth-demo');
-        applyDemoLinks();
-      }
-
-      // Detecta retorno de página com limite atingido: ?demo_limit=quiz|radio|letras
-      var urlParams = new URLSearchParams(window.location.search);
-      var demoLimit  = urlParams.get('demo_limit');
-      var demoReturn = urlParams.get('demo_return');
-      if (demoLimit && isDemoActive() && !document.body.classList.contains('auth-logged-in')) {
-        document.body.classList.remove('auth-loading', 'auth-logged-out');
-        document.body.classList.add('auth-demo');
-        applyDemoLinks();
-        window.addEventListener('DOMContentLoaded', function() {
-          showDemoUpgradeModal(demoLimit, demoReturn);
-        });
-        try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e) {}
-      }
-
-      /* ── Modal de upgrade ── */
-      var demoUpgradeModal      = document.getElementById('demoUpgradeModal');
-      var demoUpgradeGoogleBtn  = document.getElementById('demoUpgradeGoogleBtn');
-      var demoUpgradeContinueBtn= document.getElementById('demoUpgradeContinueBtn');
-      var demoUpgradeStatus     = document.getElementById('demoUpgradeStatus');
-      var demoUpgradeLimitEl    = document.getElementById('demoUpgradeLimit');
-      var demoUpgradeDescEl     = document.getElementById('demoUpgradeDesc');
-      var _pendingReturnPage    = null;
-
-      var limitMessages = {
-        quiz:   { icon: '🎯', label: 'Você respondeu 5 questões no Quiz.',        desc: 'Faça login para continuar, salvar conquistas e subir no ranking!' },
-        radio:  { icon: '📻', label: 'Você ouviu 3 músicas na Rádio CBJR.',       desc: 'Faça login para liberar todos os CDs e salvar seu progresso!' },
-        letras: { icon: '🎵', label: 'Você completou 3 letras no Modo Letras.',   desc: 'Faça login para liberar todos os álbuns do Modo Letras!' }
-      };
-
-      function showDemoUpgradeModal(limitType, returnPage) {
-        if (!demoUpgradeModal) return;
-        _pendingReturnPage = returnPage || null;
-        var info = limitMessages[limitType] || { icon: '🎮', label: 'Você está no Modo Demo.', desc: 'Faça login para acessar tudo sem limites e salvar seu progresso!' };
-        if (demoUpgradeLimitEl)  demoUpgradeLimitEl.textContent  = info.icon + ' ' + info.label;
-        if (demoUpgradeDescEl)   demoUpgradeDescEl.textContent   = info.desc;
-        if (demoUpgradeStatus)   demoUpgradeStatus.textContent   = '';
-        if (demoUpgradeGoogleBtn) demoUpgradeGoogleBtn.disabled  = false;
-        demoUpgradeModal.classList.add('show');
-        demoUpgradeModal.setAttribute('aria-hidden', 'false');
-      }
-
-      function hideDemoUpgradeModal() {
-        if (!demoUpgradeModal) return;
-        demoUpgradeModal.classList.remove('show');
-        demoUpgradeModal.setAttribute('aria-hidden', 'true');
-      }
-
-      if (demoUpgradeContinueBtn) {
-        demoUpgradeContinueBtn.addEventListener('click', hideDemoUpgradeModal);
-      }
-      if (demoUpgradeModal) {
-        demoUpgradeModal.addEventListener('click', function(ev) {
-          if (ev.target === demoUpgradeModal) hideDemoUpgradeModal();
-        });
-      }
-
-      // Expõe API global para o script de auth Firebase usar
-      window.CBJR_DEMO = {
-        isActive: isDemoActive,
-        activate: activateDemo,
-        showUpgradeModal: showDemoUpgradeModal,
-        getPendingReturnPage: function() { return _pendingReturnPage; },
-        clearSession: function() {
-          sessionStorage.removeItem(DEMO_KEY);
-          Object.keys(DEMO_COUNTS).forEach(function(k) { sessionStorage.removeItem(DEMO_COUNTS[k].key); });
-        },
-        getUpgradeGoogleBtn: function() { return demoUpgradeGoogleBtn; },
-        getUpgradeStatus:    function() { return demoUpgradeStatus; }
-      };
-    })();
-  </script>
-
   <script>
     const infoBtn = document.getElementById('infoBtn');
     const infoModal = document.getElementById('infoModal');
     const closeModal = document.getElementById('infoModalClose');
+    const soundBtn = document.getElementById('soundBtn');
 
     infoBtn.addEventListener('click', () => {
       infoModal.classList.add('show');
@@ -5028,21 +4792,9 @@
 
       if (bootStatus) bootStatus.textContent = 'Carregando o universo CBJR...';
 
-      // Timeout de segurança: se o áudio não iniciar em 6s, pula a intro
-      let audioStarted = false;
-      const audioSafetyTimeout = setTimeout(() => {
-        if (!audioStarted) {
-          console.warn('[Boot] Áudio não iniciou em 6s — pulando intro.');
-          forceCloseBoot();
-        }
-      }, 6000);
-
       try {
         await playBootAudioSynced();
-        audioStarted = true;
-        clearTimeout(audioSafetyTimeout);
       } catch (error) {
-        clearTimeout(audioSafetyTimeout);
         bootAlreadyStarted = false;
         document.body.classList.remove('booting');
         if (startIntroBtn) {
@@ -5059,50 +4811,9 @@
       const lineEls = createBootLines();
       let finished = false;
       let lastChannelIndex = -1;
-      let lastElapsed = 0;
-      let stalledMs = 0;
-      let lastTickTime = performance.now();
-
-      // Timeout global: se a intro não terminar em 35s, força fechamento
-      const bootGlobalTimeout = setTimeout(() => {
-        if (!finished) {
-          console.warn('[Boot] Timeout global atingido — forçando fechamento.');
-          forceCloseBoot();
-        }
-      }, 35000);
-
-      function forceCloseBoot() {
-        if (finished) return;
-        finished = true;
-        clearTimeout(bootGlobalTimeout);
-        try { bootAudio.pause(); bootAudio.currentTime = 0; } catch(e) {}
-        document.body.classList.remove('booting');
-        bootScreen.classList.add('hide');
-        channels.forEach((channel) => setChannelOn(channel, false));
-        setTimeout(() => playPowerOn(channels[0]), 240);
-      }
-
-      // Expõe forceCloseBoot globalmente para uso no botão de pular
-      window._bootForceClose = forceCloseBoot;
 
       function tick() {
         const elapsed = bootAudio.currentTime || 0;
-        const now = performance.now();
-        const dtMs = now - lastTickTime;
-        lastTickTime = now;
-
-        // Detecta áudio travado: elapsed não avança por mais de 3s após 26s
-        if (elapsed >= 26 && elapsed === lastElapsed) {
-          stalledMs += dtMs;
-          if (stalledMs > 3000) {
-            console.warn('[Boot] Áudio travou após "Controle pronto." — fechando.');
-            forceCloseBoot();
-            return;
-          }
-        } else {
-          stalledMs = 0;
-        }
-        lastElapsed = elapsed;
 
         let activeIndex = -1;
         lineEls.forEach((line, index) => {
@@ -5146,7 +4857,11 @@
         }
 
         if (elapsed >= 27 && !finished) {
-          forceCloseBoot();
+          finished = true;
+          document.body.classList.remove('booting');
+          bootScreen.classList.add('hide');
+          channels.forEach((channel) => setChannelOn(channel, false));
+          setTimeout(() => playPowerOn(channels[0]), 240);
           return;
         }
 
@@ -5264,24 +4979,6 @@
         setTimeout(() => {
           runMesaBoot();
         }, 170);
-      });
-    }
-
-    // Botão "Pular intro" — fecha a boot screen em qualquer situação
-    const bootSkipBtn = document.getElementById('bootSkipBtn');
-    if (bootSkipBtn) {
-      bootSkipBtn.addEventListener('click', () => {
-        try { bootAudio.pause(); bootAudio.currentTime = 0; } catch(e) {}
-        bootAlreadyStarted = true;
-        document.body.classList.remove('booting');
-        if (bootScreen) {
-          bootScreen.classList.add('hide');
-          bootScreen.setAttribute('aria-hidden', 'true');
-          bootScreen.style.pointerEvents = 'none';
-          setTimeout(() => { bootScreen.style.display = 'none'; }, 700);
-        }
-        if (window._bootForceClose) window._bootForceClose();
-        channels.forEach((channel) => setChannelOn(channel, false));
       });
     }
 
@@ -5727,31 +5424,6 @@
     location.href = 'index.html';
   });
 
-  // Botão "Entrar com Google" dentro do modal de upgrade demo
-  const demoUpgradeGoogleBtn = document.getElementById('demoUpgradeGoogleBtn');
-  if (demoUpgradeGoogleBtn) {
-    demoUpgradeGoogleBtn.addEventListener('click', async () => {
-      try {
-        demoUpgradeGoogleBtn.disabled = true;
-        const statusEl = document.getElementById('demoUpgradeStatus');
-        if (statusEl) statusEl.textContent = 'Abrindo login do Google...';
-        await signInWithPopup(auth, provider);
-        // onAuthStateChanged cuida do resto após login bem-sucedido
-      } catch (error) {
-        demoUpgradeGoogleBtn.disabled = false;
-        const statusEl = document.getElementById('demoUpgradeStatus');
-        if (statusEl) {
-          const code = error?.code || '';
-          if (code.includes('popup-closed-by-user')) {
-            statusEl.textContent = 'Login cancelado. Clique novamente para tentar.';
-          } else {
-            statusEl.textContent = 'Não foi possível entrar agora. Tente novamente.';
-          }
-        }
-      }
-    });
-  }
-
 
 
   function safeJson(value, fallback) {
@@ -6114,19 +5786,9 @@
       if (userEmail) userEmail.textContent = 'Conta Google';
       if (userMenuEmail) userMenuEmail.textContent = 'Conta Google';
       if (userPhoto) userPhoto.removeAttribute('src');
-      // Só muda para logged-out se não estiver em modo demo
-      if (!document.body.classList.contains('auth-demo')) {
-        setAuthView('auth-logged-out');
-      }
+      setAuthView('auth-logged-out');
       return;
     }
-
-    // Login bem-sucedido: limpa sessão demo se havia uma ativa
-    const wasDemo = window.CBJR_DEMO && window.CBJR_DEMO.isActive();
-    const returnPage = window.CBJR_DEMO && window.CBJR_DEMO.getPendingReturnPage
-      ? window.CBJR_DEMO.getPendingReturnPage()
-      : null;
-    if (window.CBJR_DEMO) window.CBJR_DEMO.clearSession();
 
     try { localStorage.setItem('cbjr_google_logged', '1'); } catch (e) {}
     if (loginStatus) loginStatus.textContent = 'Login confirmado. Carregando universo CBJR...';
@@ -6147,16 +5809,6 @@
       email: user.email || '',
       photoURL: user.photoURL || ''
     };
-
-    // Se veio do modo demo com uma página de retorno, redireciona para continuar de onde parou
-    if (wasDemo && returnPage) {
-      const safePage = returnPage.replace(/[^a-zA-Z0-9._-]/g, '');
-      const allowedPages = ['quiz.html', 'radio.html', 'letras.html'];
-      if (allowedPages.includes(safePage)) {
-        window.location.href = safePage;
-        return;
-      }
-    }
 
     await loadDashboardCloud(user);
     renderPlayerDashboard(user);
@@ -6190,5 +5842,160 @@
       });
     }
   </script>
+  <!-- MODAL: Limite do modo visitante atingido -->
+  <div class="modal" id="demoUpgradeModal" aria-hidden="true" role="dialog">
+    <div class="modal-card">
+      <h2>⚡ Limite do Modo Visitante</h2>
+      <p id="demoUpgradeDesc">Faça login para continuar jogando e salvar seu progresso.</p>
+      <div class="demo-upgrade-limit" id="demoUpgradeLimit">🎮 Limite atingido</div>
+      <button class="demo-upgrade-google-btn" id="demoUpgradeGoogleBtn" type="button">
+        <span class="google-icon">G</span>
+        <span>Entrar com Google e continuar</span>
+      </button>
+      <button class="demo-upgrade-back-btn" id="demoUpgradeBackBtn" type="button">Voltar ao menu</button>
+      <div class="login-status" id="demoUpgradeStatus" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
+  <script>
+  /* ── MODO VISITANTE (DEMO) ───────────────────────────────────────────
+     Usa sessionStorage: some ao recarregar a página → login aparece novamente.
+     Contadores por tipo: quiz (5), radio (3), letras (3).
+     Retorno com ?demo_limit=quiz|radio|letras → abre modal de upgrade.
+  ─────────────────────────────────────────────────────────────────── */
+  (function () {
+    var DEMO_KEY = 'cbjr_demo_mode';
+    var COUNTS   = { quiz: 'cbjr_demo_quiz', radio: 'cbjr_demo_radio', letras: 'cbjr_demo_letras' };
+    var LIMITS   = { quiz: 5, radio: 3, letras: 3 };
+    var MSGS     = {
+      quiz:   { icon: '🎯', label: 'Você respondeu 5 questões no Quiz.',       desc: 'Faça login para continuar o Quiz e salvar suas conquistas!' },
+      radio:  { icon: '📻', label: 'Você ouviu 3 músicas na Rádio.',           desc: 'Faça login para liberar todos os CDs da Rádio CBJR!' },
+      letras: { icon: '🎵', label: 'Você completou 3 letras no Modo Letras.',  desc: 'Faça login para liberar todos os álbuns do Modo Letras!' }
+    };
+
+    function isDemo() { return sessionStorage.getItem(DEMO_KEY) === '1'; }
+
+    function enterDemo() {
+      sessionStorage.setItem(DEMO_KEY, '1');
+      Object.values(COUNTS).forEach(function(k) { sessionStorage.setItem(k, '0'); });
+      document.body.classList.remove('auth-loading', 'auth-logged-out', 'auth-logged-in');
+      document.body.classList.add('auth-demo');
+      addDemoParamsToLinks();
+    }
+
+    function addDemoParamsToLinks() {
+      ['quiz.html','radio.html','letras.html'].forEach(function(page) {
+        document.querySelectorAll('a[href*="' + page + '"]').forEach(function(a) {
+          a.href = page + '?demo=1';
+        });
+      });
+    }
+
+    function clearDemo() {
+      sessionStorage.removeItem(DEMO_KEY);
+      Object.values(COUNTS).forEach(function(k) { sessionStorage.removeItem(k); });
+    }
+
+    /* Botão "Entrar como Visitante" na tela de login */
+    var demoLoginBtn = document.getElementById('demoLoginBtn');
+    if (demoLoginBtn) {
+      demoLoginBtn.addEventListener('click', function() { enterDemo(); });
+    }
+
+    /* Badge na topbar → abre modal */
+    var demoBadgeBtn = document.getElementById('demoBadgeBtn');
+    if (demoBadgeBtn) {
+      demoBadgeBtn.addEventListener('click', function() { openModal(null); });
+    }
+
+    /* Se sessão demo ainda ativa ao navegar de volta */
+    if (isDemo() && !document.body.classList.contains('auth-logged-in')) {
+      document.body.classList.remove('auth-loading', 'auth-logged-out');
+      document.body.classList.add('auth-demo');
+      addDemoParamsToLinks();
+    }
+
+    /* Detecta retorno de página filha com ?demo_limit= */
+    var params      = new URLSearchParams(window.location.search);
+    var demoLimit   = params.get('demo_limit');
+    var demoReturn  = params.get('demo_return');
+    if (demoLimit && isDemo()) {
+      document.body.classList.remove('auth-loading','auth-logged-out');
+      document.body.classList.add('auth-demo');
+      addDemoParamsToLinks();
+      try { window.history.replaceState({}, '', window.location.pathname); } catch(e) {}
+      window.addEventListener('DOMContentLoaded', function() { openModal(demoLimit, demoReturn); });
+    }
+
+    /* Modal de upgrade */
+    var modal          = document.getElementById('demoUpgradeModal');
+    var modalDesc      = document.getElementById('demoUpgradeDesc');
+    var modalLimit     = document.getElementById('demoUpgradeLimit');
+    var modalGoogleBtn = document.getElementById('demoUpgradeGoogleBtn');
+    var modalBackBtn   = document.getElementById('demoUpgradeBackBtn');
+    var modalStatus    = document.getElementById('demoUpgradeStatus');
+    var _returnPage    = null;
+
+    function openModal(limitType, returnPage) {
+      if (!modal) return;
+      _returnPage = returnPage || null;
+      var info = MSGS[limitType] || { icon: '🎮', label: 'Modo Visitante ativo.', desc: 'Faça login para salvar progresso e acessar tudo!' };
+      if (modalLimit)  modalLimit.textContent  = info.icon + ' ' + info.label;
+      if (modalDesc)   modalDesc.textContent   = info.desc;
+      if (modalStatus) modalStatus.textContent = '';
+      if (modalGoogleBtn) modalGoogleBtn.disabled = false;
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeModal() {
+      if (!modal) return;
+      modal.classList.remove('show');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+
+    if (modalBackBtn) modalBackBtn.addEventListener('click', closeModal);
+    if (modal) modal.addEventListener('click', function(e) { if (e.target === modal) closeModal(); });
+
+    /* Botão Google dentro do modal: usa o signInWithPopup do Firebase */
+    if (modalGoogleBtn) {
+      modalGoogleBtn.addEventListener('click', async function() {
+        try {
+          modalGoogleBtn.disabled = true;
+          if (modalStatus) modalStatus.textContent = 'Abrindo login do Google...';
+          // Importa as funções do Firebase que já foram carregadas no script principal
+          var { getAuth, GoogleAuthProvider, signInWithPopup } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');
+          var authInst = getAuth();
+          var prov     = new GoogleAuthProvider();
+          await signInWithPopup(authInst, prov);
+          // onAuthStateChanged do script principal cuida do resto
+          clearDemo();
+          if (_returnPage) {
+            var allowed = ['quiz.html','radio.html','letras.html'];
+            var safe = (_returnPage || '').replace(/[^a-zA-Z0-9._-]/g,'');
+            if (allowed.includes(safe)) { window.location.href = safe; return; }
+          }
+          closeModal();
+        } catch(err) {
+          if (modalGoogleBtn) modalGoogleBtn.disabled = false;
+          if (modalStatus) {
+            modalStatus.textContent = (err?.code || '').includes('popup-closed') ?
+              'Login cancelado. Clique novamente para tentar.' :
+              'Não foi possível entrar agora. Tente novamente.';
+          }
+        }
+      });
+    }
+
+    /* Expõe API global para as páginas filhas usarem */
+    window.CBJR_DEMO = {
+      isActive:    isDemo,
+      clear:       clearDemo,
+      openModal:   openModal,
+      getReturn:   function() { return _returnPage; }
+    };
+  })();
+  </script>
+
 </body>
 </html>
