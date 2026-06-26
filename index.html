@@ -4190,7 +4190,9 @@
 <body class="auth-loading">
 <script>
   try {
-    if (localStorage.getItem('cbjr_google_logged') === '1') {
+    const _skipIntro = new URLSearchParams(location.search).get('skipIntro') === 'true';
+    const _isDemo = _skipIntro && sessionStorage.getItem('cbjr_demo_mode') === '1';
+    if (localStorage.getItem('cbjr_google_logged') === '1' || _isDemo) {
       document.body.classList.remove('auth-loading', 'auth-logged-out');
       document.body.classList.add('auth-logged-in');
     }
