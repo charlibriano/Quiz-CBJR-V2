@@ -167,31 +167,6 @@
     .icon-btn:hover { border-color: var(--line-y); color: var(--yellow); }
 
     /* ── USER PILL ─────────────────────────────────── */
-
-    .demo-login-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      min-height: 48px;
-      margin-top: 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.22);
-      background: rgba(255,255,255,.07);
-      color: rgba(255,255,255,.78);
-      font-size: .94rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background .2s ease, border-color .2s ease, transform .2s ease;
-    }
-    .demo-login-btn:hover {
-      background: rgba(255,255,255,.13);
-      border-color: rgba(255,255,255,.38);
-      transform: translateY(-1px);
-    }
-    .demo-icon { font-size: 1.1rem; }
-
     .user-pill {
       display: none;
       align-items: center;
@@ -3648,6 +3623,24 @@
       line-height: 1.4;
     }
 
+    .demo-login-btn {
+      width: 100%;
+      min-height: 46px;
+      margin-top: 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.2);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.75);
+      font-size: .92rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s, border-color .2s;
+    }
+    .demo-login-btn:hover {
+      background: rgba(255,255,255,.12);
+      border-color: rgba(255,255,255,.36);
+    }
+
     .user-pill {
       display: none;
       align-items: center;
@@ -4190,7 +4183,6 @@
 <body class="auth-loading">
 <script>
   try {
-    // Mostrar app imediatamente se: usuário logado OU modo demo ativo
     if (localStorage.getItem('cbjr_google_logged') === '1' ||
         sessionStorage.getItem('cbjr_demo_mode') === '1') {
       document.body.classList.remove('auth-loading', 'auth-logged-out');
@@ -4210,11 +4202,10 @@
         <span>Continuar com Google</span>
       </button>
       <button class="demo-login-btn" id="demoLoginBtn" type="button">
-        <span class="demo-icon">👀</span>
-        <span>Experimentar sem login</span>
+        👀 Experimentar sem login
       </button>
       <div class="login-status" id="loginStatus">Verificando login...</div>
-      <div class="login-note">Entre com o Google para salvar progresso, conquistas e ranking. Ou experimente sem login.</div>
+      <div class="login-note">Entre com Google para salvar progresso e conquistas. Ou experimente sem login.</div>
     </div>
   </section>
 
@@ -5723,34 +5714,28 @@
     }
   });
 
-  // ── Modo Demo ──────────────────────────────────────────
-  // Regra simples: sessionStorage('cbjr_demo_mode') = '1' significa demo ativo.
-  // A tela de login sempre aparece quando não há login E não há demo ativo.
-  // Ao fazer logoff ou clicar "Entrar com Google", limpar demo mode.
-
-  const demoLoginBtn = document.getElementById('demoLoginBtn');
-  demoLoginBtn?.addEventListener('click', () => {
+  // Botão demo: ativa modo visitante e recarrega
+  document.getElementById('demoLoginBtn')?.addEventListener('click', () => {
     sessionStorage.setItem('cbjr_demo_mode', '1');
     window.location.reload();
   });
 
-  // Se demo ativo: mostrar dashboard sem Firebase
+  // Se demo ativo: mostrar dashboard e banner, sem Firebase
   if (sessionStorage.getItem('cbjr_demo_mode') === '1') {
     setAuthView('auth-logged-in');
     if (userName) userName.textContent = 'Visitante';
     if (userEmail) userEmail.textContent = 'Modo Demo';
     if (loginStatus) loginStatus.textContent = '';
-    const appEl = document.querySelector('.app');
-    if (appEl && !document.getElementById('cbjr-demo-banner')) {
-      const banner = document.createElement('div');
-      banner.id = 'cbjr-demo-banner';
-      banner.style.cssText = 'background:rgba(241,196,15,.15);border:1px solid rgba(241,196,15,.4);border-radius:14px;padding:10px 16px;text-align:center;font-size:.84rem;color:#f1c40f;font-weight:700;margin-bottom:8px;';
-      banner.innerHTML = '👀 Você está no <strong>Modo Demo</strong> — progresso não é salvo. <a href="index.html" onclick="sessionStorage.removeItem('cbjr_demo_mode')" style="color:#fff;text-decoration:underline;margin-left:8px;">Entrar com Google para salvar tudo →</a>';
-      appEl.insertBefore(banner, appEl.firstChild);
+    const _appEl = document.querySelector('.app');
+    if (_appEl && !document.getElementById('cbjr-demo-banner')) {
+      const _b = document.createElement('div');
+      _b.id = 'cbjr-demo-banner';
+      _b.style.cssText = 'background:rgba(241,196,15,.12);border:1px solid rgba(241,196,15,.35);border-radius:12px;padding:9px 14px;text-align:center;font-size:.82rem;color:#f1c40f;font-weight:700;margin-bottom:8px;';
+      _b.innerHTML = '👀 <strong>Modo Demo</strong> — progresso não salvo. <a href="index.html" onclick="sessionStorage.removeItem('cbjr_demo_mode')" style="color:#fff;text-decoration:underline;margin-left:6px;">Entrar com Google →</a>';
+      _appEl.insertBefore(_b, _appEl.firstChild);
     }
-    // Não registrar Firebase Auth — encerrar aqui
   } else {
-    // Sem demo: Firebase decide o que mostrar
+    // Sem demo: Firebase auth normal
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         try { localStorage.removeItem('cbjr_google_logged'); } catch (e) {}
@@ -5762,28 +5747,33 @@
         setAuthView('auth-logged-out');
         return;
       }
-      // Login real — garantir que demo está limpo
-      sessionStorage.removeItem('cbjr_demo_mode');
-      try { localStorage.setItem('cbjr_google_logged', '1'); } catch (e) {}
-      if (loginStatus) loginStatus.textContent = 'Login confirmado. Carregando universo CBJR...';
-      if (userName) userName.textContent = user.displayName || 'Jogador CBJR';
-      if (userEmail) userEmail.textContent = user.email || 'Conta Google';
-      if (userMenuEmail) userMenuEmail.textContent = user.email || 'Conta Google';
-      if (userPhoto && user.photoURL) userPhoto.src = user.photoURL;
-      try { await saveUserProfile(user); } catch (error) {}
-      window.CBJR_CURRENT_USER = {
-        uid: user.uid,
-        name: user.displayName || 'Jogador CBJR',
-        email: user.email || '',
-        photoURL: user.photoURL || ''
-      };
-      await loadDashboardCloud(user);
-      renderPlayerDashboard(user);
-      updateDashboardRanking(user);
-      setAuthView('auth-logged-in');
-    });
-  }
-  // ────────────────────────────────────────────────────────
+
+    try { localStorage.setItem('cbjr_google_logged', '1'); } catch (e) {}
+    if (loginStatus) loginStatus.textContent = 'Login confirmado. Carregando universo CBJR...';
+    if (userName) userName.textContent = user.displayName || 'Jogador CBJR';
+    if (userEmail) userEmail.textContent = user.email || 'Conta Google';
+    if (userMenuEmail) userMenuEmail.textContent = user.email || 'Conta Google';
+    if (userPhoto && user.photoURL) userPhoto.src = user.photoURL;
+
+    try {
+      await saveUserProfile(user);
+    } catch (error) {
+      console.warn('Não foi possível salvar perfil no Firestore agora:', error);
+    }
+
+    window.CBJR_CURRENT_USER = {
+      uid: user.uid,
+      name: user.displayName || 'Jogador CBJR',
+      email: user.email || '',
+      photoURL: user.photoURL || ''
+    };
+
+    await loadDashboardCloud(user);
+    renderPlayerDashboard(user);
+    updateDashboardRanking(user);
+    setAuthView('auth-logged-in');
+    }); // fim onAuthStateChanged
+  } // fim else demo
 </script>
 
 <!-- CBJR FIREBASE PROGRESS CORE V1 — sincronização por conta Google -->
