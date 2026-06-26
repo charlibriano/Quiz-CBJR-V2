@@ -1725,6 +1725,32 @@
       }
     }
 
+    /* Botão pular intro — aparece após 5s se a tela ainda estiver aberta */
+    .boot-skip-btn {
+      position: fixed;
+      bottom: 28px;
+      right: 24px;
+      z-index: 200;
+      display: none;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(0,0,0,.62);
+      color: rgba(255,255,255,.78);
+      font-size: .78rem;
+      font-weight: 950;
+      letter-spacing: .05em;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: .18s ease;
+      font-family: inherit;
+    }
+    .boot-skip-btn:hover { background: rgba(0,0,0,.82); color: #fff; border-color: rgba(255,255,255,.42); }
+    .boot-screen.running .boot-skip-btn { display: inline-flex; }
+
 
     /* AJUSTE FELIPE — fundo cobrindo toda a tela + botão menor */
     .boot-screen {
@@ -4355,6 +4381,7 @@
       <p class="boot-subtitle" id="bootText" aria-live="polite"></p>
       <div class="boot-loader" aria-hidden="true"><span></span></div>
       <div class="boot-status" id="bootStatus">Afinando instrumentos...</div>
+      <button class="boot-skip-btn" id="bootSkipBtn" type="button" aria-label="Pular introdução">⏭ Pular intro</button>
     </div>
   </div>
 
@@ -5001,9 +5028,21 @@
 
       if (bootStatus) bootStatus.textContent = 'Carregando o universo CBJR...';
 
+      // Timeout de segurança: se o áudio não iniciar em 6s, pula a intro
+      let audioStarted = false;
+      const audioSafetyTimeout = setTimeout(() => {
+        if (!audioStarted) {
+          console.warn('[Boot] Áudio não iniciou em 6s — pulando intro.');
+          forceCloseBoot();
+        }
+      }, 6000);
+
       try {
         await playBootAudioSynced();
+        audioStarted = true;
+        clearTimeout(audioSafetyTimeout);
       } catch (error) {
+        clearTimeout(audioSafetyTimeout);
         bootAlreadyStarted = false;
         document.body.classList.remove('booting');
         if (startIntroBtn) {
@@ -5020,9 +5059,50 @@
       const lineEls = createBootLines();
       let finished = false;
       let lastChannelIndex = -1;
+      let lastElapsed = 0;
+      let stalledMs = 0;
+      let lastTickTime = performance.now();
+
+      // Timeout global: se a intro não terminar em 35s, força fechamento
+      const bootGlobalTimeout = setTimeout(() => {
+        if (!finished) {
+          console.warn('[Boot] Timeout global atingido — forçando fechamento.');
+          forceCloseBoot();
+        }
+      }, 35000);
+
+      function forceCloseBoot() {
+        if (finished) return;
+        finished = true;
+        clearTimeout(bootGlobalTimeout);
+        try { bootAudio.pause(); bootAudio.currentTime = 0; } catch(e) {}
+        document.body.classList.remove('booting');
+        bootScreen.classList.add('hide');
+        channels.forEach((channel) => setChannelOn(channel, false));
+        setTimeout(() => playPowerOn(channels[0]), 240);
+      }
+
+      // Expõe forceCloseBoot globalmente para uso no botão de pular
+      window._bootForceClose = forceCloseBoot;
 
       function tick() {
         const elapsed = bootAudio.currentTime || 0;
+        const now = performance.now();
+        const dtMs = now - lastTickTime;
+        lastTickTime = now;
+
+        // Detecta áudio travado: elapsed não avança por mais de 3s após 26s
+        if (elapsed >= 26 && elapsed === lastElapsed) {
+          stalledMs += dtMs;
+          if (stalledMs > 3000) {
+            console.warn('[Boot] Áudio travou após "Controle pronto." — fechando.');
+            forceCloseBoot();
+            return;
+          }
+        } else {
+          stalledMs = 0;
+        }
+        lastElapsed = elapsed;
 
         let activeIndex = -1;
         lineEls.forEach((line, index) => {
@@ -5066,11 +5146,7 @@
         }
 
         if (elapsed >= 27 && !finished) {
-          finished = true;
-          document.body.classList.remove('booting');
-          bootScreen.classList.add('hide');
-          channels.forEach((channel) => setChannelOn(channel, false));
-          setTimeout(() => playPowerOn(channels[0]), 240);
+          forceCloseBoot();
           return;
         }
 
@@ -5188,6 +5264,24 @@
         setTimeout(() => {
           runMesaBoot();
         }, 170);
+      });
+    }
+
+    // Botão "Pular intro" — fecha a boot screen imediatamente
+    const bootSkipBtn = document.getElementById('bootSkipBtn');
+    if (bootSkipBtn) {
+      bootSkipBtn.addEventListener('click', () => {
+        if (window._bootForceClose) {
+          window._bootForceClose();
+        } else {
+          // Fallback caso a intro ainda não tenha iniciado
+          if (bootScreen) {
+            bootScreen.classList.add('hide');
+            bootScreen.setAttribute('aria-hidden', 'true');
+            setTimeout(() => { bootScreen.style.display = 'none'; }, 700);
+          }
+          document.body.classList.remove('booting');
+        }
       });
     }
 
