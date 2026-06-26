@@ -5756,21 +5756,23 @@
   }
   // ────────────────────────────────────────────────────────
 
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      // Se estiver em modo demo, não mostrar tela de login
-      if (sessionStorage.getItem('cbjr_demo_mode') === '1') return;
-      try { localStorage.removeItem('cbjr_google_logged'); } catch (e) {}
-      if (loginStatus) loginStatus.textContent = 'Faça login para continuar.';
-      if (userName) userName.textContent = 'Jogador';
-      if (userEmail) userEmail.textContent = 'Conta Google';
-      if (userMenuEmail) userMenuEmail.textContent = 'Conta Google';
-      if (userPhoto) userPhoto.removeAttribute('src');
-      setAuthView('auth-logged-out');
-      return;
-    }
-    // Login real — limpar modo demo se existia
-    sessionStorage.removeItem('cbjr_demo_mode');
+  // Modo demo ativo: não registrar o listener do Firebase (evita piscar para login)
+  const _isDemoActive = sessionStorage.getItem('cbjr_demo_mode') === '1';
+
+  if (!_isDemoActive) {
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        try { localStorage.removeItem('cbjr_google_logged'); } catch (e) {}
+        if (loginStatus) loginStatus.textContent = 'Faça login para continuar.';
+        if (userName) userName.textContent = 'Jogador';
+        if (userEmail) userEmail.textContent = 'Conta Google';
+        if (userMenuEmail) userMenuEmail.textContent = 'Conta Google';
+        if (userPhoto) userPhoto.removeAttribute('src');
+        setAuthView('auth-logged-out');
+        return;
+      }
+      // Login real — limpar modo demo se existia
+      sessionStorage.removeItem('cbjr_demo_mode');
 
     try { localStorage.setItem('cbjr_google_logged', '1'); } catch (e) {}
     if (loginStatus) loginStatus.textContent = 'Login confirmado. Carregando universo CBJR...';
@@ -5796,7 +5798,8 @@
     renderPlayerDashboard(user);
     updateDashboardRanking(user);
     setAuthView('auth-logged-in');
-  });
+    }); // fim onAuthStateChanged
+  } // fim if (!_isDemoActive)
 </script>
 
 <!-- CBJR FIREBASE PROGRESS CORE V1 — sincronização por conta Google -->
