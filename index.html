@@ -167,6 +167,31 @@
     .icon-btn:hover { border-color: var(--line-y); color: var(--yellow); }
 
     /* ── USER PILL ─────────────────────────────────── */
+
+    .demo-login-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      min-height: 48px;
+      margin-top: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.07);
+      color: rgba(255,255,255,.78);
+      font-size: .94rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s ease, border-color .2s ease, transform .2s ease;
+    }
+    .demo-login-btn:hover {
+      background: rgba(255,255,255,.13);
+      border-color: rgba(255,255,255,.38);
+      transform: translateY(-1px);
+    }
+    .demo-icon { font-size: 1.1rem; }
+
     .user-pill {
       display: none;
       align-items: center;
@@ -4182,8 +4207,12 @@
         <span class="google-icon">G</span>
         <span>Continuar com Google</span>
       </button>
+      <button class="demo-login-btn" id="demoLoginBtn" type="button">
+        <span class="demo-icon">👀</span>
+        <span>Experimentar sem login</span>
+      </button>
       <div class="login-status" id="loginStatus">Verificando login...</div>
-      <div class="login-note">O acesso é obrigatório para manter seu progresso vinculado à sua conta.</div>
+      <div class="login-note">Entre com o Google para salvar progresso, conquistas e ranking. Ou experimente sem login.</div>
     </div>
   </section>
 
@@ -5692,8 +5721,37 @@
     }
   });
 
+  // ── Modo Demo ──────────────────────────────────────────
+  const demoLoginBtn = document.getElementById('demoLoginBtn');
+  demoLoginBtn?.addEventListener('click', () => {
+    sessionStorage.setItem('cbjr_demo_mode', '1');
+    sessionStorage.removeItem('cbjr_demo_quiz_done');
+    sessionStorage.removeItem('cbjr_demo_radio_done');
+    sessionStorage.removeItem('cbjr_demo_letras_done');
+    window.location.href = 'index.html?skipIntro=true';
+  });
+
+  // Se estiver em modo demo, mostrar o dashboard com aviso
+  if (sessionStorage.getItem('cbjr_demo_mode') === '1') {
+    setAuthView('auth-logged-in');
+    if (userName) userName.textContent = 'Visitante';
+    if (userEmail) userEmail.textContent = 'Modo Demo';
+    // Inserir banner de demo no topo do app
+    const appEl = document.querySelector('.app') || document.querySelector('.main');
+    if (appEl && !document.getElementById('cbjr-demo-banner')) {
+      const banner = document.createElement('div');
+      banner.id = 'cbjr-demo-banner';
+      banner.style.cssText = 'background:rgba(241,196,15,.15);border:1px solid rgba(241,196,15,.4);border-radius:14px;padding:10px 16px;text-align:center;font-size:.84rem;color:#f1c40f;font-weight:700;margin-bottom:8px;';
+      banner.innerHTML = '👀 Você está no <strong>Modo Demo</strong> — progresso não é salvo. <a href="index.html" style="color:#fff;text-decoration:underline;margin-left:8px;">Entrar com Google para salvar tudo →</a>';
+      appEl.insertBefore(banner, appEl.firstChild);
+    }
+  }
+  // ────────────────────────────────────────────────────────
+
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
+      // Se estiver em modo demo, não mostrar tela de login
+      if (sessionStorage.getItem('cbjr_demo_mode') === '1') return;
       try { localStorage.removeItem('cbjr_google_logged'); } catch (e) {}
       if (loginStatus) loginStatus.textContent = 'Faça login para continuar.';
       if (userName) userName.textContent = 'Jogador';
@@ -5703,6 +5761,8 @@
       setAuthView('auth-logged-out');
       return;
     }
+    // Login real — limpar modo demo se existia
+    sessionStorage.removeItem('cbjr_demo_mode');
 
     try { localStorage.setItem('cbjr_google_logged', '1'); } catch (e) {}
     if (loginStatus) loginStatus.textContent = 'Login confirmado. Carregando universo CBJR...';
