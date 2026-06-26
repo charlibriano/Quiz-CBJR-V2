@@ -4258,6 +4258,7 @@
   body.has-intro { overflow: auto !important; }
 }
 </style></head>
+<script src="./guest-mode.js"></script>
 <body class="has-intro">
 <div id="radioIntro" class="radio-intro" aria-label="Entrada da Rádio CBJR">
   <div class="radio-intro-content">
@@ -4492,8 +4493,6 @@ function albumDisplayName(album) {
 }
 
 function getUnlockedAlbumIndex() {
-  // Modo demo: sempre só o primeiro CD
-  if (window.CBJR_IS_DEMO) return 0;
   const saved = Number(localStorage.getItem(UNLOCK_STORAGE_KEY));
   if (Number.isFinite(saved) && saved >= 0) {
     return Math.min(saved, RADIO_ALBUMS.length - 1);
@@ -4502,8 +4501,6 @@ function getUnlockedAlbumIndex() {
 }
 
 function setUnlockedAlbumIndex(index) {
-  // Modo demo: não salvar progresso
-  if (window.CBJR_IS_DEMO) return 0;
   const safeIndex = Math.max(0, Math.min(index, RADIO_ALBUMS.length - 1));
   localStorage.setItem(UNLOCK_STORAGE_KEY, String(safeIndex));
   try { window.CBJRCloudProgress?.save?.({ radioLastUnlockedAlbumIndex: safeIndex }); } catch(e) {}
@@ -5236,16 +5233,20 @@ function bindFinishButtons() {
 
 function renderAlbums() {
   const unlockedIndex = getUnlockedAlbumIndex();
+  // ── MODO VISITANTE: mostra só o 1º CD ──────────────
+  const guestMode = window.CBJR_GUEST?.isGuest() && !window.CBJR_GUEST?.isLoggedIn();
+  const effectiveUnlocked = guestMode ? 0 : unlockedIndex;
+  // ── FIM MODO VISITANTE ──────────────────────────────
   renderProgress();
   $('albumGrid').innerHTML = RADIO_ALBUMS.map((album, index) => {
-    const locked = index > unlockedIndex;
-    const nextClass = index === unlockedIndex && index > 0 ? ' unlocked-next' : '';
+    const locked = index > effectiveUnlocked;
+    const nextClass = index === effectiveUnlocked && index > 0 ? ' unlocked-next' : '';
     return `
       <button class="album-option${locked ? ' locked' : ''}${nextClass}" type="button" data-index="${index}" ${locked ? 'disabled aria-disabled="true"' : ''}>
-        ${albumBadge(index, locked, unlockedIndex)}
+        ${albumBadge(index, locked, effectiveUnlocked)}
         <img src="${coverUrl(album)}" alt="${albumDisplayName(album)}" onerror="this.onerror=null;this.src=PAGES_BASE + encodeURIComponent(album.cover);">
         <strong>${albumDisplayName(album)}</strong>
-        <small>${album.year || ''} • ${album.tracks.length} faixas${locked ? ' • bloqueado' : ''}</small>
+        <small>${album.year || ''} • ${album.tracks.length} faixas${locked ? (guestMode ? ' • faça login' : ' • bloqueado') : ''}</small>
       </button>
     `;
   }).join('');
@@ -5386,27 +5387,6 @@ function pickTrack(autoPlay = false) {
 }
 async function playCurrent(isAuto = false) {
   if(!currentTrack) return;
-  // Modo demo: bloquear após 3 músicas tocadas
-  if (window.CBJR_IS_DEMO && isAuto) {
-    window._cbjrDemoRadioCount = (window._cbjrDemoRadioCount || 0) + 1;
-    if (window._cbjrDemoRadioCount > window.CBJR_DEMO_RADIO_LIMIT) {
-      if (!document.getElementById('cbjr-demo-overlay')) {
-        const overlay = document.createElement('div');
-        overlay.id = 'cbjr-demo-overlay';
-        overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;display:grid;place-items:center;padding:20px;background:rgba(0,0,0,.88);backdrop-filter:blur(14px);';
-        overlay.innerHTML = `<div style="max-width:480px;text-align:center;border:1px solid rgba(241,196,15,.4);border-radius:24px;padding:36px 28px;background:rgba(0,0,0,.92);color:#fff;">
-          <div style="font-size:2.8rem;margin-bottom:12px;">🎸</div>
-          <h2 style="color:#f1c40f;margin:0 0 12px;font-size:1.9rem;">Gostou da Rádio CBJR?</h2>
-          <p style="color:rgba(255,255,255,.78);margin:0 0 24px;line-height:1.5;">Crie sua conta gratuita para ouvir todos os 13 CDs, desbloquear conquistas e salvar seu progresso.</p>
-          <a href="index.html" onclick="sessionStorage.removeItem('cbjr_demo_mode')" style="display:inline-block;background:#f1c40f;color:#000;font-weight:900;border-radius:999px;padding:14px 32px;text-decoration:none;font-size:1rem;margin-bottom:12px;">Entrar com Google — é grátis</a>
-          <br>
-          <a href="index.html" onclick="sessionStorage.removeItem('cbjr_demo_mode')" style="color:rgba(255,255,255,.5);font-size:.8rem;">Voltar ao início</a>
-        </div>`;
-        document.body.appendChild(overlay);
-      }
-      return;
-    }
-  }
   try {
     if (!audio.src || audio.src !== currentTrack.url) {
       audio.src = currentTrack.url;
@@ -5522,6 +5502,22 @@ function showCbjrFeedback(text, type) {
 
 function chooseAnswer(btn) {
   if(answered || !currentTrack) return;
+
+  // ── MODO VISITANTE: limite de 3 músicas respondidas ──
+  if (window.CBJR_GUEST?.isGuest() && !window.CBJR_GUEST?.isLoggedIn()) {
+    const key = 'cbjr_guest_radio_count';
+    const count = window.CBJR_GUEST.getCount(key);
+    if (count >= 3) {
+      window.CBJR_GUEST.showModal(
+        'Curtiu a Rádio? 📻',
+        'Você já ouviu 3 músicas no modo visitante! Faça login com sua conta Google para desbloquear todos os 13 CDs do Charlie Brown Jr. e salvar seu progresso.'
+      );
+      return;
+    }
+    window.CBJR_GUEST.incCount(key);
+  }
+  // ── FIM MODO VISITANTE ─────────────────────────────────
+
   answered = true;
   const selected = btn.dataset.title;
   const expected = currentTrack.title;
@@ -5939,7 +5935,6 @@ renderAlbums();
   }
 
   async function saveCloudProgressNow(extra = {}) {
-    if (window.CBJR_IS_DEMO) return; // Modo demo: não salvar
     if (!currentUser || syncing) return;
     const payload = readLocalProgress();
     try {
@@ -5997,29 +5992,9 @@ renderAlbums();
     }
   }
 
-  // ── Modo Demo ──────────────────────────────────────────
-  window.CBJR_IS_DEMO = sessionStorage.getItem('cbjr_demo_mode') === '1';
-  window.CBJR_DEMO_RADIO_LIMIT = 3; // máximo de músicas no demo
-  window._cbjrDemoRadioCount = 0;
-
-  if (window.CBJR_IS_DEMO) {
-    const demoBanner = document.createElement('div');
-    demoBanner.id = 'cbjr-demo-banner';
-    demoBanner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:rgba(0,0,0,.88);border-bottom:2px solid rgba(241,196,15,.55);padding:10px 18px;text-align:center;font-size:.82rem;color:#f1c40f;font-weight:700;backdrop-filter:blur(8px);';
-    demoBanner.innerHTML = '👀 <strong>Modo Demo</strong> — Rádio liberada por ' + CBJR_DEMO_RADIO_LIMIT + ' músicas. <a href="index.html" style="color:#fff;text-decoration:underline;margin-left:10px;">Criar conta gratuita →</a>';
-    document.body.prepend(demoBanner);
-  }
-  // ────────────────────────────────────────────────────────
-
   onAuthStateChanged(auth, user => {
     currentUser = user || null;
-    if (user) {
-      sessionStorage.removeItem('cbjr_demo_mode');
-      window.CBJR_IS_DEMO = false;
-      loadCloudProgress(user);
-    } else if (!window.CBJR_IS_DEMO) {
-      window.location.href = 'index.html';
-    }
+    if (user) loadCloudProgress(user);
   });
 
   window.addEventListener('beforeunload', () => {
