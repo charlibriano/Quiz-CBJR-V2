@@ -5267,21 +5267,21 @@
       });
     }
 
-    // Botão "Pular intro" — fecha a boot screen imediatamente
+    // Botão "Pular intro" — fecha a boot screen em qualquer situação
     const bootSkipBtn = document.getElementById('bootSkipBtn');
     if (bootSkipBtn) {
       bootSkipBtn.addEventListener('click', () => {
-        if (window._bootForceClose) {
-          window._bootForceClose();
-        } else {
-          // Fallback caso a intro ainda não tenha iniciado
-          if (bootScreen) {
-            bootScreen.classList.add('hide');
-            bootScreen.setAttribute('aria-hidden', 'true');
-            setTimeout(() => { bootScreen.style.display = 'none'; }, 700);
-          }
-          document.body.classList.remove('booting');
+        try { bootAudio.pause(); bootAudio.currentTime = 0; } catch(e) {}
+        bootAlreadyStarted = true;
+        document.body.classList.remove('booting');
+        if (bootScreen) {
+          bootScreen.classList.add('hide');
+          bootScreen.setAttribute('aria-hidden', 'true');
+          bootScreen.style.pointerEvents = 'none';
+          setTimeout(() => { bootScreen.style.display = 'none'; }, 700);
         }
+        if (window._bootForceClose) window._bootForceClose();
+        channels.forEach((channel) => setChannelOn(channel, false));
       });
     }
 
