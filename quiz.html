@@ -6682,10 +6682,13 @@ body.tela-pergunta .answer-btn {
       state.powerups.skip = settings.skip;
 
       // Retoma do nível salvo se for a mesma dificuldade
+      // Modo demo: sempre começa do nível 1
       const progress = loadProgress();
-      const savedLevel = progress.lastDifficulty === difficulty
-        ? Math.min(Number(progress.lastLevelIndex || 0), state.levels.length - 1)
-        : 0;
+      const savedLevel = window.CBJR_IS_DEMO
+        ? 0
+        : (progress.lastDifficulty === difficulty
+          ? Math.min(Number(progress.lastLevelIndex || 0), state.levels.length - 1)
+          : 0);
       state.currentLevelIndex = savedLevel;
 
       document.body.classList.remove('tela-dificuldade');
