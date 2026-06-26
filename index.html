@@ -4664,6 +4664,10 @@
         window.history.replaceState({}, document.title, window.location.pathname);
       } catch (error) {}
     }
+    // Marcar se deve limpar o demo mode: só quando não há skipIntro E não há demo ativo
+    if (!CBJR_SKIP_INTRO_PATCH && sessionStorage.getItem('cbjr_demo_mode') !== '1') {
+      window.__CBJR_CLEAR_DEMO__ = true;
+    }
     applySkipIntroPatch();
 
     // Se já logado e sem skipIntro, ocultar boot screen automaticamente
@@ -5724,9 +5728,9 @@
   });
 
   // ── Modo Demo ──────────────────────────────────────────
-  // Se abriu index.html sem skipIntro, sempre volta à tela de escolha (login ou demo)
-  const _demoSkipIntro = new URLSearchParams(window.location.search).get('skipIntro') === 'true';
-  if (!_demoSkipIntro) {
+  // Limpar demo mode APENAS se o flag global foi marcado pelo script de boot
+  // (o replaceState remove ?skipIntro da URL antes deste módulo rodar)
+  if (window.__CBJR_CLEAR_DEMO__) {
     sessionStorage.removeItem('cbjr_demo_mode');
   }
 
