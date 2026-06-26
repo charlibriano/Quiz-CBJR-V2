@@ -3627,6 +3627,28 @@ button:hover{
     }
 
     function saveCompletedAlbum(albumId) {
+      // Modo demo: contar álbuns e bloquear ao atingir limite
+      if (typeof CBJR_IS_DEMO !== 'undefined' && CBJR_IS_DEMO) {
+        window._cbjrDemoLetrasCount = (window._cbjrDemoLetrasCount || 0) + 1;
+        if (window._cbjrDemoLetrasCount >= CBJR_DEMO_LETRAS_LIMIT) {
+          setTimeout(() => {
+            const overlay = document.createElement('div');
+            overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;display:grid;place-items:center;padding:20px;background:rgba(0,0,0,.88);backdrop-filter:blur(14px);';
+            overlay.innerHTML = `
+              <div style="max-width:480px;text-align:center;border:1px solid rgba(241,196,15,.4);border-radius:24px;padding:36px 28px;background:rgba(0,0,0,.92);color:#fff;">
+                <div style="font-size:2.8rem;margin-bottom:12px;">✍️</div>
+                <h2 style="color:#f1c40f;margin:0 0 12px;font-size:1.9rem;">Você manda nas letras!</h2>
+                <p style="color:rgba(255,255,255,.78);margin:0 0 24px;line-height:1.5;">Crie sua conta gratuita para completar todos os 13 álbuns, salvar seu progresso e subir no ranking.</p>
+                <a href="index.html" style="display:inline-block;background:#f1c40f;color:#000;font-weight:900;border-radius:999px;padding:14px 32px;text-decoration:none;font-size:1rem;margin-bottom:12px;">Entrar com Google — é grátis</a>
+                <br>
+                <a href="index.html" style="color:rgba(255,255,255,.5);font-size:.8rem;">Voltar ao início</a>
+              </div>
+            `;
+            document.body.appendChild(overlay);
+          }, 600);
+        }
+        return; // Não salvar no localStorage em modo demo
+      }
       const completed = getCompletedAlbums();
       if (!completed.includes(albumId)) {
         completed.push(albumId);
@@ -4635,6 +4657,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
 
   async function saveCloudProgressNow(extra = {}) {
+    if (CBJR_IS_DEMO) return; // Modo demo: não salvar
     if (!currentUser || syncing) return;
     const payload = readLocalProgress();
     try {
@@ -4692,9 +4715,28 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
   }
 
+  // ── Modo Demo ──────────────────────────────────────────
+  const CBJR_IS_DEMO = sessionStorage.getItem('cbjr_demo_mode') === '1';
+  const CBJR_DEMO_LETRAS_LIMIT = 2; // máximo de álbuns no demo
+
+  if (CBJR_IS_DEMO) {
+    const demoBanner = document.createElement('div');
+    demoBanner.id = 'cbjr-demo-banner';
+    demoBanner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:rgba(0,0,0,.88);border-bottom:2px solid rgba(241,196,15,.55);padding:10px 18px;text-align:center;font-size:.82rem;color:#f1c40f;font-weight:700;backdrop-filter:blur(8px);';
+    demoBanner.innerHTML = '👀 <strong>Modo Demo</strong> — Letras liberadas por ' + CBJR_DEMO_LETRAS_LIMIT + ' álbuns. <a href="index.html" style="color:#fff;text-decoration:underline;margin-left:10px;">Criar conta gratuita →</a>';
+    document.body.prepend(demoBanner);
+    window._cbjrDemoLetrasCount = 0;
+  }
+  // ────────────────────────────────────────────────────────
+
   onAuthStateChanged(auth, user => {
     currentUser = user || null;
-    if (user) loadCloudProgress(user);
+    if (user) {
+      sessionStorage.removeItem('cbjr_demo_mode');
+      loadCloudProgress(user);
+    } else if (!CBJR_IS_DEMO) {
+      window.location.href = 'index.html';
+    }
   });
 
   window.addEventListener('beforeunload', () => {
