@@ -255,6 +255,23 @@
 
 </style>
 </head>
+<script src="./guest-mode.js"></script>
+<script>
+  (function() {
+    function checkGuest() {
+      if (!window.CBJR_GUEST) return;
+      if (!window.CBJR_GUEST.isLoggedIn() && !window.CBJR_GUEST.isGuest()) {
+        location.href = 'index.html'; return;
+      }
+      if (window.CBJR_GUEST.isGuest() && !window.CBJR_GUEST.isLoggedIn()) {
+        window.CBJR_GUEST.showGuestBlock('fans');
+      }
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', checkGuest);
+    } else { checkGuest(); }
+  })();
+</script>
 <body>
 <div class="page">
   <header class="topbar">
