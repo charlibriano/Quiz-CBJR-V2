@@ -4190,9 +4190,9 @@
 <body class="auth-loading">
 <script>
   try {
-    const _skipIntro = new URLSearchParams(location.search).get('skipIntro') === 'true';
-    const _isDemo = _skipIntro && sessionStorage.getItem('cbjr_demo_mode') === '1';
-    if (localStorage.getItem('cbjr_google_logged') === '1' || _isDemo) {
+    // Mostrar app imediatamente se: usuário logado OU modo demo ativo
+    if (localStorage.getItem('cbjr_google_logged') === '1' ||
+        sessionStorage.getItem('cbjr_demo_mode') === '1') {
       document.body.classList.remove('auth-loading', 'auth-logged-out');
       document.body.classList.add('auth-logged-in');
     }
@@ -4663,10 +4663,6 @@
       try {
         window.history.replaceState({}, document.title, window.location.pathname);
       } catch (error) {}
-    }
-    // Marcar se deve limpar o demo mode: só quando não há skipIntro E não há demo ativo
-    if (!CBJR_SKIP_INTRO_PATCH && sessionStorage.getItem('cbjr_demo_mode') !== '1') {
-      window.__CBJR_CLEAR_DEMO__ = true;
     }
     applySkipIntroPatch();
 
@@ -5728,42 +5724,33 @@
   });
 
   // ── Modo Demo ──────────────────────────────────────────
-  // Limpar demo mode APENAS se o flag global foi marcado pelo script de boot
-  // (o replaceState remove ?skipIntro da URL antes deste módulo rodar)
-  if (window.__CBJR_CLEAR_DEMO__) {
-    sessionStorage.removeItem('cbjr_demo_mode');
-  }
+  // Regra simples: sessionStorage('cbjr_demo_mode') = '1' significa demo ativo.
+  // A tela de login sempre aparece quando não há login E não há demo ativo.
+  // Ao fazer logoff ou clicar "Entrar com Google", limpar demo mode.
 
   const demoLoginBtn = document.getElementById('demoLoginBtn');
   demoLoginBtn?.addEventListener('click', () => {
     sessionStorage.setItem('cbjr_demo_mode', '1');
-    sessionStorage.removeItem('cbjr_demo_quiz_done');
-    sessionStorage.removeItem('cbjr_demo_radio_done');
-    sessionStorage.removeItem('cbjr_demo_letras_done');
-    window.location.href = 'index.html?skipIntro=true';
+    window.location.reload();
   });
 
-  // Se estiver em modo demo (veio via skipIntro), mostrar o dashboard com aviso
+  // Se demo ativo: mostrar dashboard sem Firebase
   if (sessionStorage.getItem('cbjr_demo_mode') === '1') {
     setAuthView('auth-logged-in');
     if (userName) userName.textContent = 'Visitante';
     if (userEmail) userEmail.textContent = 'Modo Demo';
-    // Inserir banner de demo no topo do app
-    const appEl = document.querySelector('.app') || document.querySelector('.main');
+    if (loginStatus) loginStatus.textContent = '';
+    const appEl = document.querySelector('.app');
     if (appEl && !document.getElementById('cbjr-demo-banner')) {
       const banner = document.createElement('div');
       banner.id = 'cbjr-demo-banner';
       banner.style.cssText = 'background:rgba(241,196,15,.15);border:1px solid rgba(241,196,15,.4);border-radius:14px;padding:10px 16px;text-align:center;font-size:.84rem;color:#f1c40f;font-weight:700;margin-bottom:8px;';
-      banner.innerHTML = '👀 Você está no <strong>Modo Demo</strong> — progresso não é salvo. <a href="index.html" style="color:#fff;text-decoration:underline;margin-left:8px;">Entrar com Google para salvar tudo →</a>';
+      banner.innerHTML = '👀 Você está no <strong>Modo Demo</strong> — progresso não é salvo. <a href="index.html" onclick="sessionStorage.removeItem('cbjr_demo_mode')" style="color:#fff;text-decoration:underline;margin-left:8px;">Entrar com Google para salvar tudo →</a>';
       appEl.insertBefore(banner, appEl.firstChild);
     }
-  }
-  // ────────────────────────────────────────────────────────
-
-  // Modo demo ativo: não registrar o listener do Firebase (evita piscar para login)
-  const _isDemoActive = sessionStorage.getItem('cbjr_demo_mode') === '1';
-
-  if (!_isDemoActive) {
+    // Não registrar Firebase Auth — encerrar aqui
+  } else {
+    // Sem demo: Firebase decide o que mostrar
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         try { localStorage.removeItem('cbjr_google_logged'); } catch (e) {}
@@ -5775,35 +5762,28 @@
         setAuthView('auth-logged-out');
         return;
       }
-      // Login real — limpar modo demo se existia
+      // Login real — garantir que demo está limpo
       sessionStorage.removeItem('cbjr_demo_mode');
-
-    try { localStorage.setItem('cbjr_google_logged', '1'); } catch (e) {}
-    if (loginStatus) loginStatus.textContent = 'Login confirmado. Carregando universo CBJR...';
-    if (userName) userName.textContent = user.displayName || 'Jogador CBJR';
-    if (userEmail) userEmail.textContent = user.email || 'Conta Google';
-    if (userMenuEmail) userMenuEmail.textContent = user.email || 'Conta Google';
-    if (userPhoto && user.photoURL) userPhoto.src = user.photoURL;
-
-    try {
-      await saveUserProfile(user);
-    } catch (error) {
-      console.warn('Não foi possível salvar perfil no Firestore agora:', error);
-    }
-
-    window.CBJR_CURRENT_USER = {
-      uid: user.uid,
-      name: user.displayName || 'Jogador CBJR',
-      email: user.email || '',
-      photoURL: user.photoURL || ''
-    };
-
-    await loadDashboardCloud(user);
-    renderPlayerDashboard(user);
-    updateDashboardRanking(user);
-    setAuthView('auth-logged-in');
-    }); // fim onAuthStateChanged
-  } // fim if (!_isDemoActive)
+      try { localStorage.setItem('cbjr_google_logged', '1'); } catch (e) {}
+      if (loginStatus) loginStatus.textContent = 'Login confirmado. Carregando universo CBJR...';
+      if (userName) userName.textContent = user.displayName || 'Jogador CBJR';
+      if (userEmail) userEmail.textContent = user.email || 'Conta Google';
+      if (userMenuEmail) userMenuEmail.textContent = user.email || 'Conta Google';
+      if (userPhoto && user.photoURL) userPhoto.src = user.photoURL;
+      try { await saveUserProfile(user); } catch (error) {}
+      window.CBJR_CURRENT_USER = {
+        uid: user.uid,
+        name: user.displayName || 'Jogador CBJR',
+        email: user.email || '',
+        photoURL: user.photoURL || ''
+      };
+      await loadDashboardCloud(user);
+      renderPlayerDashboard(user);
+      updateDashboardRanking(user);
+      setAuthView('auth-logged-in');
+    });
+  }
+  // ────────────────────────────────────────────────────────
 </script>
 
 <!-- CBJR FIREBASE PROGRESS CORE V1 — sincronização por conta Google -->
