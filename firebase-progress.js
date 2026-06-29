@@ -49,7 +49,8 @@ const STORAGE_KEYS = {
   cbjrMedals: 'cbjr_medals_v1',
   cbjrAutoAchievements: 'cbjr_auto_achievements_v1',
   cbjrLastActivity: 'cbjr_last_activity_v1',
-  cbjrHistory: 'cbjr_history_v1'
+  cbjrHistory: 'cbjr_history_v1',
+  cbjrStreak: 'cbjr_streak_v1'
 };
 
 const SYNC_KEYS = Object.values(STORAGE_KEYS);
@@ -65,7 +66,12 @@ const AUTO_ACHIEVEMENTS = [
   { id: 'letras_three_albums', title: '3 álbuns Letras', icon: '📖', xp: 220, unlocked: (ctx) => ctx.letrasCount >= 3 },
   { id: 'letras_half', title: 'Metade das Letras', icon: '🎼', xp: 320, unlocked: (ctx) => ctx.letrasCount >= 7 },
   { id: 'quiz_primeira_medalha', title: 'Medalha no Quiz', icon: '🏅', xp: 120, unlocked: (ctx) => ctx.quizAch > 0 },
-  { id: 'familia_013', title: 'Família 013', icon: '013', xp: 500, unlocked: (ctx) => ctx.radioLiberados >= 13 && ctx.letrasCount >= 13 }
+  { id: 'familia_013', title: 'Família 013', icon: '013', xp: 500, unlocked: (ctx) => ctx.radioLiberados >= 13 && ctx.letrasCount >= 13 },
+  // ── STREAK ──────────────────────────────────────────────────
+  { id: 'streak_3', title: '3 dias seguidos', icon: '🔥', xp: 100, unlocked: (ctx) => ctx.streak >= 3 },
+  { id: 'streak_7', title: 'Semana completa', icon: '⚡', xp: 250, unlocked: (ctx) => ctx.streak >= 7 },
+  { id: 'streak_15', title: '15 dias no foco', icon: '💎', xp: 500, unlocked: (ctx) => ctx.streak >= 15 },
+  { id: 'streak_30', title: 'Um mês lendário', icon: '👑', xp: 1000, unlocked: (ctx) => ctx.streak >= 30 },
 ];
 
 let currentUser = null;
@@ -186,7 +192,9 @@ function getAutoAchievementsFromData(data = {}, userLogged = false) {
   const radioAch = Object.keys(radioAchievements || {}).filter(k => radioAchievements[k]).length;
   const quizAch = Object.keys(quizAchievements || {}).filter(k => quizAchievements[k]).length;
   const baseConquistas = radioAch + quizAch + letrasCount;
-  const ctx = { userLogged, radioLiberados, radioMode, letrasCount, radioAch, quizAch, baseConquistas };
+  const streakData = safeParse(data[STORAGE_KEYS.cbjrStreak] || '{}', {});
+  const streak = Number(streakData.current || 0);
+  const ctx = { userLogged, radioLiberados, radioMode, letrasCount, radioAch, quizAch, baseConquistas, streak };
   const saved = safeParse(data[STORAGE_KEYS.cbjrAutoAchievements] || '{}', {});
   const unlocked = {};
   AUTO_ACHIEVEMENTS.forEach(item => {
@@ -378,6 +386,53 @@ function setLastActivity(activity = {}) {
   scheduleSave();
 }
 
+// ── STREAK ────────────────────────────────────────────────────
+function todayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function getStreak() {
+  return safeParse(localStorage.getItem(STORAGE_KEYS.cbjrStreak) || '{}', {
+    current: 0, best: 0, lastDay: null
+  });
+}
+
+function touchStreak() {
+  const today = todayKey();
+  const data = getStreak();
+
+  if (data.lastDay === today) return data; // já registrado hoje
+
+  const yesterday = (() => {
+    const d = new Date(); d.setDate(d.getDate() - 1);
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  })();
+
+  const current = data.lastDay === yesterday ? (data.current || 0) + 1 : 1;
+  const best = Math.max(current, data.best || 0);
+  const updated = { current, best, lastDay: today };
+  localStorage.setItem(STORAGE_KEYS.cbjrStreak, JSON.stringify(updated));
+
+  // Verificar conquistas de streak
+  const STREAK_ACHIEVEMENTS = [
+    { id: 'streak_3',  days: 3,  label: '3 dias seguidos',  xp: 100  },
+    { id: 'streak_7',  days: 7,  label: 'Semana completa',  xp: 250  },
+    { id: 'streak_15', days: 15, label: '15 dias no foco',  xp: 500  },
+    { id: 'streak_30', days: 30, label: 'Um mês lendário',  xp: 1000 },
+  ];
+  STREAK_ACHIEVEMENTS.forEach(a => {
+    if (current >= a.days) {
+      unlockAchievement(STORAGE_KEYS.cbjrAutoAchievements, a.id, a.label, a.xp);
+    }
+  });
+
+  scheduleSave();
+  window.dispatchEvent(new CustomEvent('cbjr-streak-updated', { detail: updated }));
+  return updated;
+}
+// ── FIM STREAK ────────────────────────────────────────────────
+
 if (!window.__CBJR_FIREBASE_PROGRESS_PATCHED__) {
   window.__CBJR_FIREBASE_PROGRESS_PATCHED__ = true;
   const nativeSetItem = localStorage.setItem.bind(localStorage);
@@ -405,6 +460,8 @@ window.CBJRProgress = {
   setLastActivity,
   addHistory,
   lastSnapshot: () => ({ ...lastSnapshot }),
+  getStreak,
+  touchStreak,
 
   // ── Envia pontuação para o ranking com auth já garantida ──
   async submitRanking(payload) {
