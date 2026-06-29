@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Curiosidades CBJR — Exclusivo Top 10</title>
+  <meta name="description" content="Página exclusiva para os top 10 fãs do Quiz CBJR. Curiosidades, fotos e citações raras do Charlie Brown Jr." />
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <style>
+    @font-face {
+      font-family: 'Elektrix';
+      src: url('https://charlibriano.github.io/Quiz-CBJR-V2/Elektrix.woff2') format('woff2');
+      font-weight: 900;
+      font-display: swap;
+    }
+
+    :root {
+      --yellow: #f1c40f;
+      --green: #1ed760;
+      --line: rgba(255,255,255,.12);
+      --line-y: rgba(241,196,15,.28);
+      --muted: rgba(255,255,255,.52);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: Inter, Arial, sans-serif;
+      color: #fff;
+      background: #050505;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(241,196,15,.14), transparent 30%),
+        radial-gradient(circle at 84% 88%, rgba(30,215,96,.10), transparent 30%),
+        url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/radio-bg.png') center/cover no-repeat;
+      filter: brightness(.28) blur(3px);
+      transform: scale(1.04);
+    }
+
+    .page {
+      position: relative; z-index: 2;
+      min-height: 100svh;
+      padding: 18px;
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 22px;
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .btn {
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(0,0,0,.65);
+      color: #fff;
+      text-decoration: none;
+      padding: 0 18px;
+      font-weight: 1000;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: .9rem;
+      transition: .18s ease;
+    }
+    .btn:hover { border-color: rgba(241,196,15,.65); }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 28px 18px 18px;
+      border: 1px solid var(--line-y);
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(241,196,15,.16), transparent 46%),
+        rgba(0,0,0,.72);
+      box-shadow: 0 0 48px rgba(241,196,15,.10), inset 0 1px 0 rgba(255,255,255,.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "CBJR";
+      position: absolute;
+      right: -14px; top: 8px;
+      font-family: 'Elektrix', Arial, sans-serif;
+      font-size: 7rem;
+      color: rgba(255,255,255,.03);
+      pointer-events: none;
+      line-height: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid rgba(241,196,15,.45);
+      border-radius: 999px;
+      background: rgba(241,196,15,.10);
+      padding: 6px 14px;
+      font-size: .75rem;
+      font-weight: 950;
+      color: var(--yellow);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .hero h1 {
+      font-family: 'Elektrix', Arial, sans-serif;
+      color: var(--yellow);
+      font-size: clamp(2.4rem, 7vw, 4.5rem);
+      line-height: .88;
+      margin: 0 0 12px;
+      text-shadow: 0 0 28px rgba(241,196,15,.45), 3px 4px 0 rgba(0,0,0,.7);
+    }
+
+    .hero p {
+      color: rgba(255,255,255,.72);
+      font-weight: 900;
+      font-size: clamp(.9rem, 2vw, 1.1rem);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    /* ── GRID DE CURIOSIDADES ── */
+    .curiosidades-grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    /* ── CARD BASE ── */
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(0,0,0,.72));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.07), 0 18px 50px rgba(0,0,0,.45);
+      overflow: hidden;
+      transition: transform .2s ease, border-color .2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(241,196,15,.38);
+    }
+
+    /* ── CARD COM FOTO ── */
+    .card-with-photo {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+    }
+
+    .card-photo {
+      position: relative;
+      overflow: hidden;
+      min-height: 200px;
+    }
+
+    .card-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(.3) brightness(.85);
+      transition: filter .3s ease;
+    }
+
+    .card:hover .card-photo img {
+      filter: grayscale(0) brightness(1);
+    }
+
+    .card-photo-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent 70%, rgba(0,0,0,.6));
+    }
+
+    .card-body {
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .card-kicker {
+      font-size: .68rem;
+      font-weight: 950;
+      color: var(--yellow);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+    }
+
+    .card-title {
+      font-family: 'Elektrix', Arial, sans-serif;
+      font-size: clamp(1.3rem, 3vw, 2rem);
+      color: #fff;
+      margin: 0;
+      line-height: .95;
+    }
+
+    .card-text {
+      color: rgba(255,255,255,.78);
+      font-weight: 850;
+      line-height: 1.6;
+      font-size: .92rem;
+      margin: 0;
+    }
+
+    .card-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: .68rem;
+      font-weight: 950;
+      color: var(--muted);
+      width: fit-content;
+    }
+
+    /* ── CITAÇÃO ── */
+    .card-quote {
+      border-color: rgba(241,196,15,.35);
+      background:
+        radial-gradient(circle at 0% 50%, rgba(241,196,15,.10), transparent 50%),
+        rgba(0,0,0,.72);
+      padding: 26px 28px;
+      position: relative;
+    }
+
+    .card-quote::before {
+      content: """;
+      position: absolute;
+      top: 8px; left: 18px;
+      font-family: Georgia, serif;
+      font-size: 5rem;
+      color: rgba(241,196,15,.22);
+      line-height: 1;
+    }
+
+    .card-quote blockquote {
+      margin: 0;
+      font-style: italic;
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.5;
+      padding-left: 28px;
+    }
+
+    .card-quote cite {
+      display: block;
+      margin-top: 12px;
+      padding-left: 28px;
+      font-size: .78rem;
+      font-weight: 950;
+      color: var(--yellow);
+      letter-spacing: .06em;
+      font-style: normal;
+    }
+
+    /* ── TIMELINE ── */
+    .card-timeline {
+      padding: 22px;
+    }
+
+    .card-timeline h2 {
+      font-family: 'Elektrix', Arial, sans-serif;
+      color: var(--yellow);
+      font-size: 1.6rem;
+      margin: 0 0 18px;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 0;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 0 14px;
+      position: relative;
+    }
+
+    .timeline-item:not(:last-child) .tl-year::after {
+      content: "";
+      position: absolute;
+      left: 35px;
+      top: 28px;
+      bottom: -12px;
+      width: 1px;
+      background: var(--line);
+    }
+
+    .tl-year {
+      position: relative;
+      padding-top: 4px;
+      font-family: 'Elektrix', Arial, sans-serif;
+      font-size: 1.05rem;
+      color: var(--yellow);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .tl-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--yellow);
+      border: 2px solid rgba(241,196,15,.4);
+      box-shadow: 0 0 10px rgba(241,196,15,.45);
+      position: absolute;
+      right: -1px;
+      top: 6px;
+    }
+
+    .tl-content {
+      padding: 4px 0 20px;
+    }
+
+    .tl-content strong {
+      display: block;
+      font-size: .92rem;
+      color: #fff;
+      font-weight: 950;
+      margin-bottom: 3px;
+    }
+
+    .tl-content span {
+      font-size: .8rem;
+      color: var(--muted);
+      font-weight: 850;
+      line-height: 1.4;
+    }
+
+    /* ── CARDS DE FATOS ── */
+    .facts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 22px;
+    }
+
+    .fact-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255,255,255,.05);
+      padding: 14px;
+      transition: .18s ease;
+    }
+
+    .fact-card:hover {
+      border-color: var(--line-y);
+      background: rgba(241,196,15,.06);
+    }
+
+    .fact-icon { font-size: 1.6rem; margin-bottom: 7px; display: block; }
+    .fact-label { font-size: .68rem; color: var(--muted); font-weight: 950; text-transform: uppercase; letter-spacing: .08em; }
+    .fact-value { font-family: 'Elektrix', Arial, sans-serif; font-size: 1.4rem; color: var(--yellow); line-height: .9; margin: 3px 0; }
+    .fact-desc { font-size: .78rem; color: rgba(255,255,255,.65); font-weight: 850; line-height: 1.3; }
+
+    .facts-title {
+      grid-column: 1 / -1;
+      font-family: 'Elektrix', Arial, sans-serif;
+      color: var(--yellow);
+      font-size: 1.6rem;
+      margin: 0 0 4px;
+      padding: 22px 22px 0;
+    }
+
+    /* ── FULL CARD (sem foto) ── */
+    .card-full {
+      padding: 24px;
+    }
+
+    .card-full h2 {
+      font-family: 'Elektrix', Arial, sans-serif;
+      color: var(--yellow);
+      font-size: 1.7rem;
+      margin: 0 0 14px;
+    }
+
+    .card-full p {
+      color: rgba(255,255,255,.78);
+      font-weight: 850;
+      line-height: 1.7;
+      font-size: .93rem;
+      margin: 0 0 10px;
+    }
+
+    .card-full p:last-child { margin-bottom: 0; }
+
+    /* ── DISCO DE OURO ── */
+    .card-discografia {
+      padding: 22px;
+    }
+
+    .card-discografia h2 {
+      font-family: 'Elektrix', Arial, sans-serif;
+      color: var(--yellow);
+      font-size: 1.7rem;
+      margin: 0 0 16px;
+    }
+
+    .disc-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .disc-item {
+      display: grid;
+      grid-template-columns: 44px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: rgba(255,255,255,.04);
+      padding: 10px 12px;
+    }
+
+    .disc-num {
+      font-family: 'Elektrix', Arial, sans-serif;
+      color: var(--yellow);
+      font-size: 1.4rem;
+      text-align: center;
+    }
+
+    .disc-info strong {
+      display: block;
+      font-size: .92rem;
+      color: #fff;
+      font-weight: 950;
+    }
+
+    .disc-info span {
+      font-size: .76rem;
+      color: var(--muted);
+      font-weight: 850;
+    }
+
+    .disc-year {
+      font-size: .78rem;
+      color: var(--yellow);
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    /* ── FOOTER ── */
+    .page-footer {
+      text-align: center;
+      color: rgba(255,255,255,.38);
+      font-size: .76rem;
+      font-weight: 850;
+      padding: 12px 0 8px;
+      border-top: 1px solid var(--line);
+    }
+
+    /* ── OVERLAY DE BLOQUEIO ── */
+    #curiosidadesBlock {
+      position: fixed; inset: 0; z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(0,0,0,.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    #curiosidadesBlock.show { display: flex; }
+
+    .block-box {
+      width: min(460px, 100%);
+      border: 1px solid rgba(241,196,15,.45);
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(241,196,15,.18), transparent 48%),
+        rgba(5,5,5,.98);
+      box-shadow: 0 30px 100px rgba(0,0,0,.9), 0 0 48px rgba(241,196,15,.12);
+      padding: clamp(22px, 4vw, 36px);
+      text-align: center;
+    }
+
+    .block-trophy { font-size: 3rem; margin-bottom: 12px; display: block; }
+
+    .block-box h2 {
+      font-family: 'Elektrix', Arial, sans-serif;
+      color: var(--yellow);
+      font-size: clamp(2rem, 6vw, 3rem);
+      line-height: .9;
+      margin: 0 0 12px;
+      text-shadow: 0 0 22px rgba(241,196,15,.45);
+    }
+
+    .block-box p {
+      color: rgba(255,255,255,.78);
+      font-weight: 900;
+      line-height: 1.55;
+      margin: 0 0 20px;
+      font-size: .96rem;
+    }
+
+    .block-ranking-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(241,196,15,.5);
+      border-radius: 999px;
+      background: rgba(241,196,15,.12);
+      padding: 8px 16px;
+      font-weight: 950;
+      color: var(--yellow);
+      font-size: .88rem;
+      margin-bottom: 18px;
+    }
+
+    .block-btn-primary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      min-height: 52px;
+      border-radius: 15px;
+      border: 0;
+      background: linear-gradient(90deg, var(--yellow), #e6b800);
+      color: #050505;
+      font-weight: 950;
+      font-size: .96rem;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(241,196,15,.25);
+      transition: .18s ease;
+      margin-bottom: 10px;
+    }
+
+    .block-btn-primary:hover { transform: translateY(-2px); filter: brightness(1.06); }
+
+    .block-btn-secondary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 15px;
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.75);
+      font-weight: 950;
+      font-size: .88rem;
+      text-decoration: none;
+      transition: .18s ease;
+    }
+
+    .block-btn-secondary:hover { border-color: rgba(255,255,255,.4); color: #fff; }
+
+    .block-perks {
+      margin-top: 14px;
+      font-size: .75rem;
+      color: rgba(255,255,255,.45);
+      font-weight: 850;
+      line-height: 1.7;
+    }
+
+    /* ── RESPONSIVO ── */
+    @media (max-width: 640px) {
+      .page { padding: 12px; gap: 16px; }
+      .card-with-photo { grid-template-columns: 1fr; }
+      .card-photo { min-height: 160px; }
+      .card-photo-overlay { background: linear-gradient(0deg, rgba(0,0,0,.6), transparent 60%); }
+      .facts-grid { grid-template-columns: 1fr 1fr; }
+      .disc-item { grid-template-columns: 36px 1fr auto; }
+    }
+
+    @media (max-width: 400px) {
+      .facts-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- OVERLAY DE BLOQUEIO (para não-Top 10) -->
+<div id="curiosidadesBlock">
+  <div class="block-box">
+    <span class="block-trophy">🏆</span>
+    <h2>Área Exclusiva</h2>
+    <div class="block-ranking-badge">🎸 Apenas Top 10 do Ranking</div>
+    <p id="blockMessage">Esta página é exclusiva para os 10 maiores fãs do Charlie Brown Jr. no ranking. Jogue Rádio, Letras e Quiz para subir sua pontuação e desbloquear esse conteúdo!</p>
+    <a href="ranking.html" class="block-btn-primary">🏆 Ver minha posição no ranking</a>
+    <a href="index.html?skipIntro=true" class="block-btn-secondary">← Voltar ao menu</a>
+    <p class="block-perks">
+      O que você vai encontrar aqui:<br>
+      🎸 Histórias raras da banda &nbsp; 📸 Fotos e momentos históricos<br>
+      💬 Citações do Chorão &nbsp; 📅 Timeline completa do CBJR
+    </p>
+  </div>
+</div>
+
+<div class="page" id="mainContent" style="display:none;">
+
+  <header class="topbar">
+    <a class="btn" href="index.html?skipIntro=true">← Menu</a>
+    <div style="font-family:'Elektrix',Arial,sans-serif;color:var(--yellow);font-size:1.2rem;">Curiosidades CBJR</div>
+    <a class="btn" href="ranking.html">🏆 Ranking</a>
+  </header>
+
+  <div class="hero">
+    <div class="hero-badge">🏆 Exclusivo Top 10 do Ranking</div>
+    <h1>Charlie Brown Jr.<br>por dentro</h1>
+    <p>Histórias, curiosidades e momentos que moldaram uma das maiores bandas do Brasil. Conteúdo exclusivo para os maiores fãs.</p>
+  </div>
+
+  <div class="curiosidades-grid">
+
+    <!-- CITAÇÃO 1 -->
+    <div class="card card-quote">
+      <blockquote>
+        "A vida é desafio, encare. Se você não consegue o que quer, quer dizer que ainda não fez o suficiente para merecer."
+      </blockquote>
+      <cite>— Chorão (Alexandre Magno Abrão)</cite>
+    </div>
+
+    <!-- CARD COM FOTO: ORIGEM DA BANDA -->
+    <div class="card card-with-photo">
+      <div class="card-photo">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Charlie_Brown_Jr._no_Palco_Mundo_-_Rock_in_Rio_2011.jpg/800px-Charlie_Brown_Jr._no_Palco_Mundo_-_Rock_in_Rio_2011.jpg"
+          alt="Charlie Brown Jr. no Rock in Rio 2011"
+          loading="lazy"
+          onerror="this.parentNode.style.background='linear-gradient(135deg,#111,#1a1a1a)';this.style.display='none';"
+        />
+        <div class="card-photo-overlay"></div>
+      </div>
+      <div class="card-body">
+        <span class="card-kicker">📍 Santos, SP — 1992</span>
+        <h2 class="card-title">A origem do nome</h2>
+        <p class="card-text">O nome Charlie Brown Jr. veio da combinação de dois ídolos de Chorão: o personagem Charlie Brown, do gibi Peanuts, e o bluesman americano James Brown. Uma mistura de melancolia e ginga que definia perfeitamente o espírito da banda.</p>
+        <span class="card-tag">🎸 Curiosidade histórica</span>
+      </div>
+    </div>
+
+    <!-- FATOS RÁPIDOS -->
+    <div class="card">
+      <h2 class="facts-title">Números da lenda</h2>
+      <div class="facts-grid">
+        <div class="fact-card">
+          <span class="fact-icon">💿</span>
+          <span class="fact-label">Álbuns de estúdio</span>
+          <div class="fact-value">13</div>
+          <p class="fact-desc">De "Transpiração Contínua Prolongada" (1997) a "Tamo Aí na Atividade" (2012)</p>
+        </div>
+        <div class="fact-card">
+          <span class="fact-icon">🎤</span>
+          <span class="fact-label">Anos de estrada</span>
+          <div class="fact-value">20+</div>
+          <p class="fact-desc">Fundada em 1992 em Santos, SP, a banda marcou gerações até 2013</p>
+        </div>
+        <div class="fact-card">
+          <span class="fact-icon">🏆</span>
+          <span class="fact-label">Prêmios MTV</span>
+          <div class="fact-value">5+</div>
+          <p class="fact-desc">Incluindo Melhor Banda Brasileira em múltiplos anos consecutivos</p>
+        </div>
+        <div class="fact-card">
+          <span class="fact-icon">👥</span>
+          <span class="fact-label">Membros históricos</span>
+          <div class="fact-value">10+</div>
+          <p class="fact-desc">Chorão, Champignon, Thiago Castanho, Marcão e muitos outros</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CITAÇÃO 2 -->
+    <div class="card card-quote">
+      <blockquote>
+        "Não adianta ter dinheiro se não tiver paz de espírito. Não adianta ter sucesso se não tiver amor. O que importa de verdade é ser feliz com o que você é."
+      </blockquote>
+      <cite>— Chorão</cite>
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="card card-timeline">
+      <h2>A linha do tempo CBJR</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="tl-year">1992 <div class="tl-dot"></div></div>
+          <div class="tl-content">
+            <strong>Fundação em Santos</strong>
+            <span>Chorão e Champignon se conhecem e fundam a banda em Santos, SP. O nome une Charlie Brown e James Brown como referências.</span>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-year">1997 <div class="tl-dot"></div></div>
+          <div class="tl-content">
+            <strong>Transpiração Contínua Prolongada</strong>
+            <span>Álbum de estreia lançado pela gravadora Chaos/Sony. Músicas como "Proibida pra Mim" e "Tô Menos" apresentam a banda ao Brasil.</span>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-year">2000 <div class="tl-dot"></div></div>
+          <div class="tl-content">
+            <strong>Explode o Sucesso Nacional</strong>
+            <span>"Juventude Imortal" e "Não Deixe o Samba Morrer" viram hinos. A MTV passa a tocar o videoclipe em heavy rotation.</span>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-year">2002 <div class="tl-dot"></div></div>
+          <div class="tl-content">
+            <strong>Nadando com os Tubarões</strong>
+            <span>Álbum que consolida a mistura de rock, rap e samba. "Só os Loucos Sabem" torna-se um dos maiores hits da banda.</span>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-year">2011 <div class="tl-dot"></div></div>
+          <div class="tl-content">
+            <strong>Rock in Rio — show histórico</strong>
+            <span>Apresentação no Palco Mundo do Rock in Rio 2011 com mais de 80 mil pessoas. Um dos momentos mais marcantes da história do rock brasileiro.</span>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-year">2013 <div class="tl-dot"></div></div>
+          <div class="tl-content">
+            <strong>A partida de Chorão</strong>
+            <span>Em março de 2013, Chorão parte. A banda decide encerrar as atividades em sua homenagem. O legado continua vivo no coração de milhões de fãs.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD COM FOTO: O CHORÃO -->
+    <div class="card card-with-photo">
+      <div class="card-photo">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Chorao_CBJR.jpg/400px-Chorao_CBJR.jpg"
+          alt="Chorão, vocalista do Charlie Brown Jr."
+          loading="lazy"
+          onerror="this.parentNode.style.background='linear-gradient(135deg,#1a1000,#0a0a0a)';this.style.display='none';"
+        />
+        <div class="card-photo-overlay"></div>
+      </div>
+      <div class="card-body">
+        <span class="card-kicker">👑 Alexandre Magno Abrão</span>
+        <h2 class="card-title">Quem foi o Chorão</h2>
+        <p class="card-text">Nascido em 27 de setembro de 1974 em Santos, SP, Alexandre era o coração e a voz do CBJR. Skater, poeta e rebelde, criou uma identidade única que misturava rock, rap, samba e punk. Sua sinceridade brutal nas letras tocava a realidade de uma geração inteira.</p>
+        <span class="card-tag">🎤 O vocalista lendário</span>
+      </div>
+    </div>
+
+    <!-- DISCOGRAFIA COMPLETA -->
+    <div class="card card-discografia">
+      <h2>Discografia completa</h2>
+      <div class="disc-list">
+        <div class="disc-item"><div class="disc-num">01</div><div class="disc-info"><strong>Transpiração Contínua Prolongada</strong><span>Álbum de estreia — rock alternativo e skate punk</span></div><div class="disc-year">1997</div></div>
+        <div class="disc-item"><div class="disc-num">02</div><div class="disc-info"><strong>Potencial Libertário</strong><span>Consolidação do som e da identidade visual</span></div><div class="disc-year">1999</div></div>
+        <div class="disc-item"><div class="disc-num">03</div><div class="disc-info"><strong>Preço Curto, Prazo Longo</strong><span>Abertura para o mercado mainstream</span></div><div class="disc-year">2000</div></div>
+        <div class="disc-item"><div class="disc-num">04</div><div class="disc-info"><strong>Nadando com os Tubarões</strong><span>Hit "Só os Loucos Sabem" — auge da popularidade</span></div><div class="disc-year">2002</div></div>
+        <div class="disc-item"><div class="disc-num">05</div><div class="disc-info"><strong>Radio CBJR</strong><span>Mistura de estilos e experimentação sonora</span></div><div class="disc-year">2003</div></div>
+        <div class="disc-item"><div class="disc-num">06</div><div class="disc-info"><strong>Um Passo à Frente e Você Não Está</strong><span>Álbum póstumo do Champignon produzido pelo Chorão</span></div><div class="disc-year">2004</div></div>
+        <div class="disc-item"><div class="disc-num">07</div><div class="disc-info"><strong>Deus é Brasileiro</strong><span>Releituras e faixas originais — caráter mais espiritual</span></div><div class="disc-year">2006</div></div>
+        <div class="disc-item"><div class="disc-num">08</div><div class="disc-info"><strong>Saindo de Baixo</strong><span>Retomada com energia renovada</span></div><div class="disc-year">2007</div></div>
+        <div class="disc-item"><div class="disc-num">09</div><div class="disc-info"><strong>Tamo Aí na Atividade</strong><span>Último álbum em vida de Chorão</span></div><div class="disc-year">2012</div></div>
+      </div>
+    </div>
+
+    <!-- CITAÇÃO 3 -->
+    <div class="card card-quote">
+      <blockquote>
+        "O skate me ensinou que quando você cai, tem que levantar e tentar de novo. A vida é igual. Não tem como ser diferente."
+      </blockquote>
+      <cite>— Chorão</cite>
+    </div>
+
+    <!-- CHAMPIGNON -->
+    <div class="card card-full">
+      <h2>Champignon — o baixista que partiu cedo demais</h2>
+      <p>Carlos Eduardo Novaes, o Champignon, foi um dos pilares musicais do Charlie Brown Jr. desde a fundação. Sua morte em agosto de 2013, poucos meses após a de Chorão, marcou o fim definitivo da banda.</p>
+      <p>Champignon era conhecido pelo seu jeito tranquilo e pela precisão no baixo. Ele escreveu e co-produziu algumas das músicas mais amadas do CBJR, incluindo faixas de "Nadando com os Tubarões".</p>
+      <p>O álbum "Um Passo à Frente e Você Não Está" foi concebido por Chorão como uma homenagem ao amigo que havia partido. O título veio de uma frase dita pelo Champignon antes de morrer.</p>
+    </div>
+
+    <!-- CURIOSIDADES RARAS -->
+    <div class="card card-full">
+      <h2>10 curiosidades que poucos fãs sabem</h2>
+      <p>🛹 <strong>Chorão era skater profissional</strong> antes de se dedicar integralmente à música. O esporte influenciou diretamente a estética e o espírito rebelde da banda.</p>
+      <p>🎬 <strong>O clipe de "Só os Loucos Sabem"</strong> foi um dos primeiros da MTV Brasil a usar técnicas de câmera lenta de forma artística, tornando-se referência estética no videoclipe nacional.</p>
+      <p>📻 <strong>O CBJR tocou em mais de 40 países</strong> ao longo de sua carreira, levando o rock brasileiro para públicos internacionais que nunca haviam ouvido uma banda do Brasil.</p>
+      <p>🎤 <strong>Chorão cantou em 5 idiomas diferentes</strong> em gravações ao longo da carreira, incluindo inglês, espanhol e japonês em versões especiais para mercados internacionais.</p>
+      <p>🏟️ <strong>O show no Rock in Rio 2011</strong> foi considerado pela imprensa especializada como um dos 10 melhores shows da história do festival até aquele ano.</p>
+    </div>
+
+    <!-- CITAÇÃO FINAL -->
+    <div class="card card-quote">
+      <blockquote>
+        "Você vai ter que se virar. A vida não para pra ninguém. Mas também não esquece de curtir cada momento, porque o tempo não volta."
+      </blockquote>
+      <cite>— Chorão, em entrevista ao programa Superpop, 2009</cite>
+    </div>
+
+  </div>
+
+  <footer class="page-footer">
+    Conteúdo exclusivo para os Top 10 do Ranking CBJR &nbsp;•&nbsp; Quiz CBJR V2 &nbsp;•&nbsp; Em memória de Chorão e Champignon 🎸
+  </footer>
+
+</div>
+
+<script type="module">
+  import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+  import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+  import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey: 'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
+    authDomain: 'ranking-cbjr.firebaseapp.com',
+    databaseURL: 'https://ranking-cbjr-default-rtdb.firebaseio.com',
+    projectId: 'ranking-cbjr',
+    storageBucket: 'ranking-cbjr.firebasestorage.app',
+    messagingSenderId: '681180179118',
+    appId: '1:681180179118:web:fe10833848e8bb8194db3f'
+  };
+
+  const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const block = document.getElementById('curiosidadesBlock');
+  const main  = document.getElementById('mainContent');
+  const blockMsg = document.getElementById('blockMessage');
+
+  function showBlock(msg) {
+    if (blockMsg && msg) blockMsg.textContent = msg;
+    block.classList.add('show');
+    main.style.display = 'none';
+  }
+
+  function showMain() {
+    block.classList.remove('show');
+    main.style.display = 'grid';
+  }
+
+  async function checkAccess(user) {
+    // Visitante
+    try {
+      if (sessionStorage.getItem('cbjr_guest_mode') === '1' && localStorage.getItem('cbjr_google_logged') !== '1') {
+        showBlock('Esta página é exclusiva para jogadores com conta Google no Top 10 do ranking. Faça login e suba sua pontuação!');
+        return;
+      }
+    } catch(e) {}
+
+    if (!user) {
+      showBlock('Faça login com sua conta Google para verificar se você está no Top 10 e acessar esse conteúdo exclusivo.');
+      return;
+    }
+
+    try {
+      const snap = await getDocs(collection(db, 'ranking'));
+      const rows = snap.docs
+        .map(d => ({ uid: String(d.data()?.uid || ''), email: String(d.data()?.email || ''), name: String(d.data()?.name || ''), score: Number(d.data()?.score || 0), createdAt: d.data()?.createdAt?.seconds ? d.data().createdAt.seconds * 1000 : 0 }))
+        .sort((a, b) => (b.score - a.score) || (b.createdAt - a.createdAt));
+
+      const displayName = String(user.displayName || '').toLowerCase().trim();
+      const first = displayName.split(/\s+/)[0] || '';
+      const idx = rows.findIndex(r => {
+        const rn = String(r.name || '').toLowerCase().trim();
+        return (r.uid && r.uid === user.uid) ||
+          (r.email && user.email && r.email.toLowerCase() === user.email.toLowerCase()) ||
+          (rn && displayName && rn === displayName) ||
+          (rn && first && rn === first);
+      });
+
+      const position = idx >= 0 ? idx + 1 : 9999;
+
+      // Salvar posição localmente para a home usar
+      try { localStorage.setItem('cbjr_ranking_position', String(position)); } catch(e) {}
+
+      if (position <= 10) {
+        showMain();
+      } else {
+        const posText = position < 9999 ? `Você está em #${position} do ranking.` : 'Você ainda não está no ranking.';
+        showBlock(`${posText} Esta página é exclusiva para o Top 10. Jogue Rádio, Letras e Quiz para subir sua pontuação e desbloquear esse conteúdo!`);
+      }
+    } catch(error) {
+      console.warn('Curiosidades: erro ao verificar ranking', error);
+      // Em caso de falha no Firebase, verifica o cache local
+      try {
+        const cached = Number(localStorage.getItem('cbjr_ranking_position') || 9999);
+        if (cached <= 10) { showMain(); } else { showBlock('Não foi possível verificar sua posição no ranking agora. Tente novamente mais tarde.'); }
+      } catch(e) {
+        showBlock('Não foi possível verificar sua posição no ranking agora. Tente novamente mais tarde.');
+      }
+    }
+  }
+
+  onAuthStateChanged(auth, user => {
+    checkAccess(user);
+  });
+</script>
+
+</body>
+</html>
