@@ -401,6 +401,119 @@
       margin-bottom: 12px;
     }
 
+    /* ── STREAK CARD ─────────────────────────────────── */
+    .dash-streak-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border: 1px solid rgba(255, 140, 0, .45);
+      border-radius: 16px;
+      background:
+        radial-gradient(circle at 0% 50%, rgba(255,140,0,.14), transparent 55%),
+        rgba(255,255,255,.04);
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 0 22px rgba(255,140,0,.08), inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .dash-streak-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dash-streak-fire {
+      font-size: 2rem;
+      line-height: 1;
+      filter: drop-shadow(0 0 8px rgba(255,100,0,.6));
+      animation: streakPulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes streakPulse {
+      0%, 100% { transform: scale(1);    filter: drop-shadow(0 0 8px rgba(255,100,0,.5)); }
+      50%       { transform: scale(1.14); filter: drop-shadow(0 0 14px rgba(255,140,0,.8)); }
+    }
+
+    .dash-streak-left strong {
+      display: block;
+      font-family: 'Elektrix', Arial, sans-serif;
+      font-size: 2rem;
+      color: #ff8c00;
+      line-height: .9;
+      text-shadow: 0 0 14px rgba(255,140,0,.5);
+    }
+
+    .dash-streak-left span {
+      display: block;
+      font-size: .72rem;
+      color: rgba(255,255,255,.6);
+      font-weight: 850;
+      margin-top: 2px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .dash-streak-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+    }
+
+    .dash-streak-milestones {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+
+    .dash-streak-milestone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      font-size: .6rem;
+      color: rgba(255,255,255,.5);
+      font-weight: 850;
+    }
+
+    .dash-streak-milestone .ms-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: .9rem;
+      border: 1px solid rgba(255,255,255,.15);
+      background: rgba(255,255,255,.06);
+      transition: .2s ease;
+    }
+
+    .dash-streak-milestone.done .ms-icon {
+      border-color: rgba(255,140,0,.7);
+      background: rgba(255,140,0,.18);
+      box-shadow: 0 0 10px rgba(255,140,0,.3);
+    }
+
+    .dash-streak-best {
+      font-size: .7rem;
+      color: rgba(255,255,255,.45);
+      font-weight: 850;
+    }
+
+    .dash-btn.curiosidades-btn {
+      background: linear-gradient(90deg, rgba(241,196,15,.18), rgba(30,215,96,.12));
+      border-color: rgba(241,196,15,.5);
+      color: var(--yellow);
+      animation: curiosidadesGlow 2.5s ease-in-out infinite;
+    }
+
+    @keyframes curiosidadesGlow {
+      0%, 100% { box-shadow: 0 0 10px rgba(241,196,15,.15); }
+      50%       { box-shadow: 0 0 22px rgba(241,196,15,.35); }
+    }
+    /* ── FIM STREAK CARD ─────────────────────────────── */
+
     .dash-card {
       background: rgba(255,255,255,.05);
       border: 1px solid var(--line);
@@ -4278,6 +4391,21 @@
         <div class="dash-sync" id="dashSyncStatus">Carregando progresso...</div>
       </div>
 
+      <!-- STREAK CARD -->
+      <div class="dash-streak-card" id="dashStreakCard">
+        <div class="dash-streak-left">
+          <span class="dash-streak-fire" id="dashStreakFire">🔥</span>
+          <div>
+            <strong id="dashStreakCount">0</strong>
+            <span id="dashStreakLabel">dias seguidos</span>
+          </div>
+        </div>
+        <div class="dash-streak-right">
+          <div class="dash-streak-milestones" id="dashStreakMilestones"></div>
+          <span class="dash-streak-best" id="dashStreakBest">Melhor: 0 dias</span>
+        </div>
+      </div>
+
       <div class="dash-grid">
         <div class="dash-card"><small>Ranking</small><strong id="dashRanking">#--</strong></div>
         <div class="dash-card"><small>Nível</small><strong id="dashLevel">Fã CBJR</strong></div>
@@ -4314,6 +4442,7 @@
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
           <a class="dash-btn" id="dashContinueBtn" href="radio.html">▶ Continuar de onde parei</a>
           <a class="dash-btn secondary" href="conquistas.html">🎖️ Ver conquistas</a>
+          <a class="dash-btn curiosidades-btn" id="dashCuriosidadesBtn" href="curiosidades.html" style="display:none;">🎸 Curiosidades exclusivas</a>
         </div>
       </div>
     </section>
@@ -5684,6 +5813,34 @@
     if (btn) btn.href = progress.continueHref;
     setText('dashSyncStatus', 'Progresso sincronizado');
 
+    // ── STREAK ────────────────────────────────────────────────
+    const streakRaw = (() => {
+      try { return JSON.parse(localStorage.getItem('cbjr_streak_v1') || '{}'); } catch(_) { return {}; }
+    })();
+    const streakCurrent = Number(streakRaw.current || 0);
+    const streakBest = Number(streakRaw.best || 0);
+    setText('dashStreakCount', streakCurrent);
+    setText('dashStreakLabel', streakCurrent === 1 ? 'dia seguido' : 'dias seguidos');
+    setText('dashStreakBest', `Melhor: ${streakBest} ${streakBest === 1 ? 'dia' : 'dias'}`);
+    const fireEl = document.getElementById('dashStreakFire');
+    if (fireEl) fireEl.textContent = streakCurrent >= 7 ? '🔥' : streakCurrent >= 3 ? '🔥' : '🕯️';
+    const milestonesEl = document.getElementById('dashStreakMilestones');
+    if (milestonesEl) {
+      const milestones = [
+        { days: 3,  icon: '🥉', label: '3d'  },
+        { days: 7,  icon: '⚡', label: '7d'  },
+        { days: 15, icon: '💎', label: '15d' },
+        { days: 30, icon: '👑', label: '30d' },
+      ];
+      milestonesEl.innerHTML = milestones.map(m => `
+        <div class="dash-streak-milestone ${streakCurrent >= m.days ? 'done' : ''}">
+          <span class="ms-icon">${m.icon}</span>
+          <span>${m.label}</span>
+        </div>
+      `).join('');
+    }
+    // ── FIM STREAK ────────────────────────────────────────────
+
     // Perfil Google clicável: resumo rápido dentro do menu da conta.
     setText('userMenuLevel', progress.level.name);
     setText('userMenuXP', `${progress.xp} XP`);
@@ -5722,6 +5879,21 @@
           (rn && first && rn === first);
       });
       renderPlayerDashboard(user, idx >= 0 ? `#${idx + 1}` : '#--');
+
+      // ── BOTÃO CURIOSIDADES: só Top 10 ────────────────────────
+      const curiosidadesBtn = document.getElementById('dashCuriosidadesBtn');
+      if (curiosidadesBtn) {
+        const position = idx >= 0 ? idx + 1 : 999;
+        if (position <= 10) {
+          curiosidadesBtn.style.display = 'inline-flex';
+          // Salva posição no localStorage para curiosidades.html verificar
+          try { localStorage.setItem('cbjr_ranking_position', String(position)); } catch(e) {}
+        } else {
+          curiosidadesBtn.style.display = 'none';
+          try { localStorage.setItem('cbjr_ranking_position', String(position)); } catch(e) {}
+        }
+      }
+      // ── FIM BOTÃO CURIOSIDADES ───────────────────────────────
     } catch (error) {
       console.warn('Dashboard: não foi possível consultar ranking agora.', error);
       renderPlayerDashboard(user, '#--');
@@ -5775,6 +5947,25 @@
     await loadDashboardCloud(user);
     renderPlayerDashboard(user);
     updateDashboardRanking(user);
+
+    // ── STREAK: registrar acesso do dia ──────────────────────
+    try {
+      if (window.CBJRProgress?.touchStreak) {
+        window.CBJRProgress.touchStreak();
+      } else {
+        // Fallback local caso o firebase-progress.js ainda não carregou
+        const today = (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })();
+        const sd = (() => { try { return JSON.parse(localStorage.getItem('cbjr_streak_v1') || '{}'); } catch(_) { return {}; } })();
+        if (sd.lastDay !== today) {
+          const yesterday = (() => { const d = new Date(); d.setDate(d.getDate()-1); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })();
+          const current = sd.lastDay === yesterday ? (sd.current || 0) + 1 : 1;
+          const best = Math.max(current, sd.best || 0);
+          localStorage.setItem('cbjr_streak_v1', JSON.stringify({ current, best, lastDay: today }));
+        }
+      }
+    } catch(e) {}
+    // ── FIM STREAK ────────────────────────────────────────────
+
     setAuthView('auth-logged-in');
   });
 </script>
