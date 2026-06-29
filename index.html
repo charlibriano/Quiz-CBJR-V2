@@ -401,6 +401,12 @@
       margin-bottom: 12px;
     }
 
+    /* Botão curiosidades mobile: oculto no desktop */
+    .mobile-curiosidades-btn { display: none; }
+
+    /* ── STREAK MOBILE: oculto no desktop, visível só no mobile via media query */
+    .mobile-streak-card { display: none; }
+
     /* ── STREAK CARD ─────────────────────────────────── */
     .dash-streak-card {
       display: flex;
@@ -4295,6 +4301,111 @@
         grid-template-columns: 1fr 1fr !important;
         gap: 10px !important;
       }
+
+      /* ── STREAK MOBILE ── */
+      .mobile-streak-card {
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin: 0 14px 4px !important;
+        padding: 10px 14px;
+        border: 1px solid rgba(255, 140, 0, .45);
+        border-radius: 14px;
+        background:
+          radial-gradient(circle at 0% 50%, rgba(255,140,0,.14), transparent 55%),
+          rgba(0,0,0,.55);
+        box-shadow: 0 0 18px rgba(255,140,0,.08);
+      }
+
+      .msc-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .msc-fire {
+        font-size: 1.5rem;
+        filter: drop-shadow(0 0 6px rgba(255,100,0,.55));
+        animation: streakPulse 1.8s ease-in-out infinite;
+      }
+
+      .msc-left strong {
+        display: block;
+        font-family: 'Elektrix', Arial, sans-serif;
+        font-size: 1.5rem;
+        color: #ff8c00;
+        line-height: .9;
+      }
+
+      .msc-left span {
+        display: block;
+        font-size: .6rem;
+        color: rgba(255,255,255,.55);
+        font-weight: 850;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+      }
+
+      .msc-milestones {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+        flex: 1;
+        justify-content: center;
+      }
+
+      .msc-milestone {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        font-size: .52rem;
+        color: rgba(255,255,255,.45);
+        font-weight: 850;
+      }
+
+      .msc-milestone .msc-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-size: .78rem;
+        border: 1px solid rgba(255,255,255,.14);
+        background: rgba(255,255,255,.05);
+      }
+
+      .msc-milestone.done .msc-icon {
+        border-color: rgba(255,140,0,.65);
+        background: rgba(255,140,0,.16);
+        box-shadow: 0 0 8px rgba(255,140,0,.28);
+      }
+
+      .msc-best {
+        font-size: .62rem;
+        color: rgba(255,255,255,.4);
+        font-weight: 850;
+        white-space: nowrap;
+      }
+      /* ── FIM STREAK MOBILE ── */
+
+      .mobile-curiosidades-btn {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        margin: 0 14px 4px !important;
+        padding: 10px 16px;
+        border: 1px solid rgba(241,196,15,.5);
+        border-radius: 14px;
+        background: linear-gradient(90deg, rgba(241,196,15,.14), rgba(30,215,96,.08));
+        color: var(--yellow);
+        font-weight: 950;
+        font-size: .82rem;
+        text-decoration: none;
+        letter-spacing: .02em;
+        animation: curiosidadesGlow 2.5s ease-in-out infinite;
+      }
     }
 </style>
 
@@ -4491,6 +4602,23 @@
       </section>
 
       <!-- MOBILE: cards 2x2 (visível apenas em ≤820px) -->
+      <!-- STREAK MOBILE — aparece só no celular, abaixo do hero -->
+      <div class="mobile-streak-card" id="mobileStreakCard">
+        <div class="msc-left">
+          <span class="msc-fire" id="mobileStreakFire">🕯️</span>
+          <div>
+            <strong id="mobileStreakCount">0</strong>
+            <span id="mobileStreakLabel">dias seguidos</span>
+          </div>
+        </div>
+        <div class="msc-milestones" id="mobileStreakMilestones"></div>
+        <span class="msc-best" id="mobileStreakBest">Melhor: 0d</span>
+      </div>
+      <!-- BOTÃO CURIOSIDADES MOBILE -->
+      <a class="mobile-curiosidades-btn" id="mobileCuriosidadesBtn" href="curiosidades.html" style="display:none;">
+        🎸 Curiosidades exclusivas — Top 10
+      </a>
+
       <div class="mode-cards" id="modeCards">
         <a class="mode-card" href="quiz.html" style="--mc-color: var(--yellow)" id="canal-quiz" data-tone="164.81" data-page="quiz.html">
           <div class="mode-card-icon">🎯</div>
@@ -5819,26 +5947,36 @@
     })();
     const streakCurrent = Number(streakRaw.current || 0);
     const streakBest = Number(streakRaw.best || 0);
-    setText('dashStreakCount', streakCurrent);
-    setText('dashStreakLabel', streakCurrent === 1 ? 'dia seguido' : 'dias seguidos');
-    setText('dashStreakBest', `Melhor: ${streakBest} ${streakBest === 1 ? 'dia' : 'dias'}`);
-    const fireEl = document.getElementById('dashStreakFire');
-    if (fireEl) fireEl.textContent = streakCurrent >= 7 ? '🔥' : streakCurrent >= 3 ? '🔥' : '🕯️';
-    const milestonesEl = document.getElementById('dashStreakMilestones');
-    if (milestonesEl) {
-      const milestones = [
-        { days: 3,  icon: '🥉', label: '3d'  },
-        { days: 7,  icon: '⚡', label: '7d'  },
-        { days: 15, icon: '💎', label: '15d' },
-        { days: 30, icon: '👑', label: '30d' },
-      ];
-      milestonesEl.innerHTML = milestones.map(m => `
-        <div class="dash-streak-milestone ${streakCurrent >= m.days ? 'done' : ''}">
-          <span class="ms-icon">${m.icon}</span>
-          <span>${m.label}</span>
-        </div>
-      `).join('');
-    }
+
+    const renderStreakUI = (prefix, countId, labelId, bestId, milestonesId, fireId) => {
+      setText(countId, streakCurrent);
+      setText(labelId, streakCurrent === 1 ? 'dia seguido' : 'dias seguidos');
+      setText(bestId, `Melhor: ${streakBest}d`);
+      const fireEl = document.getElementById(fireId);
+      if (fireEl) fireEl.textContent = streakCurrent >= 3 ? '🔥' : '🕯️';
+      const milestonesEl = document.getElementById(milestonesId);
+      if (milestonesEl) {
+        const milestones = [
+          { days: 3,  icon: '🥉', label: '3d'  },
+          { days: 7,  icon: '⚡', label: '7d'  },
+          { days: 15, icon: '💎', label: '15d' },
+          { days: 30, icon: '👑', label: '30d' },
+        ];
+        const iconClass = prefix === 'mobile' ? 'msc-icon' : 'ms-icon';
+        const milClass  = prefix === 'mobile' ? 'msc-milestone' : 'dash-streak-milestone';
+        milestonesEl.innerHTML = milestones.map(m => `
+          <div class="${milClass} ${streakCurrent >= m.days ? 'done' : ''}">
+            <span class="${iconClass}">${m.icon}</span>
+            <span>${m.label}</span>
+          </div>
+        `).join('');
+      }
+    };
+
+    // Desktop streak
+    renderStreakUI('desktop', 'dashStreakCount', 'dashStreakLabel', 'dashStreakBest', 'dashStreakMilestones', 'dashStreakFire');
+    // Mobile streak
+    renderStreakUI('mobile', 'mobileStreakCount', 'mobileStreakLabel', 'mobileStreakBest', 'mobileStreakMilestones', 'mobileStreakFire');
     // ── FIM STREAK ────────────────────────────────────────────
 
     // Perfil Google clicável: resumo rápido dentro do menu da conta.
@@ -5882,16 +6020,13 @@
 
       // ── BOTÃO CURIOSIDADES: só Top 10 ────────────────────────
       const curiosidadesBtn = document.getElementById('dashCuriosidadesBtn');
-      if (curiosidadesBtn) {
+      const curiosidadesBtnMobile = document.getElementById('mobileCuriosidadesBtn');
+      if (curiosidadesBtn || curiosidadesBtnMobile) {
         const position = idx >= 0 ? idx + 1 : 999;
-        if (position <= 10) {
-          curiosidadesBtn.style.display = 'inline-flex';
-          // Salva posição no localStorage para curiosidades.html verificar
-          try { localStorage.setItem('cbjr_ranking_position', String(position)); } catch(e) {}
-        } else {
-          curiosidadesBtn.style.display = 'none';
-          try { localStorage.setItem('cbjr_ranking_position', String(position)); } catch(e) {}
-        }
+        const show = position <= 10;
+        if (curiosidadesBtn) curiosidadesBtn.style.display = show ? 'inline-flex' : 'none';
+        if (curiosidadesBtnMobile) curiosidadesBtnMobile.style.display = show ? 'flex' : 'none';
+        try { localStorage.setItem('cbjr_ranking_position', String(position)); } catch(e) {}
       }
       // ── FIM BOTÃO CURIOSIDADES ───────────────────────────────
     } catch (error) {
