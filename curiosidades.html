@@ -6,7 +6,6 @@
   <title>Curiosidades CBJR — Exclusivo Top 10</title>
   <meta name="description" content="Página exclusiva para os top 10 fãs do Quiz CBJR. Curiosidades, fotos e citações raras do Charlie Brown Jr." />
   <meta name="robots" content="noindex" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
   <style>
     @font-face {
       font-family: 'Elektrix';
@@ -14,7 +13,6 @@
       font-weight: 900;
       font-display: swap;
     }
-
     :root {
       --yellow: #f1c40f;
       --green: #1ed760;
@@ -22,586 +20,273 @@
       --line-y: rgba(241,196,15,.28);
       --muted: rgba(255,255,255,.52);
     }
-
     *, *::before, *::after { box-sizing: border-box; }
-
-    html, body {
-      margin: 0;
-      min-height: 100%;
-      font-family: Inter, Arial, sans-serif;
-      color: #fff;
-      background: #050505;
-      overflow-x: hidden;
-    }
-
+    html, body { margin: 0; min-height: 100%; font-family: Inter, Arial, sans-serif; color: #fff; background: #050505; overflow-x: hidden; }
     body::before {
-      content: "";
-      position: fixed; inset: 0; z-index: 0;
+      content: ""; position: fixed; inset: 0; z-index: 0;
       background:
         radial-gradient(circle at 18% 12%, rgba(241,196,15,.14), transparent 30%),
         radial-gradient(circle at 84% 88%, rgba(30,215,96,.10), transparent 30%),
         url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/radio-bg.png') center/cover no-repeat;
-      filter: brightness(.28) blur(3px);
-      transform: scale(1.04);
+      filter: brightness(.28) blur(3px); transform: scale(1.04);
     }
-
     .page {
-      position: relative; z-index: 2;
-      min-height: 100svh;
-      padding: 18px;
-      max-width: 900px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-rows: auto auto 1fr auto;
-      gap: 22px;
+      position: relative; z-index: 2; min-height: 100svh;
+      padding: 18px; max-width: 960px; margin: 0 auto;
+      display: grid; grid-template-rows: auto auto 1fr auto; gap: 22px;
     }
-
-    /* ── TOPBAR ── */
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
     .btn {
-      min-height: 44px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(0,0,0,.65);
-      color: #fff;
-      text-decoration: none;
-      padding: 0 18px;
-      font-weight: 1000;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-family: inherit;
-      font-size: .9rem;
-      transition: .18s ease;
+      min-height: 44px; border: 1px solid var(--line); border-radius: 999px;
+      background: rgba(0,0,0,.65); color: #fff; text-decoration: none;
+      padding: 0 18px; font-weight: 1000; display: inline-flex;
+      align-items: center; justify-content: center; cursor: pointer;
+      font-family: inherit; font-size: .9rem; transition: .18s ease;
     }
     .btn:hover { border-color: rgba(241,196,15,.65); }
 
     /* ── HERO ── */
     .hero {
-      text-align: center;
-      padding: 28px 18px 18px;
-      border: 1px solid var(--line-y);
-      border-radius: 28px;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(241,196,15,.16), transparent 46%),
-        rgba(0,0,0,.72);
+      text-align: center; padding: 28px 18px 18px;
+      border: 1px solid var(--line-y); border-radius: 28px;
+      background: radial-gradient(circle at 50% 0%, rgba(241,196,15,.16), transparent 46%), rgba(0,0,0,.72);
       box-shadow: 0 0 48px rgba(241,196,15,.10), inset 0 1px 0 rgba(255,255,255,.08);
-      position: relative;
-      overflow: hidden;
+      position: relative; overflow: hidden;
     }
-
     .hero::before {
-      content: "CBJR";
-      position: absolute;
-      right: -14px; top: 8px;
-      font-family: 'Elektrix', Arial, sans-serif;
-      font-size: 7rem;
-      color: rgba(255,255,255,.03);
-      pointer-events: none;
-      line-height: 1;
+      content: "CBJR"; position: absolute; right: -14px; top: 8px;
+      font-family: 'Elektrix', Arial, sans-serif; font-size: 7rem;
+      color: rgba(255,255,255,.03); pointer-events: none; line-height: 1;
     }
-
     .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      border: 1px solid rgba(241,196,15,.45);
-      border-radius: 999px;
-      background: rgba(241,196,15,.10);
-      padding: 6px 14px;
-      font-size: .75rem;
-      font-weight: 950;
-      color: var(--yellow);
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      margin-bottom: 14px;
+      display: inline-flex; align-items: center; gap: 7px;
+      border: 1px solid rgba(241,196,15,.45); border-radius: 999px;
+      background: rgba(241,196,15,.10); padding: 6px 14px;
+      font-size: .75rem; font-weight: 950; color: var(--yellow);
+      letter-spacing: .08em; text-transform: uppercase; margin-bottom: 14px;
     }
-
     .hero h1 {
-      font-family: 'Elektrix', Arial, sans-serif;
-      color: var(--yellow);
-      font-size: clamp(2.4rem, 7vw, 4.5rem);
-      line-height: .88;
-      margin: 0 0 12px;
+      font-family: 'Elektrix', Arial, sans-serif; color: var(--yellow);
+      font-size: clamp(2.4rem, 7vw, 4.5rem); line-height: .88; margin: 0 0 12px;
       text-shadow: 0 0 28px rgba(241,196,15,.45), 3px 4px 0 rgba(0,0,0,.7);
     }
+    .hero p { color: rgba(255,255,255,.72); font-weight: 900; font-size: clamp(.9rem,2vw,1.1rem); max-width: 520px; margin: 0 auto; line-height: 1.5; }
 
-    .hero p {
-      color: rgba(255,255,255,.72);
-      font-weight: 900;
-      font-size: clamp(.9rem, 2vw, 1.1rem);
-      max-width: 520px;
-      margin: 0 auto;
-      line-height: 1.5;
+    /* ── TABS ── */
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+    .tab-btn {
+      border: 1px solid rgba(241,196,15,.35); background: rgba(0,0,0,.55);
+      color: rgba(255,255,255,.72); border-radius: 999px; min-height: 40px;
+      padding: 0 16px; font-weight: 950; font-size: .82rem; cursor: pointer;
+      font-family: inherit; transition: .18s ease;
     }
+    .tab-btn:hover { border-color: rgba(241,196,15,.65); color: #fff; }
+    .tab-btn.active { background: linear-gradient(90deg, var(--yellow), #e6b800); color: #000; border-color: transparent; }
 
-    /* ── GRID DE CURIOSIDADES ── */
-    .curiosidades-grid {
+    /* ── SEÇÕES ── */
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* ── GRADE DE CARDS ── */
+    .cards-grid {
       display: grid;
-      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
     }
 
-    /* ── CARD BASE ── */
-    .card {
+    /* ── CARD CLICÁVEL ── */
+    .info-card {
       border: 1px solid var(--line);
-      border-radius: 22px;
+      border-radius: 20px;
       background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(0,0,0,.72));
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.07), 0 18px 50px rgba(0,0,0,.45);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.07);
+      cursor: pointer;
+      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
       overflow: hidden;
+      position: relative;
+    }
+    .info-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(241,196,15,.45);
+      box-shadow: 0 12px 36px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.08);
+    }
+    .info-card.expanded { border-color: rgba(241,196,15,.6); }
+
+    .info-card-front {
+      padding: 18px;
+      display: flex; flex-direction: column; gap: 8px;
+      min-height: 130px;
+    }
+    .info-card-icon { font-size: 1.8rem; line-height: 1; }
+    .info-card-title {
+      font-weight: 950; font-size: .96rem; color: #fff; line-height: 1.2;
+    }
+    .info-card-preview {
+      font-size: .76rem; color: var(--muted); font-weight: 850; line-height: 1.4;
+    }
+    .info-card-tag {
+      margin-top: auto;
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: .66rem; font-weight: 950; color: var(--yellow);
+      letter-spacing: .06em; text-transform: uppercase;
+    }
+
+    /* conteúdo expandido */
+    .info-card-body {
+      max-height: 0; overflow: hidden;
+      transition: max-height .35s ease, padding .25s ease;
+      padding: 0 18px;
+      font-size: .86rem; color: rgba(255,255,255,.82); font-weight: 850; line-height: 1.65;
+      border-top: 0px solid transparent;
+    }
+    .info-card.expanded .info-card-body {
+      max-height: 600px;
+      padding: 14px 18px 18px;
+      border-top: 1px solid rgba(255,255,255,.08);
+    }
+    .info-card-chevron {
+      position: absolute; top: 14px; right: 14px;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: rgba(255,255,255,.07); border: 1px solid var(--line);
+      display: grid; place-items: center; font-size: .7rem;
+      color: var(--muted); transition: transform .25s ease, background .2s ease;
+    }
+    .info-card.expanded .info-card-chevron {
+      transform: rotate(180deg);
+      background: rgba(241,196,15,.15); border-color: rgba(241,196,15,.4);
+      color: var(--yellow);
+    }
+
+    /* ── CARDS ESPECIAIS ── */
+    /* Citações */
+    .quote-card {
+      border: 1px solid rgba(241,196,15,.35);
+      border-radius: 20px;
+      background: radial-gradient(circle at 0% 50%, rgba(241,196,15,.10), transparent 50%), rgba(0,0,0,.72);
+      padding: 22px 24px;
+      position: relative;
+      grid-column: 1 / -1;
+    }
+    .quote-card::before {
+      content: "\201C"; position: absolute; top: 4px; left: 16px;
+      font-family: Georgia, serif; font-size: 4.5rem;
+      color: rgba(241,196,15,.2); line-height: 1;
+    }
+    .quote-card blockquote {
+      margin: 0; font-style: italic; font-size: clamp(.95rem,2.5vw,1.2rem);
+      font-weight: 900; color: #fff; line-height: 1.5; padding-left: 24px;
+    }
+    .quote-card cite {
+      display: block; margin-top: 10px; padding-left: 24px;
+      font-size: .78rem; font-weight: 950; color: var(--yellow);
+      letter-spacing: .06em; font-style: normal;
+    }
+
+    /* Card com foto */
+    .photo-card {
+      border: 1px solid var(--line); border-radius: 20px; overflow: hidden;
+      grid-column: span 2;
+      display: grid; grid-template-columns: 180px 1fr;
+      background: rgba(0,0,0,.72);
       transition: transform .2s ease, border-color .2s ease;
     }
+    .photo-card:hover { transform: translateY(-2px); border-color: rgba(241,196,15,.38); }
+    .photo-card-img { position: relative; overflow: hidden; }
+    .photo-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(.3) brightness(.85); transition: filter .3s; }
+    .photo-card:hover .photo-card-img img { filter: grayscale(0) brightness(1); }
+    .photo-card-img::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 60%, rgba(0,0,0,.6)); }
+    .photo-card-body { padding: 18px; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
+    .photo-card-kicker { font-size: .68rem; font-weight: 950; color: var(--yellow); text-transform: uppercase; letter-spacing: .12em; }
+    .photo-card-title { font-family: 'Elektrix', Arial, sans-serif; font-size: clamp(1.2rem,2.5vw,1.8rem); color: #fff; margin: 0; line-height: .95; }
+    .photo-card-text { color: rgba(255,255,255,.76); font-weight: 850; line-height: 1.55; font-size: .87rem; margin: 0; }
 
-    .card:hover {
-      transform: translateY(-3px);
-      border-color: rgba(241,196,15,.38);
+    /* Números */
+    .numbers-grid {
+      display: grid; grid-template-columns: repeat(2,1fr); gap: 12px;
+      border: 1px solid var(--line); border-radius: 20px;
+      background: rgba(0,0,0,.55); padding: 18px;
+      grid-column: span 2;
     }
-
-    /* ── CARD COM FOTO ── */
-    .card-with-photo {
-      display: grid;
-      grid-template-columns: 200px 1fr;
+    .numbers-grid h2 {
+      font-family: 'Elektrix', Arial, sans-serif; color: var(--yellow);
+      font-size: 1.5rem; margin: 0 0 4px; grid-column: 1/-1;
     }
+    .num-item { border: 1px solid var(--line); border-radius: 14px; background: rgba(255,255,255,.04); padding: 12px; }
+    .num-icon { font-size: 1.4rem; margin-bottom: 5px; display: block; }
+    .num-label { font-size: .64rem; color: var(--muted); font-weight: 950; text-transform: uppercase; letter-spacing: .08em; }
+    .num-value { font-family: 'Elektrix', Arial, sans-serif; font-size: 1.6rem; color: var(--yellow); line-height: .9; margin: 3px 0; }
+    .num-desc { font-size: .74rem; color: rgba(255,255,255,.62); font-weight: 850; line-height: 1.3; }
 
-    .card-photo {
-      position: relative;
-      overflow: hidden;
-      min-height: 200px;
-    }
-
-    .card-photo img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      filter: grayscale(.3) brightness(.85);
-      transition: filter .3s ease;
-    }
-
-    .card:hover .card-photo img {
-      filter: grayscale(0) brightness(1);
-    }
-
-    .card-photo-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, transparent 70%, rgba(0,0,0,.6));
-    }
-
-    .card-body {
-      padding: 20px 22px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .card-kicker {
-      font-size: .68rem;
-      font-weight: 950;
-      color: var(--yellow);
-      text-transform: uppercase;
-      letter-spacing: .12em;
-    }
-
-    .card-title {
-      font-family: 'Elektrix', Arial, sans-serif;
-      font-size: clamp(1.3rem, 3vw, 2rem);
-      color: #fff;
-      margin: 0;
-      line-height: .95;
-    }
-
-    .card-text {
-      color: rgba(255,255,255,.78);
-      font-weight: 850;
-      line-height: 1.6;
-      font-size: .92rem;
-      margin: 0;
-    }
-
-    .card-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 4px 10px;
-      font-size: .68rem;
-      font-weight: 950;
-      color: var(--muted);
-      width: fit-content;
-    }
-
-    /* ── CITAÇÃO ── */
-    .card-quote {
-      border-color: rgba(241,196,15,.35);
-      background:
-        radial-gradient(circle at 0% 50%, rgba(241,196,15,.10), transparent 50%),
-        rgba(0,0,0,.72);
-      padding: 26px 28px;
-      position: relative;
-    }
-
-    .card-quote::before {
-      content: """;
-      position: absolute;
-      top: 8px; left: 18px;
-      font-family: Georgia, serif;
-      font-size: 5rem;
-      color: rgba(241,196,15,.22);
-      line-height: 1;
-    }
-
-    .card-quote blockquote {
-      margin: 0;
-      font-style: italic;
-      font-size: clamp(1rem, 2.5vw, 1.3rem);
-      font-weight: 900;
-      color: #fff;
-      line-height: 1.5;
-      padding-left: 28px;
-    }
-
-    .card-quote cite {
-      display: block;
-      margin-top: 12px;
-      padding-left: 28px;
-      font-size: .78rem;
-      font-weight: 950;
-      color: var(--yellow);
-      letter-spacing: .06em;
-      font-style: normal;
-    }
-
-    /* ── TIMELINE ── */
-    .card-timeline {
-      padding: 22px;
-    }
-
-    .card-timeline h2 {
-      font-family: 'Elektrix', Arial, sans-serif;
-      color: var(--yellow);
-      font-size: 1.6rem;
-      margin: 0 0 18px;
-    }
-
-    .timeline {
-      display: grid;
-      gap: 0;
-    }
-
-    .timeline-item {
-      display: grid;
-      grid-template-columns: 72px 1fr;
-      gap: 0 14px;
-      position: relative;
-    }
-
-    .timeline-item:not(:last-child) .tl-year::after {
-      content: "";
-      position: absolute;
-      left: 35px;
-      top: 28px;
-      bottom: -12px;
-      width: 1px;
-      background: var(--line);
-    }
-
-    .tl-year {
-      position: relative;
-      padding-top: 4px;
-      font-family: 'Elektrix', Arial, sans-serif;
-      font-size: 1.05rem;
-      color: var(--yellow);
-      font-weight: 900;
-      line-height: 1;
-    }
-
-    .tl-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--yellow);
-      border: 2px solid rgba(241,196,15,.4);
-      box-shadow: 0 0 10px rgba(241,196,15,.45);
-      position: absolute;
-      right: -1px;
-      top: 6px;
-    }
-
-    .tl-content {
-      padding: 4px 0 20px;
-    }
-
-    .tl-content strong {
-      display: block;
-      font-size: .92rem;
-      color: #fff;
-      font-weight: 950;
-      margin-bottom: 3px;
-    }
-
-    .tl-content span {
-      font-size: .8rem;
-      color: var(--muted);
-      font-weight: 850;
-      line-height: 1.4;
-    }
-
-    /* ── CARDS DE FATOS ── */
-    .facts-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      padding: 22px;
-    }
-
-    .fact-card {
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: rgba(255,255,255,.05);
-      padding: 14px;
-      transition: .18s ease;
-    }
-
-    .fact-card:hover {
-      border-color: var(--line-y);
-      background: rgba(241,196,15,.06);
-    }
-
-    .fact-icon { font-size: 1.6rem; margin-bottom: 7px; display: block; }
-    .fact-label { font-size: .68rem; color: var(--muted); font-weight: 950; text-transform: uppercase; letter-spacing: .08em; }
-    .fact-value { font-family: 'Elektrix', Arial, sans-serif; font-size: 1.4rem; color: var(--yellow); line-height: .9; margin: 3px 0; }
-    .fact-desc { font-size: .78rem; color: rgba(255,255,255,.65); font-weight: 850; line-height: 1.3; }
-
-    .facts-title {
+    /* Timeline */
+    .timeline-card {
+      border: 1px solid var(--line); border-radius: 20px;
+      background: rgba(0,0,0,.55); padding: 20px;
       grid-column: 1 / -1;
-      font-family: 'Elektrix', Arial, sans-serif;
-      color: var(--yellow);
-      font-size: 1.6rem;
-      margin: 0 0 4px;
-      padding: 22px 22px 0;
     }
-
-    /* ── FULL CARD (sem foto) ── */
-    .card-full {
-      padding: 24px;
+    .timeline-card h2 { font-family: 'Elektrix', Arial, sans-serif; color: var(--yellow); font-size: 1.5rem; margin: 0 0 16px; }
+    .tl { display: grid; gap: 0; }
+    .tl-item { display: grid; grid-template-columns: 68px 1fr; gap: 0 12px; position: relative; }
+    .tl-item:not(:last-child) .tl-yr::after {
+      content: ""; position: absolute; left: 33px; top: 26px; bottom: -10px;
+      width: 1px; background: var(--line);
     }
+    .tl-yr { position: relative; padding-top: 3px; font-family: 'Elektrix', Arial, sans-serif; font-size: .95rem; color: var(--yellow); font-weight: 900; line-height: 1; }
+    .tl-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--yellow); border: 2px solid rgba(241,196,15,.35); box-shadow: 0 0 8px rgba(241,196,15,.4); position: absolute; right: -1px; top: 5px; }
+    .tl-c { padding: 2px 0 18px; }
+    .tl-c strong { display: block; font-size: .88rem; color: #fff; font-weight: 950; margin-bottom: 2px; }
+    .tl-c span { font-size: .76rem; color: var(--muted); font-weight: 850; line-height: 1.4; }
 
-    .card-full h2 {
-      font-family: 'Elektrix', Arial, sans-serif;
-      color: var(--yellow);
-      font-size: 1.7rem;
-      margin: 0 0 14px;
+    /* Discografia */
+    .disc-card {
+      border: 1px solid var(--line); border-radius: 20px;
+      background: rgba(0,0,0,.55); padding: 20px;
+      grid-column: 1 / -1;
     }
-
-    .card-full p {
-      color: rgba(255,255,255,.78);
-      font-weight: 850;
-      line-height: 1.7;
-      font-size: .93rem;
-      margin: 0 0 10px;
-    }
-
-    .card-full p:last-child { margin-bottom: 0; }
-
-    /* ── DISCO DE OURO ── */
-    .card-discografia {
-      padding: 22px;
-    }
-
-    .card-discografia h2 {
-      font-family: 'Elektrix', Arial, sans-serif;
-      color: var(--yellow);
-      font-size: 1.7rem;
-      margin: 0 0 16px;
-    }
-
-    .disc-list {
-      display: grid;
-      gap: 10px;
-    }
-
-    .disc-item {
-      display: grid;
-      grid-template-columns: 44px 1fr auto;
-      gap: 10px;
-      align-items: center;
-      border: 1px solid var(--line);
-      border-radius: 13px;
-      background: rgba(255,255,255,.04);
-      padding: 10px 12px;
-    }
-
-    .disc-num {
-      font-family: 'Elektrix', Arial, sans-serif;
-      color: var(--yellow);
-      font-size: 1.4rem;
-      text-align: center;
-    }
-
-    .disc-info strong {
-      display: block;
-      font-size: .92rem;
-      color: #fff;
-      font-weight: 950;
-    }
-
-    .disc-info span {
-      font-size: .76rem;
-      color: var(--muted);
-      font-weight: 850;
-    }
-
-    .disc-year {
-      font-size: .78rem;
-      color: var(--yellow);
-      font-weight: 950;
-      white-space: nowrap;
-    }
+    .disc-card h2 { font-family: 'Elektrix', Arial, sans-serif; color: var(--yellow); font-size: 1.5rem; margin: 0 0 14px; }
+    .disc-list { display: grid; gap: 8px; }
+    .disc-item { display: grid; grid-template-columns: 40px 1fr auto; gap: 10px; align-items: center; border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,.04); padding: 9px 12px; }
+    .disc-num { font-family: 'Elektrix', Arial, sans-serif; color: var(--yellow); font-size: 1.2rem; text-align: center; }
+    .disc-info strong { display: block; font-size: .88rem; color: #fff; font-weight: 950; }
+    .disc-info span { font-size: .72rem; color: var(--muted); font-weight: 850; }
+    .disc-year { font-size: .76rem; color: var(--yellow); font-weight: 950; white-space: nowrap; }
 
     /* ── FOOTER ── */
-    .page-footer {
-      text-align: center;
-      color: rgba(255,255,255,.38);
-      font-size: .76rem;
-      font-weight: 850;
-      padding: 12px 0 8px;
-      border-top: 1px solid var(--line);
-    }
+    .page-footer { text-align: center; color: rgba(255,255,255,.38); font-size: .76rem; font-weight: 850; padding: 12px 0 8px; border-top: 1px solid var(--line); }
 
-    /* ── OVERLAY DE BLOQUEIO ── */
+    /* ── OVERLAY BLOQUEIO ── */
     #curiosidadesBlock {
       position: fixed; inset: 0; z-index: 9999;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 18px;
-      background: rgba(0,0,0,.95);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      display: none; align-items: center; justify-content: center;
+      padding: 18px; background: rgba(0,0,0,.95);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
     }
-
     #curiosidadesBlock.show { display: flex; }
-
-    .block-box {
-      width: min(460px, 100%);
-      border: 1px solid rgba(241,196,15,.45);
-      border-radius: 28px;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(241,196,15,.18), transparent 48%),
-        rgba(5,5,5,.98);
-      box-shadow: 0 30px 100px rgba(0,0,0,.9), 0 0 48px rgba(241,196,15,.12);
-      padding: clamp(22px, 4vw, 36px);
-      text-align: center;
-    }
-
+    .block-box { width: min(460px,100%); border: 1px solid rgba(241,196,15,.45); border-radius: 28px; background: radial-gradient(circle at 50% 0%,rgba(241,196,15,.18),transparent 48%),rgba(5,5,5,.98); box-shadow: 0 30px 100px rgba(0,0,0,.9); padding: clamp(22px,4vw,36px); text-align: center; }
     .block-trophy { font-size: 3rem; margin-bottom: 12px; display: block; }
-
-    .block-box h2 {
-      font-family: 'Elektrix', Arial, sans-serif;
-      color: var(--yellow);
-      font-size: clamp(2rem, 6vw, 3rem);
-      line-height: .9;
-      margin: 0 0 12px;
-      text-shadow: 0 0 22px rgba(241,196,15,.45);
-    }
-
-    .block-box p {
-      color: rgba(255,255,255,.78);
-      font-weight: 900;
-      line-height: 1.55;
-      margin: 0 0 20px;
-      font-size: .96rem;
-    }
-
-    .block-ranking-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border: 1px solid rgba(241,196,15,.5);
-      border-radius: 999px;
-      background: rgba(241,196,15,.12);
-      padding: 8px 16px;
-      font-weight: 950;
-      color: var(--yellow);
-      font-size: .88rem;
-      margin-bottom: 18px;
-    }
-
-    .block-btn-primary {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      min-height: 52px;
-      border-radius: 15px;
-      border: 0;
-      background: linear-gradient(90deg, var(--yellow), #e6b800);
-      color: #050505;
-      font-weight: 950;
-      font-size: .96rem;
-      text-decoration: none;
-      cursor: pointer;
-      box-shadow: 0 10px 30px rgba(241,196,15,.25);
-      transition: .18s ease;
-      margin-bottom: 10px;
-    }
-
-    .block-btn-primary:hover { transform: translateY(-2px); filter: brightness(1.06); }
-
-    .block-btn-secondary {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      min-height: 44px;
-      border: 1px solid rgba(255,255,255,.2);
-      border-radius: 15px;
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.75);
-      font-weight: 950;
-      font-size: .88rem;
-      text-decoration: none;
-      transition: .18s ease;
-    }
-
-    .block-btn-secondary:hover { border-color: rgba(255,255,255,.4); color: #fff; }
-
-    .block-perks {
-      margin-top: 14px;
-      font-size: .75rem;
-      color: rgba(255,255,255,.45);
-      font-weight: 850;
-      line-height: 1.7;
-    }
+    .block-box h2 { font-family:'Elektrix',Arial,sans-serif; color:var(--yellow); font-size:clamp(2rem,6vw,3rem); line-height:.9; margin:0 0 12px; text-shadow:0 0 22px rgba(241,196,15,.45); }
+    .block-box p { color:rgba(255,255,255,.78); font-weight:900; line-height:1.55; margin:0 0 20px; font-size:.96rem; }
+    .block-ranking-badge { display:inline-flex; align-items:center; gap:8px; border:1px solid rgba(241,196,15,.5); border-radius:999px; background:rgba(241,196,15,.12); padding:8px 16px; font-weight:950; color:var(--yellow); font-size:.88rem; margin-bottom:18px; }
+    .block-btn-primary { display:flex; align-items:center; justify-content:center; gap:10px; width:100%; min-height:52px; border-radius:15px; border:0; background:linear-gradient(90deg,var(--yellow),#e6b800); color:#050505; font-weight:950; font-size:.96rem; text-decoration:none; cursor:pointer; box-shadow:0 10px 30px rgba(241,196,15,.25); transition:.18s ease; margin-bottom:10px; }
+    .block-btn-primary:hover { transform:translateY(-2px); filter:brightness(1.06); }
+    .block-btn-secondary { display:flex; align-items:center; justify-content:center; width:100%; min-height:44px; border:1px solid rgba(255,255,255,.2); border-radius:15px; background:rgba(255,255,255,.06); color:rgba(255,255,255,.75); font-weight:950; font-size:.88rem; text-decoration:none; transition:.18s ease; }
+    .block-btn-secondary:hover { border-color:rgba(255,255,255,.4); color:#fff; }
 
     /* ── RESPONSIVO ── */
-    @media (max-width: 640px) {
-      .page { padding: 12px; gap: 16px; }
-      .card-with-photo { grid-template-columns: 1fr; }
-      .card-photo { min-height: 160px; }
-      .card-photo-overlay { background: linear-gradient(0deg, rgba(0,0,0,.6), transparent 60%); }
-      .facts-grid { grid-template-columns: 1fr 1fr; }
-      .disc-item { grid-template-columns: 36px 1fr auto; }
+    @media (max-width: 600px) {
+      .cards-grid { grid-template-columns: 1fr 1fr; }
+      .photo-card { grid-column: 1/-1; grid-template-columns: 1fr; }
+      .photo-card-img { min-height: 140px; }
+      .numbers-grid { grid-column: 1/-1; }
+      .quote-card { grid-column: 1/-1; }
     }
-
     @media (max-width: 400px) {
-      .facts-grid { grid-template-columns: 1fr; }
+      .cards-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-<!-- OVERLAY DE BLOQUEIO (para não-Top 10) -->
 <div id="curiosidadesBlock">
   <div class="block-box">
     <span class="block-trophy">🏆</span>
@@ -610,11 +295,6 @@
     <p id="blockMessage">Esta página é exclusiva para os 10 maiores fãs do Charlie Brown Jr. no ranking. Jogue Rádio, Letras e Quiz para subir sua pontuação e desbloquear esse conteúdo!</p>
     <a href="ranking.html" class="block-btn-primary">🏆 Ver minha posição no ranking</a>
     <a href="index.html?skipIntro=true" class="block-btn-secondary">← Voltar ao menu</a>
-    <p class="block-perks">
-      O que você vai encontrar aqui:<br>
-      🎸 Histórias raras da banda &nbsp; 📸 Fotos e momentos históricos<br>
-      💬 Citações do Chorão &nbsp; 📅 Timeline completa do CBJR
-    </p>
   </div>
 </div>
 
@@ -629,257 +309,429 @@
   <div class="hero">
     <div class="hero-badge">🏆 Exclusivo Top 10 do Ranking</div>
     <h1>Charlie Brown Jr.<br>por dentro</h1>
-    <p>Histórias, curiosidades e momentos que moldaram uma das maiores bandas do Brasil. Conteúdo exclusivo para os maiores fãs.</p>
+    <p>Histórias, curiosidades e momentos que moldaram uma das maiores bandas do Brasil.</p>
   </div>
 
-  <div class="curiosidades-grid">
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="curiosidades">🎸 Curiosidades</button>
+    <button class="tab-btn" data-tab="historia">📅 História</button>
+    <button class="tab-btn" data-tab="membros">👥 Membros</button>
+    <button class="tab-btn" data-tab="discografia">💿 Discografia</button>
+    <button class="tab-btn" data-tab="legado">🌟 Legado</button>
+  </div>
 
-    <!-- CITAÇÃO 1 -->
-    <div class="card card-quote">
-      <blockquote>
-        "A vida é desafio, encare. Se você não consegue o que quer, quer dizer que ainda não fez o suficiente para merecer."
-      </blockquote>
-      <cite>— Chorão (Alexandre Magno Abrão)</cite>
-    </div>
+  <!-- ══ CURIOSIDADES ══ -->
+  <div class="section active" id="tab-curiosidades">
+    <div class="cards-grid">
 
-    <!-- CARD COM FOTO: ORIGEM DA BANDA -->
-    <div class="card card-with-photo">
-      <div class="card-photo">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Charlie_Brown_Jr._no_Palco_Mundo_-_Rock_in_Rio_2011.jpg/800px-Charlie_Brown_Jr._no_Palco_Mundo_-_Rock_in_Rio_2011.jpg"
-          alt="Charlie Brown Jr. no Rock in Rio 2011"
-          loading="lazy"
-          onerror="this.parentNode.style.background='linear-gradient(135deg,#111,#1a1a1a)';this.style.display='none';"
-        />
-        <div class="card-photo-overlay"></div>
+      <div class="quote-card">
+        <blockquote>"A vida é desafio, encare. Se você não consegue o que quer, quer dizer que ainda não fez o suficiente para merecer."</blockquote>
+        <cite>— Chorão</cite>
       </div>
-      <div class="card-body">
-        <span class="card-kicker">📍 Santos, SP — 1992</span>
-        <h2 class="card-title">A origem do nome</h2>
-        <p class="card-text">O nome surgiu por acaso: Chorão atropelou uma barraca de água de coco que tinha o desenho do personagem Charlie Brown, do gibi Peanuts. Já o "Jr." foi acrescido, nas palavras do próprio Chorão, "pelo fato de sermos filhos do rock", numa homenagem à cena do rock brasileiro dos anos 90.</p>
-        <span class="card-tag">🎸 Curiosidade histórica</span>
+
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">💰</span>
+          <div class="info-card-title">A demo financiada com penhores</div>
+          <div class="info-card-preview">Champignon penhorou um baixo, Chorão penhorou uma TV...</div>
+          <span class="info-card-tag">📼 1995</span>
+        </div>
+        <div class="info-card-body">Para pagar a gravação da primeira fita demo em 1995, Champignon penhorou um de seus baixos e Chorão penhorou uma televisão. Essa demo chegou ao produtor Tadeu Patolla — que por sua vez a levou ao Rick Bonadio — e mudou o destino da banda.</div>
+        <div class="info-card-chevron">▼</div>
+      </div>
+
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">🚽</span>
+          <div class="info-card-title">A estreia por necessidade de banheiro</div>
+          <div class="info-card-preview">Chorão entrou pra música porque um cantor precisou ir ao banheiro...</div>
+          <span class="info-card-tag">🎤 Origem</span>
+        </div>
+        <div class="info-card-body">Chorão entrou para o mundo da música quando substituiu o vocalista de uma banda num bar local porque o cara precisou ir ao banheiro. Uma pessoa da plateia o viu cantar e o convidou para integrar sua banda. Sem esse momento, o CBJR talvez nunca existisse.</div>
+        <div class="info-card-chevron">▼</div>
+      </div>
+
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">🇵🇹</span>
+          <div class="info-card-title">"Bocas Ordinárias" veio de um crítico português</div>
+          <div class="info-card-preview">Um jornalista xingou a banda e Chorão adorou...</div>
+          <span class="info-card-tag">💿 2002</span>
+        </div>
+        <div class="info-card-body">Durante a turnê em Portugal, um jornalista chamou a banda de "bocas ordinárias" — expressão lusitana para "mal-educados" ou "grosseiros". Em vez de se ofender, Chorão adorou e usou como título do álbum de 2002, que vendeu mais de 500 mil cópias.</div>
+        <div class="info-card-chevron">▼</div>
+      </div>
+
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">💙</span>
+          <div class="info-card-title">"Céu Azul" foi escrita após o divórcio</div>
+          <div class="info-card-preview">Uma das músicas mais amadas veio de uma separação...</div>
+          <span class="info-card-tag">🎵 2011</span>
+        </div>
+        <div class="info-card-body">Chorão compôs "Céu Azul" para sua ex-companheira Graziela "Grazon" Gonçalves após a separação em 2011. O divórcio foi motivado pelos problemas de dependência química do vocalista. A música foi lançada no álbum ao vivo "Música Popular Caiçara" em 2012.</div>
+        <div class="info-card-chevron">▼</div>
+      </div>
+
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">🎮</span>
+          <div class="info-card-title">"Confisco" no Tony Hawk's Pro Skater</div>
+          <div class="info-card-preview">A música entrou no jogo de skate mais famoso do mundo...</div>
+          <span class="info-card-tag">🛹 2020</span>
+        </div>
+        <div class="info-card-body">Em 2020, "Confisco" foi incluída na trilha sonora do remake de Tony Hawk's Pro Skater 1+2 — o jogo de skate mais famoso da história. Uma homenagem perfeita para uma banda que sempre misturou rock e cultura do skate.</div>
+        <div class="info-card-chevron">▼</div>
+      </div>
+
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">📺</span>
+          <div class="info-card-title">"Te Levar" na Malhação por 7 anos</div>
+          <div class="info-card-preview">De 1999 a 2006, toda tarde na Globo...</div>
+          <span class="info-card-tag">📻 1999–2006</span>
+        </div>
+        <div class="info-card-body">De 1999 a 2006, "Te Levar" foi tema de abertura do seriado Malhação, da TV Globo — sete anos seguidos. Isso expôs o CBJR às mais diferentes classes sociais do Brasil e criou uma geração inteira de fãs.</div>
+        <div class="info-card-chevron">▼</div>
+      </div>
+
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">🎵</span>
+          <div class="info-card-title">Primeiro número 1 nas rádios</div>
+          <div class="info-card-preview">"Zóio de Lula" chegou ao topo em 1999...</div>
+          <span class="info-card-tag">📻 1999</span>
+        </div>
+        <div class="info-card-body">"Zóio de Lula", lançado em 1º de abril de 1999, foi a primeira música do CBJR a alcançar o topo das rádios brasileiras. O clipe apresentava a apresentadora Luize Altenhofen, então com 19 anos.</div>
+        <div class="info-card-chevron">▼</div>
+      </div>
+
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">⚖️</span>
+          <div class="info-card-title">Champignon precisava de autorização judicial</div>
+          <div class="info-card-preview">Era menor de idade e não podia entrar nas casas noturnas...</div>
+          <span class="info-card-tag">👶 Começo</span>
+        </div>
+        <div class="info-card-body">Nos primeiros anos da banda, Champignon era menor de idade e precisava levar uma autorização judicial assinada pelos pais para entrar nas casas noturnas onde o grupo se apresentava. Ele tinha 12 anos quando entrou para a banda precursora do CBJR.</div>
+        <div class="info-card-chevron">▼</div>
+      </div>
+
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">🤝</span>
+          <div class="info-card-title">O contrato veio por uma namorada</div>
+          <div class="info-card-preview">Champignon namorava a cunhada do produtor...</div>
+          <span class="info-card-tag">🎙️ 1995</span>
+        </div>
+        <div class="info-card-body">Champignon namorava a cunhada do produtor Tadeu Patolla. Foi ele quem levou a fita demo ao produtor Rick Bonadio, então presidente da Virgin Records no Brasil — o mesmo que havia produzido os Mamonas Assassinas. Patolla ainda aconselhou Chorão a cantar em português e misturar hip hop e reggae ao som da banda.</div>
+        <div class="info-card-chevron">▼</div>
+      </div>
+
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">🏟️</span>
+          <div class="info-card-title">Recusaram o Rock in Rio III</div>
+          <div class="info-card-preview">Em 2001, disseram não ao maior festival do mundo...</div>
+          <span class="info-card-tag">🎸 2001</span>
+        </div>
+        <div class="info-card-body">Em 2001, o CBJR foi uma das bandas brasileiras que se recusou a participar do Rock in Rio III por discordar do tratamento dispensado às bandas nacionais pelos organizadores. Uma atitude coerente com a postura rebelde e independente da banda.</div>
+        <div class="info-card-chevron">▼</div>
+      </div>
+
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">🎬</span>
+          <div class="info-card-title">Abriram o primeiro show do Linkin Park no Brasil</div>
+          <div class="info-card-preview">No Morumbi, em setembro de 2004...</div>
+          <span class="info-card-tag">🎤 2004</span>
+        </div>
+        <div class="info-card-body">Em 11 de setembro de 2004, o CBJR abriu o primeiro show do Linkin Park no Brasil, realizado no Estádio do Morumbi em São Paulo, na 1ª edição do Chimera Music Festival.</div>
+        <div class="info-card-chevron">▼</div>
+      </div>
+
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">💔</span>
+          <div class="info-card-title">A música feita para a Cássia Eller</div>
+          <div class="info-card-preview">Chorão compôs uma canção que ela nunca gravou...</div>
+          <span class="info-card-tag">🎵 2001</span>
+        </div>
+        <div class="info-card-body">Em 2001, a cantora Cássia Eller pediu a Chorão uma música para entrar em seu próximo disco. Ele compôs "O Dom, a Inteligência e a Voz". Cássia faleceu antes de gravá-la. Anos depois, Chorão lançou a canção no álbum Camisa 10 (2009) como homenagem.</div>
+        <div class="info-card-chevron">▼</div>
+      </div>
+
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">📈</span>
+          <div class="info-card-title">9 do Top 10 após a morte de Chorão</div>
+          <div class="info-card-preview">Na semana do falecimento, dominaram as paradas...</div>
+          <span class="info-card-tag">📊 Março 2013</span>
+        </div>
+        <div class="info-card-body">Na semana da morte de Chorão, em março de 2013, o CBJR ocupou 9 das 10 posições do top 10 de músicas mais compradas no Brasil. O único single que não era do grupo estava na 5ª posição.</div>
+        <div class="info-card-chevron">▼</div>
+      </div>
+
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">📚</span>
+          <div class="info-card-title">O livro que quase não existiu</div>
+          <div class="info-card-preview">"Eu Estava Lá Também" — 350 fotos, 192 páginas...</div>
+          <span class="info-card-tag">📖 2017</span>
+        </div>
+        <div class="info-card-body">Em 2011, Chorão planejou um livro fotográfico com mais de 300 fotos do fotógrafo oficial Jerri Rossato Lima. Ele deixou o projeto praticamente pronto antes de morrer. Seu filho Alexandre retomou via crowdfunding e lançou em 9 de abril de 2017 — data em que Chorão completaria 47 anos — com 350 fotos em 192 páginas, no formato 31x31cm de capa de vinil.</div>
+        <div class="info-card-chevron">▼</div>
+      </div>
+
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">🌍</span>
+          <div class="info-card-title">2ª banda de rock brasileira mais ouvida no exterior</div>
+          <div class="info-card-preview">Atrás apenas do Sepultura, segundo o Deezer em 2015...</div>
+          <span class="info-card-tag">🌐 2015</span>
+        </div>
+        <div class="info-card-body">Em 2015, levantamento do Deezer revelou que o CBJR era a segunda banda de rock brasileira mais ouvida fora do Brasil, atrás apenas do Sepultura. No Spotify, a banda ficou em 31º lugar entre os 47 artistas brasileiros mais ouvidos no exterior.</div>
+        <div class="info-card-chevron">▼</div>
+      </div>
+
+      <div class="quote-card">
+        <blockquote>"Não adianta ter dinheiro se não tiver paz de espírito. Não adianta ter sucesso se não tiver amor. O que importa de verdade é ser feliz com o que você é."</blockquote>
+        <cite>— Chorão</cite>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ HISTÓRIA ══ -->
+  <div class="section" id="tab-historia">
+    <div class="cards-grid">
+
+      <div class="numbers-grid">
+        <h2>Números da lenda</h2>
+        <div class="num-item"><span class="num-icon">💿</span><span class="num-label">Álbuns de estúdio</span><div class="num-value">10</div><p class="num-desc">De "Transpiração Contínua Prolongada" (1997) a "La Família 013" (2013)</p></div>
+        <div class="num-item"><span class="num-icon">🏆</span><span class="num-label">Grammy Latino</span><div class="num-value">2</div><p class="num-desc">"Tamo Aí na Atividade" (2005) e "Camisa 10" (2010) — mais 5 indicações</p></div>
+        <div class="num-item"><span class="num-icon">🎤</span><span class="num-label">Anos de estrada</span><div class="num-value">20+</div><p class="num-desc">Fundada em Santos em 1992 — Chorão nasceu em SP e chegou a Santos em 1987</p></div>
+        <div class="num-item"><span class="num-icon">👥</span><span class="num-label">Formação original</span><div class="num-value">5</div><p class="num-desc">Chorão, Champignon, Marcão Britto, Thiago Castanho e Renato Pelado</p></div>
+      </div>
+
+      <div class="timeline-card">
+        <h2>A linha do tempo CBJR</h2>
+        <div class="tl">
+          <div class="tl-item"><div class="tl-yr">1987<div class="tl-dot"></div></div><div class="tl-c"><strong>Chorão chega a Santos</strong><span>Alexandre Magno Abrão, nascido em São Paulo, se muda para Santos. Descobre o skate e chega às melhores posições em campeonatos brasileiros.</span></div></div>
+          <div class="tl-item"><div class="tl-yr">1990<div class="tl-dot"></div></div><div class="tl-c"><strong>Chorão conhece Champignon</strong><span>Luiz Carlos Leão Duarte Júnior, o Champignon, com apenas 12 anos, faz um teste de baixo e os dois formam a What's Up — precursora do CBJR.</span></div></div>
+          <div class="tl-item"><div class="tl-yr">1992<div class="tl-dot"></div></div><div class="tl-c"><strong>Nasce o Charlie Brown Jr.</strong><span>Marcão Britto, Thiago Castanho e Renato Pelado completam a formação clássica. O nome surge quando Chorão atropela uma barraca com o desenho do Charlie Brown.</span></div></div>
+          <div class="tl-item"><div class="tl-yr">1995<div class="tl-dot"></div></div><div class="tl-c"><strong>A demo dos penhores</strong><span>Champignon penhorou um baixo e Chorão penhorou uma TV para pagar a gravação da primeira fita demo. O produtor Tadeu Patolla aconselhou Chorão a cantar em português.</span></div></div>
+          <div class="tl-item"><div class="tl-yr">1997<div class="tl-dot"></div></div><div class="tl-c"><strong>Transpiração Contínua Prolongada</strong><span>Álbum de estreia pela Virgin Records. ~500 mil cópias. Primeira aparição na TV no Programa Livre do SBT em 24 de junho de 1997.</span></div></div>
+          <div class="tl-item"><div class="tl-yr">1999<div class="tl-dot"></div></div><div class="tl-c"><strong>Preço Curto... Prazo Longo</strong><span>25 músicas pelo preço de um CD simples. "Te Levar" vira tema da Malhação por 7 anos. "Zóio de Lula" é o primeiro número 1 nas rádios.</span></div></div>
+          <div class="tl-item"><div class="tl-yr">2003<div class="tl-dot"></div></div><div class="tl-c"><strong>Acústico MTV — o auge</strong><span>Gravado no Teatro Mars em SP, torna-se o maior sucesso da banda. Mais de 2 milhões de cópias vendidas, com Marcelo D2, Negra Li e RZO.</span></div></div>
+          <div class="tl-item"><div class="tl-yr">2005<div class="tl-dot"></div></div><div class="tl-c"><strong>🏆 Grammy Latino — Tamo Aí na Atividade</strong><span>Primeiro Grammy. Nova formação com Pinguim, Heitor Gomes e retorno de Thiago Castanho. "Lutar Pelo Que é Meu" vira abertura da Malhação.</span></div></div>
+          <div class="tl-item"><div class="tl-yr">2009<div class="tl-dot"></div></div><div class="tl-c"><strong>🏆 Grammy Latino — Camisa 10</strong><span>Segundo Grammy. Inclui "Céu Azul", escrita após o divórcio de Chorão, e a canção feita para Cássia Eller que ela nunca gravou.</span></div></div>
+          <div class="tl-item"><div class="tl-yr">2011<div class="tl-dot"></div></div><div class="tl-c"><strong>Rock in Rio e reunião histórica</strong><span>Champignon e Marcão retornam à banda. Show no Palco Mundo com mais de 80 mil pessoas. Chorão compõe "Céu Azul" após o divórcio.</span></div></div>
+          <div class="tl-item"><div class="tl-yr">2013<div class="tl-dot"></div></div><div class="tl-c"><strong>O fim de uma era</strong><span>Em 6 de março, Chorão é encontrado morto em SP. Em 9 de setembro, Champignon parte. O álbum póstumo "La Família 013" é lançado em outubro.</span></div></div>
+        </div>
+      </div>
+
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">🎸</span>
+          <div class="info-card-title">As influências que moldaram o som</div>
+          <div class="info-card-preview">De thrash metal com letras em inglês para o maior som do rock brasileiro...</div>
+          <span class="info-card-tag">🎵 Influências</span>
+        </div>
+        <div class="info-card-body">Antes do CBJR, Chorão e Champignon tocavam na What's Up — crossover thrash e hardcore punk com letras em inglês, inspirado em Biohazard e Suicidal Tendencies. O produtor Tadeu Patolla sugeriu cantar em português e usar Red Hot Chili Peppers e Rage Against the Machine como referência de fusão. As maiores influências de Chorão incluíam Blink-182, Sublime, Bad Brains, Faith No More, NOFX e 311.</div>
+        <div class="info-card-chevron">▼</div>
+      </div>
+
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">🥊</span>
+          <div class="info-card-title">A briga com Marcelo Camelo</div>
+          <div class="info-card-preview">Um comercial de Coca-Cola, uma entrevista e um soco no aeroporto...</div>
+          <span class="info-card-tag">🗞️ 2004</span>
+        </div>
+        <div class="info-card-body">Em 2002, Chorão estrelou um comercial da Coca-Cola. Em 2004, o vocalista dos Los Hermanos, Marcelo Camelo, criticou a atitude numa entrevista. Chorão ficou furioso. Num voo rumo ao Piauí Pop, os dois se encontraram. No desembarque em Fortaleza, Chorão agrediu Camelo com um soco. Os Los Hermanos abriram dois processos — um pedindo R$ 43 mil. Anos depois, Chorão ironizou: "Camelo, eu te amo. Sem você o Brasil não seria o mesmo."</div>
+        <div class="info-card-chevron">▼</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ MEMBROS ══ -->
+  <div class="section" id="tab-membros">
+    <div class="cards-grid">
+
+      <div class="photo-card">
+        <div class="photo-card-img">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Chorao_CBJR.jpg/400px-Chorao_CBJR.jpg" alt="Chorão" loading="lazy" onerror="this.parentNode.style.background='#111';this.style.display='none';" />
+        </div>
+        <div class="photo-card-body">
+          <span class="photo-card-kicker">👑 Alexandre Magno Abrão</span>
+          <h2 class="photo-card-title">Chorão</h2>
+          <p class="photo-card-text">Nascido em 27 de setembro de 1974 em São Paulo, mudou-se para Santos em 1987. Skatista competitivo, poeta e rebelde. Criou o Chorão Skate Park em Santos (2005) e planejou um livro fotográfico com 350 fotos que seu filho Alexandre lançou em 2017, na data em que ele completaria 47 anos.</p>
+        </div>
+      </div>
+
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">🎸</span>
+          <div class="info-card-title">Champignon</div>
+          <div class="info-card-preview">Luiz Carlos Leão Duarte Júnior — entrou com 12 anos...</div>
+          <span class="info-card-tag">🎸 Baixista</span>
+        </div>
+        <div class="info-card-body">Luiz Carlos Leão Duarte Júnior entrou na banda com 12 anos em 1990. Multi-instrumentista e beatboxer. Saiu em 2005 após divergências e retornou em 2011 com o vídeo "Voltei pra ficar! Aqui é minha casa!". Após a morte de Chorão assumiu os vocais no projeto A Banca. Partiu em 9 de setembro de 2013 — sua mulher estava grávida de 5 meses. Seu depoimento no documentário Marginal Alado foi gravado uma semana antes de sua morte.</div>
+        <div class="info-card-chevron">▼</div>
+      </div>
+
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">🎸</span>
+          <div class="info-card-title">Marcão Britto</div>
+          <div class="info-card-preview">Guitarrista desde a fundação — saiu, voltou e ainda toca...</div>
+          <span class="info-card-tag">🎸 Guitarra</span>
+        </div>
+        <div class="info-card-body">Guitarrista desde 1992, saiu em 2005 junto com Champignon e Pelado. Retornou em 2011 quando Chorão o chamou ao palco no Viradão Carioca. Após 2013, formou as bandas TH6 e D'Chapas. Desde 2022 lidera o projeto "Charlie Brown Jr. 30 Anos" ao lado de Thiago Castanho — precisaram lutar na Justiça pelo direito de usar o nome, saindo vencedores nos processos.</div>
+        <div class="info-card-chevron">▼</div>
+      </div>
+
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">🎸</span>
+          <div class="info-card-title">Thiago Castanho</div>
+          <div class="info-card-preview">Saiu após o 3º álbum, voltou, saiu e voltou de novo...</div>
+          <span class="info-card-tag">🎸 Guitarra</span>
+        </div>
+        <div class="info-card-body">Guitarrista da formação original (1992–2001). Saiu após o álbum "Nadando com os Tubarões" alegando cansaço das turnês. Retornou em 2005 com a nova formação pós-separação. Parte da banda até 2013. Hoje co-lidera o projeto "30 Anos" com Marcão. Em 2021, declarou: "O Charlie Brown Jr. acabou em 2013. Mas existem integrantes vivos que estão aí."</div>
+        <div class="info-card-chevron">▼</div>
+      </div>
+
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">🥁</span>
+          <div class="info-card-title">Renato Pelado</div>
+          <div class="info-card-preview">Baterista original — saiu em 2005 e virou DJ...</div>
+          <span class="info-card-tag">🥁 Bateria</span>
+        </div>
+        <div class="info-card-body">Baterista da formação original de 1992 a 2005. Saiu junto com Champignon e Marcão em 2005. Após deixar a banda, Renato Pelado se dedicou à carreira de DJ. É o único membro da formação clássica que nunca retornou à banda.</div>
+        <div class="info-card-chevron">▼</div>
+      </div>
+
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">🥁</span>
+          <div class="info-card-title">Pinguim Ruas & Heitor Gomes</div>
+          <div class="info-card-preview">A formação do Grammy Latino de 2005...</div>
+          <span class="info-card-tag">🏆 2005–2011</span>
+        </div>
+        <div class="info-card-body">André "Pinguim" Ruas (bateria) e Heitor Gomes (baixo, filho do baixista Chico Gomes) entraram na nova formação em 2005. Com eles e Thiago Castanho, a banda venceu o Grammy Latino com "Tamo Aí na Atividade". Pinguim saiu em 2008 após seu contrato expirar. Heitor saiu em 2011 para se juntar ao CPM 22. Os dois tocam juntos no projeto "30 Anos".</div>
+        <div class="info-card-chevron">▼</div>
+      </div>
+
+      <div class="quote-card">
+        <blockquote>"O skate me ensinou que quando você cai, tem que levantar e tentar de novo. A vida é igual. Não tem como ser diferente."</blockquote>
+        <cite>— Chorão</cite>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ DISCOGRAFIA ══ -->
+  <div class="section" id="tab-discografia">
+    <div class="cards-grid">
+      <div class="disc-card">
+        <h2>10 álbuns de estúdio</h2>
+        <div class="disc-list">
+          <div class="disc-item"><div class="disc-num">01</div><div class="disc-info"><strong>Transpiração Contínua Prolongada</strong><span>~500 mil cópias — O Coro Vai Comê!, Proibida pra Mim, Quinta-Feira</span></div><div class="disc-year">1997</div></div>
+          <div class="disc-item"><div class="disc-num">02</div><div class="disc-info"><strong>Preço Curto... Prazo Longo</strong><span>25 faixas pelo preço de um — Te Levar, Zóio de Lula, Confisco</span></div><div class="disc-year">1999</div></div>
+          <div class="disc-item"><div class="disc-num">03</div><div class="disc-info"><strong>Nadando com os Tubarões</strong><span>Último com a formação original — Não é Sério, A Banca, Rubão o Dono do Mundo</span></div><div class="disc-year">2000</div></div>
+          <div class="disc-item"><div class="disc-num">04</div><div class="disc-info"><strong>100% Charlie Brown Jr. — Abalando a Sua Fábrica</strong><span>1º sem Thiago Castanho — Lugar ao Sol, Sino Dourado</span></div><div class="disc-year">2001</div></div>
+          <div class="disc-item"><div class="disc-num">05</div><div class="disc-info"><strong>Bocas Ordinárias</strong><span>+500 mil cópias — nome veio de crítico português — Papo Reto, Só por Uma Noite</span></div><div class="disc-year">2002</div></div>
+          <div class="disc-item"><div class="disc-num">06</div><div class="disc-info"><strong>Tamo Aí na Atividade</strong><span>🏆 Grammy Latino 2005 — Champagne e Água Benta, Tamo Aí na Atividade</span></div><div class="disc-year">2004</div></div>
+          <div class="disc-item"><div class="disc-num">07</div><div class="disc-info"><strong>Imunidade Musical</strong><span>Nova formação — Lutar Pelo Que é Meu, Dias de Luta Dias de Glória, Ela Vai Voltar</span></div><div class="disc-year">2005</div></div>
+          <div class="disc-item"><div class="disc-num">08</div><div class="disc-info"><strong>Ritmo, Ritual e Responsa</strong><span>22 faixas — Pontes Indestrutíveis, Be Myself (trilha Duas Caras/Globo)</span></div><div class="disc-year">2007</div></div>
+          <div class="disc-item"><div class="disc-num">09</div><div class="disc-info"><strong>Camisa 10 — Joga Bola até na Chuva</strong><span>🏆 Grammy Latino 2010 — Céu Azul, Só os Loucos Sabem, canção p/ Cássia Eller</span></div><div class="disc-year">2009</div></div>
+          <div class="disc-item"><div class="disc-num">10</div><div class="disc-info"><strong>La Família 013</strong><span>Álbum póstumo — 013 é o DDD de Santos — Meu Novo Mundo</span></div><div class="disc-year">2013</div></div>
+        </div>
       </div>
     </div>
+  </div>
 
-    <!-- FATOS RÁPIDOS -->
-    <div class="card">
-      <h2 class="facts-title">Números da lenda</h2>
-      <div class="facts-grid">
-        <div class="fact-card">
-          <span class="fact-icon">💿</span>
-          <span class="fact-label">Álbuns de estúdio</span>
-          <div class="fact-value">10</div>
-          <p class="fact-desc">De "Transpiração Contínua Prolongada" (1997) a "La Família 013" (2013, póstumo)</p>
+  <!-- ══ LEGADO ══ -->
+  <div class="section" id="tab-legado">
+    <div class="cards-grid">
+
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">🎬</span>
+          <div class="info-card-title">Documentário Marginal Alado</div>
+          <div class="info-card-preview">Netflix, prêmio do público e o último depoimento de Champignon...</div>
+          <span class="info-card-tag">🎥 2021</span>
         </div>
-        <div class="fact-card">
-          <span class="fact-icon">🎤</span>
-          <span class="fact-label">Anos de estrada</span>
-          <div class="fact-value">20+</div>
-          <p class="fact-desc">Fundada em 1992 em Santos, SP — Chorão era natural de São Paulo e se mudou para Santos em 1987</p>
-        </div>
-        <div class="fact-card">
-          <span class="fact-icon">🏆</span>
-          <span class="fact-label">Grammy Latino</span>
-          <div class="fact-value">1</div>
-          <p class="fact-desc">Venceram com "Camisa 10 Joga Bola até na Chuva" (2009) na categoria Melhor Álbum de Rock Brasileiro</p>
-        </div>
-        <div class="fact-card">
-          <span class="fact-icon">👥</span>
-          <span class="fact-label">Formação original</span>
-          <div class="fact-value">5</div>
-          <p class="fact-desc">Chorão, Champignon, Marcão Britto, Thiago Castanho e Renato Pelado — todos de Santos exceto Chorão</p>
-        </div>
+        <div class="info-card-body">Dirigido por Felipe Novaes, financiado por crowdfunding que arrecadou R$ 41.513 (meta era R$ 35.000). Teve première na 43ª Mostra Internacional de Cinema de São Paulo em 2019. Venceu o prêmio do público de melhor documentário. Lançado em 8 de abril de 2021 e disponível na Netflix e Paramount+. Detalhe arrepiante: o depoimento de Champignon foi gravado uma semana antes de seu suicídio.</div>
+        <div class="info-card-chevron">▼</div>
       </div>
-    </div>
 
-    <!-- CITAÇÃO 2 -->
-    <div class="card card-quote">
-      <blockquote>
-        "Não adianta ter dinheiro se não tiver paz de espírito. Não adianta ter sucesso se não tiver amor. O que importa de verdade é ser feliz com o que você é."
-      </blockquote>
-      <cite>— Chorão</cite>
-    </div>
-
-    <!-- TIMELINE -->
-    <div class="card card-timeline">
-      <h2>A linha do tempo CBJR</h2>
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="tl-year">1987 <div class="tl-dot"></div></div>
-          <div class="tl-content">
-            <strong>Chorão chega a Santos</strong>
-            <span>Alexandre Magno Abrão, nascido em São Paulo, se muda para Santos. Passa a se dedicar ao skate, chegando às melhores posições em campeonatos brasileiros.</span>
-          </div>
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">🎭</span>
+          <div class="info-card-title">Musical Dias de Luta, Dias de Glória</div>
+          <div class="info-card-preview">25 atores, 26 canções e uma polêmica com a família...</div>
+          <span class="info-card-tag">🎭 2015</span>
         </div>
-        <div class="timeline-item">
-          <div class="tl-year">1990 <div class="tl-dot"></div></div>
-          <div class="tl-content">
-            <strong>Chorão conhece Champignon</strong>
-            <span>Luiz Carlos Leão Duarte Júnior, o Champignon, com apenas 12 anos, faz um teste de baixo e os dois formam a banda What's Up, precursora do CBJR.</span>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="tl-year">1992 <div class="tl-dot"></div></div>
-          <div class="tl-content">
-            <strong>Nasce o Charlie Brown Jr.</strong>
-            <span>Com a entrada de Marcão Britto, Thiago Castanho e Renato Pelado, a formação clássica está completa. O nome surge quando Chorão atropela uma barraca com o desenho do Charlie Brown.</span>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="tl-year">1997 <div class="tl-dot"></div></div>
-          <div class="tl-content">
-            <strong>Transpiração Contínua Prolongada</strong>
-            <span>Álbum de estreia pela Virgin Records, produzido por Tadeu Patolla e Rick Bonadio. Vendeu cerca de 500 mil cópias. Primeira aparição na TV foi no Programa Livre do SBT.</span>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="tl-year">1999 <div class="tl-dot"></div></div>
-          <div class="tl-content">
-            <strong>Preço Curto... Prazo Longo</strong>
-            <span>25 músicas pelo preço de um CD simples. "Te Levar" vira tema da Malhação na Globo por 7 anos consecutivos, expondo a banda a todo o Brasil.</span>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="tl-year">2003 <div class="tl-dot"></div></div>
-          <div class="tl-content">
-            <strong>Acústico MTV — o auge</strong>
-            <span>Gravado no Teatro Mars em São Paulo, torna-se o álbum de maior sucesso da banda. Mais de 2 milhões de cópias vendidas, com participações de Marcelo D2, Negra Li e RZO.</span>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="tl-year">2005 <div class="tl-dot"></div></div>
-          <div class="tl-content">
-            <strong>Nova formação — Imunidade Musical</strong>
-            <span>Com Pinguim, Heitor Gomes e o retorno de Thiago Castanho, a banda ressurge renovada. "Lutar Pelo Que é Meu" vira abertura da Malhação. O álbum vende mais de 100 mil cópias.</span>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="tl-year">2009 <div class="tl-dot"></div></div>
-          <div class="tl-content">
-            <strong>🏆 Grammy Latino — Camisa 10</strong>
-            <span>O 9º álbum, "Camisa 10 Joga Bola até na Chuva", vence o Grammy Latino de Melhor Álbum de Rock Brasileiro. O título é um trocadilho: é o 10º trabalho da banda.</span>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="tl-year">2011 <div class="tl-dot"></div></div>
-          <div class="tl-content">
-            <strong>Rock in Rio — show histórico</strong>
-            <span>Apresentação no Palco Mundo com mais de 80 mil pessoas. Champignon e Marcão haviam retornado à banda, restaurando 80% da formação clássica.</span>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="tl-year">2013 <div class="tl-dot"></div></div>
-          <div class="tl-content">
-            <strong>O fim de uma era</strong>
-            <span>Em 6 de março, Chorão é encontrado morto em seu apartamento em São Paulo. Em 9 de setembro, Champignon parte. O álbum póstumo "La Família 013" é lançado em outubro.</span>
-          </div>
-        </div>
+        <div class="info-card-body">Estreou em 29 de março de 2015 no Teatro Gamaro em SP. Escrito por Well Rianc e dirigido pelos irmãos Bruno e Luiz Sorrentino. O rapper DZ6 interpretou Chorão. Apesar da recepção positiva da crítica, o irmão de Chorão, Ricardo Abrão, chamou o musical de "desrespeitoso e impreciso".</div>
+        <div class="info-card-chevron">▼</div>
       </div>
-    </div>
 
-    <!-- CARD COM FOTO: O CHORÃO -->
-    <div class="card card-with-photo">
-      <div class="card-photo">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Chorao_CBJR.jpg/400px-Chorao_CBJR.jpg"
-          alt="Chorão, vocalista do Charlie Brown Jr."
-          loading="lazy"
-          onerror="this.parentNode.style.background='linear-gradient(135deg,#1a1000,#0a0a0a)';this.style.display='none';"
-        />
-        <div class="card-photo-overlay"></div>
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">🎸</span>
+          <div class="info-card-title">Projeto 30 Anos — a turnê que continua</div>
+          <div class="info-card-preview">Marcão, Thiago, duas baterias e uma batalha na Justiça...</div>
+          <span class="info-card-tag">🌟 2022</span>
+        </div>
+        <div class="info-card-body">Desde 2022, Marcão Britto e Thiago Castanho lideram o projeto "Charlie Brown Jr. 30 Anos". A formação inclui dois bateristas simultâneos — Bruno Graveto e Pinguim Ruas — e o vocalista Egypcio (ex-Tihuana). Precisaram lutar na Justiça pelo direito de usar o nome da banda, saindo vencedores. O lema: "respeitar o passado e eternizar o legado". Segundo Marcão, 70% do público que vai aos shows está indo pela primeira vez.</div>
+        <div class="info-card-chevron">▼</div>
       </div>
-      <div class="card-body">
-        <span class="card-kicker">👑 Alexandre Magno Abrão</span>
-        <h2 class="card-title">Quem foi o Chorão</h2>
-        <p class="card-text">Nascido em 27 de setembro de 1974 em São Paulo, Alexandre se mudou para Santos em 1987, onde descobriu o skate e a música. Skatista, poeta e rebelde — criou em Santos o Chorão Skate Park, pista indoor inaugurada em 2005. Em 2011 começou a planejar um livro fotográfico da banda com mais de 300 fotos do fotógrafo oficial Jerri Rossato Lima. O projeto foi pausado em 2012 e interrompido com sua morte em 2013. Seu filho Alexandre Abrão retomou o projeto via crowdfunding e o lançou em 9 de abril de 2017 — data em que Chorão completaria 47 anos — com 350 fotos em 192 páginas, no formato 31x31cm de capa de vinil.</p>
-        <span class="card-tag">🎤 O vocalista lendário</span>
+
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">💎</span>
+          <div class="info-card-title">O diamante feito do cabelo de Chorão</div>
+          <div class="info-card-preview">Em 2020, o filho de Chorão revelou algo incrível...</div>
+          <span class="info-card-tag">💛 Memória</span>
+        </div>
+        <div class="info-card-body">Em 2020, Alexandre Abrão, filho de Chorão, revelou que logo após a morte do pai em 2013, ele havia encomendado a fabricação de um diamante feito a partir de uma mecha do cabelo de Chorão. Uma forma única e eterna de manter o pai sempre presente.</div>
+        <div class="info-card-chevron">▼</div>
       </div>
-    </div>
 
-    <!-- DISCOGRAFIA COMPLETA -->
-    <div class="card card-discografia">
-      <h2>Discografia completa</h2>
-      <div class="disc-list">
-        <div class="disc-item"><div class="disc-num">01</div><div class="disc-info"><strong>Transpiração Contínua Prolongada</strong><span>~500 mil cópias — hits: O Coro Vai Comê!, Proibida pra Mim, Quinta-Feira</span></div><div class="disc-year">1997</div></div>
-        <div class="disc-item"><div class="disc-num">02</div><div class="disc-info"><strong>Preço Curto... Prazo Longo</strong><span>25 faixas — hits: Te Levar, Zóio de Lula, Confisco</span></div><div class="disc-year">1999</div></div>
-        <div class="disc-item"><div class="disc-num">03</div><div class="disc-info"><strong>Nadando com os Tubarões</strong><span>Último com a formação original — hits: Não é Sério, A Banca, Rubão o Dono do Mundo</span></div><div class="disc-year">2000</div></div>
-        <div class="disc-item"><div class="disc-num">04</div><div class="disc-info"><strong>100% Charlie Brown Jr. — Abalando a Sua Fábrica</strong><span>Primeiro sem Thiago Castanho — hits: Lugar ao Sol, Sino Dourado</span></div><div class="disc-year">2001</div></div>
-        <div class="disc-item"><div class="disc-num">05</div><div class="disc-info"><strong>Bocas Ordinárias</strong><span>+500 mil cópias — hits: Papo Reto, Só por Uma Noite</span></div><div class="disc-year">2002</div></div>
-        <div class="disc-item"><div class="disc-num">06</div><div class="disc-info"><strong>Tamo Aí na Atividade</strong><span>+250 mil cópias — hits: Champagne e Água Benta, Tamo Aí na Atividade</span></div><div class="disc-year">2004</div></div>
-        <div class="disc-item"><div class="disc-num">07</div><div class="disc-info"><strong>Imunidade Musical</strong><span>Nova formação — hits: Lutar Pelo Que é Meu, Dias de Luta Dias de Glória, Ela Vai Voltar</span></div><div class="disc-year">2005</div></div>
-        <div class="disc-item"><div class="disc-num">08</div><div class="disc-info"><strong>Ritmo, Ritual e Responsa</strong><span>22 faixas + bônus — hits: Pontes Indestrutíveis, Be Myself (trilha de Duas Caras/Globo)</span></div><div class="disc-year">2007</div></div>
-        <div class="disc-item"><div class="disc-num">09</div><div class="disc-info"><strong>Camisa 10 — Joga Bola até na Chuva</strong><span>🏆 Grammy Latino — inclui versão oficial de Céu Azul e a canção feita para Cássia Eller</span></div><div class="disc-year">2009</div></div>
-        <div class="disc-item"><div class="disc-num">10</div><div class="disc-info"><strong>La Família 013</strong><span>Álbum póstumo — lançado após a morte de Chorão e Champignon</span></div><div class="disc-year">2013</div></div>
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">🎵</span>
+          <div class="info-card-title">A briga dos fãs com o projeto A Banca</div>
+          <div class="info-card-preview">Champignon foi chamado de traidor pelos próprios fãs...</div>
+          <span class="info-card-tag">💔 2013</span>
+        </div>
+        <div class="info-card-body">Após a morte de Chorão, Champignon assumiu os vocais no projeto A Banca. Mas parte dos fãs o atacou nas redes sociais, chamando-o de "traidor", "Judas" e "aproveitador da morte de Chorão". Champignon negou veementemente, mas as críticas constantes o levaram à depressão. O single "O Novo Passo" foi eleito pela Rolling Stone Brasil como uma das melhores músicas brasileiras de 2013.</div>
+        <div class="info-card-chevron">▼</div>
       </div>
-    </div>
 
-    <!-- CITAÇÃO 3 -->
-    <div class="card card-quote">
-      <blockquote>
-        "O skate me ensinou que quando você cai, tem que levantar e tentar de novo. A vida é igual. Não tem como ser diferente."
-      </blockquote>
-      <cite>— Chorão</cite>
-    </div>
+      <div class="info-card" onclick="toggleCard(this)">
+        <div class="info-card-front">
+          <span class="info-card-icon">🎬</span>
+          <div class="info-card-title">José Loreto quer interpretar Chorão</div>
+          <div class="info-card-preview">Um ator da Globo e um biopic em desenvolvimento...</div>
+          <span class="info-card-tag">🎥 Futuro</span>
+        </div>
+        <div class="info-card-body">Em 4 de setembro de 2020, o ator José Loreto expressou publicamente seu desejo de interpretar Chorão em um potencial filme biográfico. Também há um projeto de biopic do Champignon em desenvolvimento, com roteiro escrito por Gabriel Mellin em parceria com a viúva Claudia Bossle.</div>
+        <div class="info-card-chevron">▼</div>
+      </div>
 
-    <!-- CHAMPIGNON -->
-    <div class="card card-full">
-      <h2>Champignon — o baixista que partiu cedo demais</h2>
-      <p>Luiz Carlos Leão Duarte Júnior, o Champignon, foi um músico multi-instrumentista, beatboxer e cantor que entrou na banda com apenas 12 anos de idade, em 1990, quando foi apresentado a Chorão para fazer um teste de baixo. Os dois formaram primeiro a banda What's Up antes de fundar o Charlie Brown Jr.</p>
-      <p>Após a morte de Chorão, foi o próprio Champignon quem assumiu os vocais no projeto A Banca — nome sugerido pelo próprio Chorão, que havia dito: "a gente não era o Charlie Brown, nós éramos a banca do Charlie Brown". O projeto durou pouco: em 9 de setembro de 2013, Champignon foi encontrado morto em sua residência em São Paulo. Sua mulher estava em casa e estava grávida de cinco meses.</p>
-      <p>Apesar das brigas ao longo dos anos, em uma entrevista no dia da morte de Chorão, Champignon disse: "A gente tinha uma relação profissional. Apesar de muitas brigas, éramos amigos há mais de 20 anos." O título "La Família 013" homenageia o DDD de Santos — 013 — cidade onde tudo começou.</p>
-    </div>
+      <div class="quote-card">
+        <blockquote>"Você vai ter que se virar. A vida não para pra ninguém. Mas também não esquece de curtir cada momento, porque o tempo não volta."</blockquote>
+        <cite>— Chorão</cite>
+      </div>
 
-    <!-- CURIOSIDADES RARAS -->
-    <div class="card card-full">
-      <h2>Curiosidades que poucos fãs sabem</h2>
-      <p>🛹 <strong>Chorão era skatista competitivo</strong> antes da música — chegou a figurar nas melhores posições do ranking em campeonatos brasileiros de skate nos anos 80.</p>
-      <p>🎵 <strong>"Te Levar" foi tema da Malhação por 7 anos</strong> — de 1999 a 2006, a música abriu o seriado da Globo, expondo o CBJR para as mais diferentes classes sociais do Brasil.</p>
-      <p>🎤 <strong>A estreia na TV foi por necessidade de banheiro</strong> — Chorão entrou para o mundo da música quando substituiu o vocalista de uma banda num bar local porque o cara precisou ir ao banheiro. Uma pessoa da plateia o viu cantar e o convidou para integrar sua banda.</p>
-      <p>🎸 <strong>Champignon tinha que levar autorização judicial</strong> para entrar nas casas noturnas onde a banda se apresentava, pois era menor de idade quando começou a tocar com o grupo.</p>
-      <p>🤝 <strong>O contrato veio por uma namorada</strong> — Champignon namorava a cunhada do produtor Tadeu Patolla. Foi ele quem levou a fita demo ao produtor Rick Bonadio, então presidente da Virgin Records no Brasil — o mesmo que havia produzido os Mamonas Assassinas.</p>
-      <p>🏟️ <strong>Recusaram o Rock in Rio III em 2001</strong> — o CBJR foi uma das bandas que se recusou a participar do festival por discordar do tratamento dispensado às bandas nacionais pelos organizadores.</p>
-      <p>🎬 <strong>Chorão abriu o primeiro show do Linkin Park no Brasil</strong> — em 11 de setembro de 2004, o CBJR abriu o show da banda americana no Estádio do Morumbi, na 1ª edição do Chimera Music Festival.</p>
-      <p>🎵 <strong>"Be Myself" entrou na trilha da Globo</strong> — a música do álbum "Ritmo, Ritual e Responsa" (2007) fez parte da trilha sonora da novela Duas Caras da Rede Globo.</p>
-      <p>💔 <strong>Uma música feita para a Cássia Eller</strong> — Chorão compôs "O Dom, a Inteligência e a Voz" a pedido da cantora, para entrar no disco que ela ia fazer em 2002. Cássia faleceu 15 dias após a criação da música. A canção foi lançada no álbum Camisa 10 (2009).</p>
-      <p>🌍 <strong>Segunda banda de rock brasileira mais ouvida no exterior</strong> — levantamento do Deezer em 2015 revelou que o CBJR ficava atrás apenas do Sepultura entre as bandas brasileiras mais escutadas fora do Brasil.</p>
-      <p>📚 <strong>O livro que quase não existiu</strong> — "Eu Estava Lá Também" foi planejado por Chorão em 2011 com mais de 300 fotos do fotógrafo oficial da banda. Ele deixou o projeto praticamente pronto antes de morrer. Seu filho Alexandre o retomou via crowdfunding e lançou em 9 de abril de 2017 — data em que Chorão completaria 47 anos. No lançamento na Fnac Pinheiros, em São Paulo, todos os ex-integrantes vivos da banda estiveram presentes.</p>
-      <p>📈 <strong>Dominaram as paradas após a morte de Chorão</strong> — na semana do falecimento, o CBJR ocupou 9 das 10 posições do top 10 de músicas mais compradas no Brasil.</p>
-      <p>🎓 <strong>Champignon tinha 12 anos</strong> quando entrou para a banda precursora do CBJR, a What's Up, em 1990 — tornando-se um dos músicos mais jovens a integrar uma banda com projeção nacional.</p>
     </div>
-
-    <!-- INFLUÊNCIAS MUSICAIS -->
-    <div class="card card-full">
-      <h2>As influências que moldaram o som</h2>
-      <p>Antes de se tornarem o Charlie Brown Jr., Chorão e Champignon tocavam juntos na banda <strong>What's Up</strong> — um projeto de thrash metal, hardcore punk e crossover, com letras em inglês, inspirado em bandas como Biohazard e Suicidal Tendencies. Quase ninguém imagina que o som era tão pesado no começo.</p>
-      <p>Quando a formação clássica se consolidou, as influências se expandiram: <strong>Blink-182, Sublime, Bad Brains, 311, Rage Against the Machine, NOFX e Suicidal Tendencies</strong> alimentavam a mistura de hardcore, skate punk, reggae e ska que definiria o som do CBJR.</p>
-      <p>Inspirados pelo rock brasileiro dos anos 90 — Raimundos, O Rappa, Nação Zumbi e Planet Hemp — a banda queria ser "filhos do rock", e foi exatamente isso que o "Jr." no nome representou desde o início.</p>
-    </div>
-
-    <!-- BASTIDORES E CRISES -->
-    <div class="card card-full">
-      <h2>Os bastidores: crises, brigas e reconciliações</h2>
-      <p>A história do CBJR não foi só de sucesso — foi marcada por tensões internas que quase destruíram a banda várias vezes. <strong>Antes de gravar "Nadando com os Tubarões"</strong>, Chorão e Champignon brigaram feio e a banda quase encerrou. Para piorar, o pai de Chorão faleceu de câncer nessa época, fazendo-o entrar em seis meses de profunda depressão, engordando 20 kg em casa sem motivação.</p>
-      <p>Em <strong>2005</strong>, Champignon, Marcão e Renato Pelado anunciaram a saída alegando "divergências profissionais". Na realidade, segundo Champignon em entrevista à Jovem Pan: <em>"O lance da banda foi um desentendimento com o empresário PIPO e o Chorão comprou a dele."</em> Chorão ficou sozinho com o nome e reconstruiu o CBJR com nova formação.</p>
-      <p>Em <strong>10 de setembro de 2012</strong>, durante um show em Apucarana (PR), Chorão fez um discurso de mais de 4 minutos no palco criticando Champignon publicamente, acusando-o de ter mentido na mídia e de ter voltado à banda "por dinheiro". Champignon ficou em silêncio e saiu do palco sob gritos de "arregou!" da plateia. O vídeo gravado por um fã viralizou e a hashtag #Chorao entrou nos Trending Topics do Brasil. No dia seguinte, os dois gravaram um vídeo juntos pedindo desculpas, com Chorão admitindo que "as coisas saíram do controle".</p>
-      <p>Em <strong>2011</strong>, Chorão havia surpreendido o público no Viradão Carioca ao chamar Marcão Britto ao palco. Meses depois, Champignon também retornou com um vídeo emocionante no YouTube: <em>"Voltei pra ficar! Aqui é minha casa!"</em> — e o último capítulo da história da banda começava a ser escrito.</p>
-    </div>
-
-    <!-- LEGADO -->
-    <div class="card card-full">
-      <h2>O legado que não morreu</h2>
-      <p>Após as mortes de Chorão (6 de março de 2013) e Champignon (9 de setembro de 2013), os demais membros tentaram continuar brevemente com o nome <strong>A Banca</strong>, com Champignon assumindo os vocais — ideia que o próprio Chorão havia sugerido no início de 2013, quando manifestou desejo de descansar. O projeto durou pouco.</p>
-      <p>Em <strong>2022</strong>, os guitarristas Marcão Britto e Thiago Castanho lançaram o projeto <strong>CBJR | Marcão Britto & Thiago Castanho — Charlie Brown Jr. 30 Anos</strong>, comemorando os 30 anos da banda e os 25 anos do álbum de estreia. A formação traz também dois bateristas simultâneos no palco — Bruno Graveto e Pinguim Ruas — além do vocalista Egypcio (ex-Tihuana), que se propõe a honrar o legado de Chorão sem imitá-lo. O projeto precisou lutar na Justiça pelo direito de usar o nome da banda, saindo vencedor nos processos. O lema da turnê é claro: <em>"respeitar o passado e eternizar o legado"</em>.</p>
-      <p>Em <strong>2021</strong>, estreou o documentário <strong>Chorão: Marginal Alado</strong>, dirigido por Felipe Novaes. O filme teve sua première na 43ª Mostra Internacional de Cinema de São Paulo em 2019 e venceu o prêmio do público de melhor documentário. Está disponível na Netflix e Paramount+. Um detalhe arrepiante: o depoimento de Champignon no documentário foi gravado apenas uma semana antes de seu suicídio — tornando-se uma de suas últimas imagens registradas.</p>
-    </div>
-
-    <!-- CITAÇÃO FINAL -->
-    <div class="card card-quote">
-      <blockquote>
-        "Você vai ter que se virar. A vida não para pra ninguém. Mas também não esquece de curtir cada momento, porque o tempo não volta."
-      </blockquote>
-      <cite>— Chorão, em entrevista ao programa Superpop, 2009</cite>
-    </div>
-
   </div>
 
   <footer class="page-footer">
@@ -887,6 +739,24 @@
   </footer>
 
 </div>
+
+<script>
+  // Toggle cards
+  function toggleCard(card) {
+    const isExpanded = card.classList.contains('expanded');
+    card.classList.toggle('expanded', !isExpanded);
+  }
+
+  // Tabs
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+</script>
 
 <script type="module">
   import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
@@ -896,7 +766,6 @@
   const firebaseConfig = {
     apiKey: 'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
     authDomain: 'ranking-cbjr.firebaseapp.com',
-    databaseURL: 'https://ranking-cbjr-default-rtdb.firebaseio.com',
     projectId: 'ranking-cbjr',
     storageBucket: 'ranking-cbjr.firebasestorage.app',
     messagingSenderId: '681180179118',
@@ -906,78 +775,38 @@
   const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
-
   const block = document.getElementById('curiosidadesBlock');
-  const main  = document.getElementById('mainContent');
+  const main = document.getElementById('mainContent');
   const blockMsg = document.getElementById('blockMessage');
 
-  function showBlock(msg) {
-    if (blockMsg && msg) blockMsg.textContent = msg;
-    block.classList.add('show');
-    main.style.display = 'none';
-  }
-
-  function showMain() {
-    block.classList.remove('show');
-    main.style.display = 'grid';
-  }
+  function showBlock(msg) { if (blockMsg && msg) blockMsg.textContent = msg; block.classList.add('show'); main.style.display = 'none'; }
+  function showMain() { block.classList.remove('show'); main.style.display = 'grid'; }
 
   async function checkAccess(user) {
-    // Visitante
     try {
       if (sessionStorage.getItem('cbjr_guest_mode') === '1' && localStorage.getItem('cbjr_google_logged') !== '1') {
-        showBlock('Esta página é exclusiva para jogadores com conta Google no Top 10 do ranking. Faça login e suba sua pontuação!');
-        return;
+        showBlock('Esta página é exclusiva para jogadores com conta Google no Top 10 do ranking. Faça login e suba sua pontuação!'); return;
       }
     } catch(e) {}
-
-    if (!user) {
-      showBlock('Faça login com sua conta Google para verificar se você está no Top 10 e acessar esse conteúdo exclusivo.');
-      return;
-    }
-
+    if (!user) { showBlock('Faça login com sua conta Google para verificar se você está no Top 10 e acessar esse conteúdo exclusivo.'); return; }
     try {
       const snap = await getDocs(collection(db, 'ranking'));
-      const rows = snap.docs
-        .map(d => ({ uid: String(d.data()?.uid || ''), email: String(d.data()?.email || ''), name: String(d.data()?.name || ''), score: Number(d.data()?.score || 0), createdAt: d.data()?.createdAt?.seconds ? d.data().createdAt.seconds * 1000 : 0 }))
-        .sort((a, b) => (b.score - a.score) || (b.createdAt - a.createdAt));
-
-      const displayName = String(user.displayName || '').toLowerCase().trim();
-      const first = displayName.split(/\s+/)[0] || '';
-      const idx = rows.findIndex(r => {
-        const rn = String(r.name || '').toLowerCase().trim();
-        return (r.uid && r.uid === user.uid) ||
-          (r.email && user.email && r.email.toLowerCase() === user.email.toLowerCase()) ||
-          (rn && displayName && rn === displayName) ||
-          (rn && first && rn === first);
-      });
-
-      const position = idx >= 0 ? idx + 1 : 9999;
-
-      // Salvar posição localmente para a home usar
+      const rows = snap.docs.map(d => ({ uid: String(d.data()?.uid||''), email: String(d.data()?.email||''), name: String(d.data()?.name||''), score: Number(d.data()?.score||0), createdAt: d.data()?.createdAt?.seconds ? d.data().createdAt.seconds*1000 : 0 })).sort((a,b) => (b.score-a.score)||(b.createdAt-a.createdAt));
+      const displayName = String(user.displayName||'').toLowerCase().trim();
+      const first = displayName.split(/\s+/)[0]||'';
+      const idx = rows.findIndex(r => { const rn=String(r.name||'').toLowerCase().trim(); return (r.uid&&r.uid===user.uid)||(r.email&&user.email&&r.email.toLowerCase()===user.email.toLowerCase())||(rn&&displayName&&rn===displayName)||(rn&&first&&rn===first); });
+      const position = idx >= 0 ? idx+1 : 9999;
       try { localStorage.setItem('cbjr_ranking_position', String(position)); } catch(e) {}
-
-      if (position <= 10) {
-        showMain();
-      } else {
+      if (position <= 10) { showMain(); } else {
         const posText = position < 9999 ? `Você está em #${position} do ranking.` : 'Você ainda não está no ranking.';
-        showBlock(`${posText} Esta página é exclusiva para o Top 10. Jogue Rádio, Letras e Quiz para subir sua pontuação e desbloquear esse conteúdo!`);
+        showBlock(`${posText} Esta página é exclusiva para o Top 10. Jogue Rádio, Letras e Quiz para subir sua pontuação!`);
       }
     } catch(error) {
-      console.warn('Curiosidades: erro ao verificar ranking', error);
-      // Em caso de falha no Firebase, verifica o cache local
-      try {
-        const cached = Number(localStorage.getItem('cbjr_ranking_position') || 9999);
-        if (cached <= 10) { showMain(); } else { showBlock('Não foi possível verificar sua posição no ranking agora. Tente novamente mais tarde.'); }
-      } catch(e) {
-        showBlock('Não foi possível verificar sua posição no ranking agora. Tente novamente mais tarde.');
-      }
+      try { const cached = Number(localStorage.getItem('cbjr_ranking_position')||9999); if (cached<=10) { showMain(); } else { showBlock('Não foi possível verificar sua posição agora. Tente novamente mais tarde.'); } } catch(e) { showBlock('Não foi possível verificar sua posição agora.'); }
     }
   }
 
-  onAuthStateChanged(auth, user => {
-    checkAccess(user);
-  });
+  onAuthStateChanged(auth, user => { checkAccess(user); });
 </script>
 
 </body>
