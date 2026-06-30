@@ -408,7 +408,53 @@
       border: 1px solid var(--line); border-radius: 999px;
       background: rgba(255,255,255,.05); color: rgba(255,255,255,.8);
       padding: 5px 11px; font-size: .78rem; font-weight: 850;
+      cursor: pointer; transition: .18s ease;
+      display: inline-flex; align-items: center; gap: 6px;
     }
+    .album-modal-track:hover {
+      border-color: rgba(241,196,15,.5); background: rgba(241,196,15,.1); color: #fff;
+    }
+    .album-modal-track.playing {
+      border-color: rgba(30,215,96,.6); background: rgba(30,215,96,.14); color: #1ed760;
+      box-shadow: 0 0 14px rgba(30,215,96,.2);
+    }
+    .album-modal-track .track-icon { font-size: .85rem; }
+
+    /* ── MINI PLAYER ── */
+    .album-mini-player {
+      display: none;
+      align-items: center; gap: 12px;
+      border: 1px solid rgba(30,215,96,.4); border-radius: 16px;
+      background: radial-gradient(circle at 0% 50%, rgba(30,215,96,.12), transparent 60%), rgba(0,0,0,.5);
+      padding: 12px 14px; margin-top: 14px;
+      box-shadow: 0 0 24px rgba(30,215,96,.1);
+    }
+    .album-mini-player.show { display: flex; }
+    .amp-btn {
+      width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+      border: 1px solid rgba(30,215,96,.5); background: rgba(30,215,96,.15);
+      color: #1ed760; font-size: 1rem; cursor: pointer;
+      display: grid; place-items: center; transition: .18s ease;
+    }
+    .amp-btn:hover { background: rgba(30,215,96,.28); transform: scale(1.05); }
+    .amp-info { flex: 1; min-width: 0; }
+    .amp-title { font-size: .82rem; font-weight: 950; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .amp-bars { display: flex; align-items: flex-end; gap: 2px; height: 14px; margin-top: 4px; }
+    .amp-bar { width: 3px; background: #1ed760; border-radius: 2px; animation: ampWave 0.9s ease-in-out infinite; }
+    .amp-bar:nth-child(1) { height: 40%; animation-delay: 0s; }
+    .amp-bar:nth-child(2) { height: 100%; animation-delay: .15s; }
+    .amp-bar:nth-child(3) { height: 60%; animation-delay: .3s; }
+    .amp-bar:nth-child(4) { height: 85%; animation-delay: .45s; }
+    .amp-bar:nth-child(5) { height: 50%; animation-delay: .6s; }
+    @keyframes ampWave { 0%, 100% { transform: scaleY(.4); } 50% { transform: scaleY(1); } }
+    .amp-bars.paused .amp-bar { animation-play-state: paused; }
+    .amp-close {
+      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+      border: 1px solid var(--line); background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.6); font-size: .8rem; cursor: pointer;
+      display: grid; place-items: center; transition: .18s ease;
+    }
+    .amp-close:hover { background: rgba(255,59,48,.15); border-color: rgba(255,59,48,.4); color: #ff6b6b; }
 
     /* ── RESPONSIVO ── */
     @media (max-width: 600px) {
@@ -439,11 +485,22 @@
       <p class="album-modal-text" id="albumModalText"></p>
     </div>
     <div class="album-modal-section" id="albumModalTracksWrap" style="display:none;">
-      <h3>Faixas em destaque</h3>
+      <h3>🎧 Faixas em destaque — toque para ouvir</h3>
       <div class="album-modal-tracks" id="albumModalTracks"></div>
+      <div class="album-mini-player" id="albumMiniPlayer">
+        <button class="amp-btn" id="ampPlayBtn" onclick="toggleAudio()">▶</button>
+        <div class="amp-info">
+          <div class="amp-title" id="ampTitle">—</div>
+          <div class="amp-bars paused" id="ampBars">
+            <span class="amp-bar"></span><span class="amp-bar"></span><span class="amp-bar"></span><span class="amp-bar"></span><span class="amp-bar"></span>
+          </div>
+        </div>
+        <button class="amp-close" onclick="stopAudio()">✕</button>
+      </div>
     </div>
   </div>
 </div>
+<audio id="albumAudio" preload="none"></audio>
 
 <div id="curiosidadesBlock">
   <div class="block-box">
@@ -923,84 +980,84 @@
       cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%201.jpeg",
       meta: ["16 de junho de 1997", "Virgin Records", "~500 mil cópias"],
       text: "Álbum de estreia da banda, produzido por Tadeu Patolla e Rick Bonadio. Gravado após a banda penhorar instrumentos para pagar a demo que chegou até a Virgin Records. Apresentou o CBJR ao Brasil com uma mistura de hardcore, reggae e ska em português.",
-      tracks: ["O Coro Vai Comê!", "Proibida pra Mim", "Quinta-Feira", "Tudo Que Ela Gosta de Escutar"]
+      tracks: [{title:"O Coro Vai Comê!",url:"https://charlibriano.github.io/Quiz-CBJR/Transpiracao_Continua_Prolongada/Charlie%20Brown%20Jr%20-%20Transpira%C3%A7%C3%A3o%20Continua%20Prolongada%20-%2002-O%20coro%20vai%20com%C3%AA%21%20%5B1997%5D.mp3"}, {title:"Proibida pra Mim",url:"https://charlibriano.github.io/Quiz-CBJR/Transpiracao_Continua_Prolongada/Charlie%20Brown%20Jr%20-%20Transpira%C3%A7%C3%A3o%20Continua%20Prolongada%20-%2010-Proibida%20pra%20mim%20%5B1997%5D.mp3"}, {title:"Quinta-Feira",url:"https://charlibriano.github.io/Quiz-CBJR/Transpiracao_Continua_Prolongada/Charlie%20Brown%20Jr%20-%20Transpira%C3%A7%C3%A3o%20Continua%20Prolongada%20-%2009-Quinta%20Feira%20%5B1997%5D.mp3"}, {title:"Tudo Que Ela Gosta de Escutar",url:"https://charlibriano.github.io/Quiz-CBJR/Transpiracao_Continua_Prolongada/Charlie%20Brown%20Jr%20-%20Transpira%C3%A7%C3%A3o%20Continua%20Prolongada%20-%2003-Tudo%20que%20ela%20gosta%20de%20escutar%20%5B1997%5D.mp3"}]
     },
     alb2: {
       title: "Preço Curto... Prazo Longo", kicker: "💿 2º Álbum · 1999",
       cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%202.jpeg",
       meta: ["17 de maio de 1999", "Virgin Records", "~250 mil cópias"],
       text: "Lançado em 6 de março de 1999, com 25 faixas pelo preço de um CD simples. Chorão disse que foi gravado por necessidade, já que a banda não tinha repertório suficiente para os shows. \"Zóio de Lula\" foi a primeira música do CBJR a chegar ao topo das rádios.",
-      tracks: ["Te Levar", "Zóio de Lula", "Confisco", "Do Surf"]
+      tracks: [{title:"Te Levar",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/Te%20Levar%20Daqui.mp3"}, {title:"Zóio de Lula",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/Z%C3%B3io%20De%20Lula.mp3"}, {title:"Confisco",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/Confisco.mp3"}, {title:"Do Surf",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Preco_curto_prazo_longo/Do%20Surf.mp3"}]
     },
     alb3: {
       title: "Nadando com os Tubarões", kicker: "💿 3º Álbum · 2000",
       cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%203.jpeg",
       meta: ["Novembro de 2000", "Virgin Records", "🥇 Disco de Ouro"],
       text: "Último álbum com a formação original. Teve participação do grupo RZO (com Sabotage) e da então estreante Negra Li, que co-escreveu o maior hit do disco, \"Não É Sério\". Indicado ao Grammy Latino de Melhor Álbum de Rock em Língua Portuguesa em 2001. Logo após o lançamento, Thiago Castanho deixou a banda alegando cansaço das turnês.",
-      tracks: ["Não É Sério", "A Banca (Ratatá É Bicho Solto)", "Rubão - O Dono Do Mundo", "Fichado"]
+      tracks: [{title:"Não É Sério",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Nadando_com_os_Tubaroes/charlie%20brown%20jr%20-%20N%C3%A3o%20%C3%89%20S%C3%A9rio.mp3"}, {title:"A Banca (Ratatá É Bicho Solto)",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Nadando_com_os_Tubaroes/charlie%20brown%20jr%20-%20A%20Banca%20Ratat%C3%A1%20%C3%89%20Bicho%20Solto.mp3"}, {title:"Rubão - O Dono Do Mundo",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Nadando_com_os_Tubaroes/charlie%20brown%20jr%20-%20Rub%C3%A3o%20-%20O%20Dono%20Do%20Mundo.mp3"}, {title:"Fichado",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Nadando_com_os_Tubaroes/charlie%20brown%20jr%20-%20Fichado.mp3"}]
     },
     alb4: {
       title: "100% Charlie Brown Jr. — Abalando a Sua Fábrica", kicker: "💿 4º Álbum · 2001",
       cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%204.jpeg",
       meta: ["12 de novembro de 2001", "EMI", "Sem grande repercussão"],
       text: "Primeiro álbum como quarteto, sem Thiago Castanho, e a primeira gravação pela EMI. A banda passou a gravar todos os instrumentos simultaneamente, como se fosse ao vivo, buscando um som mais 'cru', influenciado por punk e garage rock.",
-      tracks: ["Lugar Ao Sol", "Sino Dourado", "Eu Protesto", "Hoje Eu Acordei Feliz"]
+      tracks: [{title:"Lugar Ao Sol",url:"https://charlibriano.github.io/Quiz-CBJR/100_Charlie_Brown_Jr._Abalando_Sua_Fabrica/Charlie%20Brown%20Jr%20-%20100%25%20Charlie%20Brown%20Jr.%20Abalando%20Sua%20F%C3%A1brica%20-%2005-Lugar%20Ao%20Sol%20%5B2001%5D.mp3"}, {title:"Sino Dourado",url:"https://charlibriano.github.io/Quiz-CBJR/100_Charlie_Brown_Jr._Abalando_Sua_Fabrica/Charlie%20Brown%20Jr%20-%20100%25%20Charlie%20Brown%20Jr.%20Abalando%20Sua%20F%C3%A1brica%20-%2003-Sino%20Dourado%20%5B2001%5D.mp3"}, {title:"Eu Protesto",url:"https://charlibriano.github.io/Quiz-CBJR/100_Charlie_Brown_Jr._Abalando_Sua_Fabrica/Charlie%20Brown%20Jr%20-%20100%25%20Charlie%20Brown%20Jr.%20Abalando%20Sua%20F%C3%A1brica%20-%2001-Eu%20Protesto%20%5B2001%5D.mp3"}, {title:"Hoje Eu Acordei Feliz",url:"https://charlibriano.github.io/Quiz-CBJR/100_Charlie_Brown_Jr._Abalando_Sua_Fabrica/Charlie%20Brown%20Jr%20-%20100%25%20Charlie%20Brown%20Jr.%20%20Abalando%20Sua%20F%C3%A1brica%20-%2002-Hoje%20Eu%20Acordei%20Feliz%20%5B2001%5D.mp3"}]
     },
     alb5: {
       title: "Bocas Ordinárias", kicker: "💿 5º Álbum · 2002",
       cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%205.jpeg",
       meta: ["6 de dezembro de 2002", "EMI", "🥇🥈 Ouro e Platina"],
       text: "O nome veio de um crítico português que chamou a banda de \"bocas ordinárias\" durante turnê em Portugal. Chorão adorou a expressão e a usou como título. Consagrou \"Só Por Uma Noite\", uma das maiores músicas da carreira da banda. Indicado ao Grammy Latino em 2003. Dedicado à cantora Cássia Eller, amiga de Chorão que havia falecido no ano anterior.",
-      tracks: ["Só Por Uma Noite", "Papo Reto", "Tarja Preta", "Baader-Meinhof Blues"]
+      tracks: [{title:"Só Por Uma Noite",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Bocas_Ordinarias/S%C3%B3%20Por%20Uma%20Noite.mp3"}, {title:"Papo Reto",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Bocas_Ordinarias/Papo%20Reto%20%28Prazer%20%C3%89%20Sexo%20O%20Resto%20%C3%89%20Neg%C3%B3cio%29.mp3"}, {title:"Tarja Preta",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Bocas_Ordinarias/Tarja%20Preta.mp3"}, {title:"Baader-Meinhof Blues",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Bocas_Ordinarias/Baader-Meinhof%20Blues.mp3"}]
     },
     alb6: {
       title: "Tamo Aí na Atividade", kicker: "💿 6º Álbum · 2004",
       cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%207.jpeg",
       meta: ["10 de dezembro de 2004", "EMI", "🏆 Grammy Latino 2005"],
       text: "Sétimo trabalho da banda e último com a formação original completa. Venceu o Grammy Latino de Melhor Álbum de Rock em Língua Portuguesa. A gravação foi marcada por divergências internas — logo depois, Champignon, Marcão e Renato Pelado deixaram a banda.",
-      tracks: ["Champanhe E Água Benta", "Tamo Aí Na Atividade", "Cheirando Cola", "Di-Sk8 Eu Vim"]
+      tracks: [{title:"Champanhe E Água Benta",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Tamo_ai_na_atividade/Champanhe%20E%20%C3%81gua%20Benta.mp3"}, {title:"Tamo Aí Na Atividade",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Tamo_ai_na_atividade/Tamo%20Ai%20Na%20Atividade.mp3"}, {title:"Cheirando Cola",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Tamo_ai_na_atividade/Cheirando%20Cola.mp3"}, {title:"Di-Sk8 Eu Vim",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._Tamo_ai_na_atividade/Di-Sk8%20Eu%20Vim.mp3"}]
     },
     alb7: {
       title: "Imunidade Musical", kicker: "💿 7º Álbum · 2005",
       cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%208.jpeg",
       meta: ["3 de outubro de 2005", "EMI", "🥇 Disco de Ouro"],
       text: "Lançado após a banda trocar quase toda a formação, mantendo apenas Chorão. Trouxe Pinguim Ruas, Heitor Gomes e o retorno de Thiago Castanho. \"Lutar Pelo Que É Meu\" virou abertura da Malhação em 2006 e 2007. Vendeu 100 mil cópias certificadas.",
-      tracks: ["Lutar Pelo Que É Meu", "Dias De Luta, Dias De Glória", "Ela Vai Voltar", "Aquela Paz"]
+      tracks: [{title:"Lutar Pelo Que É Meu",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/Lutar%20Pelo%20Que%20E%20Meu.mp3"}, {title:"Dias De Luta, Dias De Glória",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/Dias%20De%20Luta%2C%20Dias%20De%20Gloria.mp3"}, {title:"Ela Vai Voltar",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/Ela%20Vai%20Voltar%20%28Todos%20Os%20Defeitos%20De%20Uma%20Mulher%20Perfeita%29.mp3"}, {title:"Aquela Paz",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr._-_Imunidade_Musical/Aquela%20Paz.mp3"}]
     },
     alb8: {
       title: "Ritmo, Ritual e Responsa", kicker: "💿 8º Álbum · 2007",
       cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%209.jpeg",
       meta: ["15 de novembro de 2007", "EMI", "22 faixas"],
       text: "Serviu como trilha sonora do filme \"O Magnata\", escrito e co-produzido por Chorão e protagonizado por Paulo Vilhena. Teve participações de MV Bill, João Gordo, Paranormal Attack e Forfun. \"Be Myself\" foi tema do protagonista da novela Duas Caras, da Globo.",
-      tracks: ["Pontes Indestrutíveis", "Be Myself", "Ritmo, Ritual E Responsa", "Não Viva em Vão"]
+      tracks: [{title:"Pontes Indestrutíveis",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/01%20%20%20Pontes%20Indestrut%C3%ADveis.mp3"}, {title:"Be Myself",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/05%20%20%20Be%20Myself.mp3"}, {title:"Ritmo, Ritual E Responsa",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/04%20%20%20Ritmo%2C%20Ritual%20E%20Responsa.mp3"}, {title:"Não Viva em Vão",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Ritmo_Ritual_e_Responsa-2007/03%20%20%20N%C3%A3o%20Viva%20em%20V%C3%A3o.mp3"}]
     },
     alb9: {
       title: "Camisa 10 — Joga Bola até na Chuva", kicker: "💿 9º Álbum · 2009",
       cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%2011.jpeg",
       meta: ["25 de setembro de 2009", "Sony Music", "🥈 Disco de Platina"],
       text: "Primeiro álbum pela Sony Music, após a saída da EMI. O título é um trocadilho: é o décimo trabalho da banda. Trouxe \"Céu Azul\", escrita após o divórcio de Chorão, e \"O Dom, a Inteligência e a Voz\", composta para Cássia Eller em 2001 mas que ela nunca chegou a gravar. \"Só os Loucos Sabem\" tornou-se um dos maiores hits da banda.",
-      tracks: ["Só Os Loucos Sabem", "O Dom, A Inteligência E A Voz", "Camisa 10 Joga Bola Até Na Chuva", "Dona Do Meu Pensamento"]
+      tracks: [{title:"Só Os Loucos Sabem",url:"https://charlibriano.github.io/Quiz-CBJR/Camisa_10_Joga_Bola_Ate_Na_Chuva/Charlie%20Brown%20Jr%20-%20S%C3%B3%20os%20loucos%20sabem.mp3"}, {title:"O Dom, A Inteligência E A Voz",url:"https://charlibriano.github.io/Quiz-CBJR/Camisa_10_Joga_Bola_Ate_Na_Chuva/Charlie%20Brown%20Jr%20-%20O%20dom%2C%20a%20intelig%C3%AAncia%20e%20a%20voz.mp3"}, {title:"Camisa 10 Joga Bola Até Na Chuva",url:"https://charlibriano.github.io/Quiz-CBJR/Camisa_10_Joga_Bola_Ate_Na_Chuva/Charlie%20Brown%20Jr%20-%20Camisa%2010%20joga%20bola%20at%C3%A9%20na%20chuva.mp3"}, {title:"Dona Do Meu Pensamento",url:"https://charlibriano.github.io/Quiz-CBJR/Camisa_10_Joga_Bola_Ate_Na_Chuva/Charlie%20Brown%20Jr%20-%20Dona%20do%20meu%20pensamento.mp3"}]
     },
     alb10: {
       title: "La Família 013", kicker: "💿 10º Álbum · Póstumo · 2013",
       cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%2013.jpeg",
       meta: ["8 de outubro de 2013", "Som Livre", "🥇 Disco de Ouro"],
       text: "Último álbum de inéditas da banda e o primeiro lançado postumamente. O nome \"013\" é o DDD de Santos, cidade onde tudo começou. O single \"Meu Novo Mundo\" foi lançado em fevereiro de 2013, pouco antes da morte de Chorão em março. O álbum ficou inacabado e foi finalizado pelos demais membros. Vendeu cerca de 40 mil cópias até o fim do ano de lançamento.",
-      tracks: ["Meu Novo Mundo", "Camisa Preta", "Rock Star", "Fina Arte"]
+      tracks: [{title:"Meu Novo Mundo",url:"https://charlibriano.github.io/Quiz-CBJR/La_Familia_013/Charlie%20Brown%20Jr%20-%20Meu%20novo%20mundo.mp3"}, {title:"Camisa Preta",url:"https://charlibriano.github.io/Quiz-CBJR/La_Familia_013/Charlie%20Brown%20Jr%20-%20Camisa%20Preta.mp3"}, {title:"Rock Star",url:"https://charlibriano.github.io/Quiz-CBJR/La_Familia_013/Charlie%20Brown%20Jr%20-%20Rock%20Star.mp3"}, {title:"Fina Arte",url:"https://charlibriano.github.io/Quiz-CBJR/La_Familia_013/Charlie%20Brown%20Jr%20-%20Fina%20Arte.mp3"}]
     },
     alb11: {
       title: "Acústico MTV: Charlie Brown Jr.", kicker: "🎤 1º Álbum ao Vivo · 2003",
       cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%206.jpeg",
       meta: ["26 de setembro de 2003", "EMI", "🥈 Disco de Platina"],
       text: "Primeiro álbum ao vivo da banda, gravado no Teatro Mars em São Paulo e transmitido pela MTV Brasil. Produzido por Tadeu Patolla. Considerado o maior sucesso comercial da carreira, com mais de 2 milhões de cópias vendidas. Teve participações de Marcelo D2, Marcelo Nova, RZO e Negra Li.",
-      tracks: ["Samba Makossa (c/ Marcelo D2)", "Não É Sério (c/ Negra Li)", "A Banca (c/ RZO)", "Hoje (c/ Marcelo Nova)"]
+      tracks: [{title:"Samba Makossa (c/ Marcelo D2)",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr__Acustico_MTV_/Charlie%20Brown%20Jr%20%26%20Marcelo%20D2-%20Samba%20Makosa..mp3"}, {title:"Não É Sério (c/ Negra Li)",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr__Acustico_MTV_/Charlie%20Brown%20Jr%20%26%20Negra%20Li-%20N%C3%A3o%20%C3%A9%20S%C3%A9rio.mp3"}, {title:"A Banca (c/ RZO)",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr__Acustico_MTV_/Charlie%20Brown%20Jr%20%26%20RZO%20-%20A%20Banca%20%28Ratat%C3%A1%20%C3%89%20Bicho%20Solto%29.mp3"}, {title:"Hoje (c/ Marcelo Nova)",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr__Acustico_MTV_/Hoje%20-%20Charlie%20Brown%20Jr.%20e%20Marcelo%20Nova.mp3"}]
     },
     alb12: {
       title: "Música Popular Caiçara", kicker: "🎤 2º Álbum ao Vivo · 2012",
       cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%2012.jpeg",
       meta: ["Maio de 2012", "Radar Records", "CD, DVD e Blu-ray"],
       text: "Segundo álbum ao vivo, gravado em shows de 2011 em Curitiba e Santos para celebrar o retorno de Champignon e Marcão Britto à banda. Produzido por Liminha e dirigido por KondZilla. Trouxe \"Céu Azul\", composta por Chorão após seu divórcio. A versão em CD foi dividida em dois volumes, o segundo lançado apenas em 2016.",
-      tracks: ["Céu Azul", "Coração Satânico", "Dias De Luta, Dias De Glória", "Me Deixa (feat. Marcelo Falcão)"]
+      tracks: [{title:"Céu Azul (Ao Vivo)",url:"https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/C%C3%A9u%20Azul%20(Ao%20Vivo).mp3"}, {title:"Coração Satânico",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Cora%C3%A7%C3%A3o%20Sat%C3%A2nico.mp3"}, {title:"Dias De Luta, Dias De Glória",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Dias%20De%20Luta%2C%20Dias%20De%20Gl%C3%B3ria.mp3"}, {title:"Me Deixa (feat. Marcelo Falcão)",url:"https://charlibriano.github.io/Quiz-CBJR/Charlie_Brown_Jr_-_Musica_Popular_Caicara_DVD_Completo/Charlie%20Brown%20Jr%20-%20Me%20Deixa%20%5Bfeat.%20Marcelo%20Falc%C3%A3o%5D.mp3"}]
     },
     alb13: {
       title: "Chegou Quem Faltava", kicker: "🎤 3º e Último Álbum ao Vivo · 2021",
@@ -1014,7 +1071,7 @@
       cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%2010.jpeg",
       meta: ["16 de maio de 2008", "MTV Brasil", "8 músicas"],
       text: "Sétimo episódio do projeto Estúdio Coca-Cola, parceria da MTV Brasil com a Coca-Cola que unia artistas de estilos diferentes. Foi o primeiro episódio sob o nome \"Estúdio Coca-Cola Zero\" e o primeiro da 2ª temporada. O CBJR se uniu à cantora de MPB Vanessa da Mata, e o episódio é considerado um dos melhores do projeto.",
-      tracks: ["Pontes Indestrutíveis", "Ai, Ai, Ai...", "Senhor do Tempo / Não Me Deixe Só", "Uma Criança com Seu Olhar"]
+      tracks: [{title:"Pontes Indestrutíveis",url:"https://charlibriano.github.io/Quiz-CBJR/Vanessa_da_Mata__Chorao/Est%C3%BAdio%20Coca-Cola%20Zero%EF%BC%9A%20Pontes%20Indestrut%C3%ADveis.mp3"}, {title:"Ai, Ai, Ai...",url:"https://charlibriano.github.io/Quiz-CBJR/Vanessa_da_Mata__Chorao/Est%C3%BAdio%20Coca-Cola%20Zero%EF%BC%9A%20Ai%20Ai%20Ai.mp3"}, {title:"Senhor do Tempo / Não Me Deixe Só",url:"https://charlibriano.github.io/Quiz-CBJR/Vanessa_da_Mata__Chorao/Est%C3%BAdio%20Coca-Cola%20Zero%EF%BC%9A%20Senhor%20do%20Tempo.mp3"}, {title:"Uma Criança com Seu Olhar",url:"https://charlibriano.github.io/Quiz-CBJR/Vanessa_da_Mata__Chorao/uma%20crian%C3%A7a%20com%20o%20seu%20olhar-vanessa%20da%20mata%20e%20charlie%20brown.mp3"}]
     }
   };
 
@@ -1038,19 +1095,81 @@
     const tracksEl = document.getElementById('albumModalTracks');
     if (a.tracks && a.tracks.length) {
       tracksWrap.style.display = 'block';
-      tracksEl.innerHTML = a.tracks.map(t => `<span class="album-modal-track">🎵 ${t}</span>`).join('');
+      tracksEl.innerHTML = a.tracks.map((t, i) => {
+        const hasUrl = !!t.url;
+        const clickAttr = hasUrl ? `onclick="playTrack('${t.url.replace(/'/g, "\\'")}', '${t.title.replace(/'/g, "\\'")}', this)"` : `onclick="trackUnavailable(this)"`;
+        return `<span class="album-modal-track" data-track-idx="${i}" ${clickAttr}><span class="track-icon">${hasUrl ? '🎵' : '🔇'}</span>${t.title}</span>`;
+      }).join('');
     } else {
       tracksWrap.style.display = 'none';
     }
 
+    stopAudio();
     document.getElementById('albumModal').classList.add('show');
     document.body.style.overflow = 'hidden';
   }
 
   function closeAlbum() {
+    stopAudio();
     document.getElementById('albumModal').classList.remove('show');
     document.body.style.overflow = '';
   }
+
+  // ── MINI PLAYER DE ÁUDIO ────────────────────────────────────
+  const albumAudio = document.getElementById('albumAudio');
+  let currentPlayingEl = null;
+
+  function playTrack(url, title, el) {
+    document.querySelectorAll('.album-modal-track').forEach(t => t.classList.remove('playing'));
+    el.classList.add('playing');
+    currentPlayingEl = el;
+
+    document.getElementById('ampTitle').textContent = title;
+    document.getElementById('albumMiniPlayer').classList.add('show');
+    document.getElementById('ampBars').classList.remove('paused');
+    document.getElementById('ampPlayBtn').textContent = '⏸';
+
+    albumAudio.src = url;
+    albumAudio.play().catch(() => {
+      document.getElementById('ampBars').classList.add('paused');
+      document.getElementById('ampPlayBtn').textContent = '▶';
+    });
+  }
+
+  function trackUnavailable(el) {
+    el.style.animation = 'none';
+    el.style.borderColor = 'rgba(255,107,107,.5)';
+    setTimeout(() => { el.style.borderColor = ''; }, 600);
+  }
+
+  function toggleAudio() {
+    if (!albumAudio.src) return;
+    if (albumAudio.paused) {
+      albumAudio.play();
+      document.getElementById('ampBars').classList.remove('paused');
+      document.getElementById('ampPlayBtn').textContent = '⏸';
+    } else {
+      albumAudio.pause();
+      document.getElementById('ampBars').classList.add('paused');
+      document.getElementById('ampPlayBtn').textContent = '▶';
+    }
+  }
+
+  function stopAudio() {
+    albumAudio.pause();
+    albumAudio.currentTime = 0;
+    albumAudio.src = '';
+    document.getElementById('albumMiniPlayer')?.classList.remove('show');
+    document.querySelectorAll('.album-modal-track').forEach(t => t.classList.remove('playing'));
+    currentPlayingEl = null;
+  }
+
+  albumAudio.addEventListener('ended', () => {
+    document.getElementById('ampBars')?.classList.add('paused');
+    document.getElementById('ampPlayBtn').textContent = '▶';
+    currentPlayingEl?.classList.remove('playing');
+  });
+  // ── FIM MINI PLAYER ──────────────────────────────────────────
   // ── FIM DADOS DOS ÁLBUNS ────────────────────────────────────
 
   // Toggle cards
