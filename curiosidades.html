@@ -335,6 +335,81 @@
     .block-btn-secondary { display:flex; align-items:center; justify-content:center; width:100%; min-height:44px; border:1px solid rgba(255,255,255,.2); border-radius:15px; background:rgba(255,255,255,.06); color:rgba(255,255,255,.75); font-weight:950; font-size:.88rem; text-decoration:none; transition:.18s ease; }
     .block-btn-secondary:hover { border-color:rgba(255,255,255,.4); color:#fff; }
 
+    /* ── MODAL DE ÁLBUM ── */
+    #albumModal {
+      position: fixed; inset: 0; z-index: 9000;
+      display: none; align-items: center; justify-content: center;
+      padding: 18px; background: rgba(0,0,0,.88);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    }
+    #albumModal.show { display: flex; }
+    .album-modal-box {
+      width: min(560px, 100%); max-height: 90svh; overflow-y: auto;
+      border: 1px solid rgba(241,196,15,.5); border-radius: 28px;
+      background: radial-gradient(circle at 50% 0%, rgba(241,196,15,.16), transparent 50%), rgba(5,5,5,.97);
+      box-shadow: 0 30px 100px rgba(0,0,0,.85), 0 0 50px rgba(241,196,15,.12);
+      padding: 22px;
+      position: relative;
+    }
+    .album-modal-close {
+      position: absolute; top: 14px; right: 14px;
+      width: 34px; height: 34px; border-radius: 50%;
+      background: rgba(255,255,255,.08); border: 1px solid var(--line);
+      color: #fff; font-size: 1.1rem; cursor: pointer;
+      display: grid; place-items: center; transition: .18s ease; z-index: 2;
+    }
+    .album-modal-close:hover { background: rgba(241,196,15,.18); border-color: rgba(241,196,15,.5); }
+    .album-modal-cover {
+      width: 180px; height: 180px; margin: 0 auto 16px; display: block;
+      border-radius: 16px; object-fit: cover;
+      border: 1px solid rgba(241,196,15,.4);
+      box-shadow: 0 16px 50px rgba(0,0,0,.6), 0 0 40px rgba(241,196,15,.18);
+    }
+    .album-modal-icon {
+      width: 180px; height: 180px; margin: 0 auto 16px;
+      border-radius: 16px; display: grid; place-items: center;
+      font-size: 4rem; background: rgba(241,196,15,.08);
+      border: 1px solid rgba(241,196,15,.4);
+      box-shadow: 0 16px 50px rgba(0,0,0,.6), 0 0 40px rgba(241,196,15,.18);
+    }
+    .album-modal-kicker {
+      text-align: center; font-size: .72rem; font-weight: 950;
+      color: var(--yellow); text-transform: uppercase; letter-spacing: .1em;
+      margin-bottom: 6px; text-shadow: 0 0 12px rgba(241,196,15,.4);
+    }
+    .album-modal-title {
+      text-align: center; font-family: 'Elektrix', Arial, sans-serif;
+      color: #fff; font-size: clamp(1.5rem, 4vw, 2.1rem); line-height: 1;
+      margin: 0 0 14px; text-shadow: 0 0 18px rgba(241,196,15,.25);
+    }
+    .album-modal-meta {
+      display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .album-modal-chip {
+      border: 1px solid rgba(241,196,15,.35); border-radius: 999px;
+      background: rgba(241,196,15,.08); color: var(--yellow);
+      padding: 5px 12px; font-size: .76rem; font-weight: 950;
+    }
+    .album-modal-section {
+      border-top: 1px solid rgba(255,255,255,.1); padding-top: 14px; margin-top: 14px;
+    }
+    .album-modal-section h3 {
+      font-size: .76rem; font-weight: 950; color: var(--yellow);
+      text-transform: uppercase; letter-spacing: .08em; margin: 0 0 8px;
+    }
+    .album-modal-text {
+      color: rgba(255,255,255,.82); font-weight: 850; line-height: 1.6; font-size: .9rem; margin: 0;
+    }
+    .album-modal-tracks {
+      display: flex; flex-wrap: wrap; gap: 6px;
+    }
+    .album-modal-track {
+      border: 1px solid var(--line); border-radius: 999px;
+      background: rgba(255,255,255,.05); color: rgba(255,255,255,.8);
+      padding: 5px 11px; font-size: .78rem; font-weight: 850;
+    }
+
     /* ── RESPONSIVO ── */
     @media (max-width: 600px) {
       .cards-grid { grid-template-columns: 1fr 1fr; }
@@ -351,6 +426,24 @@
   </style>
 </head>
 <body>
+
+<div id="albumModal" onclick="if(event.target===this) closeAlbum()">
+  <div class="album-modal-box">
+    <button class="album-modal-close" onclick="closeAlbum()">✕</button>
+    <div id="albumModalCoverWrap"></div>
+    <div class="album-modal-kicker" id="albumModalKicker">Álbum</div>
+    <h2 class="album-modal-title" id="albumModalTitle"></h2>
+    <div class="album-modal-meta" id="albumModalMeta"></div>
+    <div class="album-modal-section">
+      <h3>Sobre o álbum</h3>
+      <p class="album-modal-text" id="albumModalText"></p>
+    </div>
+    <div class="album-modal-section" id="albumModalTracksWrap" style="display:none;">
+      <h3>Faixas em destaque</h3>
+      <div class="album-modal-tracks" id="albumModalTracks"></div>
+    </div>
+  </div>
+</div>
 
 <div id="curiosidadesBlock">
   <div class="block-box">
@@ -707,32 +800,32 @@
       <div class="disc-card">
         <h2>💿 10 álbuns de estúdio</h2>
         <div class="disc-list">
-          <div class="disc-item"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%201.jpeg" alt="Transpiração Contínua Prolongada" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Transpiração Contínua Prolongada</strong><span>~500 mil cópias — O Coro Vai Comê!, Proibida pra Mim, Quinta-Feira</span></div><div class="disc-year">1997</div></div>
-          <div class="disc-item"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%202.jpeg" alt="Preço Curto... Prazo Longo" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Preço Curto... Prazo Longo</strong><span>~250 mil cópias — Te Levar, Zóio de Lula, Confisco</span></div><div class="disc-year">1999</div></div>
-          <div class="disc-item"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%203.jpeg" alt="Nadando com os Tubarões" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Nadando com os Tubarões</strong><span>🥇 Disco de Ouro — último com a formação original — Não é Sério, A Banca</span></div><div class="disc-year">2000</div></div>
-          <div class="disc-item"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%204.jpeg" alt="100% Charlie Brown Jr." loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>100% Charlie Brown Jr. — Abalando a Sua Fábrica</strong><span>1º como quarteto, sem Thiago Castanho — Lugar ao Sol, Sino Dourado</span></div><div class="disc-year">2001</div></div>
-          <div class="disc-item"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%205.jpeg" alt="Bocas Ordinárias" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Bocas Ordinárias</strong><span>🥇🥈 Ouro e Platina — nome veio de crítico português — Só por Uma Noite</span></div><div class="disc-year">2002</div></div>
-          <div class="disc-item"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%207.jpeg" alt="Tamo Aí na Atividade" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Tamo Aí na Atividade</strong><span>🏆 Grammy Latino — último com a formação original — Champanhe e Água Benta</span></div><div class="disc-year">2004</div></div>
-          <div class="disc-item"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%208.jpeg" alt="Imunidade Musical" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Imunidade Musical</strong><span>🥇 Disco de Ouro — quase toda nova formação, exceto Chorão — Lutar Pelo Que é Meu</span></div><div class="disc-year">2005</div></div>
-          <div class="disc-item"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%209.jpeg" alt="Ritmo, Ritual e Responsa" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Ritmo, Ritual e Responsa</strong><span>22 faixas — trilha de "O Magnata" — Pontes Indestrutíveis, Be Myself</span></div><div class="disc-year">2007</div></div>
-          <div class="disc-item"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%2011.jpeg" alt="Camisa 10 Joga Bola até na Chuva" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Camisa 10 — Joga Bola até na Chuva</strong><span>🥈 Disco de Platina — 1º pela Sony Music — Céu Azul, Só os Loucos Sabem</span></div><div class="disc-year">2009</div></div>
-          <div class="disc-item"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%2013.jpeg" alt="La Família 013" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>La Família 013</strong><span>🥇 Disco de Ouro — pela Som Livre — álbum póstumo — Meu Novo Mundo</span></div><div class="disc-year">2013</div></div>
+          <div class="disc-item" onclick="openAlbum('alb1')" style="cursor:pointer;"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%201.jpeg" alt="Transpiração Contínua Prolongada" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Transpiração Contínua Prolongada</strong><span>~500 mil cópias — O Coro Vai Comê!, Proibida pra Mim, Quinta-Feira</span></div><div class="disc-year">1997</div></div>
+          <div class="disc-item" onclick="openAlbum('alb2')" style="cursor:pointer;"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%202.jpeg" alt="Preço Curto... Prazo Longo" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Preço Curto... Prazo Longo</strong><span>~250 mil cópias — Te Levar, Zóio de Lula, Confisco</span></div><div class="disc-year">1999</div></div>
+          <div class="disc-item" onclick="openAlbum('alb3')" style="cursor:pointer;"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%203.jpeg" alt="Nadando com os Tubarões" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Nadando com os Tubarões</strong><span>🥇 Disco de Ouro — último com a formação original — Não é Sério, A Banca</span></div><div class="disc-year">2000</div></div>
+          <div class="disc-item" onclick="openAlbum('alb4')" style="cursor:pointer;"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%204.jpeg" alt="100% Charlie Brown Jr." loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>100% Charlie Brown Jr. — Abalando a Sua Fábrica</strong><span>1º como quarteto, sem Thiago Castanho — Lugar ao Sol, Sino Dourado</span></div><div class="disc-year">2001</div></div>
+          <div class="disc-item" onclick="openAlbum('alb5')" style="cursor:pointer;"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%205.jpeg" alt="Bocas Ordinárias" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Bocas Ordinárias</strong><span>🥇🥈 Ouro e Platina — nome veio de crítico português — Só por Uma Noite</span></div><div class="disc-year">2002</div></div>
+          <div class="disc-item" onclick="openAlbum('alb6')" style="cursor:pointer;"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%207.jpeg" alt="Tamo Aí na Atividade" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Tamo Aí na Atividade</strong><span>🏆 Grammy Latino — último com a formação original — Champanhe e Água Benta</span></div><div class="disc-year">2004</div></div>
+          <div class="disc-item" onclick="openAlbum('alb7')" style="cursor:pointer;"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%208.jpeg" alt="Imunidade Musical" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Imunidade Musical</strong><span>🥇 Disco de Ouro — quase toda nova formação, exceto Chorão — Lutar Pelo Que é Meu</span></div><div class="disc-year">2005</div></div>
+          <div class="disc-item" onclick="openAlbum('alb8')" style="cursor:pointer;"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%209.jpeg" alt="Ritmo, Ritual e Responsa" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Ritmo, Ritual e Responsa</strong><span>22 faixas — trilha de "O Magnata" — Pontes Indestrutíveis, Be Myself</span></div><div class="disc-year">2007</div></div>
+          <div class="disc-item" onclick="openAlbum('alb9')" style="cursor:pointer;"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%2011.jpeg" alt="Camisa 10 Joga Bola até na Chuva" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Camisa 10 — Joga Bola até na Chuva</strong><span>🥈 Disco de Platina — 1º pela Sony Music — Céu Azul, Só os Loucos Sabem</span></div><div class="disc-year">2009</div></div>
+          <div class="disc-item" onclick="openAlbum('alb10')" style="cursor:pointer;"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%2013.jpeg" alt="La Família 013" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>La Família 013</strong><span>🥇 Disco de Ouro — pela Som Livre — álbum póstumo — Meu Novo Mundo</span></div><div class="disc-year">2013</div></div>
         </div>
       </div>
 
       <div class="disc-card">
         <h2>🎤 3 álbuns ao vivo</h2>
         <div class="disc-list">
-          <div class="disc-item"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%206.jpeg" alt="Acústico MTV" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Acústico MTV: Charlie Brown Jr.</strong><span>🥈 Disco de Platina — 1º álbum ao vivo — prod. Tadeu Patolla — Marcelo D2, Negra Li, RZO</span></div><div class="disc-year">2003</div></div>
-          <div class="disc-item"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%2012.jpeg" alt="Música Popular Caiçara" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Música Popular Caiçara</strong><span>2º ao vivo — CD/DVD/blu-ray — celebra a volta de Champignon e Marcão — dir. KondZilla</span></div><div class="disc-year">2012</div></div>
-          <div class="disc-item"><div class="disc-num" style="font-family:'Elektrix',Arial,sans-serif;color:var(--yellow);font-size:1.2rem;width:52px;text-align:center;">🎬</div><div class="disc-info"><strong>Chegou Quem Faltava</strong><span>🥇 Disco de Ouro — 3º e último ao vivo — show de 2011 lançado em 13/07/2021, Dia do Rock</span></div><div class="disc-year">2021</div></div>
+          <div class="disc-item" onclick="openAlbum('alb11')" style="cursor:pointer;"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%206.jpeg" alt="Acústico MTV" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Acústico MTV: Charlie Brown Jr.</strong><span>🥈 Disco de Platina — 1º álbum ao vivo — prod. Tadeu Patolla — Marcelo D2, Negra Li, RZO</span></div><div class="disc-year">2003</div></div>
+          <div class="disc-item" onclick="openAlbum('alb12')" style="cursor:pointer;"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%2012.jpeg" alt="Música Popular Caiçara" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Música Popular Caiçara</strong><span>2º ao vivo — CD/DVD/blu-ray — celebra a volta de Champignon e Marcão — dir. KondZilla</span></div><div class="disc-year">2012</div></div>
+          <div class="disc-item" onclick="openAlbum('alb13')" style="cursor:pointer;"><div class="disc-num" style="font-family:'Elektrix',Arial,sans-serif;color:var(--yellow);font-size:1.2rem;width:52px;text-align:center;">🎬</div><div class="disc-info"><strong>Chegou Quem Faltava</strong><span>🥇 Disco de Ouro — 3º e último ao vivo — show de 2011 lançado em 13/07/2021, Dia do Rock</span></div><div class="disc-year">2021</div></div>
         </div>
       </div>
 
       <div class="disc-card">
         <h2>📺 Especiais e parcerias de TV</h2>
         <div class="disc-list">
-          <div class="disc-item"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%2010.jpeg" alt="Estúdio Coca-Cola Zero com Vanessa da Mata" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Estúdio Coca-Cola Zero c/ Vanessa da Mata</strong><span>7º episódio do projeto MTV Brasil + Coca-Cola — 8 músicas tocadas a dois</span></div><div class="disc-year">2008</div></div>
+          <div class="disc-item" onclick="openAlbum('alb14')" style="cursor:pointer;"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%2010.jpeg" alt="Estúdio Coca-Cola Zero com Vanessa da Mata" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Estúdio Coca-Cola Zero c/ Vanessa da Mata</strong><span>7º episódio do projeto MTV Brasil + Coca-Cola — 8 músicas tocadas a dois</span></div><div class="disc-year">2008</div></div>
         </div>
       </div>
     </div>
@@ -823,6 +916,143 @@
 </div>
 
 <script>
+  // ── DADOS DOS ÁLBUNS PARA O MODAL ──────────────────────────
+  const ALBUM_DATA = {
+    alb1: {
+      title: "Transpiração Contínua Prolongada", kicker: "💿 Álbum de Estreia · 1997",
+      cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%201.jpeg",
+      meta: ["16 de junho de 1997", "Virgin Records", "~500 mil cópias"],
+      text: "Álbum de estreia da banda, produzido por Tadeu Patolla e Rick Bonadio. Gravado após a banda penhorar instrumentos para pagar a demo que chegou até a Virgin Records. Apresentou o CBJR ao Brasil com uma mistura de hardcore, reggae e ska em português.",
+      tracks: ["O Coro Vai Comê!", "Proibida pra Mim", "Quinta-Feira", "Tudo Que Ela Gosta de Escutar"]
+    },
+    alb2: {
+      title: "Preço Curto... Prazo Longo", kicker: "💿 2º Álbum · 1999",
+      cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%202.jpeg",
+      meta: ["17 de maio de 1999", "Virgin Records", "~250 mil cópias"],
+      text: "Lançado em 6 de março de 1999, com 25 faixas pelo preço de um CD simples. Chorão disse que foi gravado por necessidade, já que a banda não tinha repertório suficiente para os shows. \"Zóio de Lula\" foi a primeira música do CBJR a chegar ao topo das rádios.",
+      tracks: ["Te Levar", "Zóio de Lula", "Confisco", "Do Surf"]
+    },
+    alb3: {
+      title: "Nadando com os Tubarões", kicker: "💿 3º Álbum · 2000",
+      cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%203.jpeg",
+      meta: ["Novembro de 2000", "Virgin Records", "🥇 Disco de Ouro"],
+      text: "Último álbum com a formação original. Teve participação do grupo RZO (com Sabotage) e da então estreante Negra Li, que co-escreveu o maior hit do disco, \"Não É Sério\". Indicado ao Grammy Latino de Melhor Álbum de Rock em Língua Portuguesa em 2001. Logo após o lançamento, Thiago Castanho deixou a banda alegando cansaço das turnês.",
+      tracks: ["Não É Sério", "A Banca (Ratatá É Bicho Solto)", "Rubão - O Dono Do Mundo", "Fichado"]
+    },
+    alb4: {
+      title: "100% Charlie Brown Jr. — Abalando a Sua Fábrica", kicker: "💿 4º Álbum · 2001",
+      cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%204.jpeg",
+      meta: ["12 de novembro de 2001", "EMI", "Sem grande repercussão"],
+      text: "Primeiro álbum como quarteto, sem Thiago Castanho, e a primeira gravação pela EMI. A banda passou a gravar todos os instrumentos simultaneamente, como se fosse ao vivo, buscando um som mais 'cru', influenciado por punk e garage rock.",
+      tracks: ["Lugar Ao Sol", "Sino Dourado", "Eu Protesto", "Hoje Eu Acordei Feliz"]
+    },
+    alb5: {
+      title: "Bocas Ordinárias", kicker: "💿 5º Álbum · 2002",
+      cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%205.jpeg",
+      meta: ["6 de dezembro de 2002", "EMI", "🥇🥈 Ouro e Platina"],
+      text: "O nome veio de um crítico português que chamou a banda de \"bocas ordinárias\" durante turnê em Portugal. Chorão adorou a expressão e a usou como título. Consagrou \"Só Por Uma Noite\", uma das maiores músicas da carreira da banda. Indicado ao Grammy Latino em 2003. Dedicado à cantora Cássia Eller, amiga de Chorão que havia falecido no ano anterior.",
+      tracks: ["Só Por Uma Noite", "Papo Reto", "Tarja Preta", "Baader-Meinhof Blues"]
+    },
+    alb6: {
+      title: "Tamo Aí na Atividade", kicker: "💿 6º Álbum · 2004",
+      cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%207.jpeg",
+      meta: ["10 de dezembro de 2004", "EMI", "🏆 Grammy Latino 2005"],
+      text: "Sétimo trabalho da banda e último com a formação original completa. Venceu o Grammy Latino de Melhor Álbum de Rock em Língua Portuguesa. A gravação foi marcada por divergências internas — logo depois, Champignon, Marcão e Renato Pelado deixaram a banda.",
+      tracks: ["Champanhe E Água Benta", "Tamo Aí Na Atividade", "Cheirando Cola", "Di-Sk8 Eu Vim"]
+    },
+    alb7: {
+      title: "Imunidade Musical", kicker: "💿 7º Álbum · 2005",
+      cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%208.jpeg",
+      meta: ["3 de outubro de 2005", "EMI", "🥇 Disco de Ouro"],
+      text: "Lançado após a banda trocar quase toda a formação, mantendo apenas Chorão. Trouxe Pinguim Ruas, Heitor Gomes e o retorno de Thiago Castanho. \"Lutar Pelo Que É Meu\" virou abertura da Malhação em 2006 e 2007. Vendeu 100 mil cópias certificadas.",
+      tracks: ["Lutar Pelo Que É Meu", "Dias De Luta, Dias De Glória", "Ela Vai Voltar", "Aquela Paz"]
+    },
+    alb8: {
+      title: "Ritmo, Ritual e Responsa", kicker: "💿 8º Álbum · 2007",
+      cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%209.jpeg",
+      meta: ["15 de novembro de 2007", "EMI", "22 faixas"],
+      text: "Serviu como trilha sonora do filme \"O Magnata\", escrito e co-produzido por Chorão e protagonizado por Paulo Vilhena. Teve participações de MV Bill, João Gordo, Paranormal Attack e Forfun. \"Be Myself\" foi tema do protagonista da novela Duas Caras, da Globo.",
+      tracks: ["Pontes Indestrutíveis", "Be Myself", "Ritmo, Ritual E Responsa", "Não Viva em Vão"]
+    },
+    alb9: {
+      title: "Camisa 10 — Joga Bola até na Chuva", kicker: "💿 9º Álbum · 2009",
+      cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%2011.jpeg",
+      meta: ["25 de setembro de 2009", "Sony Music", "🥈 Disco de Platina"],
+      text: "Primeiro álbum pela Sony Music, após a saída da EMI. O título é um trocadilho: é o décimo trabalho da banda. Trouxe \"Céu Azul\", escrita após o divórcio de Chorão, e \"O Dom, a Inteligência e a Voz\", composta para Cássia Eller em 2001 mas que ela nunca chegou a gravar. \"Só os Loucos Sabem\" tornou-se um dos maiores hits da banda.",
+      tracks: ["Só Os Loucos Sabem", "O Dom, A Inteligência E A Voz", "Camisa 10 Joga Bola Até Na Chuva", "Dona Do Meu Pensamento"]
+    },
+    alb10: {
+      title: "La Família 013", kicker: "💿 10º Álbum · Póstumo · 2013",
+      cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%2013.jpeg",
+      meta: ["8 de outubro de 2013", "Som Livre", "🥇 Disco de Ouro"],
+      text: "Último álbum de inéditas da banda e o primeiro lançado postumamente. O nome \"013\" é o DDD de Santos, cidade onde tudo começou. O single \"Meu Novo Mundo\" foi lançado em fevereiro de 2013, pouco antes da morte de Chorão em março. O álbum ficou inacabado e foi finalizado pelos demais membros. Vendeu cerca de 40 mil cópias até o fim do ano de lançamento.",
+      tracks: ["Meu Novo Mundo", "Camisa Preta", "Rock Star", "Fina Arte"]
+    },
+    alb11: {
+      title: "Acústico MTV: Charlie Brown Jr.", kicker: "🎤 1º Álbum ao Vivo · 2003",
+      cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%206.jpeg",
+      meta: ["26 de setembro de 2003", "EMI", "🥈 Disco de Platina"],
+      text: "Primeiro álbum ao vivo da banda, gravado no Teatro Mars em São Paulo e transmitido pela MTV Brasil. Produzido por Tadeu Patolla. Considerado o maior sucesso comercial da carreira, com mais de 2 milhões de cópias vendidas. Teve participações de Marcelo D2, Marcelo Nova, RZO e Negra Li.",
+      tracks: ["Samba Makossa (c/ Marcelo D2)", "Não É Sério (c/ Negra Li)", "A Banca (c/ RZO)", "Hoje (c/ Marcelo Nova)"]
+    },
+    alb12: {
+      title: "Música Popular Caiçara", kicker: "🎤 2º Álbum ao Vivo · 2012",
+      cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%2012.jpeg",
+      meta: ["Maio de 2012", "Radar Records", "CD, DVD e Blu-ray"],
+      text: "Segundo álbum ao vivo, gravado em shows de 2011 em Curitiba e Santos para celebrar o retorno de Champignon e Marcão Britto à banda. Produzido por Liminha e dirigido por KondZilla. Trouxe \"Céu Azul\", composta por Chorão após seu divórcio. A versão em CD foi dividida em dois volumes, o segundo lançado apenas em 2016.",
+      tracks: ["Céu Azul", "Coração Satânico", "Dias De Luta, Dias De Glória", "Me Deixa (feat. Marcelo Falcão)"]
+    },
+    alb13: {
+      title: "Chegou Quem Faltava", kicker: "🎤 3º e Último Álbum ao Vivo · 2021",
+      cover: null,
+      meta: ["13 de julho de 2021", "Sony Music", "🥇 Disco de Ouro"],
+      text: "Lançado oito anos após as mortes de Chorão e Champignon, no Dia Mundial do Rock. Apresenta uma gravação inédita de um show realizado em 19 de março de 2011 no Citibank Hall, em São Paulo. Em 30 de julho, foi lançada uma versão especial com as falas de Chorão interagindo com o público durante o show.",
+      tracks: []
+    },
+    alb14: {
+      title: "Estúdio Coca-Cola Zero c/ Vanessa da Mata", kicker: "📺 Especial de TV · 2008",
+      cover: "https://charlibriano.github.io/Quiz-CBJR-V2/CD%2010.jpeg",
+      meta: ["16 de maio de 2008", "MTV Brasil", "8 músicas"],
+      text: "Sétimo episódio do projeto Estúdio Coca-Cola, parceria da MTV Brasil com a Coca-Cola que unia artistas de estilos diferentes. Foi o primeiro episódio sob o nome \"Estúdio Coca-Cola Zero\" e o primeiro da 2ª temporada. O CBJR se uniu à cantora de MPB Vanessa da Mata, e o episódio é considerado um dos melhores do projeto.",
+      tracks: ["Pontes Indestrutíveis", "Ai, Ai, Ai...", "Senhor do Tempo / Não Me Deixe Só", "Uma Criança com Seu Olhar"]
+    }
+  };
+
+  function openAlbum(id) {
+    const a = ALBUM_DATA[id];
+    if (!a) return;
+    document.getElementById('albumModalKicker').textContent = a.kicker;
+    document.getElementById('albumModalTitle').textContent = a.title;
+    document.getElementById('albumModalText').textContent = a.text;
+
+    const coverWrap = document.getElementById('albumModalCoverWrap');
+    if (a.cover) {
+      coverWrap.innerHTML = `<img class="album-modal-cover" src="${a.cover}" alt="${a.title}" onerror="this.outerHTML='<div class=\\'album-modal-icon\\'>🎬</div>'">`;
+    } else {
+      coverWrap.innerHTML = `<div class="album-modal-icon">🎬</div>`;
+    }
+
+    document.getElementById('albumModalMeta').innerHTML = a.meta.map(m => `<span class="album-modal-chip">${m}</span>`).join('');
+
+    const tracksWrap = document.getElementById('albumModalTracksWrap');
+    const tracksEl = document.getElementById('albumModalTracks');
+    if (a.tracks && a.tracks.length) {
+      tracksWrap.style.display = 'block';
+      tracksEl.innerHTML = a.tracks.map(t => `<span class="album-modal-track">🎵 ${t}</span>`).join('');
+    } else {
+      tracksWrap.style.display = 'none';
+    }
+
+    document.getElementById('albumModal').classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeAlbum() {
+    document.getElementById('albumModal').classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  // ── FIM DADOS DOS ÁLBUNS ────────────────────────────────────
+
   // Toggle cards
   function toggleCard(card) {
     const isExpanded = card.classList.contains('expanded');
