@@ -25,10 +25,14 @@
     body::before {
       content: ""; position: fixed; inset: 0; z-index: 0;
       background:
-        radial-gradient(circle at 18% 12%, rgba(241,196,15,.14), transparent 30%),
-        radial-gradient(circle at 84% 88%, rgba(30,215,96,.10), transparent 30%),
-        url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/radio-bg.png') center/cover no-repeat;
-      filter: brightness(.28) blur(3px); transform: scale(1.04);
+        radial-gradient(circle at 18% 12%, rgba(241,196,15,.18), transparent 32%),
+        radial-gradient(circle at 84% 88%, rgba(30,215,96,.13), transparent 32%),
+        url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/cbjr.png') center/cover no-repeat;
+      filter: brightness(.30) blur(2px); transform: scale(1.04);
+    }
+    body::after {
+      content: ""; position: fixed; inset: 0; z-index: 1; pointer-events: none;
+      background: radial-gradient(circle at 50% 0%, rgba(241,196,15,.05), transparent 50%);
     }
     .page {
       position: relative; z-index: 2; min-height: 100svh;
@@ -48,9 +52,9 @@
     /* ── HERO ── */
     .hero {
       text-align: center; padding: 28px 18px 18px;
-      border: 1px solid var(--line-y); border-radius: 28px;
-      background: radial-gradient(circle at 50% 0%, rgba(241,196,15,.16), transparent 46%), rgba(0,0,0,.72);
-      box-shadow: 0 0 48px rgba(241,196,15,.10), inset 0 1px 0 rgba(255,255,255,.08);
+      border: 1px solid rgba(241,196,15,.4); border-radius: 28px;
+      background: radial-gradient(circle at 50% 0%, rgba(241,196,15,.2), transparent 46%), rgba(0,0,0,.72);
+      box-shadow: 0 0 60px rgba(241,196,15,.14), inset 0 1px 0 rgba(255,255,255,.08);
       position: relative; overflow: hidden;
     }
     .hero::before {
@@ -75,13 +79,14 @@
     /* ── TABS ── */
     .tabs { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
     .tab-btn {
-      border: 1px solid rgba(241,196,15,.35); background: rgba(0,0,0,.55);
-      color: rgba(255,255,255,.72); border-radius: 999px; min-height: 40px;
+      border: 1px solid rgba(241,196,15,.4); background: rgba(0,0,0,.55);
+      color: rgba(255,255,255,.78); border-radius: 999px; min-height: 40px;
       padding: 0 16px; font-weight: 950; font-size: .82rem; cursor: pointer;
       font-family: inherit; transition: .18s ease;
+      box-shadow: 0 0 0 rgba(241,196,15,0);
     }
-    .tab-btn:hover { border-color: rgba(241,196,15,.65); color: #fff; }
-    .tab-btn.active { background: linear-gradient(90deg, var(--yellow), #e6b800); color: #000; border-color: transparent; }
+    .tab-btn:hover { border-color: rgba(241,196,15,.75); color: #fff; box-shadow: 0 0 16px rgba(241,196,15,.18); }
+    .tab-btn.active { background: linear-gradient(90deg, var(--yellow), #e6b800); color: #000; border-color: transparent; box-shadow: 0 0 22px rgba(241,196,15,.35); }
 
     /* ── SEÇÕES ── */
     .section { display: none; }
@@ -97,28 +102,43 @@
 
     /* ── CARD CLICÁVEL ── */
     .info-card {
-      border: 1px solid var(--line);
+      border: 1px solid rgba(241,196,15,.22);
       border-radius: 20px;
-      background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(0,0,0,.72));
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.07);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(0,0,0,.72));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 0 0 rgba(241,196,15,0);
       cursor: pointer;
-      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+      transition: transform .2s ease, border-color .2s ease, box-shadow .25s ease;
       overflow: hidden;
       position: relative;
+      isolation: isolate;
+    }
+    .info-card::before {
+      content: "";
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 30% 0%, rgba(241,196,15,.22), transparent 55%);
+      opacity: .35; z-index: -1; transition: opacity .25s ease;
     }
     .info-card:hover {
-      transform: translateY(-3px);
-      border-color: rgba(241,196,15,.45);
-      box-shadow: 0 12px 36px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.08);
+      transform: translateY(-4px);
+      border-color: rgba(241,196,15,.6);
+      box-shadow: 0 16px 42px rgba(0,0,0,.55), 0 0 28px rgba(241,196,15,.16), inset 0 1px 0 rgba(255,255,255,.1);
     }
-    .info-card.expanded { border-color: rgba(241,196,15,.6); }
+    .info-card:hover::before { opacity: .75; }
+    .info-card.expanded {
+      border-color: rgba(241,196,15,.75);
+      box-shadow: 0 0 36px rgba(241,196,15,.22), inset 0 1px 0 rgba(255,255,255,.1);
+    }
+    .info-card.expanded::before { opacity: .9; }
 
     .info-card-front {
       padding: 18px;
       display: flex; flex-direction: column; gap: 8px;
       min-height: 130px;
     }
-    .info-card-icon { font-size: 1.8rem; line-height: 1; }
+    .info-card-icon {
+      font-size: 1.9rem; line-height: 1;
+      filter: drop-shadow(0 0 8px rgba(241,196,15,.35));
+    }
     .info-card-title {
       font-weight: 950; font-size: .96rem; color: #fff; line-height: 1.2;
     }
@@ -130,6 +150,7 @@
       display: inline-flex; align-items: center; gap: 5px;
       font-size: .66rem; font-weight: 950; color: var(--yellow);
       letter-spacing: .06em; text-transform: uppercase;
+      text-shadow: 0 0 12px rgba(241,196,15,.5);
     }
 
     /* conteúdo expandido */
@@ -161,17 +182,24 @@
     /* ── CARDS ESPECIAIS ── */
     /* Citações */
     .quote-card {
-      border: 1px solid rgba(241,196,15,.35);
+      border: 1px solid rgba(241,196,15,.45);
       border-radius: 20px;
-      background: radial-gradient(circle at 0% 50%, rgba(241,196,15,.10), transparent 50%), rgba(0,0,0,.72);
+      background: radial-gradient(circle at 0% 50%, rgba(241,196,15,.16), transparent 55%), rgba(0,0,0,.72);
       padding: 22px 24px;
       position: relative;
       grid-column: 1 / -1;
+      box-shadow: 0 0 32px rgba(241,196,15,.08), inset 0 1px 0 rgba(255,255,255,.08);
+      transition: box-shadow .25s ease, border-color .25s ease;
+    }
+    .quote-card:hover {
+      border-color: rgba(241,196,15,.65);
+      box-shadow: 0 0 44px rgba(241,196,15,.16), inset 0 1px 0 rgba(255,255,255,.1);
     }
     .quote-card::before {
       content: "\201C"; position: absolute; top: 4px; left: 16px;
       font-family: Georgia, serif; font-size: 4.5rem;
-      color: rgba(241,196,15,.2); line-height: 1;
+      color: rgba(241,196,15,.3); line-height: 1;
+      text-shadow: 0 0 20px rgba(241,196,15,.3);
     }
     .quote-card blockquote {
       margin: 0; font-style: italic; font-size: clamp(.95rem,2.5vw,1.2rem);
@@ -185,68 +213,103 @@
 
     /* Card com foto */
     .photo-card {
-      border: 1px solid var(--line); border-radius: 20px; overflow: hidden;
+      border: 1px solid rgba(241,196,15,.25); border-radius: 20px; overflow: hidden;
       grid-column: span 2;
       display: grid; grid-template-columns: 180px 1fr;
       background: rgba(0,0,0,.72);
-      transition: transform .2s ease, border-color .2s ease;
+      box-shadow: 0 0 26px rgba(241,196,15,.06), inset 0 1px 0 rgba(255,255,255,.06);
+      transition: transform .2s ease, border-color .2s ease, box-shadow .25s ease;
     }
-    .photo-card:hover { transform: translateY(-2px); border-color: rgba(241,196,15,.38); }
+    .photo-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(241,196,15,.55);
+      box-shadow: 0 16px 40px rgba(0,0,0,.5), 0 0 30px rgba(241,196,15,.14);
+    }
     .photo-card-img { position: relative; overflow: hidden; }
     .photo-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(.3) brightness(.85); transition: filter .3s; }
     .photo-card:hover .photo-card-img img { filter: grayscale(0) brightness(1); }
     .photo-card-img::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 60%, rgba(0,0,0,.6)); }
     .photo-card-body { padding: 18px; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
     .photo-card-kicker { font-size: .68rem; font-weight: 950; color: var(--yellow); text-transform: uppercase; letter-spacing: .12em; }
-    .photo-card-title { font-family: 'Elektrix', Arial, sans-serif; font-size: clamp(1.2rem,2.5vw,1.8rem); color: #fff; margin: 0; line-height: .95; }
+    .photo-card-title { font-family: 'Elektrix', Arial, sans-serif; font-size: clamp(1.2rem,2.5vw,1.8rem); color: #fff; margin: 0; line-height: .95; text-shadow: 0 0 18px rgba(241,196,15,.25); }
     .photo-card-text { color: rgba(255,255,255,.76); font-weight: 850; line-height: 1.55; font-size: .87rem; margin: 0; }
 
     /* Números */
     .numbers-grid {
       display: grid; grid-template-columns: repeat(2,1fr); gap: 12px;
-      border: 1px solid var(--line); border-radius: 20px;
+      border: 1px solid rgba(241,196,15,.28); border-radius: 20px;
       background: rgba(0,0,0,.55); padding: 18px;
       grid-column: span 2;
+      box-shadow: 0 0 30px rgba(241,196,15,.07), inset 0 1px 0 rgba(255,255,255,.06);
     }
     .numbers-grid h2 {
       font-family: 'Elektrix', Arial, sans-serif; color: var(--yellow);
       font-size: 1.5rem; margin: 0 0 4px; grid-column: 1/-1;
+      text-shadow: 0 0 18px rgba(241,196,15,.4);
     }
-    .num-item { border: 1px solid var(--line); border-radius: 14px; background: rgba(255,255,255,.04); padding: 12px; }
-    .num-icon { font-size: 1.4rem; margin-bottom: 5px; display: block; }
+    .num-item {
+      border: 1px solid rgba(241,196,15,.18); border-radius: 14px;
+      background: rgba(255,255,255,.045); padding: 12px;
+      transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+    }
+    .num-item:hover {
+      border-color: rgba(241,196,15,.5);
+      box-shadow: 0 0 20px rgba(241,196,15,.12);
+      transform: translateY(-2px);
+    }
+    .num-icon { font-size: 1.4rem; margin-bottom: 5px; display: block; filter: drop-shadow(0 0 8px rgba(241,196,15,.3)); }
     .num-label { font-size: .64rem; color: var(--muted); font-weight: 950; text-transform: uppercase; letter-spacing: .08em; }
-    .num-value { font-family: 'Elektrix', Arial, sans-serif; font-size: 1.6rem; color: var(--yellow); line-height: .9; margin: 3px 0; }
+    .num-value { font-family: 'Elektrix', Arial, sans-serif; font-size: 1.6rem; color: var(--yellow); line-height: .9; margin: 3px 0; text-shadow: 0 0 14px rgba(241,196,15,.4); }
     .num-desc { font-size: .74rem; color: rgba(255,255,255,.62); font-weight: 850; line-height: 1.3; }
 
     /* Timeline */
     .timeline-card {
-      border: 1px solid var(--line); border-radius: 20px;
+      border: 1px solid rgba(241,196,15,.25); border-radius: 20px;
       background: rgba(0,0,0,.55); padding: 20px;
       grid-column: 1 / -1;
+      box-shadow: 0 0 28px rgba(241,196,15,.06), inset 0 1px 0 rgba(255,255,255,.06);
     }
-    .timeline-card h2 { font-family: 'Elektrix', Arial, sans-serif; color: var(--yellow); font-size: 1.5rem; margin: 0 0 16px; }
+    .timeline-card h2 { font-family: 'Elektrix', Arial, sans-serif; color: var(--yellow); font-size: 1.5rem; margin: 0 0 16px; text-shadow: 0 0 18px rgba(241,196,15,.4); }
     .tl { display: grid; gap: 0; }
     .tl-item { display: grid; grid-template-columns: 68px 1fr; gap: 0 12px; position: relative; }
     .tl-item:not(:last-child) .tl-yr::after {
       content: ""; position: absolute; left: 33px; top: 26px; bottom: -10px;
-      width: 1px; background: var(--line);
+      width: 1px; background: linear-gradient(180deg, rgba(241,196,15,.4), rgba(255,255,255,.08));
     }
-    .tl-yr { position: relative; padding-top: 3px; font-family: 'Elektrix', Arial, sans-serif; font-size: .95rem; color: var(--yellow); font-weight: 900; line-height: 1; }
-    .tl-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--yellow); border: 2px solid rgba(241,196,15,.35); box-shadow: 0 0 8px rgba(241,196,15,.4); position: absolute; right: -1px; top: 5px; }
+    .tl-yr { position: relative; padding-top: 3px; font-family: 'Elektrix', Arial, sans-serif; font-size: .95rem; color: var(--yellow); font-weight: 900; line-height: 1; text-shadow: 0 0 10px rgba(241,196,15,.4); }
+    .tl-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--yellow); border: 2px solid rgba(241,196,15,.4); box-shadow: 0 0 12px rgba(241,196,15,.6); position: absolute; right: -1px; top: 5px; }
     .tl-c { padding: 2px 0 18px; }
     .tl-c strong { display: block; font-size: .88rem; color: #fff; font-weight: 950; margin-bottom: 2px; }
     .tl-c span { font-size: .76rem; color: var(--muted); font-weight: 850; line-height: 1.4; }
 
     /* Discografia */
     .disc-card {
-      border: 1px solid var(--line); border-radius: 20px;
+      border: 1px solid rgba(241,196,15,.25); border-radius: 20px;
       background: rgba(0,0,0,.55); padding: 20px;
       grid-column: 1 / -1;
+      box-shadow: 0 0 28px rgba(241,196,15,.06), inset 0 1px 0 rgba(255,255,255,.06);
     }
-    .disc-card h2 { font-family: 'Elektrix', Arial, sans-serif; color: var(--yellow); font-size: 1.5rem; margin: 0 0 14px; }
+    .disc-card h2 { font-family: 'Elektrix', Arial, sans-serif; color: var(--yellow); font-size: 1.5rem; margin: 0 0 14px; text-shadow: 0 0 18px rgba(241,196,15,.4); }
     .disc-list { display: grid; gap: 8px; }
-    .disc-item { display: grid; grid-template-columns: 40px 1fr auto; gap: 10px; align-items: center; border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,.04); padding: 9px 12px; }
-    .disc-num { font-family: 'Elektrix', Arial, sans-serif; color: var(--yellow); font-size: 1.2rem; text-align: center; }
+    .disc-item {
+      display: grid; grid-template-columns: 52px 1fr auto; gap: 12px; align-items: center;
+      border: 1px solid rgba(241,196,15,.16); border-radius: 12px;
+      background: rgba(255,255,255,.04); padding: 8px 12px;
+      transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+    }
+    .disc-item:hover {
+      border-color: rgba(241,196,15,.5);
+      box-shadow: 0 0 18px rgba(241,196,15,.14);
+      transform: translateY(-2px);
+    }
+    .disc-cover {
+      width: 52px; height: 52px; border-radius: 8px; object-fit: cover;
+      border: 1px solid rgba(241,196,15,.3);
+      box-shadow: 0 0 12px rgba(241,196,15,.18);
+      flex-shrink: 0;
+      background: #111;
+    }
+    .disc-num { font-family: 'Elektrix', Arial, sans-serif; color: var(--yellow); font-size: 1.2rem; text-align: center; text-shadow: 0 0 10px rgba(241,196,15,.4); }
     .disc-info strong { display: block; font-size: .88rem; color: #fff; font-weight: 950; }
     .disc-info span { font-size: .72rem; color: var(--muted); font-weight: 850; }
     .disc-year { font-size: .76rem; color: var(--yellow); font-weight: 950; white-space: nowrap; }
@@ -279,6 +342,8 @@
       .photo-card-img { min-height: 140px; }
       .numbers-grid { grid-column: 1/-1; }
       .quote-card { grid-column: 1/-1; }
+      .disc-item { grid-template-columns: 40px 1fr auto; gap: 8px; }
+      .disc-cover { width: 40px; height: 40px; }
     }
     @media (max-width: 400px) {
       .cards-grid { grid-template-columns: 1fr; }
@@ -641,16 +706,16 @@
       <div class="disc-card">
         <h2>10 álbuns de estúdio</h2>
         <div class="disc-list">
-          <div class="disc-item"><div class="disc-num">01</div><div class="disc-info"><strong>Transpiração Contínua Prolongada</strong><span>~500 mil cópias — O Coro Vai Comê!, Proibida pra Mim, Quinta-Feira</span></div><div class="disc-year">1997</div></div>
-          <div class="disc-item"><div class="disc-num">02</div><div class="disc-info"><strong>Preço Curto... Prazo Longo</strong><span>25 faixas pelo preço de um — Te Levar, Zóio de Lula, Confisco</span></div><div class="disc-year">1999</div></div>
-          <div class="disc-item"><div class="disc-num">03</div><div class="disc-info"><strong>Nadando com os Tubarões</strong><span>Último com a formação original — Não é Sério, A Banca, Rubão o Dono do Mundo</span></div><div class="disc-year">2000</div></div>
-          <div class="disc-item"><div class="disc-num">04</div><div class="disc-info"><strong>100% Charlie Brown Jr. — Abalando a Sua Fábrica</strong><span>1º sem Thiago Castanho — Lugar ao Sol, Sino Dourado</span></div><div class="disc-year">2001</div></div>
-          <div class="disc-item"><div class="disc-num">05</div><div class="disc-info"><strong>Bocas Ordinárias</strong><span>+500 mil cópias — nome veio de crítico português — Papo Reto, Só por Uma Noite</span></div><div class="disc-year">2002</div></div>
-          <div class="disc-item"><div class="disc-num">06</div><div class="disc-info"><strong>Tamo Aí na Atividade</strong><span>🏆 Grammy Latino 2005 — Champagne e Água Benta, Tamo Aí na Atividade</span></div><div class="disc-year">2004</div></div>
-          <div class="disc-item"><div class="disc-num">07</div><div class="disc-info"><strong>Imunidade Musical</strong><span>Nova formação — Lutar Pelo Que é Meu, Dias de Luta Dias de Glória, Ela Vai Voltar</span></div><div class="disc-year">2005</div></div>
-          <div class="disc-item"><div class="disc-num">08</div><div class="disc-info"><strong>Ritmo, Ritual e Responsa</strong><span>22 faixas — Pontes Indestrutíveis, Be Myself (trilha Duas Caras/Globo)</span></div><div class="disc-year">2007</div></div>
-          <div class="disc-item"><div class="disc-num">09</div><div class="disc-info"><strong>Camisa 10 — Joga Bola até na Chuva</strong><span>🏆 Grammy Latino 2010 — Céu Azul, Só os Loucos Sabem, canção p/ Cássia Eller</span></div><div class="disc-year">2009</div></div>
-          <div class="disc-item"><div class="disc-num">10</div><div class="disc-info"><strong>La Família 013</strong><span>Álbum póstumo — 013 é o DDD de Santos — Meu Novo Mundo</span></div><div class="disc-year">2013</div></div>
+          <div class="disc-item"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%201.jpeg" alt="Transpiração Contínua Prolongada" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Transpiração Contínua Prolongada</strong><span>~500 mil cópias — O Coro Vai Comê!, Proibida pra Mim, Quinta-Feira</span></div><div class="disc-year">1997</div></div>
+          <div class="disc-item"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%202.jpeg" alt="Preço Curto... Prazo Longo" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Preço Curto... Prazo Longo</strong><span>25 faixas pelo preço de um — Te Levar, Zóio de Lula, Confisco</span></div><div class="disc-year">1999</div></div>
+          <div class="disc-item"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%203.jpeg" alt="Nadando com os Tubarões" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Nadando com os Tubarões</strong><span>Último com a formação original — Não é Sério, A Banca, Rubão o Dono do Mundo</span></div><div class="disc-year">2000</div></div>
+          <div class="disc-item"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%204.jpeg" alt="100% Charlie Brown Jr." loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>100% Charlie Brown Jr. — Abalando a Sua Fábrica</strong><span>1º sem Thiago Castanho — Lugar ao Sol, Sino Dourado</span></div><div class="disc-year">2001</div></div>
+          <div class="disc-item"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%205.jpeg" alt="Bocas Ordinárias" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Bocas Ordinárias</strong><span>+500 mil cópias — nome veio de crítico português — Papo Reto, Só por Uma Noite</span></div><div class="disc-year">2002</div></div>
+          <div class="disc-item"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%207.jpeg" alt="Tamo Aí na Atividade" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Tamo Aí na Atividade</strong><span>🏆 Grammy Latino 2005 — Champagne e Água Benta, Tamo Aí na Atividade</span></div><div class="disc-year">2004</div></div>
+          <div class="disc-item"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%208.jpeg" alt="Imunidade Musical" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Imunidade Musical</strong><span>Nova formação — Lutar Pelo Que é Meu, Dias de Luta Dias de Glória, Ela Vai Voltar</span></div><div class="disc-year">2005</div></div>
+          <div class="disc-item"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%209.jpeg" alt="Ritmo, Ritual e Responsa" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Ritmo, Ritual e Responsa</strong><span>22 faixas — Pontes Indestrutíveis, Be Myself (trilha Duas Caras/Globo)</span></div><div class="disc-year">2007</div></div>
+          <div class="disc-item"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%2011.jpeg" alt="Camisa 10 Joga Bola até na Chuva" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>Camisa 10 — Joga Bola até na Chuva</strong><span>🏆 Grammy Latino 2010 — Céu Azul, Só os Loucos Sabem, canção p/ Cássia Eller</span></div><div class="disc-year">2009</div></div>
+          <div class="disc-item"><img class="disc-cover" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%2013.jpeg" alt="La Família 013" loading="lazy" onerror="this.style.display='none'"><div class="disc-info"><strong>La Família 013</strong><span>Álbum póstumo — 013 é o DDD de Santos — Meu Novo Mundo</span></div><div class="disc-year">2013</div></div>
         </div>
       </div>
     </div>
