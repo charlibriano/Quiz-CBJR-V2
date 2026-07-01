@@ -379,7 +379,7 @@
       border-radius: 20px;
       border: 1px solid rgba(255,255,255,.12);
       background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(0,0,0,.72));
-      min-height: 110px;
+      min-height: 120px;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       gap: 6px; cursor: pointer;
@@ -415,11 +415,22 @@
 
     .ls-num {
       font-family: 'Elektrix', Arial, sans-serif;
-      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
       color: var(--ls-accent, #f1c40f);
       line-height: 1;
       text-shadow: 0 0 14px rgba(255,255,255,.3);
     }
+    .ls-song {
+      font-size: clamp(.62rem, 1.2vw, .78rem);
+      font-weight: 950;
+      color: rgba(255,255,255,.72);
+      line-height: 1.3;
+      text-align: center;
+      padding: 0 6px;
+    }
+    .level-select-card.ls-done .ls-song { color: rgba(255,255,255,.5); }
+    .level-select-card.ls-next .ls-song { color: #fff; }
+    .level-select-card.ls-locked .ls-song { color: rgba(255,255,255,.3); }
     .ls-label {
       font-size: .65rem; font-weight: 950;
       text-transform: uppercase; letter-spacing: .08em;
@@ -6723,23 +6734,33 @@ body.tela-pergunta .answer-btn {
       dificil:{ accent: '#ff3b30', label: 'Difícil', glow: 'rgba(255,59,48,.22)' },
     };
 
+    const LEVEL_SONGS = [
+      { num: 1, song: 'O Coro Vai Comê!',      icon: '🎵' },
+      { num: 2, song: 'Zóio de Lula',           icon: '🎵' },
+      { num: 3, song: 'Só Por Uma Noite',       icon: '🎵' },
+      { num: 4, song: 'A Banca',                icon: '🎵' },
+      { num: 5, song: 'Dias de Luta',           icon: '🎵' },
+      { num: 6, song: 'Lutar Pelo Que é Meu',  icon: '🎵' },
+      { num: 7, song: 'Só os Loucos Sabem',     icon: '🎵' },
+      { num: 8, song: 'Céu Azul',               icon: '🎵' },
+    ];
+
     let _levelSelectDifficulty = 'normal';
 
     function showLevelSelect(difficulty) {
       _levelSelectDifficulty = difficulty;
       const meta    = DIFF_COLORS[difficulty] || DIFF_COLORS.normal;
       const total   = state.levels.length || 8;
-      const highest = getHighestLevel(difficulty); // nível mais alto atingido (base 1)
+      const highest = getHighestLevel(difficulty);
 
-      // Atualiza cor CSS e subtítulo
       const screen = document.getElementById('levelSelectScreen');
       screen.style.setProperty('--ls-accent', meta.accent);
       document.getElementById('lsSubtitle').textContent = `Modo ${meta.label}`;
 
-      // Gera os cards
       const grid = document.getElementById('levelSelectGrid');
       grid.innerHTML = Array.from({ length: total }, (_, i) => {
         const num      = i + 1;
+        const levelMeta = LEVEL_SONGS[i] || { num, song: `Nível ${num}`, icon: '🎵' };
         const isDone   = i < highest;
         const isNext   = i === highest;
         const isLocked = i > highest;
@@ -6758,17 +6779,16 @@ body.tela-pergunta .answer-btn {
             type="button"
             onclick="pickLevel(${i})"
             ${isLocked ? 'disabled aria-disabled="true"' : ''}
-            aria-label="Nível ${num}${isDone ? ' — concluído' : isNext ? ' — próximo' : ' — bloqueado'}"
+            aria-label="Nível ${num} — ${levelMeta.song}"
           >
             ${badge}
             <span class="ls-num">${num}</span>
-            <span class="ls-label">Nível ${num}</span>
+            <span class="ls-song">${levelMeta.song}</span>
             ${tag}
           </button>
         `;
       }).join('');
 
-      // Transição de telas
       els.difficultyScreen.classList.remove('active');
       els.difficultyScreen.style.display = 'none';
       screen.classList.add('active');
