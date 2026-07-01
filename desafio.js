@@ -66,14 +66,27 @@
     return seed % unlockedCount;
   }
 
-  // Sorteio determinístico de categoria do Quiz por data
-  function getDailyQuizCategory() {
-    const key = todayStr() + 'quiz';
+  // Sorteio determinístico de nível do Quiz por data
+  function getDailyQuizLevel(difficulty) {
+    const key = todayStr() + 'quiz' + difficulty;
     let h = 0;
     for (let i = 0; i < key.length; i++) { h = Math.imul(31, h) + key.charCodeAt(i) | 0; }
     const seed = Math.abs(h);
-    const categories = ['Todas as músicas', 'Fácil', 'Médio', 'Difícil'];
-    return categories[seed % categories.length];
+    // Lê o nível mais alto atingido na dificuldade
+    try {
+      const progress = JSON.parse(localStorage.getItem('cobjr_quiz_progress_v1') || '{}');
+      const highest = Number(progress[`highestLevel_${difficulty}`] || 0); // base 1
+      const maxLevel = Math.max(1, highest); // pelo menos nível 1
+      return seed % maxLevel; // retorna index base 0
+    } catch(_) { return 0; }
+  }
+
+  // Dificuldade mais jogada pelo usuário
+  function getPreferredDifficulty() {
+    try {
+      const progress = JSON.parse(localStorage.getItem('cobjr_quiz_progress_v1') || '{}');
+      return progress.lastDifficulty || 'normal';
+    } catch(_) { return 'normal'; }
   }
 
   function isDone() {
@@ -296,12 +309,15 @@
           : `<a class="cbjr-daily-btn letras-btn" href="letras.html" style="opacity:.7">Desbloquear →</a>`;
     } else {
       // quiz
+      const prefDiff   = getPreferredDifficulty();
+      const quizLevel  = getDailyQuizLevel(prefDiff);
+      const diffLabels = { facil: 'Fácil', normal: 'Normal', dificil: 'Difícil' };
       rightVisual = `<div class="cbjr-daily-mode-icon">🎸</div>`;
-      titleText   = `Quiz do dia`;
-      subText     = `Categoria: ${quizCat} · Modo Quiz`;
+      titleText   = `Quiz — Nível ${quizLevel + 1}`;
+      subText     = `Dificuldade ${diffLabels[prefDiff] || 'Normal'} · Modo Quiz`;
       btnHtml     = done
         ? `<span class="cbjr-daily-btn done">✓ Concluído hoje</span>`
-        : `<a class="cbjr-daily-btn quiz-btn" href="quiz.html?desafio=1">Jogar agora →</a>`;
+        : `<a class="cbjr-daily-btn quiz-btn" href="quiz.html?desafio=1&diff=${prefDiff}&level=${quizLevel}">Jogar agora →</a>`;
     }
 
     const banner = document.createElement('div');
@@ -427,38 +443,26 @@
     const isDesafio = params.get('desafio') === '1';
     const meta      = MODE_META['quiz'];
 
-    if (!isDesafio) return; // só age se veio via link do desafio
+    if (!isDesafio) return;
 
-    // Injeta banner no topo do quiz indicando que é o desafio do dia
+    const difficulty = params.get('diff') || getPreferredDifficulty();
+    const levelIndex = Number(params.get('level') || 0);
+
+    // Aguarda o quiz carregar e chama startQuizAtLevel diretamente
     let attempts = 0;
     const check = setInterval(() => {
-      const quizApp = document.querySelector('.quiz-app, #quizApp, .app, main');
-      if (!quizApp) { if (++attempts > 20) clearInterval(check); return; }
+      if (typeof window.startQuizAtLevel !== 'function') {
+        if (++attempts > 40) clearInterval(check);
+        return;
+      }
       clearInterval(check);
 
-      if (document.getElementById('cbjrQuizDailyBanner')) return;
-      const banner = document.createElement('div');
-      banner.id = 'cbjrQuizDailyBanner';
-      banner.style.cssText = `
-        display:flex; align-items:center; gap:10px;
-        padding:10px 16px; margin-bottom:14px;
-        border-radius:14px;
-        border:1px solid ${meta.border};
-        background:${meta.glow};
-        font-family:Inter,Arial,sans-serif;
-        font-size:.82rem; font-weight:900;
-        color:${meta.color};
-      `;
-      banner.innerHTML = `${meta.icon} Desafio do dia — Quiz CBJR <span style="margin-left:auto;font-size:.72rem;color:rgba(255,255,255,.5)">Complete para marcar como feito</span>`;
-      quizApp.insertAdjacentElement('beforebegin', banner);
+      // Pequeno delay para o quiz terminar de inicializar
+      setTimeout(() => {
+        window.startQuizAtLevel(difficulty, levelIndex);
+        markDone();
+      }, 800);
     }, 250);
-
-    // Detecta conclusão do quiz
-    const obs = new MutationObserver(() => {
-      const done = document.querySelector('.quiz-finish.show, #quizFinish.show, .finish-screen.show');
-      if (done) markDone();
-    });
-    obs.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
   }
 
   // ── Init ─────────────────────────────────────────────────────
