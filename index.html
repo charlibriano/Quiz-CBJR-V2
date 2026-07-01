@@ -507,7 +507,76 @@
       font-weight: 850;
     }
 
-    .dash-btn.curiosidades-btn {
+    .dash-btn.share-btn {
+      background: linear-gradient(90deg, #25D366, #1ead52);
+      color: #fff;
+      border: 0;
+      box-shadow: 0 8px 24px rgba(37,211,102,.25);
+      animation: shareGlow 2.5s ease-in-out infinite;
+    }
+    .dash-btn.share-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    @keyframes shareGlow {
+      0%, 100% { box-shadow: 0 8px 24px rgba(37,211,102,.2); }
+      50%       { box-shadow: 0 8px 32px rgba(37,211,102,.45); }
+    }
+
+    /* ── MODAL SHARE CARD ── */
+    #shareModal {
+      position: fixed; inset: 0; z-index: 9999;
+      display: none; align-items: center; justify-content: center;
+      padding: 18px; background: rgba(0,0,0,.88);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    }
+    #shareModal.show { display: flex; }
+    .share-modal-box {
+      width: min(420px, 100%);
+      border: 1px solid rgba(241,196,15,.4); border-radius: 28px;
+      background: radial-gradient(circle at 50% 0%, rgba(241,196,15,.14), transparent 50%), rgba(5,5,5,.97);
+      box-shadow: 0 30px 80px rgba(0,0,0,.8);
+      padding: 22px; position: relative;
+    }
+    .share-modal-close {
+      position: absolute; top: 14px; right: 14px;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
+      color: #fff; font-size: 1rem; cursor: pointer;
+      display: grid; place-items: center; transition: .18s ease;
+    }
+    .share-modal-close:hover { background: rgba(255,59,48,.18); border-color: rgba(255,59,48,.4); }
+    .share-modal-title {
+      font-family: 'Elektrix', Arial, sans-serif;
+      color: var(--yellow, #f1c40f); font-size: 1.6rem;
+      margin: 0 0 14px; text-align: center;
+      text-shadow: 0 0 18px rgba(241,196,15,.4);
+    }
+    .share-canvas-wrap {
+      display: flex; justify-content: center; margin-bottom: 16px;
+    }
+    #shareCanvas {
+      border-radius: 16px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.6), 0 0 30px rgba(241,196,15,.12);
+      max-width: 100%; height: auto;
+    }
+    .share-modal-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .share-modal-btn {
+      min-height: 46px; border-radius: 14px; border: 0;
+      font-weight: 950; font-size: .88rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px; transition: .18s ease; font-family: inherit;
+    }
+    .share-modal-btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+    .share-modal-btn.download {
+      background: linear-gradient(90deg, var(--yellow, #f1c40f), #e6b800); color: #050505;
+      box-shadow: 0 8px 22px rgba(241,196,15,.28);
+    }
+    .share-modal-btn.whatsapp {
+      background: linear-gradient(90deg, #25D366, #1ead52); color: #fff;
+      box-shadow: 0 8px 22px rgba(37,211,102,.25);
+    }
+    .share-modal-tip {
+      text-align: center; font-size: .74rem; color: rgba(255,255,255,.45);
+      font-weight: 850; margin-top: 10px; line-height: 1.5;
+    }
       background: linear-gradient(90deg, rgba(241,196,15,.18), rgba(30,215,96,.12));
       border-color: rgba(241,196,15,.5);
       color: var(--yellow);
@@ -4554,6 +4623,7 @@
           <a class="dash-btn" id="dashContinueBtn" href="radio.html">▶ Continuar de onde parei</a>
           <a class="dash-btn secondary" href="conquistas.html">🎖️ Ver conquistas</a>
           <a class="dash-btn curiosidades-btn" id="dashCuriosidadesBtn" href="curiosidades.html" style="display:none;">🎸 Curiosidades exclusivas</a>
+          <button class="dash-btn share-btn" id="dashShareBtn" onclick="openShareModal()" type="button">📲 Compartilhar meu progresso</button>
         </div>
       </div>
     </section>
@@ -4618,6 +4688,9 @@
       <a class="mobile-curiosidades-btn" id="mobileCuriosidadesBtn" href="curiosidades.html" style="display:none;">
         🎸 Curiosidades exclusivas — Top 10
       </a>
+      <button class="mobile-curiosidades-btn" id="mobileShareBtn" onclick="openShareModal()" type="button" style="display:none; border:1px solid rgba(37,211,102,.5); background:rgba(37,211,102,.12); color:#25D366; cursor:pointer; font-family:inherit; font-weight:950;">
+        📲 Compartilhar meu progresso
+      </button>
 
       <div class="mode-cards" id="modeCards">
         <a class="mode-card" href="quiz.html" style="--mc-color: var(--yellow)" id="canal-quiz" data-tone="164.81" data-page="quiz.html">
@@ -6029,6 +6102,11 @@
         try { localStorage.setItem('cbjr_ranking_position', String(position)); } catch(e) {}
       }
       // ── FIM BOTÃO CURIOSIDADES ───────────────────────────────
+
+      // ── BOTÃO SHARE MOBILE: sempre visível após login ─────────
+      const mobileShareBtn = document.getElementById('mobileShareBtn');
+      if (mobileShareBtn) mobileShareBtn.style.display = 'flex';
+      // ── FIM BOTÃO SHARE MOBILE ────────────────────────────────
     } catch (error) {
       console.warn('Dashboard: não foi possível consultar ranking agora.', error);
       renderPlayerDashboard(user, '#--');
@@ -6130,5 +6208,272 @@
       });
     }
   </script>
+<!-- ── MODAL SHARE CARD ────────────────────────────────── -->
+<div id="shareModal" onclick="if(event.target===this)closeShareModal()">
+  <div class="share-modal-box">
+    <button class="share-modal-close" onclick="closeShareModal()">✕</button>
+    <h2 class="share-modal-title">Compartilhar progresso</h2>
+    <div class="share-canvas-wrap">
+      <canvas id="shareCanvas" width="450" height="800"></canvas>
+    </div>
+    <div class="share-modal-btns">
+      <button class="share-modal-btn download" onclick="downloadShareCard()">⬇ Baixar imagem</button>
+      <button class="share-modal-btn whatsapp" onclick="shareWhatsApp()">📲 WhatsApp</button>
+    </div>
+    <p class="share-modal-tip">Salve a imagem e poste nos stories do Instagram para desafiar seus amigos! 🎸</p>
+  </div>
+</div>
+
+<script>
+// ── SHARE CARD GENERATOR ─────────────────────────────────────
+let _shareData = {};
+
+function openShareModal() {
+  // Coleta dados atuais do dashboard
+  const name    = document.getElementById('dashWelcome')?.textContent?.replace('Bem-vindo, ','') || 'Fã 013';
+  const level   = document.getElementById('dashLevel')?.textContent || 'Fã CBJR';
+  const xp      = document.getElementById('dashXP')?.textContent || '0 XP';
+  const ranking = document.getElementById('dashRanking')?.textContent || '#--';
+  const radio   = document.getElementById('dashRadio')?.textContent || '0/13 CDs';
+  const letras  = document.getElementById('dashLetras')?.textContent || '0/13 álbuns';
+  const medals  = document.getElementById('dashConquistas')?.textContent || '0';
+  const streak  = document.getElementById('dashStreakCount')?.textContent || '0';
+
+  _shareData = { name, level, xp, ranking, radio, letras, medals, streak };
+  drawShareCard(_shareData);
+  document.getElementById('shareModal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeShareModal() {
+  document.getElementById('shareModal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+function getPhrase(level, xp) {
+  const xpNum = Number(String(xp).replace(/\D/g,'')) || 0;
+  if (xpNum >= 8000) return ['LENDA 013', '🔥 Chorão estaria orgulhoso!'];
+  if (xpNum >= 5000) return ['FÃ RAIZ', '⚡ Você conhece demais!'];
+  if (xpNum >= 3000) return ['FÃ DE CARTEIRINHA', '💎 Quase uma lenda!'];
+  if (xpNum >= 1500) return ['FÃ EM EVOLUÇÃO', '🎸 Está no caminho certo!'];
+  if (xpNum >= 500)  return ['FÃ INICIANTE', '🎵 Tem muito mais pra descobrir!'];
+  return ['FÃ CASUAL', '😅 Nem ouviu no rádio ainda?'];
+}
+
+function drawShareCard(d) {
+  const canvas = document.getElementById('shareCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = 450, H = 800;
+  canvas.width = W; canvas.height = H;
+
+  // ── FUNDO ────────────────────────────────────────────────
+  ctx.fillStyle = '#050505';
+  ctx.fillRect(0, 0, W, H);
+
+  // Glow superior amarelo
+  const gTop = ctx.createRadialGradient(W/2, 0, 0, W/2, 0, 280);
+  gTop.addColorStop(0, 'rgba(241,196,15,0.28)');
+  gTop.addColorStop(1, 'rgba(241,196,15,0)');
+  ctx.fillStyle = gTop;
+  ctx.fillRect(0, 0, W, H);
+
+  // Glow inferior verde
+  const gBot = ctx.createRadialGradient(W/2, H, 0, W/2, H, 200);
+  gBot.addColorStop(0, 'rgba(30,215,96,0.16)');
+  gBot.addColorStop(1, 'rgba(30,215,96,0)');
+  ctx.fillStyle = gBot;
+  ctx.fillRect(0, 0, W, H);
+
+  // Borda dourada arredondada
+  ctx.strokeStyle = 'rgba(241,196,15,0.55)';
+  ctx.lineWidth = 1.5;
+  roundRect(ctx, 8, 8, W-16, H-16, 24);
+  ctx.stroke();
+
+  // Linha decorativa interna
+  ctx.strokeStyle = 'rgba(241,196,15,0.15)';
+  ctx.lineWidth = 1;
+  roundRect(ctx, 14, 14, W-28, H-28, 20);
+  ctx.stroke();
+
+  // ── LOGO / HEADER ────────────────────────────────────────
+  ctx.textAlign = 'center';
+
+  // Badge "QUIZ CBJR"
+  ctx.fillStyle = 'rgba(241,196,15,0.12)';
+  roundRect(ctx, W/2-80, 38, 160, 30, 15);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(241,196,15,0.45)';
+  ctx.lineWidth = 1;
+  roundRect(ctx, W/2-80, 38, 160, 30, 15);
+  ctx.stroke();
+  ctx.fillStyle = '#f1c40f';
+  ctx.font = 'bold 11px Inter, Arial, sans-serif';
+  ctx.letterSpacing = '0.1em';
+  ctx.fillText('🎸 QUIZ CHARLIE BROWN JR.', W/2, 59);
+  ctx.letterSpacing = '0';
+
+  // Título grande CBJR
+  ctx.fillStyle = '#f1c40f';
+  ctx.font = 'bold 64px Arial Black, Arial, sans-serif';
+  ctx.shadowColor = 'rgba(241,196,15,0.5)';
+  ctx.shadowBlur = 22;
+  ctx.fillText('CBJR', W/2, 148);
+  ctx.shadowBlur = 0;
+
+  // ── NOME DO USUÁRIO ──────────────────────────────────────
+  ctx.fillStyle = 'rgba(255,255,255,0.92)';
+  ctx.font = 'bold 22px Inter, Arial, sans-serif';
+  ctx.fillText(d.name, W/2, 192);
+
+  // ── FRASE PROVOCATIVA ───────────────────────────────────
+  const [phrase, sub] = getPhrase(d.level, d.xp);
+  ctx.fillStyle = '#f1c40f';
+  ctx.font = 'bold 28px Arial Black, Arial, sans-serif';
+  ctx.shadowColor = 'rgba(241,196,15,0.4)';
+  ctx.shadowBlur = 14;
+  ctx.fillText(phrase, W/2, 238);
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = 'rgba(255,255,255,0.72)';
+  ctx.font = '15px Inter, Arial, sans-serif';
+  ctx.fillText(sub, W/2, 262);
+
+  // ── SEPARADOR ───────────────────────────────────────────
+  ctx.strokeStyle = 'rgba(241,196,15,0.25)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(40, 284); ctx.lineTo(W-40, 284); ctx.stroke();
+
+  // ── STATS GRID ──────────────────────────────────────────
+  const stats = [
+    { label: 'RANKING',  value: d.ranking,  icon: '🏆' },
+    { label: 'NÍVEL',    value: d.level,     icon: '⭐' },
+    { label: 'XP TOTAL', value: d.xp,        icon: '💥' },
+    { label: 'RÁDIO',    value: d.radio,     icon: '📻' },
+    { label: 'LETRAS',   value: d.letras,    icon: '✍️'  },
+    { label: 'MEDALHAS', value: d.medals,    icon: '🎖️'  },
+  ];
+
+  const cols = 2, rows = 3;
+  const cellW = (W - 60) / cols;
+  const cellH = 94;
+  const startY = 300;
+
+  stats.forEach((s, i) => {
+    const col = i % cols;
+    const row = Math.floor(i / cols);
+    const x = 30 + col * cellW;
+    const y = startY + row * (cellH + 8);
+
+    // Card background
+    ctx.fillStyle = 'rgba(255,255,255,0.045)';
+    roundRect(ctx, x, y, cellW - 8, cellH, 16);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(241,196,15,0.18)';
+    ctx.lineWidth = 1;
+    roundRect(ctx, x, y, cellW - 8, cellH, 16);
+    ctx.stroke();
+
+    // Ícone
+    ctx.font = '22px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(s.icon, x + (cellW-8)/2, y + 28);
+
+    // Label
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = 'bold 10px Inter, Arial, sans-serif';
+    ctx.letterSpacing = '0.08em';
+    ctx.fillText(s.label, x + (cellW-8)/2, y + 48);
+    ctx.letterSpacing = '0';
+
+    // Valor
+    ctx.fillStyle = '#f1c40f';
+    ctx.font = 'bold 16px Inter, Arial, sans-serif';
+    ctx.shadowColor = 'rgba(241,196,15,0.35)';
+    ctx.shadowBlur = 8;
+    ctx.fillText(s.value, x + (cellW-8)/2, y + 70);
+    ctx.shadowBlur = 0;
+  });
+
+  // ── STREAK ───────────────────────────────────────────────
+  const streakY = startY + rows * (cellH + 8) + 10;
+  ctx.fillStyle = 'rgba(255,140,0,0.10)';
+  roundRect(ctx, 30, streakY, W-60, 60, 16);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,140,0,0.4)';
+  ctx.lineWidth = 1;
+  roundRect(ctx, 30, streakY, W-60, 60, 16);
+  ctx.stroke();
+
+  ctx.textAlign = 'center';
+  ctx.font = '22px Arial';
+  ctx.fillText('🔥', W/2 - 70, streakY + 38);
+  ctx.fillStyle = '#ff8c00';
+  ctx.font = 'bold 26px Inter, Arial, sans-serif';
+  ctx.shadowColor = 'rgba(255,140,0,0.5)';
+  ctx.shadowBlur = 10;
+  ctx.fillText(`${d.streak} dias seguidos`, W/2 + 10, streakY + 38);
+  ctx.shadowBlur = 0;
+
+  // ── CTA ─────────────────────────────────────────────────
+  const ctaY = streakY + 76;
+  ctx.fillStyle = 'rgba(241,196,15,0.1)';
+  roundRect(ctx, 30, ctaY, W-60, 58, 16);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(241,196,15,0.35)';
+  ctx.lineWidth = 1;
+  roundRect(ctx, 30, ctaY, W-60, 58, 16);
+  ctx.stroke();
+
+  ctx.fillStyle = 'rgba(255,255,255,0.9)';
+  ctx.font = 'bold 14px Inter, Arial, sans-serif';
+  ctx.fillText('Você consegue superar?', W/2, ctaY + 24);
+  ctx.fillStyle = '#f1c40f';
+  ctx.font = 'bold 16px Inter, Arial, sans-serif';
+  ctx.shadowColor = 'rgba(241,196,15,0.4)';
+  ctx.shadowBlur = 8;
+  ctx.fillText('charlibriano.github.io/Quiz-CBJR-V2', W/2, ctaY + 46);
+  ctx.shadowBlur = 0;
+
+  // ── FOOTER ──────────────────────────────────────────────
+  ctx.fillStyle = 'rgba(255,255,255,0.28)';
+  ctx.font = '11px Inter, Arial, sans-serif';
+  ctx.fillText('Quiz CBJR V2 • Em memória de Chorão e Champignon 🎸', W/2, H - 20);
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function downloadShareCard() {
+  const canvas = document.getElementById('shareCanvas');
+  const link = document.createElement('a');
+  link.download = 'meu-progresso-cbjr.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+function shareWhatsApp() {
+  const [phrase] = getPhrase(_shareData.level, _shareData.xp);
+  const text = encodeURIComponent(
+    `🎸 Sou ${phrase} no Quiz Charlie Brown Jr.!\n` +
+    `🏆 ${_shareData.ranking} no ranking | ⭐ ${_shareData.level} | 💥 ${_shareData.xp}\n` +
+    `📻 ${_shareData.radio} | ✍️ ${_shareData.letras} | 🔥 ${_shareData.streak} dias seguidos\n\n` +
+    `Você consegue me superar? 👉 charlibriano.github.io/Quiz-CBJR-V2`
+  );
+  window.open(`https://wa.me/?text=${text}`, '_blank');
+}
+// ── FIM SHARE CARD ───────────────────────────────────────────
+</script>
+
 </body>
 </html>
