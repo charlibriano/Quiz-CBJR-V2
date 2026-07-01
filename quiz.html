@@ -336,6 +336,126 @@
     .level-normal { --accent: #f1c40f; }
     .level-hard { --accent: #ff3b30; }
 
+    /* ── TELA DE SELEÇÃO DE NÍVEL ────────────────────────────── */
+    #levelSelectScreen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100svh;
+      padding: clamp(16px, 4vw, 40px);
+      gap: 24px;
+      text-align: center;
+    }
+    #levelSelectScreen.active { display: flex; }
+
+    .level-select-title small {
+      font-size: .72rem; font-weight: 950;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: rgba(255,255,255,.5);
+    }
+    .level-select-title h1 {
+      font-family: 'Elektrix', Arial, sans-serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      color: var(--ls-accent, #f1c40f);
+      margin: 4px 0 8px;
+      line-height: .9;
+      text-shadow: 0 0 24px rgba(255,255,255,.2);
+    }
+    .level-select-title p {
+      font-size: .84rem; font-weight: 900;
+      color: rgba(255,255,255,.6); margin: 0;
+    }
+
+    .level-select-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: clamp(10px, 1.8vw, 18px);
+      width: min(900px, 94vw);
+    }
+
+    .level-select-card {
+      position: relative;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(0,0,0,.72));
+      min-height: 110px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 6px; cursor: pointer;
+      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+      padding: 14px 10px;
+    }
+    .level-select-card:hover:not(.ls-locked) {
+      transform: translateY(-4px);
+      border-color: var(--ls-accent, #f1c40f);
+      box-shadow: 0 0 28px rgba(255,255,255,.08);
+    }
+    .level-select-card.ls-locked {
+      opacity: .45; cursor: not-allowed;
+    }
+    .level-select-card.ls-done {
+      border-color: rgba(255,255,255,.22);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(0,0,0,.72));
+    }
+    .level-select-card.ls-done:hover {
+      border-color: var(--ls-accent, #f1c40f);
+    }
+    .level-select-card.ls-next {
+      border-color: var(--ls-accent, #f1c40f);
+      background: radial-gradient(circle at 50% 0%, rgba(255,255,255,.14), transparent 60%),
+                  linear-gradient(180deg, rgba(0,0,0,.1), rgba(0,0,0,.72));
+      box-shadow: 0 0 32px rgba(255,255,255,.1), inset 0 1px 0 rgba(255,255,255,.1);
+      animation: lsNextPulse 2s ease-in-out infinite;
+    }
+    @keyframes lsNextPulse {
+      0%, 100% { box-shadow: 0 0 18px rgba(255,255,255,.08); }
+      50%       { box-shadow: 0 0 36px rgba(255,255,255,.2); }
+    }
+
+    .ls-num {
+      font-family: 'Elektrix', Arial, sans-serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      color: var(--ls-accent, #f1c40f);
+      line-height: 1;
+      text-shadow: 0 0 14px rgba(255,255,255,.3);
+    }
+    .ls-label {
+      font-size: .65rem; font-weight: 950;
+      text-transform: uppercase; letter-spacing: .08em;
+      color: rgba(255,255,255,.5);
+    }
+    .ls-badge {
+      position: absolute; top: 8px; right: 8px;
+      font-size: .75rem; line-height: 1;
+    }
+    .ls-next-tag {
+      position: absolute; bottom: 8px;
+      font-size: .58rem; font-weight: 950;
+      text-transform: uppercase; letter-spacing: .06em;
+      color: var(--ls-accent, #f1c40f);
+      background: rgba(0,0,0,.5);
+      padding: 2px 7px; border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.15);
+    }
+
+    .level-select-back {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1px solid rgba(255,255,255,.18); border-radius: 999px;
+      background: rgba(0,0,0,.5); color: rgba(255,255,255,.7);
+      padding: 10px 20px; font-size: .86rem; font-weight: 950;
+      cursor: pointer; font-family: inherit; transition: .18s ease;
+    }
+    .level-select-back:hover {
+      border-color: rgba(255,255,255,.4); color: #fff;
+    }
+
+    @media (max-width: 600px) {
+      .level-select-grid { grid-template-columns: repeat(2, 1fr); }
+      .level-select-card { min-height: 90px; }
+    }
+    /* ── FIM TELA DE SELEÇÃO DE NÍVEL ────────────────────────── */
+
     /* Badge de progresso salvo no card de dificuldade */
     .quiz-progress-badge {
       display: block;
@@ -1209,6 +1329,17 @@
       display: none !important;
       visibility: hidden !important;
       pointer-events: none !important;
+    }
+
+    /* Tela de seleção de nível */
+    body.tela-level-select #difficultyScreen,
+    body.tela-level-select .quiz-screen,
+    body.tela-level-select #quizScreen {
+      display: none !important;
+      visibility: hidden !important;
+    }
+    body.tela-level-select #levelSelectScreen {
+      display: flex !important;
     }
 
     body.tela-pergunta .quiz-screen.active {
@@ -6229,6 +6360,18 @@ body.tela-pergunta .answer-btn {
       </div>
     </section>
 
+    <!-- ── TELA DE SELEÇÃO DE NÍVEL ── -->
+    <section id="levelSelectScreen" class="screen" aria-label="Escolha o nível">
+      <div class="level-select-title">
+        <small id="lsSubtitle">Modo Normal</small>
+        <h1>Escolha o Nível</h1>
+        <p>Selecione um nível desbloqueado para jogar</p>
+      </div>
+      <div class="level-select-grid" id="levelSelectGrid"></div>
+      <button class="level-select-back" onclick="backToDifficulty()">← Mudar dificuldade</button>
+    </section>
+    <!-- ── FIM TELA DE SELEÇÃO DE NÍVEL ── -->
+
     <section id="quizScreen" class="screen quiz-screen" aria-label="Perguntas do quiz">
       <div id="choraoBalloon" class="chorao-balloon" aria-live="polite" aria-hidden="true"></div>
       <div class="quiz-hud" aria-label="Progresso do nível">
@@ -6561,7 +6704,7 @@ body.tela-pergunta .answer-btn {
           button.classList.add('is-pressed');
           setTimeout(() => {
             button.classList.remove('is-pressed');
-            startQuiz(difficulty);
+            showLevelSelect(difficulty); // ← abre grade de níveis antes de iniciar
           }, 220);
         });
       });
@@ -6572,6 +6715,85 @@ body.tela-pergunta .answer-btn {
       els.nextLevelBtn.addEventListener('click', goToNextLevel);
       els.retryLevelBtn.addEventListener('click', retryCurrentLevel);
     }
+
+    // ── TELA DE SELEÇÃO DE NÍVEL ─────────────────────────────
+    const DIFF_COLORS = {
+      facil:  { accent: '#1ed760', label: 'Fácil',  glow: 'rgba(30,215,96,.22)'  },
+      normal: { accent: '#f1c40f', label: 'Normal', glow: 'rgba(241,196,15,.22)' },
+      dificil:{ accent: '#ff3b30', label: 'Difícil', glow: 'rgba(255,59,48,.22)' },
+    };
+
+    let _levelSelectDifficulty = 'normal';
+
+    function showLevelSelect(difficulty) {
+      _levelSelectDifficulty = difficulty;
+      const meta    = DIFF_COLORS[difficulty] || DIFF_COLORS.normal;
+      const total   = state.levels.length || 8;
+      const highest = getHighestLevel(difficulty); // nível mais alto atingido (base 1)
+
+      // Atualiza cor CSS e subtítulo
+      const screen = document.getElementById('levelSelectScreen');
+      screen.style.setProperty('--ls-accent', meta.accent);
+      document.getElementById('lsSubtitle').textContent = `Modo ${meta.label}`;
+
+      // Gera os cards
+      const grid = document.getElementById('levelSelectGrid');
+      grid.innerHTML = Array.from({ length: total }, (_, i) => {
+        const num      = i + 1;
+        const isDone   = i < highest;
+        const isNext   = i === highest;
+        const isLocked = i > highest;
+
+        let stateClass = '';
+        let badge = '';
+        let tag = '';
+
+        if (isDone)   { stateClass = 'ls-done';   badge = '<span class="ls-badge">✅</span>'; }
+        if (isNext)   { stateClass = 'ls-next';   tag   = '<span class="ls-next-tag">Continue aqui</span>'; }
+        if (isLocked) { stateClass = 'ls-locked'; badge = '<span class="ls-badge">🔒</span>'; }
+
+        return `
+          <button
+            class="level-select-card ${stateClass}"
+            type="button"
+            onclick="pickLevel(${i})"
+            ${isLocked ? 'disabled aria-disabled="true"' : ''}
+            aria-label="Nível ${num}${isDone ? ' — concluído' : isNext ? ' — próximo' : ' — bloqueado'}"
+          >
+            ${badge}
+            <span class="ls-num">${num}</span>
+            <span class="ls-label">Nível ${num}</span>
+            ${tag}
+          </button>
+        `;
+      }).join('');
+
+      // Transição de telas
+      els.difficultyScreen.classList.remove('active');
+      els.difficultyScreen.style.display = 'none';
+      screen.classList.add('active');
+      document.body.classList.remove('tela-dificuldade');
+      document.body.classList.add('tela-level-select');
+    }
+
+    function pickLevel(levelIndex) {
+      const screen = document.getElementById('levelSelectScreen');
+      screen.classList.remove('active');
+      screen.style.display = 'none';
+      document.body.classList.remove('tela-level-select');
+      startQuizAtLevel(_levelSelectDifficulty, levelIndex);
+    }
+
+    function backToDifficulty() {
+      const screen = document.getElementById('levelSelectScreen');
+      screen.classList.remove('active');
+      screen.style.display = 'none';
+      document.body.classList.remove('tela-level-select');
+      els.difficultyScreen.style.display = '';
+      els.difficultyScreen.classList.add('active');
+      document.body.classList.add('tela-dificuldade');
+    }
+    // ── FIM TELA DE SELEÇÃO DE NÍVEL ─────────────────────────
 
     function normalizeLevels(data) {
       if (!Array.isArray(data)) return [];
@@ -6667,6 +6889,11 @@ body.tela-pergunta .answer-btn {
     }
 
     function startQuiz(difficulty) {
+      // Mantido como fallback — redireciona para seleção de nível
+      showLevelSelect(difficulty);
+    }
+
+    function startQuizAtLevel(difficulty, levelIndex) {
       if (!state.levels.length) {
         showToast('As perguntas ainda não foram carregadas.');
         return;
@@ -6681,28 +6908,25 @@ body.tela-pergunta .answer-btn {
       state.powerups.fifty = settings.fifty;
       state.powerups.skip = settings.skip;
 
-      // Retoma do nível salvo se for a mesma dificuldade
-      const progress = loadProgress();
-      const savedLevel = progress.lastDifficulty === difficulty
-        ? Math.min(Number(progress.lastLevelIndex || 0), state.levels.length - 1)
-        : 0;
-      state.currentLevelIndex = savedLevel;
+      const safeIndex = Math.min(Math.max(0, levelIndex), state.levels.length - 1);
+      state.currentLevelIndex = safeIndex;
 
-      document.body.classList.remove('tela-dificuldade');
+      document.body.classList.remove('tela-dificuldade', 'tela-level-select');
       document.body.classList.add('tela-pergunta');
       els.difficultyScreen.classList.remove('active');
       els.quizScreen.classList.add('active');
       els.difficultyScreen.style.display = 'none';
+      document.getElementById('levelSelectScreen').style.display = 'none';
       els.quizScreen.style.display = 'block';
       els.resultOverlay.classList.remove('show');
 
-      startLevel(savedLevel);
+      startLevel(safeIndex);
 
-      // Avisa o jogador se retomou de onde parou
-      if (savedLevel > 0) {
-        showToast(`Continuando do nível ${savedLevel + 1} 🎸`);
+      if (safeIndex > 0) {
+        showToast(`Iniciando nível ${safeIndex + 1} 🎸`);
       }
     }
+    window.startQuizAtLevel = startQuizAtLevel; // expõe para desafio.js
 
     function startLevel(levelIndex) {
       const level = state.levels[levelIndex];
