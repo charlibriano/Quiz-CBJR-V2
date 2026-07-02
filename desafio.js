@@ -42,9 +42,13 @@
     quiz:   { label: 'Quiz',   icon: '🎸',  page: 'quiz.html',   color: 'rgba(100,149,237,1)', glow: 'rgba(100,149,237,.12)', border: 'rgba(100,149,237,.45)' },
   };
 
-  const DAILY_KEY  = 'cbjr_daily_done_v1';
-  const UNLOCK_KEY = 'radioCBJRUnlockedAlbumIndex_v2';
-  const PAGE       = location.pathname.split('/').pop().replace('.html','') || 'index';
+  const DAILY_KEY        = 'cbjr_daily_done_v1';
+  const DAILY_STREAK_KEY = 'cbjr_daily_streak_v1';
+  const UNLOCK_KEY       = 'radioCBJRUnlockedAlbumIndex_v2';
+  const PAGE             = location.pathname.split('/').pop().replace('.html','') || 'index';
+
+  const XP_DAILY    = 150;   // XP por completar o desafio do dia
+  const XP_STREAK_7 = 500;   // XP bônus por 7 dias seguidos
 
   // ── Helpers de data ──────────────────────────────────────────
   function todayStr() {
@@ -96,13 +100,195 @@
     } catch(_) { return false; }
   }
 
+  // ── STREAK DO DESAFIO ─────────────────────────────────────
+  function getDailyStreak() {
+    try { return JSON.parse(localStorage.getItem(DAILY_STREAK_KEY) || '{}'); } catch(_) { return {}; }
+  }
+
+  function updateDailyStreak() {
+    const today     = todayStr();
+    const yesterday = (() => {
+      const d = new Date(); d.setDate(d.getDate() - 1);
+      return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+    })();
+
+    const data    = getDailyStreak();
+    const current = data.lastDay === yesterday ? (data.current || 0) + 1 : 1;
+    const best    = Math.max(current, data.best || 0);
+    const updated = { current, best, lastDay: today };
+    try { localStorage.setItem(DAILY_STREAK_KEY, JSON.stringify(updated)); } catch(_) {}
+    return updated;
+  }
+
   function markDone() {
     try { localStorage.setItem(DAILY_KEY, JSON.stringify({ date: todayStr(), done: true, mode: todayMode() })); } catch(_) {}
+
+    // Atualiza streak do desafio
+    const streak = updateDailyStreak();
+
+    // Concede XP pelo desafio
+    let totalXp   = XP_DAILY;
+    let streakBonus = false;
+
+    if (streak.current > 0 && streak.current % 7 === 0) {
+      totalXp += XP_STREAK_7;
+      streakBonus = true;
+    }
+
+    // Adiciona XP via CBJRProgress se disponível
+    if (window.CBJRProgress?.addXp) {
+      window.CBJRProgress.addXp(totalXp, `Desafio do dia (${todayStr()})`);
+    } else {
+      // Fallback: adiciona direto no localStorage
+      try {
+        const key = 'cbjr_xp_total';
+        const curr = Number(localStorage.getItem(key) || 0);
+        localStorage.setItem(key, String(curr + totalXp));
+      } catch(_) {}
+    }
+
+    // Mostra popup de recompensa
+    showXpRewardPopup(totalXp, streak.current, streakBonus);
   }
+  // ── FIM STREAK DO DESAFIO ─────────────────────────────────
 
   function getUnlockedIndex() {
     return Math.max(0, Number(localStorage.getItem(UNLOCK_KEY) || 0));
   }
+
+  // ── POPUP DE RECOMPENSA XP ────────────────────────────────
+  function showXpRewardPopup(xp, streakDays, isStreakBonus) {
+    // Evita duplicatas
+    if (document.getElementById('cbjrXpRewardPopup')) return;
+
+    const popup = document.createElement('div');
+    popup.id = 'cbjrXpRewardPopup';
+
+    const streakHtml = streakDays > 1 ? `
+      <div class="cbjr-xp-streak">
+        🔥 ${streakDays} dias seguidos de desafio!
+      </div>
+    ` : '';
+
+    const bonusHtml = isStreakBonus ? `
+      <div class="cbjr-xp-bonus">
+        👑 Bônus de 7 dias: <strong>+${XP_STREAK_7} XP</strong>
+      </div>
+    ` : '';
+
+    popup.innerHTML = `
+      <div class="cbjr-xp-box">
+        <div class="cbjr-xp-icon">⭐</div>
+        <div class="cbjr-xp-label">Desafio concluído!</div>
+        <div class="cbjr-xp-amount">+${xp} XP</div>
+        ${streakHtml}
+        ${bonusHtml}
+        <button class="cbjr-xp-close" onclick="document.getElementById('cbjrXpRewardPopup').remove()">Continuar →</button>
+      </div>
+    `;
+
+    // Estilos do popup
+    const style = document.createElement('style');
+    style.textContent = `
+      #cbjrXpRewardPopup {
+        position: fixed; inset: 0; z-index: 99999;
+        display: flex; align-items: center; justify-content: center;
+        padding: 18px;
+        background: rgba(0,0,0,.82);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        animation: cbjrXpFadeIn .25s ease;
+      }
+      @keyframes cbjrXpFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+      .cbjr-xp-box {
+        width: min(380px, 100%);
+        border: 1px solid rgba(241,196,15,.55);
+        border-radius: 28px;
+        background:
+          radial-gradient(circle at 50% 0%, rgba(241,196,15,.22), transparent 52%),
+          rgba(5,5,5,.97);
+        box-shadow: 0 0 60px rgba(241,196,15,.18), 0 30px 80px rgba(0,0,0,.8);
+        padding: clamp(24px, 4vw, 36px);
+        text-align: center;
+        font-family: Inter, Arial, sans-serif;
+        color: #fff;
+        animation: cbjrXpSlideUp .3s ease;
+      }
+      @keyframes cbjrXpSlideUp {
+        from { transform: translateY(24px) scale(.96); opacity: 0; }
+        to   { transform: translateY(0)    scale(1);   opacity: 1; }
+      }
+
+      .cbjr-xp-icon {
+        font-size: 3rem; margin-bottom: 8px;
+        animation: cbjrXpSpin 1s ease;
+      }
+      @keyframes cbjrXpSpin {
+        0%   { transform: scale(0) rotate(-180deg); }
+        70%  { transform: scale(1.2) rotate(10deg); }
+        100% { transform: scale(1) rotate(0deg); }
+      }
+
+      .cbjr-xp-label {
+        font-size: .82rem; font-weight: 950;
+        text-transform: uppercase; letter-spacing: .12em;
+        color: rgba(255,255,255,.6); margin-bottom: 6px;
+      }
+
+      .cbjr-xp-amount {
+        font-family: 'Elektrix', Arial, sans-serif;
+        font-size: clamp(3rem, 10vw, 4.5rem);
+        color: #f1c40f; line-height: .9;
+        text-shadow: 0 0 30px rgba(241,196,15,.6), 3px 4px 0 rgba(0,0,0,.6);
+        margin-bottom: 12px;
+        animation: cbjrXpCount .6s ease .2s both;
+      }
+      @keyframes cbjrXpCount {
+        from { transform: scale(.7); opacity: 0; }
+        to   { transform: scale(1);  opacity: 1; }
+      }
+
+      .cbjr-xp-streak {
+        display: inline-flex; align-items: center; gap: 6px;
+        border: 1px solid rgba(255,140,0,.45);
+        border-radius: 999px;
+        background: rgba(255,140,0,.10);
+        color: #ff8c00; font-size: .8rem; font-weight: 950;
+        padding: 6px 14px; margin-bottom: 8px;
+      }
+
+      .cbjr-xp-bonus {
+        display: inline-flex; align-items: center; gap: 6px;
+        border: 1px solid rgba(241,196,15,.45);
+        border-radius: 999px;
+        background: rgba(241,196,15,.10);
+        color: #f1c40f; font-size: .82rem; font-weight: 950;
+        padding: 6px 14px; margin-bottom: 12px;
+      }
+      .cbjr-xp-bonus strong { color: #fff; }
+
+      .cbjr-xp-close {
+        display: block; width: 100%; min-height: 48px;
+        border-radius: 14px; border: 0; margin-top: 14px;
+        background: linear-gradient(90deg, #f1c40f, #e6b800);
+        color: #050505; font-weight: 950; font-size: .96rem;
+        cursor: pointer; font-family: inherit;
+        box-shadow: 0 10px 28px rgba(241,196,15,.28);
+        transition: .18s ease;
+      }
+      .cbjr-xp-close:hover { transform: translateY(-2px); filter: brightness(1.08); }
+    `;
+
+    document.head.appendChild(style);
+    document.body.appendChild(popup);
+
+    // Fecha ao clicar fora
+    popup.addEventListener('click', (e) => {
+      if (e.target === popup) popup.remove();
+    });
+  }
+  // ── FIM POPUP DE RECOMPENSA ───────────────────────────────
 
   // ── CSS injetado uma única vez ───────────────────────────────
   function injectCSS() {
@@ -284,7 +470,13 @@
     const album    = ALBUMS[idx];
     const unlocked = getUnlockedIndex();
     const canPlay  = idx <= unlocked;
-    const quizCat  = getDailyQuizCategory();
+
+    // Streak do desafio
+    const dailyStreak = getDailyStreak();
+    const streakDays  = dailyStreak.current || 0;
+    const streakHtml  = streakDays > 1
+      ? `<span style="display:inline-flex;align-items:center;gap:5px;margin-top:5px;font-size:.7rem;font-weight:950;color:#ff8c00;letter-spacing:.04em;">🔥 ${streakDays} dias seguidos · +${XP_DAILY} XP ao concluir${streakDays % 7 === 6 ? ` · amanhã +${XP_STREAK_7} XP bônus!` : ''}</span>`
+      : `<span style="display:inline-flex;align-items:center;gap:5px;margin-top:5px;font-size:.7rem;font-weight:950;color:rgba(255,255,255,.45);">⭐ +${XP_DAILY} XP ao concluir</span>`;
 
     // Monta o conteúdo do lado direito dependendo do modo
     let rightVisual, subText, btnHtml, titleText;
@@ -331,6 +523,7 @@
         <div class="cbjr-daily-kicker">${meta.icon} Desafio do dia · ${meta.label}</div>
         <h3 class="cbjr-daily-title">${titleText}</h3>
         <p class="cbjr-daily-sub">${subText}</p>
+        ${streakHtml}
       </div>
       <div class="cbjr-daily-right">
         ${rightVisual}
