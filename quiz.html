@@ -7264,6 +7264,8 @@ body.tela-pergunta .answer-btn {
       if (state.levelApproved) {
         const prev = getHighestLevel(diff);
         if (lvl > prev) saveProgress({ [`highestLevel_${diff}`]: lvl });
+        // ── Mural de atividades ──
+        window.dispatchEvent(new CustomEvent('cbjr-quiz-level-complete', { detail: { level: state.currentLevelIndex, difficulty: state.difficulty } }));
       }
 
       // Salva pontuação máxima
@@ -10698,3 +10700,4 @@ body.tela-pergunta .answer-btn.wrong {
 </style>
 
 <script src="./desafio.js" defer></script>
+<script src="./activity-publisher.js" defer></script>
