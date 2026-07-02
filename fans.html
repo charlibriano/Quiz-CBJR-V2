@@ -253,8 +253,97 @@
 /* CARTÃO DO JOGADOR CBJR */
 .post{cursor:pointer}.post .action,.post a,.post input,.post button{cursor:auto}.fan-title{margin-top:4px;color:#f1c40f;font-weight:1000;font-size:.76rem}.player-card-modal{position:fixed;inset:0;z-index:9000;display:none;place-items:center;padding:18px;background:rgba(0,0,0,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.player-card-modal.show{display:grid}.player-card-box{width:min(540px,94vw);border:1px solid rgba(241,196,15,.45);border-radius:28px;background:radial-gradient(circle at 50% 0%,rgba(241,196,15,.16),transparent 40%),rgba(0,0,0,.96);box-shadow:0 30px 100px rgba(0,0,0,.84);padding:22px;color:#fff;position:relative;overflow:hidden;text-align:center}.player-card-close{position:absolute;right:14px;top:14px;width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;font-weight:1000;cursor:pointer}.player-card-avatar{width:86px;height:86px;margin:0 auto 12px;border-radius:50%;border:3px solid rgba(241,196,15,.78);background:linear-gradient(135deg,var(--yellow),#111);display:grid;place-items:center;color:#000;font-weight:1000;font-size:1.45rem;overflow:hidden;box-shadow:0 0 28px rgba(241,196,15,.22)}.player-card-avatar img{width:100%;height:100%;object-fit:cover}.player-card-name{font-family:Elektrix,Inter,sans-serif;color:var(--yellow);font-size:clamp(1.8rem,5vw,3rem);line-height:.9;margin:0 0 8px;text-shadow:0 0 20px rgba(241,196,15,.35)}.player-card-title{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid rgba(241,196,15,.38);border-radius:999px;background:rgba(241,196,15,.10);padding:7px 12px;font-weight:1000;color:#fff;margin-bottom:12px}.player-card-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:12px 0}.player-card-stat{border:1px solid rgba(255,255,255,.12);border-radius:16px;background:rgba(255,255,255,.055);padding:10px}.player-card-stat small{display:block;color:rgba(255,255,255,.58);font-size:.66rem;font-weight:1000;text-transform:uppercase;letter-spacing:.08em}.player-card-stat strong{display:block;margin-top:5px;color:#1ed760;font-size:1.05rem}.player-card-medals{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:12px}.player-card-medal{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(241,196,15,.36);background:rgba(0,0,0,.55);font-size:1.18rem}
 
+/* ── MURAL DE ATIVIDADES ─────────────────────────────────── */
+.activity-wall-card {
+  border-color: rgba(30,215,96,.3);
+  background: linear-gradient(180deg, rgba(30,215,96,.06), rgba(0,0,0,.88));
+}
+.activity-wall-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin-bottom: 14px;
+}
+.activity-live-dot {
+  display: inline-flex; align-items: center; gap: 7px;
+  border: 1px solid rgba(30,215,96,.4); border-radius: 999px;
+  background: rgba(30,215,96,.08); color: #1ed760;
+  padding: 6px 12px; font-size: .7rem; font-weight: 950;
+  letter-spacing: .1em; white-space: nowrap;
+}
+.live-pulse {
+  width: 8px; height: 8px; border-radius: 50%; background: #1ed760;
+  box-shadow: 0 0 0 0 rgba(30,215,96,.6);
+  animation: livePulse 1.6s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes livePulse {
+  0%   { box-shadow: 0 0 0 0 rgba(30,215,96,.6); }
+  70%  { box-shadow: 0 0 0 8px rgba(30,215,96,0); }
+  100% { box-shadow: 0 0 0 0 rgba(30,215,96,0); }
+}
+.activity-feed {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px;
+}
+.activity-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  border: 1px solid rgba(255,255,255,.09); border-radius: 16px;
+  background: rgba(255,255,255,.04); padding: 11px 13px;
+  transition: border-color .2s ease, transform .2s ease;
+  animation: activityIn .35s ease;
+  position: relative; overflow: hidden;
+}
+@keyframes activityIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.activity-item:hover {
+  border-color: rgba(255,255,255,.18); transform: translateY(-2px);
+}
+.activity-item.new-item {
+  border-color: rgba(30,215,96,.45);
+  box-shadow: 0 0 18px rgba(30,215,96,.1);
+}
+.activity-avatar {
+  width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+  overflow: hidden; border: 2px solid rgba(241,196,15,.55);
+  background: linear-gradient(135deg, rgba(241,196,15,.9), #111);
+  display: grid; place-items: center;
+  color: #000; font-weight: 1000; font-size: .82rem;
+}
+.activity-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.activity-body { flex: 1; min-width: 0; }
+.activity-name {
+  font-weight: 1000; color: #fff; font-size: .86rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.activity-text {
+  margin-top: 3px; font-size: .78rem; font-weight: 850;
+  color: rgba(255,255,255,.65); line-height: 1.35;
+}
+.activity-text strong { color: #fff; }
+.activity-time {
+  margin-top: 4px; font-size: .68rem; font-weight: 850;
+  color: rgba(255,255,255,.38);
+}
+.activity-icon {
+  font-size: 1.1rem; flex-shrink: 0; margin-top: 1px;
+}
+/* tipos de atividade */
+.activity-item[data-type="radio"]    { --act-color: rgba(241,196,15,.35); }
+.activity-item[data-type="letras"]   { --act-color: rgba(30,215,96,.35);  }
+.activity-item[data-type="quiz"]     { --act-color: rgba(100,149,237,.35); }
+.activity-item[data-type="conquista"]{ --act-color: rgba(255,140,0,.35);  }
+.activity-item[data-type="desafio"]  { --act-color: rgba(255,59,48,.35);  }
+.activity-item[data-type="ranking"]  { --act-color: rgba(241,196,15,.35); }
+.activity-item::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; border-radius: 3px 0 0 3px;
+  background: var(--act-color, rgba(255,255,255,.12));
+}
+/* ── FIM MURAL DE ATIVIDADES ─────────────────────────────── */
+
 </style>
-</head>
 <script src="./guest-mode.js"></script>
 <script>
   (function() {
@@ -310,6 +399,23 @@
   </section>
 
   <main class="layout">
+    <!-- ── MURAL DE ATIVIDADES ── -->
+    <section class="card activity-wall-card" id="activityWall" style="grid-column: 1 / -1;">
+      <div class="activity-wall-head">
+        <div>
+          <h2>⚡ Rolando agora</h2>
+          <p class="card-sub">Atividades recentes dos fãs na comunidade CBJR.</p>
+        </div>
+        <div class="activity-live-dot">
+          <span class="live-pulse"></span> AO VIVO
+        </div>
+      </div>
+      <div id="activityFeed" class="activity-feed">
+        <div class="loading">Carregando atividades...</div>
+      </div>
+    </section>
+    <!-- ── FIM MURAL DE ATIVIDADES ── -->
+
     <section class="card" id="mural">
       <div class="feed-head">
         <div><h2>Mural da galera</h2><p class="card-sub">Mensagens mais recentes da comunidade. Clique em “Entrar na sintonia” para deixar seu recado.</p></div>
@@ -1170,5 +1276,158 @@ loadLocal();cleanStalePresence();startRealtime();setupOnlinePresence();
 </div>
 
 <script type="module" src="./notificacoes.js"></script>
+<!-- ── MURAL DE ATIVIDADES CBJR ─────────────────────────── -->
+<script type="module" id="cbjr-activity-wall-script">
+import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { getFirestore, collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
+  authDomain: 'ranking-cbjr.firebaseapp.com',
+  projectId: 'ranking-cbjr',
+  storageBucket: 'ranking-cbjr.firebasestorage.app',
+  messagingSenderId: '681180179118',
+  appId: '1:681180179118:web:fe10833848e8bb8194db3f'
+};
+
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+const ACTIVITY_COLLECTION = 'cbjr_atividades';
+const MAX_ITEMS = 20;
+
+// ── Tipos e textos de atividade ──────────────────────────
+const ACTIVITY_META = {
+  radio:     { icon: '📻', color: 'rgba(241,196,15,.35)' },
+  letras:    { icon: '✍️',  color: 'rgba(30,215,96,.35)'  },
+  quiz:      { icon: '🎸',  color: 'rgba(100,149,237,.35)'},
+  conquista: { icon: '🏅',  color: 'rgba(255,140,0,.35)'  },
+  desafio:   { icon: '🔥',  color: 'rgba(255,59,48,.35)'  },
+  ranking:   { icon: '🏆',  color: 'rgba(241,196,15,.35)' },
+};
+
+// ── Helpers ──────────────────────────────────────────────
+function timeAgo(ts) {
+  const diff = Date.now() - ts;
+  if (diff < 60000)  return 'agora mesmo';
+  if (diff < 3600000) return `${Math.floor(diff/60000)}min atrás`;
+  if (diff < 86400000) return `${Math.floor(diff/3600000)}h atrás`;
+  return `${Math.floor(diff/86400000)}d atrás`;
+}
+
+function initials(name) {
+  const parts = String(name || 'CB').trim().split(/\s+/).filter(Boolean);
+  return (parts.length >= 2 ? parts[0][0] + parts[1][0] : String(name||'CB').slice(0,2)).toUpperCase();
+}
+
+function escapeHtml(str) {
+  return String(str ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+}
+
+// ── Renderizar mural ─────────────────────────────────────
+let isFirstLoad = true;
+let latestTs = 0;
+
+function renderActivity(activities) {
+  const feed = document.getElementById('activityFeed');
+  if (!feed) return;
+
+  if (!activities.length) {
+    feed.innerHTML = '<div class="empty">Nenhuma atividade ainda. Seja o primeiro a jogar! 🎸</div>';
+    return;
+  }
+
+  feed.innerHTML = activities.map(a => {
+    const meta = ACTIVITY_META[a.type] || ACTIVITY_META.radio;
+    const isNew = !isFirstLoad && a.ts > latestTs;
+    const photoHtml = a.photo
+      ? `<img src="${escapeHtml(a.photo)}" alt="${escapeHtml(a.name)}" onerror="this.outerHTML='<span>${escapeHtml(initials(a.name))}</span>'">`
+      : `<span>${escapeHtml(initials(a.name))}</span>`;
+
+    return `
+      <div class="activity-item ${isNew ? 'new-item' : ''}" data-type="${escapeHtml(a.type)}">
+        <div class="activity-avatar">${photoHtml}</div>
+        <div class="activity-body">
+          <div class="activity-name">${escapeHtml(a.name)}</div>
+          <div class="activity-text">${a.text}</div>
+          <div class="activity-time">${timeAgo(a.ts)}</div>
+        </div>
+        <span class="activity-icon">${meta.icon}</span>
+      </div>
+    `;
+  }).join('');
+
+  if (activities.length) {
+    latestTs = Math.max(...activities.map(a => a.ts || 0));
+  }
+  isFirstLoad = false;
+}
+
+// ── Escutar atividades em tempo real ────────────────────
+const q = query(
+  collection(db, ACTIVITY_COLLECTION),
+  orderBy('ts', 'desc'),
+  limit(MAX_ITEMS)
+);
+
+onSnapshot(q, snap => {
+  const activities = snap.docs.map(d => ({ id: d.id, ...d.data(), ts: d.data().ts?.toMillis?.() || d.data().ts || 0 }));
+  renderActivity(activities);
+}, err => {
+  console.warn('ActivityWall:', err);
+  const feed = document.getElementById('activityFeed');
+  if (feed) feed.innerHTML = '<div class="empty">Não foi possível carregar as atividades.</div>';
+});
+
+// ── Publicar atividade do usuário atual ─────────────────
+// Esta função é exposta globalmente para ser chamada pelas outras páginas
+async function publishActivity(type, text, user) {
+  if (!user) return;
+  try {
+    await addDoc(collection(db, ACTIVITY_COLLECTION), {
+      uid:   user.uid,
+      name:  user.displayName || 'Fã CBJR',
+      photo: user.photoURL || '',
+      type,
+      text,
+      ts: serverTimestamp()
+    });
+  } catch(e) {
+    console.warn('ActivityWall: não foi possível publicar atividade', e);
+  }
+}
+
+// Escuta eventos de atividade disparados pelas outras páginas via localStorage
+window.addEventListener('storage', e => {
+  if (e.key !== 'cbjr_nova_atividade') return;
+  try {
+    const data = JSON.parse(e.newValue || '{}');
+    const user = auth.currentUser;
+    if (user && data.type && data.text) {
+      publishActivity(data.type, data.text, user);
+    }
+  } catch(_) {}
+});
+
+// Quando o usuário está na página de fãs, publica sua chegada
+onAuthStateChanged(auth, async user => {
+  if (!user) return;
+  // Verifica se já publicou nos últimos 30 minutos para não spammar
+  try {
+    const lastVisit = Number(localStorage.getItem('cbjr_last_fans_visit') || 0);
+    if (Date.now() - lastVisit > 30 * 60 * 1000) {
+      await publishActivity('ranking', `entrou na comunidade 🎸`, user);
+      localStorage.setItem('cbjr_last_fans_visit', String(Date.now()));
+    }
+  } catch(_) {}
+});
+
+// Expõe a função para uso externo
+window.CBJRActivity = { publish: publishActivity };
+</script>
+<!-- ── FIM MURAL DE ATIVIDADES ─────────────────────────── -->
+
 </body>
 </html>
