@@ -4310,6 +4310,11 @@ const cbjrFeedback = {
       const completedAlbum = lettersMode.errors < lettersMode.maxErrors;
 
       if (completedAlbum) saveCompletedAlbum(lettersMode.currentAlbumId);
+      // ── Mural de atividades ──
+      if (completedAlbum) {
+        const _albumName = lettersMode.albumMap[lettersMode.currentAlbumId]?.name || '';
+        window.dispatchEvent(new CustomEvent('cbjr-letras-album-complete', { detail: { albumName: _albumName } }));
+      }
 
       const completed = getCompletedAlbums();
       updateLettersDashboard(completed, getUnlockedAlbums());
@@ -4874,5 +4879,6 @@ document.addEventListener('DOMContentLoaded',()=>{
 <!-- /CBJR POP-UP DE CONQUISTA DESBLOQUEADA -->
   
 <script src="./desafio.js" defer></script>
+<script src="./activity-publisher.js" defer></script>
 </body>
 </html>
