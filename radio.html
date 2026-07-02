@@ -5610,6 +5610,8 @@ function finishAlbum() {
 
     renderAlbums();
     $('finishOverlay').classList.add('show');
+    // ── Mural de atividades ──
+    window.dispatchEvent(new CustomEvent('cbjr-radio-cd-complete', { detail: { albumName: albumDisplayName(currentAlbum), albumIndex: currentAlbumIndex } }));
     setTimeout(() => { if (typeof refreshOnlineRankingPreview === 'function') refreshOnlineRankingPreview(); }, 150);
   }, 5000);
 }
@@ -6189,5 +6191,6 @@ renderAlbums();
 </script>
 <script type="module" src="./notificacoes.js"></script>
   <script src="./desafio.js" defer></script>
+<script src="./activity-publisher.js" defer></script>
 </body>
 </html>
