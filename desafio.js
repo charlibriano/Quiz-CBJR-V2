@@ -574,15 +574,14 @@
       if (isDesafio) setTimeout(() => target.click(), 700);
     }, 250);
 
-    const obs = new MutationObserver(() => {
-      const overlay = document.getElementById('finishOverlay');
-      if (overlay?.classList.contains('show')) {
-        if (window.currentAlbumIndex === idx || isDesafio) markDone();
+    // Detecta conclusão do CD com sucesso via evento
+    window.addEventListener('cbjr-radio-cd-complete', function onRadioDone(e) {
+      const { albumIndex } = e.detail || {};
+      if (albumIndex === idx || isDesafio) {
+        markDone();
+        window.removeEventListener('cbjr-radio-cd-complete', onRadioDone);
       }
     });
-    const overlayEl = document.getElementById('finishOverlay');
-    if (overlayEl) obs.observe(overlayEl, { attributes: true, attributeFilter: ['class'] });
-  }
 
   // ── Destaque no Letras ───────────────────────────────────────
   function highlightLetrasAlbum() {
@@ -620,12 +619,11 @@
       if (isDesafio) setTimeout(() => target.click(), 700);
     }, 250);
 
-    // Detecta conclusão do álbum
-    const obs = new MutationObserver(() => {
-      const overlay = document.querySelector('.finish-overlay.show, #letrasFinish.show, .letters-finish.show');
-      if (overlay) markDone();
+    // Detecta conclusão do álbum via evento
+    window.addEventListener('cbjr-letras-album-complete', function onLetrasDone(e) {
+      markDone();
+      window.removeEventListener('cbjr-letras-album-complete', onLetrasDone);
     });
-    obs.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
   }
 
   // ── Destaque no Quiz ─────────────────────────────────────────
@@ -653,9 +651,18 @@
       // Pequeno delay para o quiz terminar de inicializar
       setTimeout(() => {
         window.startQuizAtLevel(difficulty, levelIndex);
-        markDone();
+        // NÃO marca como feito aqui — espera o evento de aprovação real
       }, 800);
     }, 250);
+
+    // Marca como concluído somente quando o nível for aprovado
+    window.addEventListener('cbjr-quiz-level-complete', function onQuizDone(e) {
+      const { level } = e.detail || {};
+      if (level === levelIndex) {
+        markDone();
+        window.removeEventListener('cbjr-quiz-level-complete', onQuizDone);
+      }
+    });
   }
 
   // ── Init ─────────────────────────────────────────────────────
