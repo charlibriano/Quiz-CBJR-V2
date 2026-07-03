@@ -453,15 +453,37 @@
 
   // ── Banner no index.html ─────────────────────────────────────
   function injectIndexBanner() {
-    const anchors = document.querySelectorAll('.console-head h2, .console h2');
-    let anchor = null;
-    for (const el of anchors) {
-      if (el.textContent.trim().toLowerCase().includes('mesa')) {
-        anchor = el.closest('section, .console') || el.parentElement;
-        break;
+    // Se o banner já existe, não injeta novamente
+    if (document.querySelector('.cbjr-daily-banner')) return;
+
+    // Tenta encontrar a âncora com retry (o DOM pode ainda não estar pronto)
+    function tryInject(attempt) {
+      let anchor = null;
+
+      // 1. Procura section#mesa ou .console com h2 "Mesa de controle"
+      const consoleEl = document.getElementById('mesa') || document.querySelector('section.console');
+      if (consoleEl) anchor = consoleEl;
+
+      // 2. Fallback: player-dashboard
+      if (!anchor) anchor = document.getElementById('playerDashboard');
+
+      // 3. Fallback mobile: mode-cards
+      if (!anchor) anchor = document.getElementById('modeCards');
+
+      // 4. Retry por até 3 segundos
+      if (!anchor) {
+        if (attempt < 12) setTimeout(() => tryInject(attempt + 1), 250);
+        return;
       }
+
+      buildAndInsertBanner(anchor);
     }
-    if (!anchor) return;
+
+    tryInject(0);
+  }
+
+  function buildAndInsertBanner(anchor) {
+    if (document.querySelector('.cbjr-daily-banner')) return;
 
     const mode     = todayMode();
     const meta     = MODE_META[mode];
@@ -537,7 +559,7 @@
 
     anchor.insertAdjacentElement('beforebegin', banner);
     startTimer(document.getElementById('cbjrDailyTimer'));
-  }
+  } // fim buildAndInsertBanner
 
   // ── Destaque na Rádio ────────────────────────────────────────
   function highlightRadioAlbum() {
