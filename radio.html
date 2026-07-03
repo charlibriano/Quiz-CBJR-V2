@@ -5143,6 +5143,7 @@ function renderUnlockSuccess(nextAlbum, hitGoal) {
         <div class="cbjr-result-actions">
           <button id="finishNextAlbum" class="primary" type="button">▶ Tocar ${albumName}</button>
           <button id="finishChooseAlbum" class="secondary" type="button">Escolher outro CD</button>
+          <button class="secondary" type="button" onclick="CBJRShareResult.radio({albumName:'${albumDisplayName(currentAlbum)}',albumYear:${currentAlbum.year||0},correct:${correct},total:${currentAlbum.tracks.length},coverUrl:'${coverUrl(currentAlbum)}'})">📲 Compartilhar resultado</button>
         </div>
       </div>
     `;
@@ -5167,6 +5168,7 @@ function renderUnlockSuccess(nextAlbum, hitGoal) {
       <div class="actions epic-actions">
         <button id="finishNextAlbum" class="primary" type="button">Tocar ${albumName}</button>
         <button id="finishChooseAlbum" class="secondary" type="button">Escolher outro CD</button>
+        <button class="secondary" type="button" onclick="CBJRShareResult.radio({albumName:'${albumDisplayName(currentAlbum)}',albumYear:${currentAlbum.year||0},correct:${correct},total:${currentAlbum.tracks.length},coverUrl:'${coverUrl(currentAlbum)}'})">📲 Compartilhar</button>
       </div>
     `;
   }
@@ -5207,6 +5209,7 @@ function renderFinishSimple(title, text, showNext, nextAlbum) {
         <div class="cbjr-result-actions">
           ${showNext && nextAlbum ? `<button id="finishNextAlbum" class="primary" type="button">▶ Tocar ${albumDisplayName(nextAlbum)}</button>` : ''}
           <button id="finishChooseAlbum" class="secondary" type="button">Escolher outro CD</button>
+          <button class="secondary" type="button" onclick="CBJRShareResult.radio({albumName:'${albumDisplayName(currentAlbum)}',albumYear:${currentAlbum?.year||0},correct:${correct},total:${total},coverUrl:'${currentAlbum?coverUrl(currentAlbum):''}' })">📲 Compartilhar resultado</button>
         </div>
       </div>
     `;
@@ -5218,6 +5221,7 @@ function renderFinishSimple(title, text, showNext, nextAlbum) {
       <div class="actions">
         <button id="finishNextAlbum" class="primary" type="button" style="display:${showNext ? 'inline-flex' : 'none'}">${showNext && nextAlbum ? 'Tocar ' + albumDisplayName(nextAlbum) : 'Próximo CD'}</button>
         <button id="finishChooseAlbum" class="secondary" type="button">Escolher outro CD</button>
+        <button class="secondary" type="button" onclick="CBJRShareResult.radio({albumName:'${albumDisplayName(currentAlbum)}',albumYear:${currentAlbum?.year||0},correct:${correct},total:${total},coverUrl:'${currentAlbum?coverUrl(currentAlbum):''}' })">📲 Compartilhar</button>
       </div>
     `;
   }
@@ -6192,5 +6196,6 @@ renderAlbums();
 <script type="module" src="./notificacoes.js"></script>
   <script src="./desafio.js" defer></script>
 <script src="./activity-publisher.js" defer></script>
+<script src="./share-result.js" defer></script>
 </body>
 </html>
