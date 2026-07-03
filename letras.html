@@ -4351,6 +4351,7 @@ const cbjrFeedback = {
                 ${hasNextAlbum ? '<button class="primary-button" id="next-album-btn">Jogar álbum liberado</button>' : ''}
                 <button class="ghost-button" id="albums-btn">Escolher álbum</button>
                 <button class="ghost-button" id="restart-btn">Repetir álbum atual</button>
+                <button class="ghost-button" id="share-result-btn" type="button">📲 Compartilhar resultado</button>
                 <a class="ghost-button" style="text-decoration:none;display:inline-flex;align-items:center;" href="index.html?skipIntro=true">Voltar ao painel</a>
               </div>
             </div>
@@ -4369,6 +4370,19 @@ const cbjrFeedback = {
         if (nextBtn && hasNextAlbum) nextBtn.addEventListener('click', () => startLettersMode(nextAlbumId));
         document.getElementById('restart-btn').addEventListener('click', () => startLettersMode(lettersMode.currentAlbumId));
         document.getElementById('albums-btn').addEventListener('click', showSelection);
+
+        // ── Botão compartilhar ──
+        document.getElementById('share-result-btn')?.addEventListener('click', () => {
+          const _albumCoverUrl = (() => { try { return coverUrl ? coverUrl(album) : ''; } catch(_) { return ''; } })();
+          if (window.CBJRShareResult) {
+            CBJRShareResult.letras({
+              albumName: album?.name || '',
+              correct: lettersMode.correct,
+              total: lettersMode.questions.length,
+              coverUrl: _albumCoverUrl
+            });
+          }
+        });
 
         setTimeout(() => {
           document.querySelector('.unlock-screen')?.classList.add('is-visible');
@@ -4880,5 +4894,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   
 <script src="./desafio.js" defer></script>
 <script src="./activity-publisher.js" defer></script>
+<script src="./share-result.js" defer></script>
 </body>
 </html>
