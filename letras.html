@@ -4303,15 +4303,260 @@ const cbjrFeedback = {
 
     window.submitLettersScoreOnline = submitLettersScoreOnline;
 
+    // ── MODO CHARLIBRIANO ─────────────────────────────────────
+    const CHARLIBRIANO_KEY = 'cbjr_charlibriano_letras_v1';
+
+    function getCharlibrianoRecord() {
+      try { return JSON.parse(localStorage.getItem(CHARLIBRIANO_KEY) || '{}'); } catch(_) { return {}; }
+    }
+
+    function saveCharlibrianoRecord(albums, acertos, xp) {
+      const rec = getCharlibrianoRecord();
+      const best = Math.max(rec.bestAlbums || 0, albums);
+      const bestAcertos = Math.max(rec.bestAcertos || 0, acertos);
+      const totalXp = (rec.totalXp || 0) + xp;
+      const updated = { bestAlbums: best, bestAcertos: bestAcertos, totalXp, lastRun: Date.now(), hasPlayed: true };
+      try { localStorage.setItem(CHARLIBRIANO_KEY, JSON.stringify(updated)); } catch(_) {}
+      return updated;
+    }
+
+    // Estado do modo Charlibriano
+    const charlibrianoState = {
+      active: false,
+      albumsCompleted: 0,
+      totalAcertos: 0,
+      albumQueue: [],
+    };
+
+    function shuffleArray(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function showCharlibrianoEntry() {
+      const rec = getCharlibrianoRecord();
+      els.final.innerHTML = `
+        <div class="charlibriano-entry">
+          <div class="charlibriano-badge">🎸 Desbloqueado · Modo Especial</div>
+          <h2 class="charlibriano-title">Modo<br>Charlibriano</h2>
+          <p class="charlibriano-sub">
+            Você dominou todos os álbuns do Modo Letras.<br>
+            Agora começa o verdadeiro teste — álbuns infinitos em ordem aleatória.<br>
+            <strong>Um erro e acabou.</strong>
+          </p>
+          <div class="charlibriano-rules">
+            <div class="charlibriano-rule">
+              <span class="rule-icon">♾️</span>
+              <strong>Infinito</strong>
+              <span>Álbuns sem fim em ordem aleatória</span>
+            </div>
+            <div class="charlibriano-rule">
+              <span class="rule-icon">💀</span>
+              <strong>Zero erros</strong>
+              <span>Qualquer erro encerra o modo</span>
+            </div>
+            <div class="charlibriano-rule">
+              <span class="rule-icon">⭐</span>
+              <strong>XP real</strong>
+              <span>+50 XP por álbum completado</span>
+            </div>
+          </div>
+          ${rec.bestAlbums ? `<div class="charlibriano-gameover-record">🏆 Seu recorde: ${rec.bestAlbums} álbum${rec.bestAlbums > 1 ? 's' : ''} consecutivos</div>` : ''}
+          <button class="charlibriano-start-btn" id="charlibrianoStartBtn">
+            🎸 Entrar no Modo Charlibriano
+          </button>
+          <button class="ghost-button" id="charlibrianoSkipBtn" style="margin-top:4px;">
+            Voltar para os álbuns
+          </button>
+        </div>
+      `;
+      showOnly('final');
+      setTimeout(() => document.querySelector('.charlibriano-entry')?.classList.add('is-visible'), 60);
+
+      document.getElementById('charlibrianoStartBtn').addEventListener('click', startCharlibrianoMode);
+      document.getElementById('charlibrianoSkipBtn').addEventListener('click', showSelection);
+    }
+
+    function startCharlibrianoMode() {
+      charlibrianoState.active = true;
+      charlibrianoState.albumsCompleted = 0;
+      charlibrianoState.totalAcertos = 0;
+      charlibrianoState.albumQueue = shuffleArray([...lettersMode.albumOrder]);
+      nextCharlibrianoAlbum();
+    }
+
+    function nextCharlibrianoAlbum() {
+      // Repõe a fila quando esvaziar
+      if (!charlibrianoState.albumQueue.length) {
+        charlibrianoState.albumQueue = shuffleArray([...lettersMode.albumOrder]);
+      }
+      const albumId = charlibrianoState.albumQueue.shift();
+
+      // Configura modo hard: zero erros permitidos
+      lettersMode.maxErrors = 0; // 0 = qualquer erro encerra
+      startLettersModeCharlibriano(albumId);
+    }
+
+    async function startLettersModeCharlibriano(albumId) {
+      clearInterval(lettersMode.timer);
+      lettersMode.currentAlbumId = albumId;
+      lettersMode.correct = 0;
+      lettersMode.errors = 0;
+      lettersMode.currentIndex = 0;
+      lettersMode.questions = [];
+
+      const album = lettersMode.albumMap[albumId];
+      try {
+        const response = await fetch(jsonUrl(album), { cache: 'no-store' });
+        if (!response.ok) throw new Error('Erro ao carregar álbum');
+        const data = await response.json();
+        const songs = normalizeSongs(data);
+        lettersMode.questions = buildQuestions(songs);
+        if (!lettersMode.questions.length) throw new Error('Sem músicas válidas');
+      } catch(e) {
+        charlibrianoGameOver();
+        return;
+      }
+
+      injectCharlibrianoHUD(album.name);
+      showOnly('question');
+      showLettersQuestion();
+    }
+
+    function injectCharlibrianoHUD(albumName) {
+      // Remove HUD anterior se existir
+      document.getElementById('charlibrianoHUD')?.remove();
+      const hud = document.createElement('div');
+      hud.id = 'charlibrianoHUD';
+      hud.className = 'charlibriano-hud';
+      hud.innerHTML = `
+        <div class="charlibriano-hud-badge">🎸 Modo Charlibriano</div>
+        <div style="font-size:.78rem;font-weight:900;color:rgba(255,255,255,.7);text-align:center;">
+          <span style="color:#fff;">${albumName}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="charlibriano-hud-score" title="Álbuns completados">
+            ${charlibrianoState.albumsCompleted} 💿
+          </div>
+          <div class="charlibriano-hud-zero">0 erros</div>
+        </div>
+      `;
+      const questionSection = document.getElementById('question') || els.question;
+      if (questionSection) questionSection.insertAdjacentElement('beforebegin', hud);
+    }
+
+    function charlibrianoGameOver(motivo = '') {
+      charlibrianoState.active = false;
+      lettersMode.maxErrors = 5; // restaura o padrão
+
+      document.getElementById('charlibrianoHUD')?.remove();
+
+      const albums   = charlibrianoState.albumsCompleted;
+      const acertos  = charlibrianoState.totalAcertos;
+      const xpGanho  = albums * 50;
+      const rec      = saveCharlibrianoRecord(albums, acertos, xpGanho);
+      const isRecord = albums > 0 && albums >= rec.bestAlbums;
+
+      // Concede XP
+      if (xpGanho > 0) {
+        if (window.CBJRProgress?.addXp) {
+          window.CBJRProgress.addXp(xpGanho, `Modo Charlibriano — ${albums} álbum(ns)`);
+        } else {
+          try { const k='cbjr_xp_total'; localStorage.setItem(k, String(Number(localStorage.getItem(k)||0)+xpGanho)); } catch(_) {}
+        }
+      }
+
+      // Concede selo se completou pelo menos 1 álbum
+      if (albums >= 1) {
+        try { localStorage.setItem('cbjr_selo_charlibriano', '1'); } catch(_) {}
+        window.dispatchEvent(new CustomEvent('cbjr-charlibriano-reached', { detail: { albums, acertos, xp: xpGanho } }));
+      }
+
+      els.final.innerHTML = `
+        <div class="charlibriano-gameover">
+          <div class="charlibriano-gameover-icon">${albums === 0 ? '💀' : '🎸'}</div>
+          <h2>${albums === 0 ? 'Acabou cedo!' : 'Modo Charlibriano'}</h2>
+          <p style="color:rgba(255,255,255,.7);font-weight:900;margin:0;max-width:420px;line-height:1.5;">
+            ${albums === 0
+              ? 'Você caiu no primeiro álbum. O Modo Charlibriano não perdoa!'
+              : `Você completou <strong style="color:#f1c40f">${albums} álbum${albums>1?'s':''}</strong> consecutivos sem errar uma letra!`}
+          </p>
+          <div class="charlibriano-gameover-stats">
+            <div class="charlibriano-stat">
+              <div class="cs-val">${albums}</div>
+              <div class="cs-label">Álbuns</div>
+            </div>
+            <div class="charlibriano-stat">
+              <div class="cs-val">${acertos}</div>
+              <div class="cs-label">Acertos</div>
+            </div>
+            <div class="charlibriano-stat">
+              <div class="cs-val">+${xpGanho}</div>
+              <div class="cs-label">XP ganho</div>
+            </div>
+          </div>
+          ${isRecord && albums > 0 ? `<div class="charlibriano-gameover-record">🏆 Novo recorde pessoal!</div>` : `<div style="font-size:.78rem;color:rgba(255,255,255,.45);font-weight:850;">Recorde: ${rec.bestAlbums} álbum${rec.bestAlbums>1?'s':''}</div>`}
+          <div class="charlibriano-gameover-actions">
+            <button class="charlibriano-start-btn" id="charlibrianoRetryBtn">🎸 Tentar de novo</button>
+            <button class="ghost-button" id="charlibrianoExitBtn">Voltar para os álbuns</button>
+          </div>
+        </div>
+      `;
+      showOnly('final');
+
+      document.getElementById('charlibrianoRetryBtn').addEventListener('click', startCharlibrianoMode);
+      document.getElementById('charlibrianoExitBtn').addEventListener('click', () => {
+        charlibrianoState.active = false;
+        lettersMode.maxErrors = 5;
+        showSelection();
+      });
+    }
+    // ── FIM MODO CHARLIBRIANO ─────────────────────────────────
+
     function endLettersGame() {
       clearInterval(lettersMode.timer);
       const total = lettersMode.questions.length;
       const album = lettersMode.albumMap[lettersMode.currentAlbumId];
-      const completedAlbum = lettersMode.errors < lettersMode.maxErrors;
+      const completedAlbum = lettersMode.errors < Math.max(1, lettersMode.maxErrors) || lettersMode.maxErrors === 0 && lettersMode.errors === 0;
 
-      if (completedAlbum) saveCompletedAlbum(lettersMode.currentAlbumId);
+      // ── Intercepta o Modo Charlibriano ──────────────────────
+      if (charlibrianoState.active) {
+        if (completedAlbum && lettersMode.errors === 0) {
+          // Álbum completado sem erros — continua!
+          charlibrianoState.albumsCompleted++;
+          charlibrianoState.totalAcertos += lettersMode.correct;
+          // XP parcial a cada álbum
+          if (window.CBJRProgress?.addXp) {
+            window.CBJRProgress.addXp(50, `Charlibriano: ${album.name}`);
+          }
+          // Pequena celebração antes do próximo
+          els.final.innerHTML = `
+            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:40vh;gap:14px;text-align:center;padding:24px;">
+              <div style="font-size:3rem;">🎸</div>
+              <div style="font-family:'Elektrix',Arial,sans-serif;font-size:2rem;color:#f1c40f;text-shadow:0 0 20px rgba(241,196,15,.5);">+50 XP</div>
+              <p style="color:rgba(255,255,255,.8);font-weight:900;margin:0;">${album.name} concluído!<br><span style="color:#f1c40f;font-size:1.1em;">${charlibrianoState.albumsCompleted} álbum${charlibrianoState.albumsCompleted>1?'s':''} no Modo Charlibriano</span></p>
+              <p style="color:rgba(255,255,255,.5);font-size:.82rem;font-weight:850;margin:0;">Próximo álbum em...</p>
+            </div>
+          `;
+          showOnly('final');
+          setTimeout(() => nextCharlibrianoAlbum(), 2000);
+        } else {
+          // Errou — game over
+          charlibrianoGameOver();
+        }
+        return;
+      }
+      // ── Fim interceptação Charlibriano ───────────────────────
+
+      const completedAlbumNormal = lettersMode.errors < lettersMode.maxErrors;
+
+      if (completedAlbumNormal) saveCompletedAlbum(lettersMode.currentAlbumId);
       // ── Mural de atividades ──
-      if (completedAlbum) {
+      if (completedAlbumNormal) {
         const _albumName = lettersMode.albumMap[lettersMode.currentAlbumId]?.name || '';
         window.dispatchEvent(new CustomEvent('cbjr-letras-album-complete', { detail: { albumName: _albumName } }));
       }
@@ -4322,15 +4567,15 @@ const cbjrFeedback = {
       const nextAlbumId = lettersMode.albumOrder.find(id => !completed.includes(id));
       const nextAlbum = nextAlbumId ? lettersMode.albumMap[nextAlbumId] : null;
 
-      if (completedAlbum) {
+      if (completedAlbumNormal) {
         const hasNextAlbum = Boolean(nextAlbum);
         els.final.innerHTML = `
           <div class="unlock-screen">
             <div class="unlock-glow"></div>
 
             <div class="unlock-copy">
-              <span class="unlock-kicker">${hasNextAlbum ? 'Novo álbum liberado' : 'Modo Letras dominado'}</span>
-              <h2>${hasNextAlbum ? nextAlbum.name : 'Todos os álbuns concluídos'}</h2>
+              <span class="unlock-kicker">${hasNextAlbum ? 'Novo álbum liberado' : '🎸 Modo Charlibriano desbloqueado!'}</span>
+              <h2>${hasNextAlbum ? nextAlbum.name : 'Todos os álbuns dominados'}</h2>
               <p>
                 Você concluiu <strong>${album.name}</strong> com
                 <strong>${lettersMode.correct}</strong> acertos em <strong>${total}</strong> trechos.
@@ -4348,7 +4593,7 @@ const cbjrFeedback = {
               ${renderLettersRankingCard(true)}
 
               <div class="unlock-actions">
-                ${hasNextAlbum ? '<button class="primary-button" id="next-album-btn">Jogar álbum liberado</button>' : ''}
+                ${hasNextAlbum ? '<button class="primary-button" id="next-album-btn">Jogar álbum liberado</button>' : '<button class="primary-button" id="charlibrianoEntryBtn">🎸 Entrar no Modo Charlibriano</button>'}
                 <button class="ghost-button" id="albums-btn">Escolher álbum</button>
                 <button class="ghost-button" id="restart-btn">Repetir álbum atual</button>
                 <button class="ghost-button" id="share-result-btn" type="button">📲 Compartilhar resultado</button>
@@ -4370,6 +4615,9 @@ const cbjrFeedback = {
         if (nextBtn && hasNextAlbum) nextBtn.addEventListener('click', () => startLettersMode(nextAlbumId));
         document.getElementById('restart-btn').addEventListener('click', () => startLettersMode(lettersMode.currentAlbumId));
         document.getElementById('albums-btn').addEventListener('click', showSelection);
+
+        // Botão Modo Charlibriano
+        document.getElementById('charlibrianoEntryBtn')?.addEventListener('click', showCharlibrianoEntry);
 
         // ── Botão compartilhar ──
         document.getElementById('share-result-btn')?.addEventListener('click', () => {
@@ -4788,6 +5036,138 @@ document.addEventListener('DOMContentLoaded',()=>{
   @keyframes cbjrAchIn{to{transform:translateX(0) scale(1);opacity:1}}
   @keyframes cbjrAchOut{to{transform:translateX(120%) scale(.98);opacity:0}}
   @media(max-width:620px){.cbjr-achievement-stack{right:10px;bottom:10px}.cbjr-achievement-popup{grid-template-columns:44px 1fr;padding:10px}.cbjr-ach-icon{width:44px;height:44px;font-size:1.45rem}.cbjr-ach-xp{grid-column:2;justify-self:start;padding:5px 8px}.cbjr-ach-title{font-size:.9rem}.cbjr-ach-desc{font-size:.72rem}}
+</style>
+
+<style id="charlibriano-mode-style">
+/* ── MODO CHARLIBRIANO ─────────────────────────────────────── */
+.charlibriano-entry {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 60vh; text-align: center; padding: clamp(20px,4vw,48px);
+  gap: 18px; position: relative; overflow: hidden;
+}
+.charlibriano-entry::before {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(circle at 50% 30%, rgba(241,196,15,.18), transparent 60%);
+  pointer-events: none;
+}
+.charlibriano-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1px solid rgba(241,196,15,.6); border-radius: 999px;
+  background: rgba(241,196,15,.12); color: #f1c40f;
+  padding: 8px 18px; font-size: .76rem; font-weight: 950;
+  letter-spacing: .12em; text-transform: uppercase;
+  box-shadow: 0 0 24px rgba(241,196,15,.2);
+  animation: charliPulse 2s ease-in-out infinite;
+}
+@keyframes charliPulse {
+  0%,100% { box-shadow: 0 0 14px rgba(241,196,15,.15); }
+  50%      { box-shadow: 0 0 32px rgba(241,196,15,.4); }
+}
+.charlibriano-title {
+  font-family: 'Elektrix', Arial, sans-serif;
+  font-size: clamp(2.8rem, 8vw, 5rem);
+  color: #f1c40f; line-height: .88; margin: 0;
+  text-shadow: 0 0 40px rgba(241,196,15,.5), 3px 5px 0 rgba(0,0,0,.7);
+}
+.charlibriano-sub {
+  font-size: clamp(.9rem, 2vw, 1.1rem); font-weight: 900;
+  color: rgba(255,255,255,.75); max-width: 520px; line-height: 1.55; margin: 0;
+}
+.charlibriano-rules {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px; width: min(560px, 100%); margin: 4px 0;
+}
+.charlibriano-rule {
+  border: 1px solid rgba(255,255,255,.12); border-radius: 16px;
+  background: rgba(255,255,255,.05); padding: 12px 14px; text-align: center;
+}
+.charlibriano-rule .rule-icon { font-size: 1.6rem; display: block; margin-bottom: 5px; }
+.charlibriano-rule strong { display: block; font-size: .82rem; color: #fff; font-weight: 950; }
+.charlibriano-rule span { font-size: .72rem; color: rgba(255,255,255,.55); font-weight: 850; }
+.charlibriano-start-btn {
+  min-height: 54px; padding: 0 32px; border-radius: 16px; border: 0;
+  background: linear-gradient(90deg, #f1c40f, #e6b800);
+  color: #050505; font-weight: 1000; font-size: 1rem;
+  cursor: pointer; font-family: inherit;
+  box-shadow: 0 14px 36px rgba(241,196,15,.3);
+  transition: .18s ease; letter-spacing: .02em;
+}
+.charlibriano-start-btn:hover { transform: translateY(-3px); filter: brightness(1.08); }
+
+/* HUD do Modo Charlibriano */
+.charlibriano-hud {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 10px 16px; margin-bottom: 14px;
+  border: 1px solid rgba(241,196,15,.35); border-radius: 16px;
+  background: radial-gradient(circle at 0% 50%, rgba(241,196,15,.10), transparent 55%),
+              rgba(0,0,0,.55);
+}
+.charlibriano-hud-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: .7rem; font-weight: 950; color: #f1c40f;
+  text-transform: uppercase; letter-spacing: .08em;
+}
+.charlibriano-hud-score {
+  font-family: 'Elektrix', Arial, sans-serif;
+  font-size: 1.4rem; color: #f1c40f;
+  text-shadow: 0 0 12px rgba(241,196,15,.4);
+}
+.charlibriano-hud-zero {
+  font-size: .72rem; font-weight: 950;
+  color: rgba(255,59,48,.9);
+  border: 1px solid rgba(255,59,48,.4);
+  border-radius: 999px; padding: 4px 10px;
+  background: rgba(255,59,48,.08);
+  letter-spacing: .06em;
+}
+
+/* Game Over Charlibriano */
+.charlibriano-gameover {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; padding: clamp(20px,4vw,48px); gap: 16px;
+  position: relative; overflow: hidden;
+}
+.charlibriano-gameover::before {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(255,59,48,.12), transparent 55%);
+  pointer-events: none;
+}
+.charlibriano-gameover-icon { font-size: 3.5rem; animation: goShake .5s ease; }
+@keyframes goShake {
+  0%,100% { transform: rotate(0); }
+  25%      { transform: rotate(-12deg); }
+  75%      { transform: rotate(12deg); }
+}
+.charlibriano-gameover h2 {
+  font-family: 'Elektrix', Arial, sans-serif;
+  font-size: clamp(2rem,6vw,3.5rem); color: #f1c40f;
+  margin: 0; text-shadow: 0 0 24px rgba(241,196,15,.4);
+}
+.charlibriano-gameover-stats {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 10px; width: min(420px,100%);
+}
+.charlibriano-stat {
+  border: 1px solid rgba(241,196,15,.22); border-radius: 14px;
+  background: rgba(255,255,255,.045); padding: 12px 8px; text-align: center;
+}
+.charlibriano-stat .cs-val {
+  font-family: 'Elektrix', Arial, sans-serif;
+  font-size: 1.8rem; color: #f1c40f; line-height: .9;
+  text-shadow: 0 0 12px rgba(241,196,15,.4);
+}
+.charlibriano-stat .cs-label {
+  font-size: .65rem; font-weight: 950; color: rgba(255,255,255,.5);
+  text-transform: uppercase; letter-spacing: .06em; margin-top: 4px;
+}
+.charlibriano-gameover-record {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1px solid rgba(30,215,96,.45); border-radius: 999px;
+  background: rgba(30,215,96,.08); color: #1ed760;
+  padding: 8px 16px; font-size: .82rem; font-weight: 950;
+}
+.charlibriano-gameover-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+/* ── FIM MODO CHARLIBRIANO ─────────────────────────────────── */
 </style>
 <div id="cbjrAchievementStack" class="cbjr-achievement-stack" aria-live="polite" aria-atomic="true"></div>
 <script id="cbjr-achievement-popup-script">
