@@ -6427,6 +6427,7 @@ body.tela-pergunta .answer-btn {
       <div class="overlay-actions">
         <button id="nextLevelBtn" class="primary-btn" type="button">Próximo nível</button>
         <button id="retryLevelBtn" class="primary-btn" type="button">Tentar de novo</button>
+        <button id="shareResultBtn" class="secondary-btn" type="button">📲 Compartilhar resultado</button>
         <button class="secondary-btn" type="button" onclick="window.location.href='index.html?skipIntro=true'">Menu principal</button>
       </div>
     </div>
@@ -7328,6 +7329,27 @@ body.tela-pergunta .answer-btn {
       if (approved) sendQuizScoreToRanking();
 
       els.resultOverlay.classList.add('show');
+
+      // ── Botão compartilhar resultado ──
+      const shareBtn = document.getElementById('shareResultBtn');
+      if (shareBtn) {
+        shareBtn.style.display = approved ? 'inline-flex' : 'none';
+        shareBtn.onclick = () => {
+          if (!window.CBJRShareResult) return;
+          const LEVEL_SONGS = [
+            'O Coro Vai Comê!','Zóio de Lula','Só Por Uma Noite','A Banca',
+            'Dias de Luta','Lutar Pelo Que é Meu','Só os Loucos Sabem','Céu Azul'
+          ];
+          CBJRShareResult.quiz({
+            levelName:   LEVEL_SONGS[state.currentLevelIndex] || `Nível ${levelNumber}`,
+            levelNumber: levelNumber,
+            difficulty:  state.difficulty,
+            score:       state.score,
+            hits:        state.globalHits,
+            total:       state.totalAnswered
+          });
+        };
+      }
     }
 
     // ── Envia pontuação do Quiz para o Ranking ──
@@ -10701,3 +10723,4 @@ body.tela-pergunta .answer-btn.wrong {
 
 <script src="./desafio.js" defer></script>
 <script src="./activity-publisher.js" defer></script>
+<script src="./share-result.js" defer></script>
