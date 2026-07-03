@@ -3851,7 +3851,7 @@ button:hover{
       }
       // ── FIM MODO VISITANTE ─────────────────────────────────
 
-      if (lettersMode.currentIndex >= lettersMode.questions.length || lettersMode.errors >= lettersMode.maxErrors) {
+      if (lettersMode.currentIndex >= lettersMode.questions.length || (lettersMode.maxErrors === -1 ? lettersMode.errors > 0 : lettersMode.errors >= lettersMode.maxErrors)) {
         endLettersGame();
         return;
       }
@@ -3893,7 +3893,7 @@ button:hover{
             <div class="lm-stats">
               <div><span>${lettersMode.correct}</span><small>Acertos</small></div>
               <div class="lm-stat-sep"></div>
-              <div><span>${lettersMode.errors}/${lettersMode.maxErrors}</span><small>Erros</small></div>
+              <div><span>${lettersMode.errors}/${lettersMode.maxErrors === -1 ? '∞' : lettersMode.maxErrors}</span><small>Erros</small></div>
               <div class="lm-stat-sep"></div>
               <div><span>${lettersMode.correct * 150}</span><small>Pontos</small></div>
             </div>
@@ -3923,7 +3923,7 @@ button:hover{
           </section>
           <aside class="game-side">
             <div class="timer-card"><span>Tempo</span><div class="timer-ring"><strong id="letters-timer">${lettersMode.timePerQuestion}</strong><small>segundos</small></div></div>
-            <div class="score-card"><span>Pontuação</span><strong>${lettersMode.correct * 150}</strong><small>${lettersMode.correct} acertos • ${lettersMode.errors}/${lettersMode.maxErrors} erros</small></div>
+            <div class="score-card"><span>Pontuação</span><strong>${lettersMode.correct * 150}</strong><small>${lettersMode.correct} acertos • ${lettersMode.errors}/${lettersMode.maxErrors === -1 ? '∞' : lettersMode.maxErrors} erros</small></div>
             <div class="album-now"><span>Álbum atual</span><h3>${album.name}</h3><img src="${coverUrl(album)}" alt="${album.name}"><div class="album-mini-bar"><i style="width:${progressPercent}%"></i></div><p>${lettersMode.currentIndex + 1} / ${lettersMode.questions.length} trechos</p></div>
             <button class="exit-button" id="exit-game-btn">Voltar aos álbuns</button>
           </aside>
@@ -4397,7 +4397,7 @@ const cbjrFeedback = {
       const albumId = charlibrianoState.albumQueue.shift();
 
       // Configura modo hard: zero erros permitidos
-      lettersMode.maxErrors = 0; // 0 = qualquer erro encerra
+      lettersMode.maxErrors = -1; // -1 = modo Charlibriano: qualquer erro encerra
       startLettersModeCharlibriano(albumId);
     }
 
@@ -4521,7 +4521,9 @@ const cbjrFeedback = {
       clearInterval(lettersMode.timer);
       const total = lettersMode.questions.length;
       const album = lettersMode.albumMap[lettersMode.currentAlbumId];
-      const completedAlbum = lettersMode.errors < Math.max(1, lettersMode.maxErrors) || lettersMode.maxErrors === 0 && lettersMode.errors === 0;
+      const completedAlbum = lettersMode.maxErrors === -1
+        ? lettersMode.errors === 0
+        : lettersMode.errors < Math.max(1, lettersMode.maxErrors);
 
       // ── Intercepta o Modo Charlibriano ──────────────────────
       if (charlibrianoState.active) {
