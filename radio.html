@@ -5548,6 +5548,10 @@ function chooseAnswer(btn) {
     if (window.innerWidth <= 760) {
       showCbjrFeedback('Vacilou!', 'wrong');
     }
+    // ── Charlibriano: game over ao errar ──
+    if (charlibrianoRadio.active) {
+      setTimeout(() => charlibrianoRadioGameOver(), 1800);
+    }
   }
 
   pool.shift();
@@ -5605,11 +5609,50 @@ function finishAlbum() {
       finishOverlayBaseClasses('unlock-success');
       renderUnlockSuccess(nextAlbum, hitGoal);
     } else if (!hasNextAlbum) {
-      finishOverlayBaseClasses('radio-complete');
-      renderFinishSimple('Rádio completa!', `Você fechou todos os CDs disponíveis. Acertou ${correct} de ${currentAlbum.tracks.length} faixas neste último CD.`, false, null);
+      // ── Modo Charlibriano: intercept quando todos os CDs concluídos ──
+      if (charlibrianoRadio.active) {
+        // CD concluído no modo Charlibriano — verifica se teve erro
+        if (wrong > 0) {
+          charlibrianoRadioGameOver();
+        } else {
+          charlibrianoRadio.cdsCompleted++;
+          charlibrianoRadio.totalCorrect += correct;
+          if (window.CBJRProgress?.addXp) window.CBJRProgress.addXp(50, `Charlibriano Rádio: ${albumDisplayName(currentAlbum)}`);
+          $('finishOverlay').classList.add('show');
+          const card = $('finishOverlay')?.querySelector('.overlay-card');
+          if (card) card.innerHTML = `
+            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:40vh;gap:14px;text-align:center;padding:24px;">
+              <div style="font-size:3rem;">🎸</div>
+              <div style="font-family:'Elektrix',Arial,sans-serif;font-size:2rem;color:#f1c40f;text-shadow:0 0 20px rgba(241,196,15,.5);">+50 XP</div>
+              <p style="color:rgba(255,255,255,.8);font-weight:900;margin:0;">${albumDisplayName(currentAlbum)} concluído!<br><span style="color:#f1c40f;font-size:1.1em;">${charlibrianoRadio.cdsCompleted} CD${charlibrianoRadio.cdsCompleted>1?'s':''} no Modo Charlibriano</span></p>
+              <p style="color:rgba(255,255,255,.5);font-size:.82rem;font-weight:850;margin:0;">Próximo CD em...</p>
+            </div>`;
+          setTimeout(() => nextCharlibrianoRadioAlbum(), 2500);
+        }
+      } else {
+        finishOverlayBaseClasses('radio-complete');
+        renderFinishSimple('Rádio completa!', `Você fechou todos os 13 CDs! Acertou ${correct} de ${currentAlbum.tracks.length} faixas neste último CD.`, false, null);
+        // Mostra botão Charlibriano na tela de fim
+        setTimeout(() => {
+          const actions = $('finishOverlay')?.querySelector('.cbjr-result-actions, .actions');
+          if (actions) {
+            const btn = document.createElement('button');
+            btn.className = 'charlibriano-start-btn';
+            btn.style.cssText = 'margin-top:8px;width:100%;';
+            btn.textContent = '🎸 Entrar no Modo Charlibriano';
+            btn.addEventListener('click', showCharlibrianoRadioEntry);
+            actions.appendChild(btn);
+          }
+        }, 100);
+      }
     } else {
-      finishOverlayBaseClasses('unlock-fail');
-      renderFinishSimple('CD finalizado!', `Você acertou ${correct} de ${currentAlbum.tracks.length} faixas e errou ${wrong}. Para desbloquear ${albumDisplayName(nextAlbum)}, precisa acertar pelo menos ${hitGoal} faixas neste CD.`, false, nextAlbum);
+      // CD finalizado no Charlibriano com erro
+      if (charlibrianoRadio.active && wrong > 0) {
+        charlibrianoRadioGameOver();
+      } else {
+        finishOverlayBaseClasses('unlock-fail');
+        renderFinishSimple('CD finalizado!', `Você acertou ${correct} de ${currentAlbum.tracks.length} faixas e errou ${wrong}. Para desbloquear ${albumDisplayName(nextAlbum)}, precisa acertar pelo menos ${hitGoal} faixas neste CD.`, false, nextAlbum);
+      }
     }
 
     renderAlbums();
@@ -6043,6 +6086,251 @@ renderAlbums();
   @keyframes cbjrAchOut{to{transform:translateX(120%) scale(.98);opacity:0}}
   @media(max-width:620px){.cbjr-achievement-stack{right:10px;bottom:10px}.cbjr-achievement-popup{grid-template-columns:44px 1fr;padding:10px}.cbjr-ach-icon{width:44px;height:44px;font-size:1.45rem}.cbjr-ach-xp{grid-column:2;justify-self:start;padding:5px 8px}.cbjr-ach-title{font-size:.9rem}.cbjr-ach-desc{font-size:.72rem}}
 </style>
+
+<style id="charlibriano-radio-style">
+/* ── MODO CHARLIBRIANO RÁDIO ────────────────────────────────── */
+.charlibriano-entry {
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:60vh;text-align:center;padding:clamp(20px,4vw,48px);gap:18px;
+  position:relative;overflow:hidden;
+}
+.charlibriano-entry::before {
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 30%,rgba(241,196,15,.18),transparent 60%);
+  pointer-events:none;
+}
+.charlibriano-badge {
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid rgba(241,196,15,.6);border-radius:999px;
+  background:rgba(241,196,15,.12);color:#f1c40f;
+  padding:8px 18px;font-size:.76rem;font-weight:950;
+  letter-spacing:.12em;text-transform:uppercase;
+  box-shadow:0 0 24px rgba(241,196,15,.2);
+  animation:charliPulse 2s ease-in-out infinite;
+}
+@keyframes charliPulse{0%,100%{box-shadow:0 0 14px rgba(241,196,15,.15)}50%{box-shadow:0 0 32px rgba(241,196,15,.4)}}
+.charlibriano-title {
+  font-family:'Elektrix',Arial,sans-serif;
+  font-size:clamp(2.8rem,8vw,5rem);color:#f1c40f;line-height:.88;margin:0;
+  text-shadow:0 0 40px rgba(241,196,15,.5),3px 5px 0 rgba(0,0,0,.7);
+}
+.charlibriano-sub {
+  font-size:clamp(.9rem,2vw,1.1rem);font-weight:900;
+  color:rgba(255,255,255,.75);max-width:520px;line-height:1.55;margin:0;
+}
+.charlibriano-rules {
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:10px;width:min(560px,100%);margin:4px 0;
+}
+.charlibriano-rule {
+  border:1px solid rgba(255,255,255,.12);border-radius:16px;
+  background:rgba(255,255,255,.05);padding:12px 14px;text-align:center;
+}
+.charlibriano-rule .rule-icon{font-size:1.6rem;display:block;margin-bottom:5px}
+.charlibriano-rule strong{display:block;font-size:.82rem;color:#fff;font-weight:950}
+.charlibriano-rule span{font-size:.72rem;color:rgba(255,255,255,.55);font-weight:850}
+.charlibriano-start-btn {
+  min-height:54px;padding:0 32px;border-radius:16px;border:0;
+  background:linear-gradient(90deg,#f1c40f,#e6b800);
+  color:#050505;font-weight:1000;font-size:1rem;
+  cursor:pointer;font-family:inherit;
+  box-shadow:0 14px 36px rgba(241,196,15,.3);
+  transition:.18s ease;letter-spacing:.02em;
+}
+.charlibriano-start-btn:hover{transform:translateY(-3px);filter:brightness(1.08)}
+.charlibriano-hud {
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:10px 16px;
+  border-bottom:1px solid rgba(241,196,15,.3);
+  background:radial-gradient(circle at 0% 50%,rgba(241,196,15,.10),transparent 55%),
+             rgba(5,5,5,.92);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  font-family:Inter,Arial,sans-serif;
+}
+.charlibriano-hud-badge{display:inline-flex;align-items:center;gap:6px;font-size:.7rem;font-weight:950;color:#f1c40f;text-transform:uppercase;letter-spacing:.08em}
+.charlibriano-hud-score{font-family:'Elektrix',Arial,sans-serif;font-size:1.4rem;color:#f1c40f;text-shadow:0 0 12px rgba(241,196,15,.4)}
+.charlibriano-hud-zero{font-size:.72rem;font-weight:950;color:rgba(255,59,48,.9);border:1px solid rgba(255,59,48,.4);border-radius:999px;padding:4px 10px;background:rgba(255,59,48,.08);letter-spacing:.06em}
+.charlibriano-gameover {
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;padding:clamp(20px,4vw,48px);gap:16px;
+  position:relative;overflow:hidden;
+}
+.charlibriano-gameover::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(255,59,48,.12),transparent 55%);pointer-events:none}
+.charlibriano-gameover-icon{font-size:3.5rem;animation:goShake .5s ease}
+@keyframes goShake{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
+.charlibriano-gameover h2{font-family:'Elektrix',Arial,sans-serif;font-size:clamp(2rem,6vw,3.5rem);color:#f1c40f;margin:0;text-shadow:0 0 24px rgba(241,196,15,.4)}
+.charlibriano-gameover-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:min(420px,100%)}
+.charlibriano-stat{border:1px solid rgba(241,196,15,.22);border-radius:14px;background:rgba(255,255,255,.045);padding:12px 8px;text-align:center}
+.charlibriano-stat .cs-val{font-family:'Elektrix',Arial,sans-serif;font-size:1.8rem;color:#f1c40f;line-height:.9;text-shadow:0 0 12px rgba(241,196,15,.4)}
+.charlibriano-stat .cs-label{font-size:.65rem;font-weight:950;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em;margin-top:4px}
+.charlibriano-gameover-record{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(30,215,96,.45);border-radius:999px;background:rgba(30,215,96,.08);color:#1ed760;padding:8px 16px;font-size:.82rem;font-weight:950}
+.charlibriano-gameover-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+/* ── FIM MODO CHARLIBRIANO RÁDIO ────────────────────────────── */
+</style>
+
+<script>
+// ── MODO CHARLIBRIANO — RÁDIO ─────────────────────────────────
+const CHARLIBRIANO_RADIO_KEY = 'cbjr_charlibriano_radio_v1';
+
+const charlibrianoRadio = {
+  active: false,
+  cdsCompleted: 0,
+  totalCorrect: 0,
+  cdQueue: [],
+};
+
+function getCharlibrianoRadioRecord() {
+  try { return JSON.parse(localStorage.getItem(CHARLIBRIANO_RADIO_KEY) || '{}'); } catch(_) { return {}; }
+}
+
+function shuffleAlbums(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i+1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function showCharlibrianoRadioEntry() {
+  const rec = getCharlibrianoRadioRecord();
+  const overlay = $('finishOverlay');
+  const card = overlay?.querySelector('.overlay-card');
+  if (!card) return;
+
+  card.innerHTML = `
+    <div class="charlibriano-entry">
+      <div class="charlibriano-badge">🎸 Modo Especial Desbloqueado</div>
+      <h2 class="charlibriano-title">Modo<br>Charlibriano</h2>
+      <p class="charlibriano-sub">
+        Você dominou todos os 13 CDs da Rádio.<br>
+        Agora começa o verdadeiro teste — CDs infinitos em ordem aleatória.<br>
+        <strong>Um erro e acabou.</strong>
+      </p>
+      <div class="charlibriano-rules">
+        <div class="charlibriano-rule">
+          <span class="rule-icon">♾️</span>
+          <strong>Infinito</strong>
+          <span>CDs sem fim em ordem aleatória</span>
+        </div>
+        <div class="charlibriano-rule">
+          <span class="rule-icon">💀</span>
+          <strong>Zero erros</strong>
+          <span>Qualquer erro encerra o modo</span>
+        </div>
+        <div class="charlibriano-rule">
+          <span class="rule-icon">⭐</span>
+          <strong>XP real</strong>
+          <span>+50 XP por CD completado</span>
+        </div>
+      </div>
+      ${rec.bestCds ? `<div class="charlibriano-gameover-record">🏆 Seu recorde: ${rec.bestCds} CD${rec.bestCds>1?'s':''} consecutivos</div>` : ''}
+      <button class="charlibriano-start-btn" id="charlibrianoRadioStartBtn">🎸 Entrar no Modo Charlibriano</button>
+      <button class="secondary" id="charlibrianoRadioSkipBtn" style="margin-top:4px;min-height:44px;padding:0 20px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:rgba(255,255,255,.7);cursor:pointer;font-family:inherit;font-weight:950;">Voltar para os CDs</button>
+    </div>
+  `;
+
+  overlay.classList.add('show');
+  document.getElementById('charlibrianoRadioStartBtn').addEventListener('click', startCharlibrianoRadio);
+  document.getElementById('charlibrianoRadioSkipBtn').addEventListener('click', () => {
+    overlay.classList.remove('show');
+    showSelect();
+  });
+}
+
+function startCharlibrianoRadio() {
+  charlibrianoRadio.active = true;
+  charlibrianoRadio.cdsCompleted = 0;
+  charlibrianoRadio.totalCorrect = 0;
+  charlibrianoRadio.cdQueue = shuffleAlbums(RADIO_ALBUMS.map((_, i) => i));
+  nextCharlibrianoRadioAlbum();
+}
+
+function nextCharlibrianoRadioAlbum() {
+  if (!charlibrianoRadio.cdQueue.length) {
+    charlibrianoRadio.cdQueue = shuffleAlbums(RADIO_ALBUMS.map((_, i) => i));
+  }
+  const idx = charlibrianoRadio.cdQueue.shift();
+  $('finishOverlay')?.classList.remove('show');
+  document.getElementById('charlibrianoHUDRadio')?.remove();
+  startAlbum(idx);
+  // Injeta HUD após pequeno delay para garantir que o DOM está pronto
+  setTimeout(() => injectCharlibrianoRadioHUD(albumDisplayName(RADIO_ALBUMS[idx])), 300);
+}
+
+function injectCharlibrianoRadioHUD(albumName) {
+  document.getElementById('charlibrianoHUDRadio')?.remove();
+  const hud = document.createElement('div');
+  hud.id = 'charlibrianoHUDRadio';
+  hud.className = 'charlibriano-hud';
+  hud.innerHTML = `
+    <div class="charlibriano-hud-badge">🎸 Modo Charlibriano</div>
+    <div style="font-size:.78rem;font-weight:900;color:rgba(255,255,255,.7);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px;">${albumName}</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="charlibriano-hud-score">${charlibrianoRadio.cdsCompleted} 💿</div>
+      <div class="charlibriano-hud-zero">0 erros</div>
+    </div>
+  `;
+  document.body.insertAdjacentElement('afterbegin', hud);
+}
+
+function charlibrianoRadioGameOver() {
+  charlibrianoRadio.active = false;
+  document.getElementById('charlibrianoHUDRadio')?.remove();
+
+  const cds     = charlibrianoRadio.cdsCompleted;
+  const acertos = charlibrianoRadio.totalCorrect;
+  const xpGanho = cds * 50;
+
+  // Salva recorde
+  const rec     = getCharlibrianoRadioRecord();
+  const best    = Math.max(rec.bestCds || 0, cds);
+  const isRecord = cds > 0 && cds >= best;
+  try { localStorage.setItem(CHARLIBRIANO_RADIO_KEY, JSON.stringify({ bestCds: best, bestAcertos: Math.max(rec.bestAcertos||0, acertos), totalXp:(rec.totalXp||0)+xpGanho, hasPlayed:true })); } catch(_) {}
+
+  // Concede XP
+  if (xpGanho > 0) {
+    if (window.CBJRProgress?.addXp) window.CBJRProgress.addXp(xpGanho, `Charlibriano Rádio — ${cds} CD(s)`);
+    else { try { const k='cbjr_xp_total'; localStorage.setItem(k, String(Number(localStorage.getItem(k)||0)+xpGanho)); } catch(_) {} }
+  }
+  if (cds >= 1) {
+    try { localStorage.setItem('cbjr_selo_charlibriano','1'); } catch(_) {}
+    window.dispatchEvent(new CustomEvent('cbjr-charlibriano-reached', { detail: { cds, acertos, xp: xpGanho } }));
+  }
+
+  const overlay = $('finishOverlay');
+  const card    = overlay?.querySelector('.overlay-card');
+  if (!card) return;
+  card.innerHTML = `
+    <div class="charlibriano-gameover">
+      <div class="charlibriano-gameover-icon">${cds===0?'💀':'🎸'}</div>
+      <h2>${cds===0?'Acabou cedo!':'Modo Charlibriano'}</h2>
+      <p style="color:rgba(255,255,255,.7);font-weight:900;margin:0;max-width:420px;line-height:1.5;">
+        ${cds===0 ? 'Você errou no primeiro CD. O Modo Charlibriano não perdoa!' : `Você completou <strong style="color:#f1c40f">${cds} CD${cds>1?'s':''}</strong> consecutivos sem errar uma faixa!`}
+      </p>
+      <div class="charlibriano-gameover-stats">
+        <div class="charlibriano-stat"><div class="cs-val">${cds}</div><div class="cs-label">CDs</div></div>
+        <div class="charlibriano-stat"><div class="cs-val">${acertos}</div><div class="cs-label">Acertos</div></div>
+        <div class="charlibriano-stat"><div class="cs-val">+${xpGanho}</div><div class="cs-label">XP ganho</div></div>
+      </div>
+      ${isRecord && cds>0 ? `<div class="charlibriano-gameover-record">🏆 Novo recorde pessoal!</div>` : `<div style="font-size:.78rem;color:rgba(255,255,255,.45);font-weight:850;">Recorde: ${best} CD${best>1?'s':''}</div>`}
+      <div class="charlibriano-gameover-actions">
+        <button class="charlibriano-start-btn" id="charlibrianoRadioRetryBtn">🎸 Tentar de novo</button>
+        <button class="secondary" id="charlibrianoRadioExitBtn" style="min-height:44px;padding:0 20px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:rgba(255,255,255,.7);cursor:pointer;font-family:inherit;font-weight:950;">Voltar para os CDs</button>
+      </div>
+    </div>
+  `;
+  overlay.classList.add('show');
+  document.getElementById('charlibrianoRadioRetryBtn').addEventListener('click', startCharlibrianoRadio);
+  document.getElementById('charlibrianoRadioExitBtn').addEventListener('click', () => {
+    charlibrianoRadio.active = false;
+    overlay.classList.remove('show');
+    showSelect();
+  });
+}
+// ── FIM MODO CHARLIBRIANO RÁDIO ───────────────────────────────
+</script>
 <div id="cbjrAchievementStack" class="cbjr-achievement-stack" aria-live="polite" aria-atomic="true"></div>
 <script id="cbjr-achievement-popup-script">
 (function(){
