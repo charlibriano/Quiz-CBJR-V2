@@ -4284,6 +4284,11 @@
     <p>Toque em um álbum, ouça a música e selecione qual faixa está tocando.</p>
 
     <div id="radioProgress" class="radio-progress" aria-label="Progresso dos CDs"></div>
+    <div id="charlibrianoRadioEntryWrap" style="display:none;text-align:center;margin-bottom:10px;">
+      <button id="charlibrianoRadioEntryBtn" class="charlibriano-start-btn" style="font-size:.9rem;min-height:46px;padding:0 24px;">
+        🎸 Modo Charlibriano <span id="charlibrianoRadioRecord"></span>
+      </button>
+    </div>
     <div id="albumGrid" class="album-grid"></div>
     <div class="cbjr-carousel-dots" id="carouselDots"></div>
   </section>
@@ -4768,25 +4773,10 @@ function renderProgress() {
   if (!el) return;
   const unlockedCount = getUnlockedAlbumIndex() + 1;
   const percent = progressPercent();
-  const allUnlocked = unlockedCount >= RADIO_ALBUMS.length;
-  const rec = getCharlibrianoRadioRecord();
-
   el.innerHTML = `
     <div class="progress-label"><span>Progresso da Rádio</span><span>${unlockedCount}/${RADIO_ALBUMS.length} CDs liberados</span></div>
     <div class="progress-bar"><div class="progress-fill" style="width:${percent}%"></div></div>
   `;
-
-  // Adiciona botão Charlibriano separadamente para evitar problemas com template literal
-  if (allUnlocked) {
-    const wrap = document.createElement('div');
-    wrap.style.cssText = 'margin-top:14px;text-align:center;';
-    const btn = document.createElement('button');
-    btn.style.cssText = 'min-height:48px;padding:0 28px;border-radius:14px;border:1px solid rgba(241,196,15,.6);background:linear-gradient(90deg,rgba(241,196,15,.15),rgba(241,196,15,.08));color:#f1c40f;font-weight:1000;font-size:.92rem;cursor:pointer;font-family:inherit;box-shadow:0 0 22px rgba(241,196,15,.18);transition:.18s ease;letter-spacing:.02em;';
-    btn.textContent = '🎸 Modo Charlibriano' + (rec.bestCds ? ` · Recorde: ${rec.bestCds} CD${rec.bestCds>1?'s':''}` : ' · Desbloqueado!');
-    btn.addEventListener('click', showCharlibrianoRadioEntry);
-    wrap.appendChild(btn);
-    el.appendChild(wrap);
-  }
 }
 
 function albumBadge(index, locked, unlockedIndex) {
@@ -5270,6 +5260,20 @@ function renderAlbums() {
     `;
   }).join('');
   document.querySelectorAll('.album-option:not(.locked)').forEach(btn => btn.addEventListener('click', () => startAlbum(Number(btn.dataset.index))));
+
+  // Botão Charlibriano — aparece quando todos os CDs estão desbloqueados
+  const charlibrianoWrap = document.getElementById('charlibrianoRadioEntryWrap');
+  const charlibrianoBtn  = document.getElementById('charlibrianoRadioEntryBtn');
+  const charlibrianoRec  = document.getElementById('charlibrianoRadioRecord');
+  if (charlibrianoWrap && charlibrianoBtn) {
+    const allUnlocked = getUnlockedAlbumIndex() + 1 >= RADIO_ALBUMS.length;
+    charlibrianoWrap.style.display = allUnlocked && !guestMode ? 'block' : 'none';
+    if (allUnlocked) {
+      const rec = getCharlibrianoRadioRecord();
+      if (charlibrianoRec) charlibrianoRec.textContent = rec.bestCds ? `· Recorde: ${rec.bestCds} CD${rec.bestCds>1?'s':''}` : '· Desbloqueado!';
+      charlibrianoBtn.onclick = showCharlibrianoRadioEntry;
+    }
+  }
 
   // Dots do carrossel
   if (window.innerWidth <= 760) {
