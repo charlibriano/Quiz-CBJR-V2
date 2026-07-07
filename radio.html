@@ -6215,7 +6215,6 @@ function shuffleAlbums(arr) {
 function showCharlibrianoRadioEntry() {
   // Remove modal anterior se existir
   document.getElementById('charlibrianoRadioModal')?.remove();
-  window.showCharlibrianoRadioEntry = showCharlibrianoRadioEntry;
 
   const rec = getCharlibrianoRadioRecord();
   const modal = document.createElement('div');
@@ -6259,6 +6258,7 @@ function showCharlibrianoRadioEntry() {
   document.getElementById('charlibrianoRadioStartBtn').addEventListener('click', () => { modal.remove(); startCharlibrianoRadio(); });
   document.getElementById('charlibrianoRadioSkipBtn').addEventListener('click', () => modal.remove());
 }
+window.showCharlibrianoRadioEntry = showCharlibrianoRadioEntry;
 
 function startCharlibrianoRadio() {
   charlibrianoRadio.active = true;
