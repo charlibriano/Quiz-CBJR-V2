@@ -4774,18 +4774,19 @@ function renderProgress() {
   el.innerHTML = `
     <div class="progress-label"><span>Progresso da Rádio</span><span>${unlockedCount}/${RADIO_ALBUMS.length} CDs liberados</span></div>
     <div class="progress-bar"><div class="progress-fill" style="width:${percent}%"></div></div>
-    ${allUnlocked ? `
-      <div style="margin-top:14px;text-align:center;">
-        <button onclick="showCharlibrianoRadioEntry()" style="
-          min-height:48px;padding:0 28px;border-radius:14px;border:1px solid rgba(241,196,15,.6);
-          background:linear-gradient(90deg,rgba(241,196,15,.15),rgba(241,196,15,.08));
-          color:#f1c40f;font-weight:1000;font-size:.92rem;cursor:pointer;font-family:inherit;
-          box-shadow:0 0 22px rgba(241,196,15,.18);transition:.18s ease;letter-spacing:.02em;
-          animation:charliPulse 2s ease-in-out infinite;
-        ">🎸 Modo Charlibriano${rec.bestCds ? ` · Recorde: ${rec.bestCds} CD${rec.bestCds>1?'s':''}` : ' · Desbloqueado!'}</button>
-      </div>
-    ` : ''}
   `;
+
+  // Adiciona botão Charlibriano separadamente para evitar problemas com template literal
+  if (allUnlocked) {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'margin-top:14px;text-align:center;';
+    const btn = document.createElement('button');
+    btn.style.cssText = 'min-height:48px;padding:0 28px;border-radius:14px;border:1px solid rgba(241,196,15,.6);background:linear-gradient(90deg,rgba(241,196,15,.15),rgba(241,196,15,.08));color:#f1c40f;font-weight:1000;font-size:.92rem;cursor:pointer;font-family:inherit;box-shadow:0 0 22px rgba(241,196,15,.18);transition:.18s ease;letter-spacing:.02em;';
+    btn.textContent = '🎸 Modo Charlibriano' + (rec.bestCds ? ` · Recorde: ${rec.bestCds} CD${rec.bestCds>1?'s':''}` : ' · Desbloqueado!');
+    btn.addEventListener('click', showCharlibrianoRadioEntry);
+    wrap.appendChild(btn);
+    el.appendChild(wrap);
+  }
 }
 
 function albumBadge(index, locked, unlockedIndex) {
