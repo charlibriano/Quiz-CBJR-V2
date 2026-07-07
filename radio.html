@@ -5271,7 +5271,7 @@ function renderAlbums() {
     if (allUnlocked) {
       const rec = getCharlibrianoRadioRecord();
       if (charlibrianoRec) charlibrianoRec.textContent = rec.bestCds ? `· Recorde: ${rec.bestCds} CD${rec.bestCds>1?'s':''}` : '· Desbloqueado!';
-      charlibrianoBtn.onclick = showCharlibrianoRadioEntry;
+      charlibrianoBtn.onclick = () => window.showCharlibrianoRadioEntry?.();
     }
   }
 
@@ -6215,6 +6215,7 @@ function shuffleAlbums(arr) {
 function showCharlibrianoRadioEntry() {
   // Remove modal anterior se existir
   document.getElementById('charlibrianoRadioModal')?.remove();
+  window.showCharlibrianoRadioEntry = showCharlibrianoRadioEntry;
 
   const rec = getCharlibrianoRadioRecord();
   const modal = document.createElement('div');
