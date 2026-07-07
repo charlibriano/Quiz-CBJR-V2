@@ -6213,13 +6213,16 @@ function shuffleAlbums(arr) {
 }
 
 function showCharlibrianoRadioEntry() {
-  const rec = getCharlibrianoRadioRecord();
-  const overlay = $('finishOverlay');
-  const card = overlay?.querySelector('.overlay-card');
-  if (!card) return;
+  // Remove modal anterior se existir
+  document.getElementById('charlibrianoRadioModal')?.remove();
 
-  card.innerHTML = `
-    <div class="charlibriano-entry">
+  const rec = getCharlibrianoRadioRecord();
+  const modal = document.createElement('div');
+  modal.id = 'charlibrianoRadioModal';
+  modal.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);';
+
+  modal.innerHTML = `
+    <div class="charlibriano-entry" style="max-width:560px;width:100%;border:1px solid rgba(241,196,15,.4);border-radius:28px;background:radial-gradient(circle at 50% 0%,rgba(241,196,15,.16),transparent 48%),rgba(5,5,5,.97);box-shadow:0 30px 80px rgba(0,0,0,.85);padding:clamp(22px,4vw,36px);">
       <div class="charlibriano-badge">🎸 Modo Especial Desbloqueado</div>
       <h2 class="charlibriano-title">Modo<br>Charlibriano</h2>
       <p class="charlibriano-sub">
@@ -6246,16 +6249,14 @@ function showCharlibrianoRadioEntry() {
       </div>
       ${rec.bestCds ? `<div class="charlibriano-gameover-record">🏆 Seu recorde: ${rec.bestCds} CD${rec.bestCds>1?'s':''} consecutivos</div>` : ''}
       <button class="charlibriano-start-btn" id="charlibrianoRadioStartBtn">🎸 Entrar no Modo Charlibriano</button>
-      <button class="secondary" id="charlibrianoRadioSkipBtn" style="margin-top:4px;min-height:44px;padding:0 20px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:rgba(255,255,255,.7);cursor:pointer;font-family:inherit;font-weight:950;">Voltar para os CDs</button>
+      <button id="charlibrianoRadioSkipBtn" style="margin-top:8px;min-height:44px;padding:0 20px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:rgba(255,255,255,.7);cursor:pointer;font-family:inherit;font-weight:950;width:100%;">Voltar para os CDs</button>
     </div>
   `;
 
-  overlay.classList.add('show');
-  document.getElementById('charlibrianoRadioStartBtn').addEventListener('click', startCharlibrianoRadio);
-  document.getElementById('charlibrianoRadioSkipBtn').addEventListener('click', () => {
-    overlay.classList.remove('show');
-    showSelect();
-  });
+  document.body.appendChild(modal);
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+  document.getElementById('charlibrianoRadioStartBtn').addEventListener('click', () => { modal.remove(); startCharlibrianoRadio(); });
+  document.getElementById('charlibrianoRadioSkipBtn').addEventListener('click', () => modal.remove());
 }
 
 function startCharlibrianoRadio() {
