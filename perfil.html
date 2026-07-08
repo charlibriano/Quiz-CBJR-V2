@@ -545,6 +545,8 @@ async function executeReset() {
   // 1. Limpa localStorage de todos os modos selecionados
   modes.forEach(m => RESET_MODES[m].keys.forEach(k => localStorage.removeItem(k)));
 
+  let rankingFound = 0, rankingDeleted = 0, rankingFailed = 0, rankingFailReason = '';
+
   // 2. Zera no Firestore (progresso) e apaga TODAS as entradas do ranking
   //    online que pertencem a essa conta nos modos selecionados — busca por
   //    uid em vez de assumir um ID fixo, então funciona mesmo com entradas
@@ -579,7 +581,18 @@ async function executeReset() {
         const q = fsQuery(fsCollection(db, 'ranking'), fsWhere('uid', '==', resetCurrentUser.uid));
         const snap = await fsGetDocs(q);
         const toDelete = snap.docs.filter(d => rankingModesToClear.includes(detectGameMode(d.data() || {})));
-        await Promise.all(toDelete.map(d => fsDelete(d.ref).catch(e => console.warn('[Reset] Falha ao apagar ranking:', d.id, e.message))));
+        rankingFound = toDelete.length;
+
+        const results = await Promise.all(toDelete.map(d =>
+          fsDelete(d.ref).then(() => ({ ok: true })).catch(e => ({ ok: false, id: d.id, reason: e.message }))
+        ));
+        rankingDeleted = results.filter(r => r.ok).length;
+        const failures = results.filter(r => !r.ok);
+        rankingFailed = failures.length;
+        if (failures.length) {
+          rankingFailReason = failures[0].reason;
+          console.warn('[Reset] Falha ao apagar do ranking:', failures);
+        }
       }
     } catch(e) {
       console.warn('[Reset] Erro Firestore:', e.message);
@@ -594,7 +607,13 @@ async function executeReset() {
   if (confirmBtn) { confirmBtn.disabled = false; confirmBtn.textContent = 'Confirmar'; }
 
   const labels = modes.map(m => RESET_MODES[m].label).join(', ');
-  showToast(`✅ ${labels} — zerado com sucesso!`);
+  if (rankingFailed > 0) {
+    showToast(`⚠️ ${labels} zerado, mas ${rankingFailed} entrada(s) do ranking não puderam ser apagadas (${rankingFailReason || 'permissão negada'}). Veja o console.`);
+  } else if (rankingFound > 0) {
+    showToast(`✅ ${labels} — zerado e removido do ranking (${rankingDeleted}/${rankingFound})!`);
+  } else {
+    showToast(`✅ ${labels} — zerado com sucesso!`);
+  }
   if (resetCurrentUser) render(resetCurrentUser);
 }
 
