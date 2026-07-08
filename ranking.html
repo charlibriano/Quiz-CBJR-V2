@@ -176,6 +176,20 @@ function entryMatchesFilter(e){
   if(['normal','hard'].includes(activeFilter))return e.radioMode===activeFilter;
   return true;
 }
+// Mantém só a melhor pontuação de cada jogador por modo de jogo — evita que o
+// mesmo jogador apareça várias vezes no ranking (uma vez por recorde batido).
+function dedupeRankingData(list){
+  const bestByKey=new Map();
+  for(const e of list){
+    const identity=e.uid?`uid:${e.uid}`:`name:${e.name.trim().toLowerCase()}`;
+    const key=`${identity}|${e.game}`;
+    const existing=bestByKey.get(key);
+    if(!existing||e.score>existing.score||(e.score===existing.score&&e.createdAt>existing.createdAt)){
+      bestByKey.set(key,e);
+    }
+  }
+  return Array.from(bestByKey.values());
+}
 function escapeHtml(str){return String(str).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
 function modeLabel(e){
   if(e.radioMode==='hard')return 'Hard';
@@ -243,7 +257,7 @@ async function loadRanking(){
   list.innerHTML='<div class="loading">Carregando ranking online...</div>';
   try{
     const snap=await getDocs(collection(db,COLLECTION_NAME));
-    rankingData=snap.docs.map(docToEntry).sort((a,b)=>(b.score-a.score)||(b.createdAt-a.createdAt));
+    rankingData=dedupeRankingData(snap.docs.map(docToEntry)).sort((a,b)=>(b.score-a.score)||(b.createdAt-a.createdAt));
     status.textContent=`Ranking online conectado. ${rankingData.length} pontuação(ões) encontrada(s).`;
     renderRanking();
   }catch(error){
