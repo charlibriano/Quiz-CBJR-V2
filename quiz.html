@@ -9079,13 +9079,15 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     submitRanking: async (payload) => {
       if (!currentUser) { console.warn('[Quiz Ranking] sem usuário logado'); return false; }
       try {
-        const { addDoc, collection } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
-        await addDoc(collection(db, 'ranking'), {
+        // ID fixo por jogador+modo: reenviar uma pontuação nova ATUALIZA o
+        // registro existente em vez de criar um documento duplicado.
+        const docId = `${currentUser.uid}_${payload.gameMode || payload.source || 'quiz'}`;
+        await setDoc(doc(db, 'ranking', docId), {
           ...payload,
           uid:      currentUser.uid,
           name:     currentUser.displayName || payload.name || 'Jogador CBJR',
           photoURL: currentUser.photoURL    || payload.photoURL || '',
-          createdAt: (await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')).serverTimestamp()
+          createdAt: serverTimestamp()
         });
         return true;
       } catch(e) { console.warn('[Quiz Ranking] erro:', e.message); return false; }
