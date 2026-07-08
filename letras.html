@@ -4163,37 +4163,9 @@ const cbjrFeedback = {
 
 
 
-    /* Ranking online do Modo Letras — usa o mesmo Firebase do ranking geral */
-    const letrasFirebaseConfig = {
-      apiKey: 'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
-      authDomain: 'ranking-cbjr.firebaseapp.com',
-      projectId: 'ranking-cbjr',
-      storageBucket: 'ranking-cbjr.firebasestorage.app',
-      messagingSenderId: '681180179118',
-      appId: '1:681180179118:web:fe10833848e8bb8194db3f',
-      measurementId: 'G-QK5QE2Y1CC'
-    };
-
-    let letrasFirebaseApiPromise = null;
+    /* Ranking online do Modo Letras — usa o mesmo Firebase do ranking geral,
+       via window.CBJRCloudProgress.submitRanking (login com Google). */
     let lastLettersRankingPayload = null;
-
-    async function getLetrasFirebaseApi() {
-      if (letrasFirebaseApiPromise) return letrasFirebaseApiPromise;
-      letrasFirebaseApiPromise = Promise.all([
-        import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
-        import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')
-      ]).then(([appMod, fsMod]) => {
-        const app = appMod.getApps().length ? appMod.getApp() : appMod.initializeApp(letrasFirebaseConfig);
-        const db = fsMod.getFirestore(app);
-        return {
-          db,
-          collection: fsMod.collection,
-          addDoc: fsMod.addDoc,
-          serverTimestamp: fsMod.serverTimestamp
-        };
-      });
-      return letrasFirebaseApiPromise;
-    }
 
     function calculateLettersOnlineScore(hitCount, errorCount, totalQuestions, completedAlbum) {
       const safeTotal = Math.max(1, Number(totalQuestions) || 1);
@@ -4238,70 +4210,67 @@ const cbjrFeedback = {
       el.style.color = isError ? '#ff6b64' : 'rgba(255,255,255,.72)';
     }
 
-    async function saveLettersOnlineScore(payload) {
-      const fb = await getLetrasFirebaseApi();
-      await fb.addDoc(fb.collection(fb.db, 'ranking'), {
-        ...payload,
-        createdAt: fb.serverTimestamp()
-      });
-      return payload;
-    }
+    async function submitLettersScoreAuto(completedAlbum) {
+      const status = document.getElementById('lettersRankingStatus');
+      const user = window.CBJR_AUTH_USER;
+      const guestMode = window.CBJR_GUEST?.isGuest() && !window.CBJR_GUEST?.isLoggedIn();
 
-    async function submitLettersScoreOnline() {
-      const input = document.getElementById('lettersPlayerName');
-      const btn = document.getElementById('lettersSubmitScoreBtn');
-      const name = input ? input.value.trim() : '';
-
-      if (!name) {
-        setLettersRankingStatus('Digite seu nome para enviar ao ranking.', true);
-        input?.focus();
+      if (!user || guestMode) {
+        setLettersRankingStatus('Faça login para entrar no ranking online.');
         return;
       }
 
-      const completedAlbum = String(document.getElementById('lettersRankingCard')?.dataset.completed || '') === 'true';
-      const payload = buildLettersRankingPayload(name, completedAlbum);
+      const payload = buildLettersRankingPayload(user.displayName || 'Fã CBJR', completedAlbum);
+      const localKey = 'lettersCBJR_bestOnlineScore';
+      const prevBest = Number(localStorage.getItem(localKey) || 0);
 
-      try {
-        if (btn) {
-          btn.disabled = true;
-          btn.textContent = 'Enviando...';
-        }
-        setLettersRankingStatus('Enviando pontuação para o ranking online...');
-        await saveLettersOnlineScore(payload);
-        lastLettersRankingPayload = payload;
-        localStorage.setItem('lettersCBJR_playerName', payload.name);
-        try { window.CBJRCloudProgress?.save?.({ letrasPlayerNameUpdatedAt: Date.now() }); } catch(e) {}
-        if (input) input.disabled = true;
-        if (btn) btn.textContent = 'Enviado ✓';
-        setLettersRankingStatus(`Pontuação enviada: ${payload.score} pts. Dias de luta, dias de glória!`);
-      } catch (error) {
-        console.error(error);
-        if (btn) {
-          btn.disabled = false;
-          btn.textContent = 'Enviar';
-        }
-        setLettersRankingStatus('Erro ao enviar. Confira as regras do Firestore.', true);
+      if (payload.score <= prevBest) {
+        setLettersRankingStatus(`Seu recorde no ranking online continua ${prevBest} pts.`);
+        lastLettersRankingPayload = { ...payload, score: prevBest };
+        return;
       }
+
+      setLettersRankingStatus('Enviando pontuação para o ranking online...');
+
+      let attempts = 0;
+      const poll = setInterval(async () => {
+        attempts++;
+        const progress = window.CBJRCloudProgress;
+        const ready = typeof progress?.submitRanking === 'function';
+
+        if (ready || attempts >= 16) {
+          clearInterval(poll);
+
+          if (!ready) {
+            setLettersRankingStatus('Ranking online indisponível agora.');
+            return;
+          }
+
+          const ok = await progress.submitRanking({ ...payload, photoURL: user.photoURL || '' });
+          if (ok) {
+            localStorage.setItem(localKey, String(payload.score));
+            lastLettersRankingPayload = payload;
+            setLettersRankingStatus(`Pontuação enviada: ${payload.score} pts. Dias de luta, dias de glória!`);
+          } else {
+            setLettersRankingStatus('Erro ao enviar pontuação online.');
+          }
+        }
+      }, 500);
     }
 
     function renderLettersRankingCard(completedAlbum) {
-      const savedName = escapeAttr(localStorage.getItem('lettersCBJR_playerName') || '');
       const scorePreview = calculateLettersOnlineScore(lettersMode.correct || 0, lettersMode.errors || 0, lettersMode.questions.length || 1, completedAlbum);
       return `
         <section class="letters-ranking-card" id="lettersRankingCard" data-completed="${completedAlbum ? 'true' : 'false'}" aria-label="Ranking Online CBJR">
           <strong>Ranking Online CBJR</strong>
-          <p>Salve sua pontuação do Modo Letras e entre na disputa com a galera. Prévia: <b>${scorePreview} pts</b>.</p>
-          <div class="letters-ranking-row">
-            <input id="lettersPlayerName" maxlength="24" placeholder="Seu nome" value="${savedName}">
-            <button id="lettersSubmitScoreBtn" type="button" onclick="submitLettersScoreOnline()">Enviar</button>
-          </div>
-          <div id="lettersRankingStatus" class="letters-ranking-status">Digite seu nome para enviar sua pontuação ao ranking.</div>
+          <p>Sua pontuação do Modo Letras é enviada automaticamente. Prévia: <b>${scorePreview} pts</b>.</p>
+          <div id="lettersRankingStatus" class="letters-ranking-status">Salvando sua pontuação automaticamente...</div>
           <a class="letters-ranking-link" href="ranking.html?from=letras">Ver ranking completo ›</a>
         </section>
       `;
     }
 
-    window.submitLettersScoreOnline = submitLettersScoreOnline;
+    window.submitLettersScoreAuto = submitLettersScoreAuto;
 
     // ── MODO CHARLIBRIANO ─────────────────────────────────────
     const CHARLIBRIANO_KEY = 'cbjr_charlibriano_letras_v1';
@@ -4638,6 +4607,7 @@ const cbjrFeedback = {
           document.querySelector('.unlock-screen')?.classList.add('is-visible');
         }, 60);
 
+        submitLettersScoreAuto(true);
         showOnly('final');
         return;
       }
@@ -4657,6 +4627,7 @@ const cbjrFeedback = {
 
       document.getElementById('restart-btn').addEventListener('click', () => startLettersMode(lettersMode.currentAlbumId));
       document.getElementById('albums-btn').addEventListener('click', showSelection);
+      submitLettersScoreAuto(false);
       showOnly('final');
     }
 
@@ -4971,7 +4942,23 @@ document.addEventListener('DOMContentLoaded',()=>{
     keys: PROGRESS_KEYS,
     reload: async () => currentUser && loadCloudProgress(currentUser),
     save: saveCloudProgressNow,
-    getLocal: readLocalProgress
+    getLocal: readLocalProgress,
+    submitRanking: async (payload) => {
+      if (!currentUser) { console.warn('[Letras Ranking] sem usuário logado'); return false; }
+      try {
+        // Um único registro de ranking por jogador no Modo Letras.
+        // ID fixo => reenviar ATUALIZA em vez de duplicar.
+        const docId = `${currentUser.uid}_letras`;
+        await setDoc(doc(db, 'ranking', docId), {
+          ...payload,
+          uid:      currentUser.uid,
+          name:     currentUser.displayName || payload.name || 'Jogador CBJR',
+          photoURL: currentUser.photoURL    || payload.photoURL || '',
+          createdAt: serverTimestamp()
+        });
+        return true;
+      } catch(e) { console.warn('[Letras Ranking] erro:', e.message); return false; }
+    }
   };
 
   async function loadCloudProgress(user) {
