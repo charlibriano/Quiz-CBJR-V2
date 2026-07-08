@@ -545,22 +545,42 @@ async function executeReset() {
   // 1. Limpa localStorage de todos os modos selecionados
   modes.forEach(m => RESET_MODES[m].keys.forEach(k => localStorage.removeItem(k)));
 
-  // 2. Zera no Firestore (progresso) e apaga a entrada correspondente do ranking online
+  // 2. Zera no Firestore (progresso) e apaga TODAS as entradas do ranking
+  //    online que pertencem a essa conta nos modos selecionados — busca por
+  //    uid em vez de assumir um ID fixo, então funciona mesmo com entradas
+  //    antigas criadas antes da correção do ranking (que tinham ID aleatório).
   if (resetCurrentUser) {
     try {
-      const { doc: fsDoc, setDoc: fsSet, deleteDoc: fsDelete, serverTimestamp: fsSts } =
-        await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+      const {
+        doc: fsDoc, setDoc: fsSet, deleteDoc: fsDelete, serverTimestamp: fsSts,
+        collection: fsCollection, query: fsQuery, where: fsWhere, getDocs: fsGetDocs
+      } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+
       const progressRef = fsDoc(db, 'usuarios', resetCurrentUser.uid, 'progresso', 'geral');
       const patch = { updatedAt: fsSts(), origem: 'perfil-reset', resetModes: modes };
       modes.forEach(m => Object.assign(patch, RESET_MODES[m].firestoreFields));
       await fsSet(progressRef, patch, { merge: true });
 
-      // Remove as entradas do ranking online dos modos zerados
-      await Promise.all(modes.map(m => {
-        const rankingId = RESET_MODES[m].rankingDocId;
-        if (!rankingId) return Promise.resolve();
-        return fsDelete(fsDoc(db, 'ranking', `${resetCurrentUser.uid}_${rankingId}`)).catch(() => {});
-      }));
+      // Modos de jogo (não conquistas) selecionados, cujas entradas de ranking devem sumir
+      const rankingModesToClear = modes
+        .map(m => RESET_MODES[m].rankingDocId)
+        .filter(Boolean);
+
+      if (rankingModesToClear.length) {
+        const detectGameMode = (d) => {
+          const source = String(d.source || d.gameSource || d.origin || '').toLowerCase();
+          const gameMode = String(d.gameMode || d.mode || d.tipo || '').toLowerCase();
+          if (source.includes('radio') || gameMode.includes('radio')) return 'radio';
+          if (source.includes('letra') || gameMode.includes('letra')) return 'letras';
+          if (source.includes('quiz') || gameMode.includes('quiz')) return 'quiz';
+          return gameMode || 'quiz';
+        };
+
+        const q = fsQuery(fsCollection(db, 'ranking'), fsWhere('uid', '==', resetCurrentUser.uid));
+        const snap = await fsGetDocs(q);
+        const toDelete = snap.docs.filter(d => rankingModesToClear.includes(detectGameMode(d.data() || {})));
+        await Promise.all(toDelete.map(d => fsDelete(d.ref).catch(e => console.warn('[Reset] Falha ao apagar ranking:', d.id, e.message))));
+      }
     } catch(e) {
       console.warn('[Reset] Erro Firestore:', e.message);
       showToast('⚠️ Local zerado, mas erro na nuvem. Tente de novo.');
