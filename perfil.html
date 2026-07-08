@@ -199,6 +199,13 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle
           <span>Conquistas, progresso dos níveis e recordes de pontuação</span>
         </div>
       </label>
+      <label class="reset-check-item" id="chk-conquistas-label">
+        <input type="checkbox" id="chk-conquistas" value="conquistas">
+        <div class="reset-check-label">
+          <strong>🏆 Conquistas & XP</strong>
+          <span>Medalhas, título de perfil, XP total e histórico geral</span>
+        </div>
+      </label>
     </div>
     <div class="reset-warning"><strong>⚠️ Ação permanente e irreversível</strong>Os dados serão apagados localmente e na nuvem. Apenas os modos selecionados serão afetados.</div>
     <div class="reset-modal-actions">
@@ -479,18 +486,27 @@ if(PUBLIC_UID) {
 const RESET_MODES = {
   radio: {
     label: '📻 Rádio CBJR',
-    keys: ['radioCBJRUnlockedAlbumIndex_v2','radioCBJRMode','radioCBJR_achievements_v1'],
-    firestoreFields: { radioCBJRUnlockedAlbumIndex_v2:'0', radioCBJRMode:'normal', 'radioCBJR_achievements_v1':'{}' }
+    keys: ['radioCBJRUnlockedAlbumIndex_v2','radioCBJRMode','radioCBJR_achievements_v1','radioCBJR_last_track_order_v3','radioCBJR_bestOnlineScore','cbjr_charlibriano_radio_v1'],
+    firestoreFields: { radioCBJRUnlockedAlbumIndex_v2:'0', radioCBJRMode:'normal', 'radioCBJR_achievements_v1':'{}' },
+    rankingDocId: 'radio'
   },
   letras: {
     label: '🎵 Modo Letras',
-    keys: ['cbjr_letters_completed','lettersCBJR_playerName'],
-    firestoreFields: { cbjr_letters_completed:'[]', lettersCBJR_playerName:'' }
+    keys: ['cbjr_letters_completed','lettersCBJR_playerName','lettersCBJR_bestOnlineScore','cbjr_charlibriano_letras_v1'],
+    firestoreFields: { cbjr_letters_completed:'[]', lettersCBJR_playerName:'' },
+    rankingDocId: 'letras'
   },
   quiz: {
     label: '🎮 Quiz CBJR',
-    keys: ['cobjr_quiz_achievements','cobjr_quiz_progress_v1','cbjr_quiz_rank_best_facil','cbjr_quiz_rank_best_normal','cbjr_quiz_rank_best_dificil','cbjr_quiz_prestige'],
-    firestoreFields: { 'cobjr_quiz_achievements':'{}','cobjr_quiz_progress_v1':'{}','cbjr_quiz_rank_best_facil':'0','cbjr_quiz_rank_best_normal':'0','cbjr_quiz_rank_best_dificil':'0','cbjr_quiz_prestige':'0' }
+    keys: ['cobjr_quiz_achievements','cobjr_quiz_progress_v1','cbjr_quiz_rank_best_facil','cbjr_quiz_rank_best_normal','cbjr_quiz_rank_best_dificil','cbjr_quiz_prestige','cbjr_charlibriano_quiz_v1','cbjr_selo_charlibriano_quiz'],
+    firestoreFields: { 'cobjr_quiz_achievements':'{}','cobjr_quiz_progress_v1':'{}','cbjr_quiz_rank_best_facil':'0','cbjr_quiz_rank_best_normal':'0','cbjr_quiz_rank_best_dificil':'0','cbjr_quiz_prestige':'0' },
+    rankingDocId: 'quiz'
+  },
+  conquistas: {
+    label: '🏆 Conquistas & XP',
+    keys: ['cbjr_auto_achievements_v1','cbjr_xp_total','cbjr_medals_v1','cbjr_public_title','cbjr_history_v1','cbjr_last_activity_v1','cbjr_selo_charlibriano'],
+    firestoreFields: { 'cbjr_auto_achievements_v1':'{}','cbjr_xp_total':'0','cbjr_medals_v1':'{}','cbjr_public_title':'','cbjr_history_v1':'[]','cbjr_last_activity_v1':'' },
+    rankingDocId: null
   }
 };
 
@@ -498,7 +514,7 @@ let resetCurrentUser = null;
 
 function openResetModal() {
   // Desmarca tudo e desabilita confirmar
-  ['chk-radio','chk-letras','chk-quiz'].forEach(id => {
+  ['chk-radio','chk-letras','chk-quiz','chk-conquistas'].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.checked = false; el.closest('.reset-check-item').classList.remove('checked'); }
   });
@@ -513,7 +529,7 @@ function closeResetModal() {
 }
 
 function getSelectedModes() {
-  return ['radio','letras','quiz'].filter(m => {
+  return ['radio','letras','quiz','conquistas'].filter(m => {
     const el = document.getElementById(`chk-${m}`);
     return el && el.checked;
   });
@@ -529,15 +545,22 @@ async function executeReset() {
   // 1. Limpa localStorage de todos os modos selecionados
   modes.forEach(m => RESET_MODES[m].keys.forEach(k => localStorage.removeItem(k)));
 
-  // 2. Zera no Firestore
+  // 2. Zera no Firestore (progresso) e apaga a entrada correspondente do ranking online
   if (resetCurrentUser) {
     try {
-      const { doc: fsDoc, setDoc: fsSet, serverTimestamp: fsSts } =
+      const { doc: fsDoc, setDoc: fsSet, deleteDoc: fsDelete, serverTimestamp: fsSts } =
         await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
       const progressRef = fsDoc(db, 'usuarios', resetCurrentUser.uid, 'progresso', 'geral');
       const patch = { updatedAt: fsSts(), origem: 'perfil-reset', resetModes: modes };
       modes.forEach(m => Object.assign(patch, RESET_MODES[m].firestoreFields));
       await fsSet(progressRef, patch, { merge: true });
+
+      // Remove as entradas do ranking online dos modos zerados
+      await Promise.all(modes.map(m => {
+        const rankingId = RESET_MODES[m].rankingDocId;
+        if (!rankingId) return Promise.resolve();
+        return fsDelete(fsDoc(db, 'ranking', `${resetCurrentUser.uid}_${rankingId}`)).catch(() => {});
+      }));
     } catch(e) {
       console.warn('[Reset] Erro Firestore:', e.message);
       showToast('⚠️ Local zerado, mas erro na nuvem. Tente de novo.');
@@ -568,7 +591,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Selecionar tudo / desmarcar tudo
   $('resetSelectAll')?.addEventListener('click', () => {
-    const checks = ['chk-radio','chk-letras','chk-quiz'].map(id => document.getElementById(id));
+    const checks = ['chk-radio','chk-letras','chk-quiz','chk-conquistas'].map(id => document.getElementById(id));
     const allChecked = checks.every(c => c && c.checked);
     checks.forEach(c => {
       if (!c) return;
@@ -581,14 +604,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Atualiza visual dos checkboxes e habilita/desabilita confirmar
-  ['chk-radio','chk-letras','chk-quiz'].forEach(id => {
+  ['chk-radio','chk-letras','chk-quiz','chk-conquistas'].forEach(id => {
     document.getElementById(id)?.addEventListener('change', function() {
       this.closest('.reset-check-item').classList.toggle('checked', this.checked);
       const any = getSelectedModes().length > 0;
       const confirmBtn = $('resetConfirmBtn');
       if (confirmBtn) confirmBtn.disabled = !any;
       // Atualiza texto do selecionar tudo
-      const allChecked = ['chk-radio','chk-letras','chk-quiz'].every(i => document.getElementById(i)?.checked);
+      const allChecked = ['chk-radio','chk-letras','chk-quiz','chk-conquistas'].every(i => document.getElementById(i)?.checked);
       $('resetSelectAll').textContent = allChecked ? 'Desmarcar tudo' : 'Selecionar tudo';
     });
   });
