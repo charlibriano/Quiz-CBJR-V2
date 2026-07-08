@@ -6442,6 +6442,26 @@ body.tela-pergunta .answer-btn {
   <div id="toast" class="toast"></div>
 
   <style id="charlibriano-quiz-style">
+  /* ── PROMO PÓS-QUIZ (Rádio / Letras / Comunidade) ──────────── */
+  .cross-promo-box {
+    margin-top:18px;padding-top:18px;border-top:1px solid rgba(255,255,255,.12);
+    text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;
+  }
+  .cross-promo-title { font-weight:1000; color:#f1c40f; font-size:1rem; margin:0; }
+  .cross-promo-sub { font-weight:850; color:rgba(255,255,255,.72); font-size:.86rem; margin:0; max-width:420px; line-height:1.4; }
+  .cross-promo-actions { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:4px; }
+  .cross-promo-btn {
+    display:inline-flex; align-items:center; gap:6px; min-height:44px; padding:0 18px;
+    border-radius:12px; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.06);
+    color:#fff; font-weight:950; font-size:.86rem; text-decoration:none; cursor:pointer;
+    transition:.18s ease; font-family:inherit;
+  }
+  .cross-promo-btn:hover { border-color:rgba(241,196,15,.6); background:rgba(241,196,15,.1); transform:translateY(-2px); }
+  .cross-promo-btn-alt {
+    margin-top:4px; border-color:rgba(30,215,96,.45); background:rgba(30,215,96,.08); color:#1ed760;
+  }
+  .cross-promo-btn-alt:hover { background:rgba(30,215,96,.18); border-color:rgba(30,215,96,.75); }
+  /* ── FIM PROMO PÓS-QUIZ ────────────────────────────────────── */
   /* ── MODO CHARLIBRIANO QUIZ ────────────────────────────────── */
   .charlibriano-entry {
     display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -7055,6 +7075,33 @@ body.tela-pergunta .answer-btn {
     }
     // ═══════════════════════════════════════════════════════
     // FIM MODO CHARLIBRIANO — QUIZ
+    // ═══════════════════════════════════════════════════════
+
+    // ═══════════════════════════════════════════════════════
+    // PROMO PÓS-QUIZ — convite pra conhecer Rádio, Letras e Comunidade
+    // Aparece ao finalizar o quiz inteiro ou ao perder as vidas.
+    // ═══════════════════════════════════════════════════════
+    function showCrossPromoMessage(approved) {
+      const card = els.resultOverlay.querySelector('.overlay-card');
+      if (!card) return;
+
+      const box = document.createElement('div');
+      box.id = 'crossPromoBox';
+      box.className = 'cross-promo-box';
+      box.innerHTML = `
+        <p class="cross-promo-title">${approved ? '🎸 Muito bem, você jogou muito bem!' : '🎸 Quase lá! Bora tentar de novo?'}</p>
+        <p class="cross-promo-sub">Gostaria de conhecer o Modo Rádio ou o Modo Letras?</p>
+        <div class="cross-promo-actions">
+          <a href="radio.html" class="cross-promo-btn">🎧 Modo Rádio</a>
+          <a href="letras.html" class="cross-promo-btn">🎤 Modo Letras</a>
+        </div>
+        <p class="cross-promo-sub" style="margin-top:14px;">Quer entrar na nossa comunidade e deixar uma mensagem? Precisamos saber o que podemos melhorar!</p>
+        <a href="fans.html" class="cross-promo-btn cross-promo-btn-alt">💬 Ir para a Comunidade</a>
+      `;
+      card.appendChild(box);
+    }
+    // ═══════════════════════════════════════════════════════
+    // FIM PROMO PÓS-QUIZ
     // ═══════════════════════════════════════════════════════
 
     document.addEventListener('DOMContentLoaded', init);
@@ -7734,6 +7781,12 @@ body.tela-pergunta .answer-btn {
       if (approved) sendQuizScoreToRanking();
 
       els.resultOverlay.classList.add('show');
+
+      // ── Promo pós-quiz (Rádio / Letras / Comunidade) ──
+      document.getElementById('crossPromoBox')?.remove();
+      if (quizFinalizado || !approved) {
+        showCrossPromoMessage(approved);
+      }
 
       // ── Atualiza/mostra o botão do Modo Charlibriano ──
       updateCharlibrianoQuizEntry();
