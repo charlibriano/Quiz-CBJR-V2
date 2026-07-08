@@ -3512,6 +3512,11 @@ button:hover{
             <p>Complete os discos em sequência e desbloqueie os próximos desafios.</p>
           </div>
           <div id="album-grid" class="album-grid"></div>
+          <div id="charlibrianoLetrasEntryWrap" style="display:none;text-align:center;margin-top:18px;">
+            <button id="charlibrianoLetrasEntryBtn" class="charlibriano-start-btn" type="button" style="font-size:.9rem;min-height:46px;padding:0 24px;">
+              🎸 Modo Charlibriano <span id="charlibrianoLetrasRecord"></span>
+            </button>
+          </div>
         </div>
 
         <div id="loading-screen" class="loading">
@@ -3742,6 +3747,27 @@ button:hover{
       }
 
       showOnly('selection');
+      updateCharlibrianoLetrasEntry(completed);
+    }
+
+    // Mostra o botão fixo do Modo Charlibriano quando todos os álbuns já
+    // foram concluídos — sem isso, o único acesso era a telinha que passa
+    // rápido logo depois de concluir o último álbum.
+    function updateCharlibrianoLetrasEntry(completed = getCompletedAlbums()) {
+      const wrap = document.getElementById('charlibrianoLetrasEntryWrap');
+      const btn  = document.getElementById('charlibrianoLetrasEntryBtn');
+      const rec  = document.getElementById('charlibrianoLetrasRecord');
+      if (!wrap || !btn) return;
+
+      const guestMode = window.CBJR_GUEST?.isGuest() && !window.CBJR_GUEST?.isLoggedIn();
+      const allCompleted = lettersMode.albumOrder.length > 0 && completed.length >= lettersMode.albumOrder.length;
+      const unlocked = allCompleted && !guestMode;
+      wrap.style.display = unlocked ? 'block' : 'none';
+      if (unlocked) {
+        const record = getCharlibrianoRecord();
+        if (rec) rec.textContent = record.bestAlbums ? `· Recorde: ${record.bestAlbums} álbum${record.bestAlbums > 1 ? 's' : ''}` : '· Desbloqueado!';
+        btn.onclick = showCharlibrianoEntry;
+      }
     }
 
     function normalizeSongs(data) {
