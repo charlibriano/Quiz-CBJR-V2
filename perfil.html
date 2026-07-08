@@ -578,9 +578,24 @@ async function executeReset() {
           return gameMode || 'quiz';
         };
 
-        const q = fsQuery(fsCollection(db, 'ranking'), fsWhere('uid', '==', resetCurrentUser.uid));
-        const snap = await fsGetDocs(q);
-        const toDelete = snap.docs.filter(d => rankingModesToClear.includes(detectGameMode(d.data() || {})));
+        // Entradas novas têm `uid`. Entradas antigas (de antes da correção do
+        // ranking) só têm `name` — buscamos as duas formas e juntamos, sem duplicar.
+        const byUidSnap = await fsGetDocs(fsQuery(fsCollection(db, 'ranking'), fsWhere('uid', '==', resetCurrentUser.uid)));
+        const myName = String(resetCurrentUser.displayName || '').trim().toLowerCase();
+        let byNameDocs = [];
+        if (myName) {
+          const byNameSnap = await fsGetDocs(fsQuery(fsCollection(db, 'ranking'), fsWhere('name', '==', resetCurrentUser.displayName)));
+          byNameDocs = byNameSnap.docs.filter(d => !(d.data() || {}).uid); // só entra se não tiver uid (evita pegar de outra conta com nome igual mas já vinculada)
+        }
+
+        const seenIds = new Set();
+        const allDocs = [...byUidSnap.docs, ...byNameDocs].filter(d => {
+          if (seenIds.has(d.id)) return false;
+          seenIds.add(d.id);
+          return true;
+        });
+
+        const toDelete = allDocs.filter(d => rankingModesToClear.includes(detectGameMode(d.data() || {})));
         rankingFound = toDelete.length;
 
         const results = await Promise.all(toDelete.map(d =>
