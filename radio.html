@@ -5253,16 +5253,6 @@ async function fetchRadioOnlineRanking(limitCount = 10) {
     .slice(0, limitCount);
 }
 
-async function saveRadioOnlineScore(payload) {
-  const fb = await getFirebaseRankingApi();
-  const rankingRef = fb.collection(fb.db, 'ranking');
-  await fb.addDoc(rankingRef, {
-    ...payload,
-    createdAt: fb.serverTimestamp()
-  });
-  return payload;
-}
-
 function setOnlineRankingStatus(text, isError = false) {
   const el = document.getElementById('onlineRankingStatus');
   if (!el) return;
@@ -5299,33 +5289,58 @@ async function refreshOnlineRankingPreview() {
   }
 }
 
-async function submitRadioScoreOnline() {
-  const input = document.getElementById('onlinePlayerName');
-  const btn = document.getElementById('onlineSubmitScoreBtn');
-  const name = input ? input.value.trim() : '';
-  if (!name) {
-    setOnlineRankingStatus('Digite seu nome para enviar.', true);
-    input?.focus();
+async function submitRadioScoreAuto(hitCount = correct, missCount = wrong, total = currentAlbum?.tracks?.length || 1) {
+  const status = document.getElementById('onlineRankingStatus');
+  const user = window.CBJR_AUTH_USER;
+  const guestMode = window.CBJR_GUEST?.isGuest() && !window.CBJR_GUEST?.isLoggedIn();
+
+  if (!user || guestMode) {
+    if (status) status.textContent = 'Faça login para entrar no ranking online.';
+    await refreshOnlineRankingPreview();
     return;
   }
-  const payload = buildRadioRankingPayload(name, correct, wrong, currentAlbum?.tracks?.length || 1);
-  try {
-    if (btn) { btn.disabled = true; btn.textContent = 'Enviando...'; }
-    setOnlineRankingStatus('Enviando pontuação para o ranking online...');
-    await saveRadioOnlineScore(payload);
-    lastRadioRankingPayload = payload;
-    setOnlineRankingStatus(`Pontuação enviada: ${payload.score} pts. Tamo aí na atividade!`);
-    localStorage.setItem('radioCBJR_playerName', payload.name);
-    if (input) input.disabled = true;
-    if (btn) btn.textContent = 'Enviado ✓';
+
+  const payload = buildRadioRankingPayload(user.displayName || 'Ouvinte CBJR', hitCount, missCount, total);
+  const localKey = 'radioCBJR_bestOnlineScore';
+  const prevBest = Number(localStorage.getItem(localKey) || 0);
+
+  if (payload.score <= prevBest) {
+    if (status) status.textContent = `Seu recorde no ranking online continua ${prevBest} pts.`;
+    lastRadioRankingPayload = { ...payload, score: prevBest };
     await refreshOnlineRankingPreview();
-  } catch(e) {
-    if (btn) { btn.disabled = false; btn.textContent = 'Enviar'; }
-    setOnlineRankingStatus(e.message || 'Erro ao enviar pontuação.', true);
+    return;
   }
+
+  if (status) status.textContent = 'Enviando pontuação para o ranking online...';
+
+  let attempts = 0;
+  const poll = setInterval(async () => {
+    attempts++;
+    const progress = window.CBJRCloudProgress;
+    const ready = typeof progress?.submitRanking === 'function';
+
+    if (ready || attempts >= 16) {
+      clearInterval(poll);
+
+      if (!ready) {
+        if (status) status.textContent = 'Ranking online indisponível agora.';
+        return;
+      }
+
+      const ok = await progress.submitRanking({ ...payload, photoURL: user.photoURL || '' });
+      if (ok) {
+        localStorage.setItem(localKey, String(payload.score));
+        lastRadioRankingPayload = payload;
+        if (status) status.textContent = `Pontuação enviada: ${payload.score} pts. Tamo aí na atividade!`;
+        await refreshOnlineRankingPreview();
+      } else {
+        if (status) status.textContent = 'Erro ao enviar pontuação online.';
+      }
+    }
+  }, 500);
 }
 
-window.submitRadioScoreOnline = submitRadioScoreOnline;
+window.submitRadioScoreAuto = submitRadioScoreAuto;
 window.refreshOnlineRankingPreview = refreshOnlineRankingPreview;
 
 function renderPerformanceCard(hitCount = correct, missCount = wrong, total = currentAlbum?.tracks?.length || 1) {
@@ -5352,11 +5367,7 @@ function renderPerformanceCard(hitCount = correct, missCount = wrong, total = cu
         <p>Entre os ouvintes desta estação</p>
         <div id="onlineMiniList" class="online-mini-list"><div><span>Carregando...</span><b>online</b></div></div>
         <div class="online-ranking-panel">
-          <div class="online-ranking-row">
-            <input id="onlinePlayerName" maxlength="20" placeholder="Seu nome" value="${(localStorage.getItem('radioCBJR_playerName') || '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('"','&quot;')}">
-            <button id="onlineSubmitScoreBtn" type="button" onclick="submitRadioScoreOnline()">Enviar</button>
-          </div>
-          <div id="onlineRankingStatus" class="online-ranking-status">Salve sua pontuação no ranking online.</div>
+          <div id="onlineRankingStatus" class="online-ranking-status">Salvando sua pontuação automaticamente...</div>
         </div>
         <a class="ranking-link" href="ranking.html?from=radio">Ver ranking completo ›</a>
       </aside>
@@ -5485,6 +5496,7 @@ function bindFinishButtons() {
   const choose = $('finishChooseAlbum');
   if (next) next.onclick = () => { if (currentAlbumIndex + 1 < RADIO_ALBUMS.length) startAlbum(currentAlbumIndex + 1); };
   if (choose) choose.onclick = showSelect;
+  submitRadioScoreAuto(correct, wrong, currentAlbum?.tracks?.length || 1);
 }
 
 function renderAlbums() {
@@ -6284,7 +6296,23 @@ renderAlbums();
     keys: PROGRESS_KEYS,
     reload: async () => currentUser && loadCloudProgress(currentUser),
     save: saveCloudProgressNow,
-    getLocal: readLocalProgress
+    getLocal: readLocalProgress,
+    submitRanking: async (payload) => {
+      if (!currentUser) { console.warn('[Radio Ranking] sem usuário logado'); return false; }
+      try {
+        // Um único registro de ranking por jogador no Rádio (a melhor pontuação,
+        // Normal ou Hard). ID fixo => reenviar ATUALIZA em vez de duplicar.
+        const docId = `${currentUser.uid}_radio`;
+        await setDoc(doc(db, 'ranking', docId), {
+          ...payload,
+          uid:      currentUser.uid,
+          name:     currentUser.displayName || payload.name || 'Jogador CBJR',
+          photoURL: currentUser.photoURL    || payload.photoURL || '',
+          createdAt: serverTimestamp()
+        });
+        return true;
+      } catch(e) { console.warn('[Radio Ranking] erro:', e.message); return false; }
+    }
   };
 
   async function loadCloudProgress(user) {
