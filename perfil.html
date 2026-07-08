@@ -417,7 +417,7 @@ async function loadPublicProfile(uid) {
     setText('statNextLevel', level.next ? level.next.name : 'Máximo');
 
     // Medalhas e showcase
-    const p = { xp, radioLiberados, radioMode, letrasCount, radioAch, quizAch };
+    const p = { xp, radioLiberados, radioMode, letrasCount, radioAch, quizAch, level };
     renderMedals(p, rank);
     renderShowcase(p, rank);
 
