@@ -31,9 +31,25 @@
   const DAILY_KEY        = 'cbjr_daily_done_v1';
   const DAILY_STREAK_KEY = 'cbjr_daily_streak_v1';
   const UNLOCK_KEY       = 'radioCBJRUnlockedAlbumIndex_v2';
+  const QUIZ_PROGRESS_KEY = 'cobjr_quiz_progress_v1';
+  const LETRAS_COMPLETED_KEY = 'cbjr_letters_completed';
   const PAGE             = location.pathname.split('/').pop().replace('.html','');
   const XP_DAILY         = 150;
   const XP_STREAK_7      = 500;
+
+  // ── Álbuns do Modo Letras (mesma ordem/base de capas do letras.html) ──
+  const LETRAS_ALBUMS = [
+    { id: 'tcp',          name: 'Transpiração Contínua e Prolongada',    cover: 'https://charlibriano.github.io/Quiz-CBJR-V2/CD%201.jpeg' },
+    { id: 'pcpl',         name: 'Preço Curto Prazo Longo',               cover: 'https://charlibriano.github.io/Quiz-CBJR-V2/CD%202.jpeg' },
+    { id: 'nadando',      name: 'Nadando com os Tubarões',               cover: 'https://charlibriano.github.io/Quiz-CBJR-V2/CD%203.jpeg' },
+    { id: 'cbjr100',      name: '100% Charlie Brown Jr.',                cover: 'https://charlibriano.github.io/Quiz-CBJR-V2/CD%204.jpeg' },
+    { id: 'bocas',        name: 'Bocas Ordinárias',                      cover: 'https://charlibriano.github.io/Quiz-CBJR-V2/CD%205.jpeg' },
+    { id: 'atividade',    name: 'Tamo Aí na Atividade',                  cover: 'https://charlibriano.github.io/Quiz-CBJR-V2/CD%207.jpeg' },
+    { id: 'imunidade',    name: 'Imunidade Musical',                     cover: 'https://charlibriano.github.io/Quiz-CBJR-V2/CD%208.jpeg' },
+    { id: 'ritmo',        name: 'Ritmo, Ritual e Responsa',              cover: 'https://charlibriano.github.io/Quiz-CBJR-V2/CD%209.jpeg' },
+    { id: 'camisa10',     name: 'Camisa 10 - Joga Bola Até na Chuva',    cover: 'https://charlibriano.github.io/Quiz-CBJR-V2/CD%2011.jpeg' },
+    { id: 'lafamilia013', name: 'La Familia 013',                       cover: 'https://charlibriano.github.io/Quiz-CBJR-V2/CD%2013.jpeg' }
+  ];
 
   // ── Sorteio determinístico por data ──
   function todayStr() {
@@ -41,15 +57,57 @@
     return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
   }
 
-  function getDailyIndex() {
-    const key = todayStr();
+  function hashStr(s) {
     let h = 0;
-    for (let i = 0; i < key.length; i++) { h = Math.imul(31, h) + key.charCodeAt(i) | 0; }
-    const seed = Math.abs(h);
+    for (let i = 0; i < s.length; i++) { h = Math.imul(31, h) + s.charCodeAt(i) | 0; }
+    return Math.abs(h);
+  }
 
-    // Limita ao range de CDs desbloqueados pelo jogador
-    const unlockedCount = getUnlockedIndex() + 1; // +1 porque index é base 0
-    return seed % unlockedCount;
+  // Alterna o MODO do desafio a cada dia: rádio → quiz → letras → rádio...
+  function getTodayMode() {
+    const modes = ['radio', 'quiz', 'letras'];
+    return modes[hashStr(todayStr() + '_modo_do_dia') % 3];
+  }
+
+  function getRadioUnlockedCount() {
+    return Math.max(1, getUnlockedIndex() + 1);
+  }
+
+  function getQuizUnlockedCount() {
+    try {
+      const p = JSON.parse(localStorage.getItem(QUIZ_PROGRESS_KEY) || '{}');
+      return Math.max(1, Number(p.highestLevel_facil || 0) + 1);
+    } catch(_) { return 1; }
+  }
+
+  function getLetrasUnlockedCount() {
+    try {
+      const completed = JSON.parse(localStorage.getItem(LETRAS_COMPLETED_KEY) || '[]');
+      const n = Array.isArray(completed) ? completed.length : 0;
+      return Math.min(LETRAS_ALBUMS.length, Math.max(1, n + 1));
+    } catch(_) { return 1; }
+  }
+
+  // Monta o desafio completo de hoje: qual modo, e qual item dentro dele
+  function getDailyChallenge() {
+    const mode = getTodayMode();
+    const seed = hashStr(todayStr() + '_' + mode);
+    if (mode === 'quiz') {
+      const idx = seed % getQuizUnlockedCount();
+      return { mode, idx, difficulty: 'facil' };
+    }
+    if (mode === 'letras') {
+      const idx = seed % getLetrasUnlockedCount();
+      return { mode, idx, album: LETRAS_ALBUMS[idx] };
+    }
+    const idx = seed % getRadioUnlockedCount();
+    return { mode: 'radio', idx, album: ALBUMS[idx] };
+  }
+
+  // Mantido por compatibilidade: índice do álbum de Rádio (só válido em dias de Rádio)
+  function getDailyIndex() {
+    const challenge = getDailyChallenge();
+    return challenge.mode === 'radio' ? challenge.idx : (hashStr(todayStr()) % getRadioUnlockedCount());
   }
 
   function isDone() {
@@ -294,31 +352,51 @@
     }
     if (!anchor) return;
 
-    const idx     = getDailyIndex();
-    const album   = ALBUMS[idx];
-    const done    = isDone();
-    const unlocked = getUnlockedIndex();
-    const canPlay  = idx <= unlocked;
+    const challenge = getDailyChallenge();
+    const done       = isDone();
+
+    let title, sub, cover, playHref, iconFallback;
+    if (challenge.mode === 'radio') {
+      const album = challenge.album;
+      title = album.name;
+      sub   = `${album.year} · Rádio CBJR · CD ${challenge.idx + 1} de 13`;
+      cover = album.cover;
+      playHref = `radio.html?desafio=1&album=${challenge.idx}`;
+    } else if (challenge.mode === 'quiz') {
+      title = `Nível ${challenge.idx + 1} — Modo Fácil`;
+      sub   = `Quiz CBJR · Responda e ganhe XP`;
+      cover = null;
+      iconFallback = '🎯';
+      playHref = `quiz.html?desafio=1&level=${challenge.idx}&diff=facil`;
+    } else {
+      const album = challenge.album;
+      title = album.name;
+      sub   = `Modo Letras · Álbum ${challenge.idx + 1} de ${LETRAS_ALBUMS.length}`;
+      cover = album.cover;
+      playHref = `letras.html?desafio=1&album=${challenge.idx}`;
+    }
+
+    const coverHtml = cover
+      ? `<img class="cbjr-daily-cover" src="${cover}" alt="${title}">`
+      : `<div class="cbjr-daily-cover" style="display:flex;align-items:center;justify-content:center;font-size:2rem;">${iconFallback || '🎸'}</div>`;
 
     const banner = document.createElement('div');
     banner.className = 'cbjr-daily-banner';
     banner.innerHTML = `
       <div>
         <div class="cbjr-daily-kicker">🔥 Desafio do dia</div>
-        <h3 class="cbjr-daily-title">${album.name}</h3>
-        <p class="cbjr-daily-sub">${album.year} · CD ${idx + 1} de 13</p>
+        <h3 class="cbjr-daily-title">${title}</h3>
+        <p class="cbjr-daily-sub">${sub}</p>
       </div>
       <div class="cbjr-daily-right">
-        <img class="cbjr-daily-cover" src="${album.cover}" alt="${album.name}">
+        ${coverHtml}
         <div class="cbjr-daily-timer-wrap">
           <span class="cbjr-daily-timer-label">Renova em</span>
           <span class="cbjr-daily-timer" id="cbjrDailyTimer">--:--:--</span>
         </div>
         ${done
           ? `<span class="cbjr-daily-btn done">✓ Concluído hoje</span>`
-          : canPlay
-            ? `<a class="cbjr-daily-btn" href="radio.html?desafio=1&album=${idx}">Jogar agora →</a>`
-            : `<a class="cbjr-daily-btn" href="radio.html" style="opacity:.7">Desbloquear →</a>`
+          : `<a class="cbjr-daily-btn" href="${playHref}">Jogar agora →</a>`
         }
       </div>
     `;
@@ -332,9 +410,15 @@
     const params  = new URLSearchParams(location.search);
     const isDesafio = params.get('desafio') === '1';
     const albumParam = Number(params.get('album'));
-    const idx     = Number.isFinite(albumParam) && albumParam >= 0 && albumParam < ALBUMS.length
-                    ? albumParam
-                    : getDailyIndex();
+
+    let idx;
+    if (isDesafio && Number.isFinite(albumParam) && albumParam >= 0 && albumParam < ALBUMS.length) {
+      idx = albumParam; // veio de um link de desafio explícito
+    } else {
+      const challenge = getDailyChallenge();
+      if (challenge.mode !== 'radio') return; // hoje o desafio não é de Rádio, não faz nada aqui
+      idx = challenge.idx;
+    }
 
     // Observa o DOM para quando os cards forem criados
     let attempts = 0;
@@ -362,12 +446,66 @@
       if (isDesafio) setTimeout(() => { target.click(); }, 700);
     }, 250);
 
-    // Marca como feito somente quando o CD for concluído com sucesso
+    // Marca como feito somente quando ESSE CD específico for concluído com sucesso
     window.addEventListener('cbjr-radio-cd-complete', function onDone(e) {
       const { albumIndex } = e.detail || {};
-      if (albumIndex === idx || isDesafio) {
+      if (albumIndex === idx) {
         markDone();
         window.removeEventListener('cbjr-radio-cd-complete', onDone);
+      }
+    });
+  }
+
+  // ── Destaque no Letras ──
+  function highlightLetrasAlbum() {
+    const params  = new URLSearchParams(location.search);
+    const isDesafio = params.get('desafio') === '1';
+    const albumParam = Number(params.get('album'));
+
+    let idx;
+    if (isDesafio && Number.isFinite(albumParam) && albumParam >= 0 && albumParam < LETRAS_ALBUMS.length) {
+      idx = albumParam;
+    } else {
+      const challenge = getDailyChallenge();
+      if (challenge.mode !== 'letras') return; // hoje o desafio não é de Letras, não faz nada aqui
+      idx = challenge.idx;
+    }
+
+    const targetId = LETRAS_ALBUMS[idx].id;
+
+    // Observa o DOM até os cards de álbum existirem
+    let attempts = 0;
+    const check = setInterval(() => {
+      const cards = document.querySelectorAll('#album-grid [data-album-id], #album-grid .album-select-card');
+      if (!cards.length) { if (++attempts > 40) clearInterval(check); return; }
+      clearInterval(check);
+
+      let target = document.querySelector(`#album-grid [data-album-id="${targetId}"]`);
+      if (!target) target = cards[idx]; // fallback por posição, se não houver data-album-id
+      if (!target) return;
+
+      target.style.borderColor = 'rgba(241,196,15,.70)';
+      target.style.boxShadow   = '0 0 28px rgba(241,196,15,.18)';
+
+      if (!target.querySelector('.cbjr-daily-badge')) {
+        const badge = document.createElement('span');
+        badge.className = 'cbjr-daily-badge';
+        badge.textContent = '🔥 Desafio do dia';
+        target.appendChild(badge);
+      }
+
+      if (isDesafio) setTimeout(() => { target.click(); }, 700);
+    }, 250);
+
+    // Marca como feito somente quando ESSE álbum específico for concluído
+    window.addEventListener('cbjr-letras-album-complete', function onDone(e) {
+      const detail = e.detail || {};
+      const matches = detail.albumId
+        ? detail.albumId === targetId
+        : detail.albumName === LETRAS_ALBUMS[idx].name;
+      if (matches) {
+        markDone();
+        window.removeEventListener('cbjr-letras-album-complete', onDone);
       }
     });
   }
@@ -380,18 +518,26 @@
     } else if (PAGE === 'radio') {
       highlightRadioAlbum();
     } else if (PAGE === 'letras') {
-      // Marca desafio como feito quando álbum é concluído
-      window.addEventListener('cbjr-letras-album-complete', function onDone() {
-        markDone();
-        window.removeEventListener('cbjr-letras-album-complete', onDone);
-      });
+      highlightLetrasAlbum();
     } else if (PAGE === 'quiz') {
-      // Só age se veio via link do desafio
       const params = new URLSearchParams(location.search);
-      if (params.get('desafio') === '1') {
-        const levelIndex = Number(params.get('level') || 0);
-        const difficulty = params.get('diff') || 'normal';
-        // Inicia no nível sorteado
+      const isDesafio = params.get('desafio') === '1';
+
+      let levelIndex, difficulty;
+      if (isDesafio) {
+        // Veio de um link de desafio explícito
+        levelIndex = Number(params.get('level') || 0);
+        difficulty = params.get('diff') || 'facil';
+      } else {
+        // Visita orgânica: só conta se hoje o desafio for de Quiz
+        const challenge = getDailyChallenge();
+        if (challenge.mode !== 'quiz') return;
+        levelIndex = challenge.idx;
+        difficulty = challenge.difficulty;
+      }
+
+      if (isDesafio) {
+        // Inicia direto no nível sorteado
         let attempts = 0;
         const check = setInterval(() => {
           if (typeof window.startQuizAtLevel !== 'function') {
@@ -401,15 +547,17 @@
           clearInterval(check);
           setTimeout(() => window.startQuizAtLevel(difficulty, levelIndex), 800);
         }, 250);
-        // Marca como feito somente quando o nível for aprovado
-        window.addEventListener('cbjr-quiz-level-complete', function onDone(e) {
-          const { level } = e.detail || {};
-          if (level === levelIndex) {
-            markDone();
-            window.removeEventListener('cbjr-quiz-level-complete', onDone);
-          }
-        });
       }
+
+      // Marca como feito quando ESSE nível específico for aprovado
+      // (seja jogado via link direto ou organicamente na tela de níveis)
+      window.addEventListener('cbjr-quiz-level-complete', function onDone(e) {
+        const { level } = e.detail || {};
+        if (level === levelIndex) {
+          markDone();
+          window.removeEventListener('cbjr-quiz-level-complete', onDone);
+        }
+      });
     }
   }
 
