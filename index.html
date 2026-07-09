@@ -5873,6 +5873,14 @@
         showInviteCelebration(newOnes);
       }
       localStorage.setItem('cbjr_invite_last_seen_count', String(n));
+
+      // Guarda a contagem pra conquista "Você montou uma banda" (5 convites) e
+      // re-renderiza o painel se o valor mudou, pra desbloquear na hora.
+      const prevCached = Number(localStorage.getItem('cbjr_invite_count') || 0) || 0;
+      localStorage.setItem('cbjr_invite_count', String(n));
+      if (n !== prevCached) {
+        renderPlayerDashboard(user);
+      }
     } catch (e) {
       console.warn('Não foi possível carregar contagem de convites agora:', e.message);
     }
@@ -5925,7 +5933,8 @@
     { id: 'letras_three_albums', title: '3 álbuns Letras', icon: '📖', xp: 220, unlocked: (ctx) => ctx.letrasCount >= 3 },
     { id: 'letras_half', title: 'Metade das Letras', icon: '🎼', xp: 320, unlocked: (ctx) => ctx.letrasCount >= 7 },
     { id: 'quiz_primeira_medalha', title: 'Medalha no Quiz', icon: '🏅', xp: 120, unlocked: (ctx) => ctx.quizAch > 0 },
-    { id: 'familia_013', title: 'Família 013', icon: '013', xp: 500, unlocked: (ctx) => ctx.radioLiberados >= 13 && ctx.letrasCount >= 13 }
+    { id: 'familia_013', title: 'Família 013', icon: '013', xp: 500, unlocked: (ctx) => ctx.radioLiberados >= 13 && ctx.letrasCount >= 13 },
+    { id: 'montou_banda', title: 'Você montou uma banda', icon: '🎸', xp: 400, unlocked: (ctx) => ctx.inviteCount >= 5 }
   ];
 
   function getAutoAchievements(ctx) {
@@ -6085,7 +6094,9 @@
     const radioLiberados = Math.min(13, radioIndex + 1);
     const baseConquistas = radioAch + quizAch + letrasCount;
 
-    const ctx = { userLogged: !!window.CBJR_CURRENT_USER, radioLiberados, radioMode, letrasCount, radioAch, quizAch, baseConquistas };
+    const inviteCount = Number(localStorage.getItem('cbjr_invite_count') || 0) || 0;
+
+    const ctx = { userLogged: !!window.CBJR_CURRENT_USER, radioLiberados, radioMode, letrasCount, radioAch, quizAch, baseConquistas, inviteCount };
     const autoAchievements = getAutoAchievements(ctx);
     const autoUnlocked = countUnlockedAchievements(autoAchievements);
     const conquistas = baseConquistas + autoUnlocked;
