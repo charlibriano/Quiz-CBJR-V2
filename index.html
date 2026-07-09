@@ -4708,6 +4708,9 @@
       <button class="mobile-curiosidades-btn" id="mobileShareBtn" onclick="openShareModal()" type="button" style="display:none; border:1px solid rgba(37,211,102,.5); background:rgba(37,211,102,.12); color:#25D366; cursor:pointer; font-family:inherit; font-weight:950;">
         📲 Compartilhar meu progresso
       </button>
+      <button class="mobile-curiosidades-btn" id="mobileInviteBtn" type="button" style="display:none; border:1px solid rgba(241,196,15,.5); background:rgba(241,196,15,.12); color:#f1c40f; cursor:pointer; font-family:inherit; font-weight:950;">
+        🎁 Convide um amigo (+100 XP)
+      </button>
 
       <div class="mode-cards" id="modeCards">
         <a class="mode-card" href="quiz.html" style="--mc-color: var(--yellow)" id="canal-quiz" data-tone="164.81" data-page="quiz.html">
@@ -5809,7 +5812,7 @@
     }
   });
 
-  document.getElementById('dashInviteShareBtn')?.addEventListener('click', async () => {
+  async function shareInvite() {
     const link = getInviteLink();
     if (!link) return;
     const text = '🎸 Já conhece o site do Charlie Brown Jr. com Quiz, Rádio e Modo Letras? Entra pelo meu link e testa seus conhecimentos sobre a banda:';
@@ -5823,16 +5826,18 @@
     } catch (e) {
       window.open(`https://wa.me/?text=${encodeURIComponent(text + '\n\n' + link)}`, '_blank');
     }
-  });
+  }
+
+  document.getElementById('dashInviteShareBtn')?.addEventListener('click', shareInvite);
+  document.getElementById('mobileInviteBtn')?.addEventListener('click', shareInvite);
 
   async function loadInviteCount(user) {
     if (!user) return;
     const el = document.getElementById('dashInviteCount');
-    if (!el) return;
     try {
       const snap = await getDocs(query(collection(db, 'convites'), where('referrerUid', '==', user.uid)));
       const n = snap.size;
-      el.textContent = `${n} convidado${n === 1 ? '' : 's'}`;
+      if (el) el.textContent = `${n} convidado${n === 1 ? '' : 's'}`;
     } catch (e) {
       console.warn('Não foi possível carregar contagem de convites agora:', e.message);
     }
@@ -6235,6 +6240,11 @@
       const mobileShareBtn = document.getElementById('mobileShareBtn');
       if (mobileShareBtn) mobileShareBtn.style.display = 'flex';
       // ── FIM BOTÃO SHARE MOBILE ────────────────────────────────
+
+      // ── BOTÃO CONVITE MOBILE: sempre visível após login ───────
+      const mobileInviteBtn = document.getElementById('mobileInviteBtn');
+      if (mobileInviteBtn) mobileInviteBtn.style.display = 'flex';
+      // ── FIM BOTÃO CONVITE MOBILE ──────────────────────────────
     } catch (error) {
       console.warn('Dashboard: não foi possível consultar ranking agora.', error);
       renderPlayerDashboard(user, '#--');
