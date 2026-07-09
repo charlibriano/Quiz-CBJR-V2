@@ -4488,6 +4488,14 @@
       document.body.classList.add('auth-logged-in');
     }
   } catch (e) {}
+
+  // ── CONVITE: captura ?ref=UID da URL, se vier de um link de convite ──
+  try {
+    const refParam = new URLSearchParams(location.search).get('ref');
+    if (refParam) {
+      localStorage.setItem('cbjr_pending_ref', JSON.stringify({ uid: refParam, capturedAt: Date.now() }));
+    }
+  } catch (e) {}
 </script>
 
 
@@ -4615,6 +4623,15 @@
       <div class="dash-achievements" id="dashAchievementsBox">
         <div class="dash-achievements-head"><span>Últimas conquistas</span><strong id="dashAutoAchievementsCount">0 liberadas</strong></div>
         <div class="dash-achievement-list" id="dashAutoAchievementsList"></div>
+      </div>
+
+      <div class="dash-achievements" id="dashInviteBox">
+        <div class="dash-achievements-head"><span>🎁 Convide um amigo</span><strong id="dashInviteCount">0 convidado(s)</strong></div>
+        <div class="dash-last" style="margin-bottom:10px">Quando um amigo entrar pelo seu link e criar a conta, você ganha <strong>+100 XP</strong>. Sem limite de convites.</div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="dash-btn share-btn" id="dashInviteShareBtn" type="button">📲 Compartilhar convite</button>
+          <button class="dash-btn secondary" id="dashInviteCopyBtn" type="button">🔗 Copiar link</button>
+        </div>
       </div>
 
       <div class="dash-actions">
@@ -5616,7 +5633,7 @@
 <script type="module" id="cbjr-google-auth-script">
   import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-  import { getFirestore, doc, getDoc, setDoc, serverTimestamp, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+  import { getFirestore, doc, getDoc, setDoc, serverTimestamp, collection, getDocs, increment, runTransaction, query, where } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
   const firebaseConfig = {
     apiKey: 'AIzaSyDtb8jvVd0lMRy96QfqfjAg1dBReRIoRg4',
@@ -5660,6 +5677,62 @@
       provider: 'google',
       ultimoLogin: serverTimestamp()
     }, { merge: true });
+  }
+
+  // ── CONVITE DE AMIGO: credita +100 XP pra quem convidou, só na PRIMEIRA
+  // vez que a conta convidada faz login (nunca acumula em revisitas). ──
+  const REFERRAL_XP_BONUS = 100;
+
+  async function creditReferralIfNeeded(user) {
+    if (!user) return;
+    let pending;
+    try { pending = JSON.parse(localStorage.getItem('cbjr_pending_ref') || 'null'); }
+    catch (e) { pending = null; }
+    if (!pending || !pending.uid) return;
+
+    // Convite parado há mais de 7 dias no navegador não vale mais
+    const EXPIRY_MS = 7 * 24 * 60 * 60 * 1000;
+    if (Date.now() - Number(pending.capturedAt || 0) > EXPIRY_MS) {
+      localStorage.removeItem('cbjr_pending_ref');
+      return;
+    }
+
+    const referrerUid = pending.uid;
+    if (referrerUid === user.uid) {
+      localStorage.removeItem('cbjr_pending_ref'); // não pode se autoconvidar
+      return;
+    }
+
+    try {
+      // Só credita se essa conta NUNCA existiu antes (cadastro novo de verdade)
+      const userSnap = await getDoc(doc(db, 'usuarios', user.uid));
+      if (userSnap.exists()) {
+        localStorage.removeItem('cbjr_pending_ref');
+        return;
+      }
+
+      const inviteRef = doc(db, 'convites', user.uid);
+      await runTransaction(db, async (tx) => {
+        const inviteSnap = await tx.get(inviteRef);
+        if (inviteSnap.exists()) return; // já foi creditado antes (proteção extra)
+
+        const referrerProgressRef = doc(db, 'usuarios', referrerUid, 'progresso', 'geral');
+        tx.set(inviteRef, {
+          referrerUid,
+          referredUid: user.uid,
+          referredName: user.displayName || 'Jogador CBJR',
+          xpAwarded: REFERRAL_XP_BONUS,
+          createdAt: serverTimestamp()
+        });
+        tx.set(referrerProgressRef, {
+          cbjr_xp_convites: increment(REFERRAL_XP_BONUS)
+        }, { merge: true });
+      });
+    } catch (error) {
+      console.warn('[Convite] Não foi possível creditar o convite agora:', error.message);
+    } finally {
+      localStorage.removeItem('cbjr_pending_ref');
+    }
   }
 
   loginBtn?.addEventListener('click', async () => {
@@ -5715,6 +5788,55 @@
     await signOut(auth);
     location.href = 'index.html';
   });
+
+  // ── CONVITE DE AMIGO ──────────────────────────────────────
+  const INVITE_SITE_BASE = 'https://quiz-cbjr.vercel.app/';
+
+  function getInviteLink() {
+    const uid = window.CBJR_CURRENT_USER?.uid;
+    return uid ? `${INVITE_SITE_BASE}index.html?ref=${uid}` : null;
+  }
+
+  document.getElementById('dashInviteCopyBtn')?.addEventListener('click', async () => {
+    const link = getInviteLink();
+    if (!link) return;
+    const btn = document.getElementById('dashInviteCopyBtn');
+    try {
+      await navigator.clipboard.writeText(link);
+      if (btn) { const original = btn.textContent; btn.textContent = '✅ Copiado!'; setTimeout(() => { btn.textContent = original; }, 2000); }
+    } catch (e) {
+      window.prompt('Copie o link do seu convite:', link);
+    }
+  });
+
+  document.getElementById('dashInviteShareBtn')?.addEventListener('click', async () => {
+    const link = getInviteLink();
+    if (!link) return;
+    const text = '🎸 Já conhece o site do Charlie Brown Jr. com Quiz, Rádio e Modo Letras? Entra pelo meu link e testa seus conhecimentos sobre a banda:';
+    if (navigator.share) {
+      try { await navigator.share({ title: 'CBJR — Quiz, Rádio e Letras', text, url: link }); return; }
+      catch (e) { if (e && e.name === 'AbortError') return; }
+    }
+    try {
+      await navigator.clipboard.writeText(`${text}\n\n${link}`);
+      window.alert('Link copiado! Cola no WhatsApp ou onde quiser.');
+    } catch (e) {
+      window.open(`https://wa.me/?text=${encodeURIComponent(text + '\n\n' + link)}`, '_blank');
+    }
+  });
+
+  async function loadInviteCount(user) {
+    if (!user) return;
+    const el = document.getElementById('dashInviteCount');
+    if (!el) return;
+    try {
+      const snap = await getDocs(query(collection(db, 'convites'), where('referrerUid', '==', user.uid)));
+      const n = snap.size;
+      el.textContent = `${n} convidado${n === 1 ? '' : 's'}`;
+    } catch (e) {
+      console.warn('Não foi possível carregar contagem de convites agora:', e.message);
+    }
+  }
 
 
 
@@ -5806,6 +5928,7 @@
     'cobjr_quiz_achievements',
     'cbjr_auto_achievements_v1',
     'cbjr_xp_total',
+    'cbjr_xp_convites',
     'cbjr_public_title',
     'cbjr_medals_v1',
     'cbjr_last_activity_v1',
@@ -5855,6 +5978,10 @@
       const localXp = Number(local.cbjr_xp_total || 0);
       const remoteXp = Number(remote.cbjr_xp_total || remote?.stats?.xp || 0);
       merged.cbjr_xp_total = String(Math.max(Number.isFinite(localXp) ? localXp : 0, Number.isFinite(remoteXp) ? remoteXp : 0));
+
+      const localXpConvites = Number(local.cbjr_xp_convites || 0);
+      const remoteXpConvites = Number(remote.cbjr_xp_convites || 0);
+      merged.cbjr_xp_convites = String(Math.max(Number.isFinite(localXpConvites) ? localXpConvites : 0, Number.isFinite(remoteXpConvites) ? remoteXpConvites : 0));
 
       merged.radioCBJR_achievements_v1 = mergeObjectProgress(local.radioCBJR_achievements_v1, remote.radioCBJR_achievements_v1);
       merged.cobjr_quiz_achievements = mergeObjectProgress(local.cobjr_quiz_achievements, remote.cobjr_quiz_achievements);
@@ -5933,7 +6060,8 @@
     const xpConquistas = baseConquistas * 90;
     const xpAutoConquistas = getAchievementsXP(autoAchievements);
     const xpHardBonus = radioMode === 'hard' ? 250 : 0;
-    const calculatedXp = xpBaseRadio + xpBaseLetras + xpConquistas + xpAutoConquistas + xpHardBonus;
+    const xpConvites = Number(localStorage.getItem('cbjr_xp_convites') || 0) || 0;
+    const calculatedXp = xpBaseRadio + xpBaseLetras + xpConquistas + xpAutoConquistas + xpHardBonus + xpConvites;
     const storedXp = Number(localStorage.getItem('cbjr_xp_total') || 0) || 0;
     const xp = Math.max(calculatedXp, storedXp);
     const level = getPlayerLevel(xp);
@@ -6145,6 +6273,12 @@
     if (userPhoto && user.photoURL) userPhoto.src = user.photoURL;
 
     try {
+      await creditReferralIfNeeded(user);
+    } catch (error) {
+      console.warn('Não foi possível processar convite agora:', error);
+    }
+
+    try {
       await saveUserProfile(user);
     } catch (error) {
       console.warn('Não foi possível salvar perfil no Firestore agora:', error);
@@ -6160,6 +6294,7 @@
     await loadDashboardCloud(user);
     renderPlayerDashboard(user);
     updateDashboardRanking(user);
+    loadInviteCount(user);
 
     // ── STREAK: registrar acesso do dia ──────────────────────
     try {
