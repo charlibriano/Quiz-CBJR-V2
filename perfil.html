@@ -175,6 +175,8 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle
       <p class="muted" style="font-size:.82rem;font-weight:900;margin:0">Apaga do ranking online as pontuações antigas que não têm conta Google vinculada (testes de antes do login obrigatório). Ação permanente e afeta TODO o ranking, não só a sua conta.</p>
     </div>
     <button class="reset-open-btn" type="button" id="adminCleanupBtn" style="background:linear-gradient(90deg,#ff8c00,#e67300)">🧹 Apagar entradas antigas sem login</button>
+    <p class="muted" style="font-size:.82rem;font-weight:900;margin:14px 0 0">Apaga check-ins duplicados de "entrou na comunidade" no mural de atividades (mantém só o mais recente de cada pessoa). Afeta o mural inteiro, não só a sua conta.</p>
+    <button class="reset-open-btn" type="button" id="adminCleanupActivityBtn" style="background:linear-gradient(90deg,#ff8c00,#e67300);margin-top:8px">🧹 Apagar check-ins duplicados</button>
   </section>
 
 </div>
@@ -543,6 +545,72 @@ function getSelectedModes() {
   });
 }
 
+async function runAdminActivityCleanup() {
+  if (!resetCurrentUser) return;
+  if (!isAdminUser(resetCurrentUser)) {
+    console.warn('[Admin Cleanup] Acesso negado — conta sem permissão de admin.');
+    return;
+  }
+
+  const sure = confirm(
+    'Isso vai apagar do Firestore os check-ins duplicados de "entrou na comunidade" no mural de atividades, ' +
+    'mantendo só o mais recente de cada pessoa.\n\nEssa ação afeta o mural inteiro e não pode ser desfeita.\n\nTem certeza que quer continuar?'
+  );
+  if (!sure) return;
+
+  const btn = $('adminCleanupActivityBtn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Apagando...'; }
+
+  try {
+    const { collection: fsCollection, getDocs: fsGetDocs, deleteDoc: fsDelete } =
+      await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+
+    const snap = await fsGetDocs(fsCollection(db, 'cbjr_atividades'));
+    const joinDocs = snap.docs.filter(d => {
+      const data = d.data() || {};
+      return data.type === 'ranking' && String(data.text || '').includes('entrou na comunidade');
+    });
+
+    // Agrupa por uid, mantém só o mais recente (maior ts) de cada um
+    const byUid = new Map();
+    joinDocs.forEach(d => {
+      const data = d.data() || {};
+      const uid = data.uid || d.id;
+      const tsMillis = data.ts?.toMillis ? data.ts.toMillis() : (data.ts?.seconds ? data.ts.seconds * 1000 : 0);
+      const current = byUid.get(uid);
+      if (!current || tsMillis > current.tsMillis) {
+        byUid.set(uid, { doc: d, tsMillis });
+      }
+    });
+    const keepIds = new Set([...byUid.values()].map(v => v.doc.id));
+    const toDelete = joinDocs.filter(d => !keepIds.has(d.id));
+
+    if (!toDelete.length) {
+      showToast('✅ Nenhum check-in duplicado encontrado.');
+      if (btn) { btn.disabled = false; btn.textContent = '🧹 Apagar check-ins duplicados'; }
+      return;
+    }
+
+    const results = await Promise.all(toDelete.map(d =>
+      fsDelete(d.ref).then(() => ({ ok: true })).catch(e => ({ ok: false, id: d.id, reason: e.message }))
+    ));
+    const deleted = results.filter(r => r.ok).length;
+    const failed = results.filter(r => !r.ok);
+
+    if (failed.length) {
+      console.warn('[Admin Cleanup Activity] Falhas:', failed);
+      showToast(`⚠️ ${deleted}/${toDelete.length} apagadas. ${failed.length} falharam (${failed[0].reason}). Veja o console.`);
+    } else {
+      showToast(`✅ ${deleted} check-in(s) duplicado(s) apagado(s)!`);
+    }
+  } catch(e) {
+    console.warn('[Admin Cleanup Activity] Erro:', e.message);
+    showToast('⚠️ Erro ao limpar mural. Veja o console.');
+  }
+
+  if (btn) { btn.disabled = false; btn.textContent = '🧹 Apagar check-ins duplicados'; }
+}
+
 async function runAdminRankingCleanup() {
   if (!resetCurrentUser) return;
   if (!isAdminUser(resetCurrentUser)) {
@@ -694,6 +762,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Abre modal
   $('resetOpenBtn')?.addEventListener('click', openResetModal);
   $('adminCleanupBtn')?.addEventListener('click', runAdminRankingCleanup);
+  $('adminCleanupActivityBtn')?.addEventListener('click', runAdminActivityCleanup);
   $('resetCancelBtn')?.addEventListener('click', closeResetModal);
   $('resetModalBg')?.addEventListener('click', e => { if (e.target === $('resetModalBg')) closeResetModal(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeResetModal(); });
