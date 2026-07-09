@@ -4628,6 +4628,7 @@
       <div class="dash-achievements" id="dashInviteBox">
         <div class="dash-achievements-head"><span>🎁 Convide um amigo</span><strong id="dashInviteCount">0 convidado(s)</strong></div>
         <div class="dash-last" style="margin-bottom:10px">Quando um amigo entrar pelo seu link e criar a conta, você ganha <strong>+100 XP</strong>. Sem limite de convites.</div>
+        <div id="dashInviteList" class="dash-achievement-list" style="margin-bottom:10px"></div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
           <button class="dash-btn share-btn" id="dashInviteShareBtn" type="button">📲 Compartilhar convite</button>
           <button class="dash-btn secondary" id="dashInviteCopyBtn" type="button">🔗 Copiar link</button>
@@ -5831,13 +5832,47 @@
   document.getElementById('dashInviteShareBtn')?.addEventListener('click', shareInvite);
   document.getElementById('mobileInviteBtn')?.addEventListener('click', shareInvite);
 
+  function showInviteCelebration(names) {
+    const box = document.createElement('div');
+    box.style.cssText = 'position:fixed;left:50%;top:18px;transform:translateX(-50%) translateY(-20px);background:linear-gradient(90deg,#f1c40f,#e6b800);color:#050505;padding:14px 22px;border-radius:14px;font-weight:950;font-size:.9rem;z-index:99999;box-shadow:0 14px 36px rgba(0,0,0,.4);opacity:0;transition:opacity .3s ease, transform .3s ease;text-align:center;max-width:min(92vw,420px)';
+    const list = names.length > 2 ? `${names.slice(0,2).join(', ')} e mais ${names.length - 2}` : names.join(' e ');
+    const verb = names.length > 1 ? 'entraram' : 'entrou';
+    box.textContent = `🎉 ${list} ${verb} pelo seu convite! +${names.length * 100} XP`;
+    document.body.appendChild(box);
+    requestAnimationFrame(() => { box.style.opacity = '1'; box.style.transform = 'translateX(-50%) translateY(0)'; });
+    setTimeout(() => {
+      box.style.opacity = '0';
+      box.style.transform = 'translateX(-50%) translateY(-20px)';
+      setTimeout(() => box.remove(), 350);
+    }, 5000);
+  }
+
   async function loadInviteCount(user) {
     if (!user) return;
-    const el = document.getElementById('dashInviteCount');
+    const countEl = document.getElementById('dashInviteCount');
+    const listEl = document.getElementById('dashInviteList');
     try {
       const snap = await getDocs(query(collection(db, 'convites'), where('referrerUid', '==', user.uid)));
-      const n = snap.size;
-      if (el) el.textContent = `${n} convidado${n === 1 ? '' : 's'}`;
+      const invites = snap.docs
+        .map(d => d.data())
+        .sort((a, b) => (b.createdAt?.toMillis?.() || b.createdAt?.seconds || 0) - (a.createdAt?.toMillis?.() || a.createdAt?.seconds || 0));
+      const n = invites.length;
+
+      if (countEl) countEl.textContent = `${n} convidado${n === 1 ? '' : 's'}`;
+
+      if (listEl) {
+        listEl.innerHTML = n
+          ? invites.slice(0, 5).map(inv => `<span class="dash-achievement-pill" title="+${inv.xpAwarded || 100} XP">🎁 ${inv.referredName || 'Amigo CBJR'}</span>`).join('')
+          : '<span class="dash-achievement-empty">Ninguém entrou pelo seu link ainda. Compartilhe pra começar a ganhar XP!</span>';
+      }
+
+      // Celebra se, desde a última vez que essa pessoa esteve aqui, alguém novo entrou
+      const lastSeen = Number(localStorage.getItem('cbjr_invite_last_seen_count') || 0);
+      if (n > lastSeen) {
+        const newOnes = invites.slice(0, n - lastSeen).map(inv => inv.referredName || 'Amigo CBJR');
+        showInviteCelebration(newOnes);
+      }
+      localStorage.setItem('cbjr_invite_last_seen_count', String(n));
     } catch (e) {
       console.warn('Não foi possível carregar contagem de convites agora:', e.message);
     }
