@@ -1280,7 +1280,7 @@ loadLocal();cleanStalePresence();startRealtime();setupOnlinePresence();
 <script type="module" id="cbjr-activity-wall-script">
 import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-import { getFirestore, collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import { getFirestore, collection, query, orderBy, limit, onSnapshot, addDoc, doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
@@ -1411,14 +1411,24 @@ window.addEventListener('storage', e => {
   } catch(_) {}
 });
 
-// Quando o usuário está na página de fãs, publica sua chegada
+// Quando o usuário está na página de fãs, publica/atualiza sua chegada.
+// Usa um ID fixo por jogador (em vez de addDoc) para que, ao entrar de novo
+// no mesmo dia (mesmo testando o site várias vezes), a MESMA entrada seja
+// atualizada em vez de acumular uma nova a cada visita.
 onAuthStateChanged(auth, async user => {
   if (!user) return;
-  // Verifica se já publicou nos últimos 30 minutos para não spammar
   try {
     const lastVisit = Number(localStorage.getItem('cbjr_last_fans_visit') || 0);
-    if (Date.now() - lastVisit > 30 * 60 * 1000) {
-      await publishActivity('ranking', `entrou na comunidade 🎸`, user);
+    const ONE_DAY = 24 * 60 * 60 * 1000;
+    if (Date.now() - lastVisit > ONE_DAY) {
+      await setDoc(doc(db, ACTIVITY_COLLECTION, `${user.uid}_joined`), {
+        uid:   user.uid,
+        name:  user.displayName || 'Fã CBJR',
+        photo: user.photoURL || '',
+        type:  'ranking',
+        text:  'entrou na comunidade 🎸',
+        ts: serverTimestamp()
+      });
       localStorage.setItem('cbjr_last_fans_visit', String(Date.now()));
     }
   } catch(_) {}
