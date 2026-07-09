@@ -1,308 +1,284 @@
-/**
- * share-result.js — Card de Resultado Compartilhável CBJR
- * Usado na Rádio, Letras e Quiz para gerar card após cada resultado.
- */
-(function() {
-  'use strict';
+// ═══════════════════════════════════════════════════════
+// CBJR SHARE RESULT — gera um card de resultado (imagem) e
+// compartilha nativamente (WhatsApp/Instagram no celular),
+// com fallback pra texto simples se algo falhar.
+// Usado por quiz.html, radio.html e letras.html.
+// ═══════════════════════════════════════════════════════
+window.CBJRShareResult = (function() {
+  const SITE_BASE = 'https://quiz-cbjr.vercel.app/';
+  const CARD_SIZE = 1080;
 
-  const SITE_URL = 'charlibriano.github.io/Quiz-CBJR-V2';
+  // ── Toast próprio, não depende de nada da página ──
+  function ensureToastEl() {
+    let el = document.getElementById('cbjrShareToast');
+    if (el) return el;
+    el = document.createElement('div');
+    el.id = 'cbjrShareToast';
+    el.style.cssText = [
+      'position:fixed', 'left:50%', 'bottom:26px', 'transform:translateX(-50%) translateY(20px)',
+      'background:rgba(15,15,15,.96)', 'color:#fff', 'padding:12px 20px', 'border-radius:14px',
+      'border:1px solid rgba(241,196,15,.45)', 'font:800 .85rem/1.4 -apple-system,Segoe UI,Arial,sans-serif',
+      'z-index:99999', 'max-width:min(92vw,420px)', 'text-align:center',
+      'box-shadow:0 12px 32px rgba(0,0,0,.5)', 'opacity:0',
+      'transition:opacity .25s ease, transform .25s ease', 'pointer-events:none'
+    ].join(';');
+    document.body.appendChild(el);
+    return el;
+  }
+
+  function showShareToast(message) {
+    const el = ensureToastEl();
+    el.textContent = message;
+    requestAnimationFrame(() => {
+      el.style.opacity = '1';
+      el.style.transform = 'translateX(-50%) translateY(0)';
+    });
+    clearTimeout(el._hideTimer);
+    el._hideTimer = setTimeout(() => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateX(-50%) translateY(20px)';
+    }, 3200);
+  }
+
+  // ── Carrega uma imagem externa com timeout, sem travar o card se falhar ──
+  function loadImageSafe(url, timeoutMs = 3500) {
+    return new Promise(resolve => {
+      if (!url) { resolve(null); return; }
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      let done = false;
+      const finish = (result) => { if (!done) { done = true; resolve(result); } };
+      const timer = setTimeout(() => finish(null), timeoutMs);
+      img.onload = () => { clearTimeout(timer); finish(img); };
+      img.onerror = () => { clearTimeout(timer); finish(null); };
+      img.src = url;
+    });
+  }
 
   function roundRect(ctx, x, y, w, h, r) {
     ctx.beginPath();
-    ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y);
-    ctx.quadraticCurveTo(x+w,y,x+w,y+r); ctx.lineTo(x+w,y+h-r);
-    ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h); ctx.lineTo(x+r,y+h);
-    ctx.quadraticCurveTo(x,y+h,x,y+h-r); ctx.lineTo(x,y+r);
-    ctx.quadraticCurveTo(x,y,x+r,y); ctx.closePath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
   }
 
-  function wrapText(ctx, text, x, y, maxW, lineH) {
-    const words = text.split(' ');
-    let line = '';
-    for (let i = 0; i < words.length; i++) {
-      const test = line + words[i] + ' ';
-      if (ctx.measureText(test).width > maxW && i > 0) {
-        ctx.fillText(line.trim(), x, y); y += lineH; line = words[i] + ' ';
-      } else { line = test; }
-    }
-    ctx.fillText(line.trim(), x, y);
-    return y;
-  }
-
-  // ── CORE: Gera o canvas ──────────────────────────────────────
-  function drawCard({ mode, title, subtitle, score, scoreLabel, detail, coverUrl, accentColor, accentGlow }) {
-    const W = 450, H = 800;
-    const canvas = document.createElement('canvas');
-    canvas.width = W; canvas.height = H;
-    const ctx = canvas.getContext('2d');
-
-    // Fundo
-    ctx.fillStyle = '#050505';
-    ctx.fillRect(0, 0, W, H);
-
-    // Glow superior (cor do modo)
-    const gTop = ctx.createRadialGradient(W/2, 0, 0, W/2, 0, 300);
-    gTop.addColorStop(0, accentGlow || 'rgba(241,196,15,0.28)');
-    gTop.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = gTop;
-    ctx.fillRect(0, 0, W, H);
-
-    // Glow inferior amarelo
-    const gBot = ctx.createRadialGradient(W/2, H, 0, W/2, H, 200);
-    gBot.addColorStop(0, 'rgba(30,215,96,0.12)');
-    gBot.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = gBot;
-    ctx.fillRect(0, 0, W, H);
-
-    // Borda
-    ctx.strokeStyle = accentColor || 'rgba(241,196,15,0.55)';
-    ctx.lineWidth = 1.5;
-    roundRect(ctx, 8, 8, W-16, H-16, 24); ctx.stroke();
-    ctx.strokeStyle = 'rgba(255,255,255,0.07)';
-    ctx.lineWidth = 1;
-    roundRect(ctx, 14, 14, W-28, H-28, 20); ctx.stroke();
-
-    // Badge modo
-    ctx.textAlign = 'center';
-    ctx.fillStyle = 'rgba(255,255,255,0.06)';
-    roundRect(ctx, W/2-90, 36, 180, 30, 15); ctx.fill();
-    ctx.strokeStyle = accentColor || 'rgba(241,196,15,0.4)';
-    ctx.lineWidth = 1;
-    roundRect(ctx, W/2-90, 36, 180, 30, 15); ctx.stroke();
-    ctx.fillStyle = accentColor ? accentColor.replace(/[\d.]+\)$/, '1)') : '#f1c40f';
-    ctx.font = 'bold 11px Inter, Arial';
-    ctx.fillText(`🎸 QUIZ CHARLIE BROWN JR. · ${mode.toUpperCase()}`, W/2, 57);
-
-    // Capa do CD (se houver)
-    const coverSize = 140;
-    const coverY = 82;
-
-    if (coverUrl) {
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.onload = () => {
-        ctx.save();
-        roundRect(ctx, W/2 - coverSize/2, coverY, coverSize, coverSize, 14);
-        ctx.clip();
-        ctx.drawImage(img, W/2 - coverSize/2, coverY, coverSize, coverSize);
-        ctx.restore();
-        // Borda da capa
-        ctx.strokeStyle = accentColor || 'rgba(241,196,15,0.5)';
-        ctx.lineWidth = 2;
-        roundRect(ctx, W/2 - coverSize/2, coverY, coverSize, coverSize, 14);
-        ctx.stroke();
-        finishDraw(ctx, W, H, { title, subtitle, score, scoreLabel, detail, coverBottom: coverY + coverSize + 18, accentColor });
-      };
-      img.onerror = () => {
-        drawModeIcon(ctx, W, coverY, coverSize, mode);
-        finishDraw(ctx, W, H, { title, subtitle, score, scoreLabel, detail, coverBottom: coverY + coverSize + 18, accentColor });
-      };
-      img.src = coverUrl;
+  function drawCoverArt(ctx, img, x, y, size) {
+    ctx.save();
+    roundRect(ctx, x, y, size, size, 28);
+    ctx.clip();
+    if (img) {
+      // cover-fit centralizado
+      const ratio = Math.max(size / img.width, size / img.height);
+      const w = img.width * ratio, h = img.height * ratio;
+      ctx.drawImage(img, x + (size - w) / 2, y + (size - h) / 2, w, h);
     } else {
-      drawModeIcon(ctx, W, coverY, coverSize, mode);
-      finishDraw(ctx, W, H, { title, subtitle, score, scoreLabel, detail, coverBottom: coverY + coverSize + 18, accentColor });
+      const grad = ctx.createLinearGradient(x, y, x + size, y + size);
+      grad.addColorStop(0, '#1a1a1a');
+      grad.addColorStop(1, '#000');
+      ctx.fillStyle = grad;
+      ctx.fillRect(x, y, size, size);
+      ctx.fillStyle = 'rgba(241,196,15,.9)';
+      ctx.font = `${Math.round(size * 0.4)}px -apple-system,Segoe UI,Arial,sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('🎸', x + size / 2, y + size / 2);
+    }
+    ctx.restore();
+    ctx.strokeStyle = 'rgba(241,196,15,.35)';
+    ctx.lineWidth = 3;
+    roundRect(ctx, x, y, size, size, 28);
+    ctx.stroke();
+  }
+
+  // ── Monta o card 1080x1080 e devolve um Blob PNG (ou null se der erro) ──
+  async function buildCard({ kicker, title, subtitle, pct, statLine, coverImg }) {
+    try {
+      const canvas = document.createElement('canvas');
+      canvas.width = CARD_SIZE;
+      canvas.height = CARD_SIZE;
+      const ctx = canvas.getContext('2d');
+
+      // Fundo
+      const bg = ctx.createRadialGradient(CARD_SIZE / 2, 260, 80, CARD_SIZE / 2, 260, 900);
+      bg.addColorStop(0, '#161616');
+      bg.addColorStop(1, '#050505');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, CARD_SIZE, CARD_SIZE);
+
+      // Borda dourada sutil
+      ctx.strokeStyle = 'rgba(241,196,15,.25)';
+      ctx.lineWidth = 6;
+      ctx.strokeRect(3, 3, CARD_SIZE - 6, CARD_SIZE - 6);
+
+      // Kicker
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#f1c40f';
+      ctx.font = '700 34px -apple-system,Segoe UI,Arial,sans-serif';
+      ctx.fillText(kicker.toUpperCase(), CARD_SIZE / 2, 100);
+
+      // Capa / arte
+      const coverSize = 460;
+      drawCoverArt(ctx, coverImg, (CARD_SIZE - coverSize) / 2, 140, coverSize);
+
+      // Título (nome do álbum/nível)
+      ctx.fillStyle = '#fff';
+      ctx.font = '800 46px -apple-system,Segoe UI,Arial,sans-serif';
+      wrapText(ctx, title, CARD_SIZE / 2, 660, CARD_SIZE - 120, 54);
+
+      // Subtítulo
+      if (subtitle) {
+        ctx.fillStyle = 'rgba(255,255,255,.6)';
+        ctx.font = '700 30px -apple-system,Segoe UI,Arial,sans-serif';
+        ctx.fillText(subtitle, CARD_SIZE / 2, 730);
+      }
+
+      // Percentual grande
+      ctx.fillStyle = '#f1c40f';
+      ctx.font = '900 130px -apple-system,Segoe UI,Arial,sans-serif';
+      ctx.fillText(`${pct}%`, CARD_SIZE / 2, 890);
+
+      // Linha de stats
+      ctx.fillStyle = 'rgba(255,255,255,.75)';
+      ctx.font = '700 32px -apple-system,Segoe UI,Arial,sans-serif';
+      ctx.fillText(statLine, CARD_SIZE / 2, 940);
+
+      // Rodapé / marca
+      ctx.fillStyle = 'rgba(255,255,255,.4)';
+      ctx.font = '700 26px -apple-system,Segoe UI,Arial,sans-serif';
+      ctx.fillText('quiz-cbjr.vercel.app', CARD_SIZE / 2, 1010);
+
+      return await new Promise(resolve => canvas.toBlob(blob => resolve(blob), 'image/png', 0.95));
+    } catch (e) {
+      console.warn('[CBJRShareResult] Falha ao gerar card:', e.message);
+      return null;
+    }
+  }
+
+  function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+    const words = String(text).split(' ');
+    let line = '', lines = [];
+    for (const w of words) {
+      const test = line ? `${line} ${w}` : w;
+      if (ctx.measureText(test).width > maxWidth && line) {
+        lines.push(line);
+        line = w;
+      } else {
+        line = test;
+      }
+    }
+    if (line) lines.push(line);
+    lines = lines.slice(0, 2); // no máximo 2 linhas, pra não estourar o card
+    const startY = y - ((lines.length - 1) * lineHeight) / 2;
+    lines.forEach((l, i) => ctx.fillText(l, x, startY + i * lineHeight));
+  }
+
+  // ── Compartilha: tenta imagem+texto, cai pra só texto, cai pra WhatsApp Web ──
+  async function share({ title, text, url, cardData }) {
+    const fullText = `${text}\n\n${url}`;
+
+    // 1) Tenta gerar e compartilhar a imagem
+    if (cardData) {
+      const coverImg = await loadImageSafe(cardData.coverUrl);
+      const blob = await buildCard({ ...cardData, coverImg });
+      if (blob) {
+        const file = new File([blob], 'resultado-cbjr.png', { type: 'image/png' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({ title, text, files: [file] });
+            return true;
+          } catch (e) {
+            if (e && e.name === 'AbortError') return false;
+          }
+        }
+        // Sem suporte a compartilhar arquivo: baixa a imagem e ainda tenta texto
+        try {
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = 'resultado-cbjr.png';
+          link.click();
+          showShareToast('🖼️ Imagem baixada! Cola no WhatsApp ou Instagram junto com o texto copiado.');
+        } catch (e) { /* segue pro fallback de texto abaixo */ }
+      }
     }
 
-    return canvas;
-  }
-
-  function drawModeIcon(ctx, W, y, size, mode) {
-    const icons = { radio: '📻', letras: '✍️', quiz: '🎸' };
-    ctx.fillStyle = 'rgba(255,255,255,0.05)';
-    roundRect(ctx, W/2 - size/2, y, size, size, 14); ctx.fill();
-    ctx.font = `${size * 0.5}px Arial`;
-    ctx.textAlign = 'center';
-    ctx.fillText(icons[mode] || '🎸', W/2, y + size * 0.65);
-  }
-
-  function finishDraw(ctx, W, H, { title, subtitle, score, scoreLabel, detail, coverBottom, accentColor }) {
-    const accent = accentColor ? accentColor.replace(/[\d.]+\)$/, '1)') : '#f1c40f';
-    ctx.textAlign = 'center';
-    ctx.shadowColor = 'transparent';
-
-    // Título
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold 18px Inter, Arial';
-    ctx.fillText(title, W/2, coverBottom + 4);
-
-    // Subtítulo
-    ctx.fillStyle = 'rgba(255,255,255,0.6)';
-    ctx.font = '850 13px Inter, Arial';
-    ctx.fillText(subtitle, W/2, coverBottom + 24);
-
-    // Separador
-    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-    ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(40, coverBottom + 38); ctx.lineTo(W-40, coverBottom + 38); ctx.stroke();
-
-    // Score principal
-    const scoreY = coverBottom + 100;
-    ctx.fillStyle = accent;
-    ctx.font = 'bold 80px Arial Black, Arial';
-    ctx.shadowColor = accent.replace('1)', '0.4)');
-    ctx.shadowBlur = 20;
-    ctx.fillText(score, W/2, scoreY);
-    ctx.shadowBlur = 0;
-
-    // Label do score
-    ctx.fillStyle = 'rgba(255,255,255,0.55)';
-    ctx.font = 'bold 12px Inter, Arial';
-    ctx.letterSpacing = '0.1em';
-    ctx.fillText(scoreLabel.toUpperCase(), W/2, scoreY + 22);
-    ctx.letterSpacing = '0';
-
-    // Separador
-    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-    ctx.beginPath(); ctx.moveTo(40, scoreY + 40); ctx.lineTo(W-40, scoreY + 40); ctx.stroke();
-
-    // Detalhe / descrição
-    ctx.fillStyle = 'rgba(255,255,255,0.75)';
-    ctx.font = 'bold 15px Inter, Arial';
-    wrapText(ctx, detail, W/2, scoreY + 68, W - 80, 22);
-
-    // CTA
-    const ctaY = H - 110;
-    ctx.fillStyle = 'rgba(255,255,255,0.06)';
-    roundRect(ctx, 30, ctaY, W-60, 58, 16); ctx.fill();
-    ctx.strokeStyle = 'rgba(255,255,255,0.14)';
-    ctx.lineWidth = 1;
-    roundRect(ctx, 30, ctaY, W-60, 58, 16); ctx.stroke();
-    ctx.fillStyle = 'rgba(255,255,255,0.85)';
-    ctx.font = 'bold 13px Inter, Arial';
-    ctx.fillText('Você consegue superar? Venha jogar! 🎸', W/2, ctaY + 22);
-    ctx.fillStyle = accent;
-    ctx.font = 'bold 15px Inter, Arial';
-    ctx.shadowColor = accent.replace('1)', '0.4)');
-    ctx.shadowBlur = 8;
-    ctx.fillText(SITE_URL, W/2, ctaY + 44);
-    ctx.shadowBlur = 0;
-
-    // Footer
-    ctx.fillStyle = 'rgba(255,255,255,0.28)';
-    ctx.font = '11px Inter, Arial';
-    ctx.fillText('Quiz CBJR V2 · Em memória de Chorão e Champignon 🎸', W/2, H - 20);
-  }
-
-  // ── MODAL DE COMPARTILHAMENTO ────────────────────────────────
-  function showShareModal(canvas, whatsappText) {
-    document.getElementById('cbjrShareResultModal')?.remove();
-
-    const modal = document.createElement('div');
-    modal.id = 'cbjrShareResultModal';
-    modal.innerHTML = `
-      <div class="csrm-box">
-        <button class="csrm-close" onclick="document.getElementById('cbjrShareResultModal').remove()">✕</button>
-        <h2 class="csrm-title">Compartilhar resultado</h2>
-        <div class="csrm-canvas-wrap"></div>
-        <div class="csrm-btns">
-          <button class="csrm-btn csrm-download" id="csrmDownload">⬇ Baixar imagem</button>
-          <button class="csrm-btn csrm-whatsapp" id="csrmWhatsApp">📲 WhatsApp</button>
-        </div>
-        <p class="csrm-tip">Salve e poste nos stories do Instagram para desafiar seus amigos! 🎸</p>
-      </div>
-    `;
-
-    const style = document.createElement('style');
-    style.textContent = `
-      #cbjrShareResultModal {
-        position:fixed;inset:0;z-index:99999;
-        display:flex;align-items:center;justify-content:center;
-        padding:18px;background:rgba(0,0,0,.88);
-        backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-        animation:csrmFadeIn .25s ease;
+    // 2) Compartilhamento nativo só com texto
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, text, url });
+        return true;
+      } catch (e) {
+        if (e && e.name === 'AbortError') return false;
       }
-      @keyframes csrmFadeIn{from{opacity:0}to{opacity:1}}
-      .csrm-box{
-        width:min(400px,100%);border:1px solid rgba(241,196,15,.45);border-radius:28px;
-        background:radial-gradient(circle at 50% 0%,rgba(241,196,15,.16),transparent 48%),rgba(5,5,5,.97);
-        box-shadow:0 30px 80px rgba(0,0,0,.85);padding:20px;position:relative;text-align:center;
-        animation:csrmSlideUp .28s ease;font-family:Inter,Arial,sans-serif;color:#fff;
-      }
-      @keyframes csrmSlideUp{from{transform:translateY(20px) scale(.97);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
-      .csrm-close{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;cursor:pointer;font-size:1rem;display:grid;place-items:center;transition:.18s ease}
-      .csrm-close:hover{background:rgba(255,59,48,.18);border-color:rgba(255,59,48,.4)}
-      .csrm-title{font-family:'Elektrix',Arial,sans-serif;color:#f1c40f;font-size:1.6rem;margin:0 0 12px;text-shadow:0 0 16px rgba(241,196,15,.4)}
-      .csrm-canvas-wrap{display:flex;justify-content:center;margin-bottom:14px}
-      .csrm-canvas-wrap canvas{border-radius:14px;max-width:100%;height:auto;max-height:55vh;box-shadow:0 10px 36px rgba(0,0,0,.6),0 0 28px rgba(241,196,15,.1)}
-      .csrm-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-      .csrm-btn{min-height:46px;border-radius:14px;border:0;font-weight:950;font-size:.88rem;cursor:pointer;font-family:inherit;transition:.18s ease;display:flex;align-items:center;justify-content:center;gap:8px}
-      .csrm-btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
-      .csrm-download{background:linear-gradient(90deg,#f1c40f,#e6b800);color:#050505;box-shadow:0 8px 22px rgba(241,196,15,.28)}
-      .csrm-whatsapp{background:linear-gradient(90deg,#25D366,#1ead52);color:#fff;box-shadow:0 8px 22px rgba(37,211,102,.25)}
-      .csrm-tip{margin:12px 0 0;font-size:.74rem;color:rgba(255,255,255,.45);font-weight:850;line-height:1.5}
-    `;
-    document.head.appendChild(style);
-    document.body.appendChild(modal);
-    modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+    }
 
-    // Insere canvas no modal
-    const wrap = modal.querySelector('.csrm-canvas-wrap');
-    wrap.appendChild(canvas);
+    // 3) Copia o texto
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      try {
+        await navigator.clipboard.writeText(fullText);
+        showShareToast('📋 Texto copiado! Cola no WhatsApp, Instagram ou onde quiser.');
+        return true;
+      } catch (e) { /* segue pro último fallback */ }
+    }
 
-    // Botão download
-    modal.querySelector('#csrmDownload').onclick = () => {
-      const link = document.createElement('a');
-      link.download = 'resultado-cbjr.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-    };
-
-    // Botão WhatsApp
-    modal.querySelector('#csrmWhatsApp').onclick = () => {
-      window.open(`https://wa.me/?text=${encodeURIComponent(whatsappText)}`, '_blank');
-    };
+    // 4) Último recurso: abre WhatsApp Web com o texto pronto
+    window.open(`https://wa.me/?text=${encodeURIComponent(fullText)}`, '_blank');
+    return true;
   }
 
-  // ── API PÚBLICA ──────────────────────────────────────────────
-  window.CBJRShareResult = {
+  function quiz({ levelName, levelNumber, difficulty, score, hits, total }) {
+    const pct = total ? Math.round((hits / total) * 100) : 0;
+    const diffLabel = { facil: 'Fácil', normal: 'Normal', dificil: 'Difícil' }[difficulty] || difficulty || '';
+    return share({
+      title: 'Quiz CBJR',
+      text: `🎸 Acabei de jogar o Quiz do Charlie Brown Jr.! Nível "${levelName}" (${diffLabel}) com ${pct}% de acerto e ${score} pts. Será que você conhece mais da banda do que eu? Bora testar:`,
+      url: `${SITE_BASE}quiz.html`,
+      cardData: {
+        kicker: 'Quiz CBJR',
+        title: levelName || `Nível ${levelNumber}`,
+        subtitle: diffLabel,
+        pct,
+        statLine: `${hits}/${total} acertos • ${score} pts`,
+        coverUrl: null
+      }
+    });
+  }
 
-    radio: function({ albumName, albumYear, correct, total, coverUrl }) {
-      const pct = Math.round((correct / total) * 100);
-      const canvas = drawCard({
-        mode: 'radio', coverUrl,
-        title: albumName,
-        subtitle: `${albumYear} · Modo Rádio`,
-        score: `${correct}/${total}`,
-        scoreLabel: 'faixas acertadas',
-        detail: `Acertei ${correct} de ${total} faixas do CD "${albumName}" na Rádio CBJR!`,
-        accentColor: 'rgba(241,196,15,1)',
-        accentGlow: 'rgba(241,196,15,0.28)',
-      });
-      const whatsapp = `🎵 Acertei ${correct}/${total} faixas do CD "${albumName}" na Rádio CBJR!\n\nVocê consegue superar? 👉 ${SITE_URL}`;
-      setTimeout(() => showShareModal(canvas, whatsapp), 100);
-    },
+  function radio({ albumName, albumYear, correct, total, coverUrl }) {
+    const pct = total ? Math.round((correct / total) * 100) : 0;
+    return share({
+      title: 'Rádio CBJR',
+      text: `📻 Toquei "${albumName}" na Rádio CBJR e acertei ${pct}% das faixas! Será que você reconhece as músicas do Charlie Brown Jr. de ouvido? Bora testar:`,
+      url: `${SITE_BASE}radio.html`,
+      cardData: {
+        kicker: 'Rádio CBJR',
+        title: albumName || '',
+        subtitle: albumYear ? String(albumYear) : '',
+        pct,
+        statLine: `${correct}/${total} faixas reconhecidas`,
+        coverUrl
+      }
+    });
+  }
 
-    letras: function({ albumName, correct, total, coverUrl }) {
-      const pct = Math.round((correct / total) * 100);
-      const canvas = drawCard({
-        mode: 'letras', coverUrl,
-        title: albumName,
-        subtitle: 'Modo Letras',
-        score: `${pct}%`,
-        scoreLabel: 'de acerto',
-        detail: `Completei o álbum "${albumName}" com ${correct} acertos em ${total} trechos!`,
-        accentColor: 'rgba(30,215,96,1)',
-        accentGlow: 'rgba(30,215,96,0.25)',
-      });
-      const whatsapp = `✍️ Completei "${albumName}" com ${pct}% de acerto no Modo Letras CBJR!\n\nVocê consegue superar? 👉 ${SITE_URL}`;
-      setTimeout(() => showShareModal(canvas, whatsapp), 100);
-    },
+  function letras({ albumName, correct, total, coverUrl }) {
+    const pct = total ? Math.round((correct / total) * 100) : 0;
+    return share({
+      title: 'Modo Letras CBJR',
+      text: `✍️ Completei "${albumName}" no Modo Letras e acertei ${pct}% das frases do Charlie Brown Jr.! Será que você lembra as letras melhor do que eu? Bora testar:`,
+      url: `${SITE_BASE}letras.html`,
+      cardData: {
+        kicker: 'Modo Letras',
+        title: albumName || '',
+        subtitle: '',
+        pct,
+        statLine: `${correct}/${total} frases certas`,
+        coverUrl
+      }
+    });
+  }
 
-    quiz: function({ levelName, levelNumber, difficulty, score, hits, total }) {
-      const diffLabel = { facil: 'Fácil', normal: 'Normal', dificil: 'Difícil' }[difficulty] || 'Normal';
-      const pct = total ? Math.round((hits / total) * 100) : 0;
-      const canvas = drawCard({
-        mode: 'quiz', coverUrl: null,
-        title: `Nível ${levelNumber} — ${levelName}`,
-        subtitle: `Modo ${diffLabel} · Quiz CBJR`,
-        score: `${pct}%`,
-        scoreLabel: 'de aproveitamento',
-        detail: `Passei o Nível ${levelNumber} "${levelName}" no Quiz CBJR com ${hits}/${total} acertos!`,
-        accentColor: 'rgba(100,149,237,1)',
-        accentGlow: 'rgba(100,149,237,0.25)',
-      });
-      const whatsapp = `🎸 Passei o Nível ${levelNumber} "${levelName}" no Quiz CBJR!\nAproveitamento: ${pct}% (${hits}/${total} acertos) · Modo ${diffLabel}\n\nVocê consegue superar? 👉 ${SITE_URL}`;
-      setTimeout(() => showShareModal(canvas, whatsapp), 100);
-    },
-  };
+  return { quiz, radio, letras, share, showShareToast };
 })();
