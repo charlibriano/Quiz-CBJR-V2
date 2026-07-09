@@ -5289,10 +5289,28 @@ async function refreshOnlineRankingPreview() {
   }
 }
 
+// Espera até ~4s pelo Firebase Auth confirmar o login, em vez de desistir
+// na hora — evita falso "Faça login" quando a confirmação só demora um pouco.
+function waitForAuthUser(timeoutMs = 4000) {
+  return new Promise(resolve => {
+    if (window.CBJR_AUTH_USER) { resolve(window.CBJR_AUTH_USER); return; }
+    const start = Date.now();
+    const check = setInterval(() => {
+      if (window.CBJR_AUTH_USER) {
+        clearInterval(check);
+        resolve(window.CBJR_AUTH_USER);
+      } else if (Date.now() - start > timeoutMs) {
+        clearInterval(check);
+        resolve(null);
+      }
+    }, 250);
+  });
+}
+
 async function submitRadioScoreAuto(hitCount = correct, missCount = wrong, total = currentAlbum?.tracks?.length || 1) {
   const status = document.getElementById('onlineRankingStatus');
-  const user = window.CBJR_AUTH_USER;
   const guestMode = window.CBJR_GUEST?.isGuest() && !window.CBJR_GUEST?.isLoggedIn();
+  const user = await waitForAuthUser();
 
   if (!user || guestMode) {
     if (status) status.textContent = 'Faça login para entrar no ranking online.';
