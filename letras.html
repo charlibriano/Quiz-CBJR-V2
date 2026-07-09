@@ -4555,7 +4555,7 @@ const cbjrFeedback = {
       // ── Mural de atividades ──
       if (completedAlbumNormal) {
         const _albumName = lettersMode.albumMap[lettersMode.currentAlbumId]?.name || '';
-        window.dispatchEvent(new CustomEvent('cbjr-letras-album-complete', { detail: { albumName: _albumName } }));
+        window.dispatchEvent(new CustomEvent('cbjr-letras-album-complete', { detail: { albumId: lettersMode.currentAlbumId, albumName: _albumName } }));
       }
 
       const completed = getCompletedAlbums();
