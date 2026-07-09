@@ -169,6 +169,14 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle
     <button class="reset-open-btn" type="button" id="resetOpenBtn">🗑️ Reiniciar progresso</button>
   </section>
 
+  <section class="reset-section" id="adminCleanupSection" style="display:none;margin-top:14px;border-color:rgba(255,140,0,.35)">
+    <div class="section-head">
+      <h2>🧹 Limpeza Admin</h2>
+      <p class="muted" style="font-size:.82rem;font-weight:900;margin:0">Apaga do ranking online as pontuações antigas que não têm conta Google vinculada (testes de antes do login obrigatório). Ação permanente e afeta TODO o ranking, não só a sua conta.</p>
+    </div>
+    <button class="reset-open-btn" type="button" id="adminCleanupBtn" style="background:linear-gradient(90deg,#ff8c00,#e67300)">🧹 Apagar entradas antigas sem login</button>
+  </section>
+
 </div>
 
 <!-- Reset Modal com checkboxes -->
@@ -535,6 +543,55 @@ function getSelectedModes() {
   });
 }
 
+async function runAdminRankingCleanup() {
+  if (!resetCurrentUser) return;
+  if (!isAdminUser(resetCurrentUser)) {
+    console.warn('[Admin Cleanup] Acesso negado — conta sem permissão de admin.');
+    return;
+  }
+
+  const sure = confirm(
+    'Isso vai apagar PERMANENTEMENTE do Firestore todas as pontuações do ranking que não têm conta Google vinculada (testes antigos, sem uid).\n\n' +
+    'Essa ação afeta o ranking inteiro (não só a sua conta) e não pode ser desfeita.\n\nTem certeza que quer continuar?'
+  );
+  if (!sure) return;
+
+  const btn = $('adminCleanupBtn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Apagando...'; }
+
+  try {
+    const { collection: fsCollection, getDocs: fsGetDocs, deleteDoc: fsDelete } =
+      await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+
+    const snap = await fsGetDocs(fsCollection(db, 'ranking'));
+    const legacyDocs = snap.docs.filter(d => !(d.data() || {}).uid);
+
+    if (!legacyDocs.length) {
+      showToast('✅ Nenhuma entrada antiga sem login encontrada.');
+      if (btn) { btn.disabled = false; btn.textContent = '🧹 Apagar entradas antigas sem login'; }
+      return;
+    }
+
+    const results = await Promise.all(legacyDocs.map(d =>
+      fsDelete(d.ref).then(() => ({ ok: true })).catch(e => ({ ok: false, id: d.id, reason: e.message }))
+    ));
+    const deleted = results.filter(r => r.ok).length;
+    const failed = results.filter(r => !r.ok);
+
+    if (failed.length) {
+      console.warn('[Admin Cleanup] Falhas:', failed);
+      showToast(`⚠️ ${deleted}/${legacyDocs.length} apagadas. ${failed.length} falharam (${failed[0].reason}). Veja o console.`);
+    } else {
+      showToast(`✅ ${deleted} entrada(s) antiga(s) apagada(s) do ranking!`);
+    }
+  } catch(e) {
+    console.warn('[Admin Cleanup] Erro:', e.message);
+    showToast('⚠️ Erro ao limpar ranking. Veja o console.');
+  }
+
+  if (btn) { btn.disabled = false; btn.textContent = '🧹 Apagar entradas antigas sem login'; }
+}
+
 async function executeReset() {
   const modes = getSelectedModes();
   if (!modes.length) return;
@@ -636,6 +693,7 @@ async function executeReset() {
 document.addEventListener('DOMContentLoaded', () => {
   // Abre modal
   $('resetOpenBtn')?.addEventListener('click', openResetModal);
+  $('adminCleanupBtn')?.addEventListener('click', runAdminRankingCleanup);
   $('resetCancelBtn')?.addEventListener('click', closeResetModal);
   $('resetModalBg')?.addEventListener('click', e => { if (e.target === $('resetModalBg')) closeResetModal(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeResetModal(); });
@@ -672,6 +730,14 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 // ── /REINICIAR PROGRESSO ─────────────────────────────────────────
 
+// E-mails com acesso à Limpeza Admin (apague/edite conforme necessário).
+// Checado tanto para mostrar o botão quanto dentro da própria função,
+// pra não depender só de esconder na tela.
+const ADMIN_EMAILS = ['feliper.palhares@gmail.com'];
+function isAdminUser(user) {
+  return !!user?.email && ADMIN_EMAILS.includes(user.email.toLowerCase());
+}
+
 // Modo próprio — executa sempre que não for perfil público
 if (!PUBLIC_UID && !PUBLIC_NAME) {
   $('logoutBtn').addEventListener('click', async () => { await signOut(auth); location.href = 'index.html'; });
@@ -679,6 +745,8 @@ if (!PUBLIC_UID && !PUBLIC_NAME) {
     if (!user) { location.href = 'index.html'; return; }
     const resetSec = $('resetSection');
     if (resetSec) resetSec.style.display = '';
+    const adminSec = $('adminCleanupSection');
+    if (adminSec) adminSec.style.display = isAdminUser(user) ? '' : 'none';
     resetCurrentUser = user;
     renderUser(user);
     await loadCloud(user);
