@@ -4236,35 +4236,14 @@ const cbjrFeedback = {
       el.style.color = isError ? '#ff6b64' : 'rgba(255,255,255,.72)';
     }
 
-    // Espera até ~4s pelo Firebase Auth confirmar o login, em vez de desistir
-    // na hora — evita falso "Faça login" quando a confirmação só demora um pouco.
-    function waitForAuthUser(timeoutMs = 4000) {
-      return new Promise(resolve => {
-        if (window.CBJR_AUTH_USER) { resolve(window.CBJR_AUTH_USER); return; }
-        const start = Date.now();
-        const check = setInterval(() => {
-          if (window.CBJR_AUTH_USER) {
-            clearInterval(check);
-            resolve(window.CBJR_AUTH_USER);
-          } else if (Date.now() - start > timeoutMs) {
-            clearInterval(check);
-            resolve(null);
-          }
-        }, 250);
-      });
-    }
-
     async function submitLettersScoreAuto(completedAlbum) {
-      const status = document.getElementById('lettersRankingStatus');
       const guestMode = window.CBJR_GUEST?.isGuest() && !window.CBJR_GUEST?.isLoggedIn();
-      const user = await waitForAuthUser();
-
-      if (!user || guestMode) {
+      if (guestMode) {
         setLettersRankingStatus('Faça login para entrar no ranking online.');
         return;
       }
 
-      const payload = buildLettersRankingPayload(user.displayName || 'Fã CBJR', completedAlbum);
+      const payload = buildLettersRankingPayload('Fã CBJR', completedAlbum);
       const localKey = 'lettersCBJR_bestOnlineScore';
       const prevBest = Number(localStorage.getItem(localKey) || 0);
 
@@ -4276,6 +4255,10 @@ const cbjrFeedback = {
 
       setLettersRankingStatus('Enviando pontuação para o ranking online...');
 
+      // Espera o módulo de progresso na nuvem ficar pronto — é o mesmo
+      // mecanismo que já autentica de forma confiável (usado pra salvar o
+      // progresso), em vez de depender de uma variável separada que pode
+      // não estar sincronizada ainda.
       let attempts = 0;
       const poll = setInterval(async () => {
         attempts++;
@@ -4290,7 +4273,7 @@ const cbjrFeedback = {
             return;
           }
 
-          const ok = await progress.submitRanking({ ...payload, photoURL: user.photoURL || '' });
+          const ok = await progress.submitRanking(payload);
           if (ok) {
             localStorage.setItem(localKey, String(payload.score));
             lastLettersRankingPayload = payload;
