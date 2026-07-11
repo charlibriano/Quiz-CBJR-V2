@@ -5639,15 +5639,20 @@
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
   import { getFirestore, doc, getDoc, setDoc, serverTimestamp, collection, getDocs, increment, runTransaction, query, where } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
+  // CORREÇÃO CBJR: config unificada com o restante do site. A config antiga
+  // usava outra apiKey/appId; hoje ela é ignorada porque o script de presença
+  // online inicializa o app primeiro (com a config canônica), mas qualquer
+  // mudança na ordem dos scripts faria o login gravar a sessão sob outra
+  // apiKey — o mesmo bug que quebrava o ranking do Modo Letras.
   const firebaseConfig = {
-    apiKey: 'AIzaSyDtb8jvVd0lMRy96QfqfjAg1dBReRIoRg4',
+    apiKey: 'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
     authDomain: 'ranking-cbjr.firebaseapp.com',
     databaseURL: 'https://ranking-cbjr-default-rtdb.firebaseio.com',
     projectId: 'ranking-cbjr',
     storageBucket: 'ranking-cbjr.firebasestorage.app',
     messagingSenderId: '681180179118',
-    appId: '1:681180179118:web:3ac202c9f7ed69cf94db3f',
-    measurementId: 'G-ZXMNGH3TVG'
+    appId: '1:681180179118:web:fe10833848e8bb8194db3f',
+    measurementId: 'G-QK5QE2Y1CC'
   };
 
   const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
