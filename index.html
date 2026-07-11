@@ -4478,6 +4478,85 @@
     }
 </style>
 
+  <style id="cbjr-mode-glow-style">
+    /* ── CBJR DESTAQUE DOS MODOS: brilho pulsante na cor de cada modo ──
+       Objetivo: atrair o olhar do jogador para os outros módulos além do Quiz.
+       Tudo aditivo: só pseudo-elementos e classes novas, nada existente muda. */
+    .mode-card { position: relative; }
+
+    .mode-card::after,
+    .channel::after {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      pointer-events: none;
+      opacity: .1;
+      animation: cbjrGlowPulse 3.6s ease-in-out infinite;
+    }
+    /* Cards mobile: aura externa na cor do modo */
+    .mode-card::after {
+      border: 1px solid color-mix(in srgb, var(--mc-color, var(--yellow)) 70%, transparent);
+      box-shadow:
+        0 0 14px color-mix(in srgb, var(--mc-color, var(--yellow)) 60%, transparent),
+        0 0 34px color-mix(in srgb, var(--mc-color, var(--yellow)) 30%, transparent);
+    }
+    /* Canais desktop (overflow hidden): brilho interno + borda na cor do canal */
+    .channel::after {
+      border: 1px solid color-mix(in srgb, var(--accent, var(--yellow)) 70%, transparent);
+      box-shadow:
+        inset 0 0 26px color-mix(in srgb, var(--accent, var(--yellow)) 28%, transparent),
+        inset 0 -2px 14px color-mix(in srgb, var(--accent, var(--yellow)) 20%, transparent);
+    }
+
+    /* Onda de luz: cada modo pulsa um pouco depois do anterior */
+    .mode-cards .mode-card:nth-child(1)::after, .channels .channel:nth-child(1)::after { animation-delay: 0s; }
+    .mode-cards .mode-card:nth-child(2)::after, .channels .channel:nth-child(2)::after { animation-delay: .5s; }
+    .mode-cards .mode-card:nth-child(3)::after, .channels .channel:nth-child(3)::after { animation-delay: 1s; }
+    .mode-cards .mode-card:nth-child(4)::after, .channels .channel:nth-child(4)::after { animation-delay: 1.5s; }
+    .mode-cards .mode-card:nth-child(5)::after, .channels .channel:nth-child(5)::after { animation-delay: 2s; }
+    .mode-cards .mode-card:nth-child(6)::after, .channels .channel:nth-child(6)::after { animation-delay: 2.5s; }
+
+    /* No hover, o pulso sai de cena e o destaque de hover original assume */
+    .mode-card:hover::after, .mode-card:active::after,
+    .channel:hover::after { animation: none; opacity: 0; }
+
+    /* Selo "Experimente!" nos modos menos jogados (cards mobile) */
+    .mode-try-badge {
+      position: absolute;
+      top: -9px;
+      right: 10px;
+      z-index: 2;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--mc-color, var(--yellow)), color-mix(in srgb, var(--mc-color, var(--yellow)) 55%, #fff));
+      color: #050505;
+      font-size: .6rem;
+      font-weight: 1000;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      box-shadow: 0 4px 14px color-mix(in srgb, var(--mc-color, var(--yellow)) 45%, transparent);
+      animation: cbjrBadgeBounce 2.4s ease-in-out infinite;
+    }
+
+    /* Canais em destaque no desktop: LED aceso piscando na cor do canal
+       + pulso de brilho mais vivo (tema de mesa de som: canal "no ar") */
+    .channel-destaque .led {
+      background: var(--accent, var(--yellow));
+      box-shadow: 0 0 10px var(--accent, var(--yellow));
+      animation: cbjrLedBlink 1.6s ease-in-out infinite;
+    }
+    .channel-destaque::after { animation-duration: 2.4s; }
+
+    @keyframes cbjrGlowPulse { 0%, 100% { opacity: .1; } 50% { opacity: 1; } }
+    @keyframes cbjrBadgeBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+    @keyframes cbjrLedBlink { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .mode-card::after, .channel::after, .mode-try-badge, .channel-destaque .led { animation: none !important; }
+      .mode-card::after, .channel::after { opacity: .45; }
+    }
+  </style>
 </head>
 
 <body class="auth-loading">
@@ -4720,11 +4799,13 @@
           <div class="mode-card-tag">Perguntas e respostas</div>
         </a>
         <a class="mode-card" href="radio.html" style="--mc-color: var(--green)" data-tone="196.00">
+          <span class="mode-try-badge">Experimente!</span>
           <div class="mode-card-icon">📻</div>
           <div class="mode-card-name">Rádio CBJR</div>
           <div class="mode-card-tag">Descubra músicas</div>
         </a>
         <a class="mode-card" href="letras.html" style="--mc-color: var(--red)" data-tone="220.00">
+          <span class="mode-try-badge">Experimente!</span>
           <div class="mode-card-icon">🎵</div>
           <div class="mode-card-name">Modo Letras</div>
           <div class="mode-card-tag">Complete as letras</div>
@@ -4763,7 +4844,7 @@
             </div>
             <div class="ch-footer"><span class="tag">Principal</span><span>Abrir →</span></div>
           </a>
-          <a class="channel" style="--accent: var(--green)" href="radio.html" data-tone="196.00">
+          <a class="channel channel-destaque" style="--accent: var(--green)" href="radio.html" data-tone="196.00">
             <div class="ch-top"><span>CH 02</span><span class="led" title="Ligar canal"></span></div>
             <div class="knobs"><span></span><span></span><span></span></div>
             <div class="ch-label">INPUT • MIX • TIME</div>
@@ -4774,7 +4855,7 @@
             </div>
             <div class="ch-footer"><span class="tag">Musical</span><span>Abrir →</span></div>
           </a>
-          <a class="channel" style="--accent: var(--red)" href="letras.html" data-tone="220.00">
+          <a class="channel channel-destaque" style="--accent: var(--red)" href="letras.html" data-tone="220.00">
             <div class="ch-top"><span>CH 03</span><span class="led" title="Ligar canal"></span></div>
             <div class="knobs"><span></span><span></span><span></span></div>
             <div class="ch-label">VOCAL • TONE • SPACE</div>
