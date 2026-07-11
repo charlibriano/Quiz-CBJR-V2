@@ -5320,14 +5320,12 @@ async function submitRadioScoreAuto(hitCount = correct, missCount = wrong, total
 
   const payload = buildRadioRankingPayload(user.displayName || 'Ouvinte CBJR', hitCount, missCount, total);
   const localKey = 'radioCBJR_bestOnlineScore';
-  const prevBest = Number(localStorage.getItem(localKey) || 0);
 
-  if (payload.score <= prevBest) {
-    if (status) status.textContent = `Seu recorde no ranking online continua ${prevBest} pts.`;
-    lastRadioRankingPayload = { ...payload, score: prevBest };
-    await refreshOnlineRankingPreview();
-    return;
-  }
+  // CORREÇÃO CBJR: o bloqueio antigo pelo recorde salvo no navegador foi
+  // removido — ele impedia o envio de chegar ao Firestore quando o cache
+  // local tinha um valor antigo/alto (deixando o ranking da Rádio em branco).
+  // Agora o envio sempre acontece e é o submitRanking que compara com o
+  // recorde REAL online, mantendo o maior.
 
   if (status) status.textContent = 'Enviando pontuação para o ranking online...';
 
@@ -5347,9 +5345,17 @@ async function submitRadioScoreAuto(hitCount = correct, missCount = wrong, total
 
       const ok = await progress.submitRanking({ ...payload, photoURL: user.photoURL || '' });
       if (ok) {
-        localStorage.setItem(localKey, String(payload.score));
-        lastRadioRankingPayload = payload;
-        if (status) status.textContent = `Pontuação enviada: ${payload.score} pts. Tamo aí na atividade!`;
+        const kept = progress.lastRankingKept;
+        if (kept != null) {
+          // O recorde online é maior — mantido no servidor.
+          localStorage.setItem(localKey, String(kept));
+          lastRadioRankingPayload = { ...payload, score: kept };
+          if (status) status.textContent = `Seu recorde no ranking online continua ${kept} pts.`;
+        } else {
+          localStorage.setItem(localKey, String(payload.score));
+          lastRadioRankingPayload = payload;
+          if (status) status.textContent = `Pontuação enviada: ${payload.score} pts. Tamo aí na atividade!`;
+        }
         await refreshOnlineRankingPreview();
       } else {
         // CORREÇÃO CBJR: mostra o motivo real na tela (sem precisar de console).
@@ -6332,6 +6338,7 @@ renderAlbums();
     save: saveCloudProgressNow,
     getLocal: readLocalProgress,
     submitRanking: async (payload) => {
+      window.CBJRCloudProgress.lastRankingKept = null;
       try {
         // CORREÇÃO CBJR: espera o Auth resolver a sessão (máx. 8s) antes de
         // decidir que não há usuário — antes falhava se o Auth ainda não
@@ -6346,7 +6353,25 @@ renderAlbums();
         // Um único registro de ranking por jogador no Rádio (a melhor pontuação,
         // Normal ou Hard). ID fixo => reenviar ATUALIZA em vez de duplicar.
         const docId = `${user.uid}_radio`;
-        await setDoc(doc(db, 'ranking', docId), {
+        const rankingDocRef = doc(db, 'ranking', docId);
+
+        // CORREÇÃO CBJR: compara com o recorde REAL no Firestore, não com o
+        // cache local do navegador. Isso garante que o primeiro envio sempre
+        // acontece e impede que uma partida pior sobrescreva o recorde online
+        // (o setDoc substitui o documento inteiro).
+        try {
+          const existing = await getDoc(rankingDocRef);
+          if (existing.exists()) {
+            const onlineScore = Number(existing.data()?.score || 0);
+            if (onlineScore >= Number(payload.score || 0)) {
+              window.CBJRCloudProgress.lastRankingError = '';
+              window.CBJRCloudProgress.lastRankingKept = onlineScore;
+              return true; // recorde online mantido — nada a gravar
+            }
+          }
+        } catch (_) { /* se a leitura falhar, segue para gravar mesmo assim */ }
+
+        await setDoc(rankingDocRef, {
           ...payload,
           uid:      user.uid,
           name:     user.displayName || payload.name || 'Jogador CBJR',
