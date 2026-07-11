@@ -988,14 +988,17 @@ loadLocal();cleanStalePresence();startRealtime();setupOnlinePresence();
   import { getFirestore, doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
   const firebaseConfig = {
-    apiKey: 'AIzaSyDtb8jvVd0lMRy96QfqfjAg1dBReRIoRg4',
+    // CORREÇÃO CBJR: config unificada com o restante do site (a antiga usava
+    // outra apiKey/appId e podia quebrar a sessão Google conforme a ordem
+    // de carregamento dos scripts).
+    apiKey: 'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
     authDomain: 'ranking-cbjr.firebaseapp.com',
     databaseURL: 'https://ranking-cbjr-default-rtdb.firebaseio.com',
     projectId: 'ranking-cbjr',
     storageBucket: 'ranking-cbjr.firebasestorage.app',
     messagingSenderId: '681180179118',
-    appId: '1:681180179118:web:3ac202c9f7ed69cf94db3f',
-    measurementId: 'G-ZXMNGH3TVG'
+    appId: '1:681180179118:web:fe10833848e8bb8194db3f',
+    measurementId: 'G-QK5QE2Y1CC'
   };
   const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -1439,5 +1442,6 @@ window.CBJRActivity = { publish: publishActivity };
 </script>
 <!-- ── FIM MURAL DE ATIVIDADES ─────────────────────────── -->
 
+<script src="./descoberta.js" defer></script>
 </body>
 </html>
