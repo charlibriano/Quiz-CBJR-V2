@@ -826,14 +826,17 @@ render();
   import { getFirestore, doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
   const firebaseConfig = {
-    apiKey: 'AIzaSyDtb8jvVd0lMRy96QfqfjAg1dBReRIoRg4',
+    // CORREÇÃO CBJR: config unificada com o restante do site. A config antiga
+    // usava outra apiKey/appId e era a primeira a inicializar o app nesta
+    // página — o Auth não encontrava a sessão Google do jogador.
+    apiKey: 'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
     authDomain: 'ranking-cbjr.firebaseapp.com',
     databaseURL: 'https://ranking-cbjr-default-rtdb.firebaseio.com',
     projectId: 'ranking-cbjr',
     storageBucket: 'ranking-cbjr.firebasestorage.app',
     messagingSenderId: '681180179118',
-    appId: '1:681180179118:web:3ac202c9f7ed69cf94db3f',
-    measurementId: 'G-ZXMNGH3TVG'
+    appId: '1:681180179118:web:fe10833848e8bb8194db3f',
+    measurementId: 'G-QK5QE2Y1CC'
   };
   const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -1088,5 +1091,6 @@ render();
 </script>
 
 <script type="module" src="./notificacoes.js"></script>
+<script src="./descoberta.js" defer></script>
 </body>
 </html>
