@@ -5352,7 +5352,13 @@ async function submitRadioScoreAuto(hitCount = correct, missCount = wrong, total
         if (status) status.textContent = `Pontuação enviada: ${payload.score} pts. Tamo aí na atividade!`;
         await refreshOnlineRankingPreview();
       } else {
-        if (status) status.textContent = 'Erro ao enviar pontuação online.';
+        // CORREÇÃO CBJR: mostra o motivo real na tela (sem precisar de console).
+        const motivo = progress.lastRankingError || '';
+        if (status) {
+          status.textContent = motivo === 'sem-login'
+            ? 'Faça login com o Google para entrar no ranking online.'
+            : `Erro ao enviar pontuação online${motivo ? ' (' + motivo + ')' : ''}.`;
+        }
       }
     }
   }, 500);
@@ -6093,15 +6099,19 @@ renderAlbums();
   import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
   import { getFirestore, doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
+  // CORREÇÃO CBJR: config unificada — a mesma do Cloud Progress e do restante
+  // do site. A config antiga usava outra apiKey/appId e, como este script era
+  // o primeiro a inicializar o app na página, o Firebase Auth não encontrava a
+  // sessão Google do jogador (a sessão é salva indexada pela apiKey).
   const firebaseConfig = {
-    apiKey: 'AIzaSyDtb8jvVd0lMRy96QfqfjAg1dBReRIoRg4',
+    apiKey: 'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
     authDomain: 'ranking-cbjr.firebaseapp.com',
     databaseURL: 'https://ranking-cbjr-default-rtdb.firebaseio.com',
     projectId: 'ranking-cbjr',
     storageBucket: 'ranking-cbjr.firebasestorage.app',
     messagingSenderId: '681180179118',
-    appId: '1:681180179118:web:3ac202c9f7ed69cf94db3f',
-    measurementId: 'G-ZXMNGH3TVG'
+    appId: '1:681180179118:web:fe10833848e8bb8194db3f',
+    measurementId: 'G-QK5QE2Y1CC'
   };
   const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -6206,6 +6216,12 @@ renderAlbums();
   let cloudReady = false;
   let syncing = false;
   let saveTimer = null;
+
+  // CORREÇÃO CBJR: promessa que resolve quando o Firebase Auth emite o primeiro
+  // estado (logado ou não). O submitRanking espera por ela antes de decidir que
+  // "não há usuário" — evita falha quando o fim do CD chega antes do Auth.
+  let resolveAuthSettled;
+  const authSettled = new Promise(res => { resolveAuthSettled = res; });
 
   function safeJsonParse(value, fallback) {
     try { return JSON.parse(value); } catch (_) { return fallback; }
@@ -6316,20 +6332,35 @@ renderAlbums();
     save: saveCloudProgressNow,
     getLocal: readLocalProgress,
     submitRanking: async (payload) => {
-      if (!currentUser) { console.warn('[Radio Ranking] sem usuário logado'); return false; }
       try {
+        // CORREÇÃO CBJR: espera o Auth resolver a sessão (máx. 8s) antes de
+        // decidir que não há usuário — antes falhava se o Auth ainda não
+        // tivesse emitido o estado quando o CD terminava.
+        await Promise.race([authSettled, new Promise(res => setTimeout(res, 8000))]);
+        const user = currentUser || auth.currentUser;
+        if (!user) {
+          window.CBJRCloudProgress.lastRankingError = 'sem-login';
+          console.warn('[Radio Ranking] sem usuário logado');
+          return false;
+        }
         // Um único registro de ranking por jogador no Rádio (a melhor pontuação,
         // Normal ou Hard). ID fixo => reenviar ATUALIZA em vez de duplicar.
-        const docId = `${currentUser.uid}_radio`;
+        const docId = `${user.uid}_radio`;
         await setDoc(doc(db, 'ranking', docId), {
           ...payload,
-          uid:      currentUser.uid,
-          name:     currentUser.displayName || payload.name || 'Jogador CBJR',
-          photoURL: currentUser.photoURL    || payload.photoURL || '',
+          uid:      user.uid,
+          name:     user.displayName || payload.name || 'Jogador CBJR',
+          photoURL: user.photoURL    || payload.photoURL || '',
           createdAt: serverTimestamp()
         });
+        window.CBJRCloudProgress.lastRankingError = '';
         return true;
-      } catch(e) { console.warn('[Radio Ranking] erro:', e.message); return false; }
+      } catch(e) {
+        // Guarda o motivo real para ser exibido na tela (sem depender do console).
+        window.CBJRCloudProgress.lastRankingError = e?.code || e?.message || 'erro-desconhecido';
+        console.warn('[Radio Ranking] erro:', e);
+        return false;
+      }
     }
   };
 
@@ -6355,6 +6386,7 @@ renderAlbums();
 
   onAuthStateChanged(auth, user => {
     currentUser = user || null;
+    if (resolveAuthSettled) { resolveAuthSettled(); resolveAuthSettled = null; }
     if (user) loadCloudProgress(user);
   });
 
