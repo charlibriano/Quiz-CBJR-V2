@@ -410,6 +410,34 @@
           <span class="live-pulse"></span> AO VIVO
         </div>
       </div>
+      <!-- CBJR FILTROS DO MURAL: separa as atividades por categoria -->
+      <style id="cbjr-activity-filter-style">
+        .activity-filters{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 14px;}
+        .activity-filter-chip{
+          border:1px solid rgba(255,255,255,.14);border-radius:999px;
+          background:rgba(255,255,255,.05);color:rgba(255,255,255,.75);
+          font-family:inherit;font-size:.74rem;font-weight:900;letter-spacing:.02em;
+          padding:7px 13px;cursor:pointer;
+          transition:border-color .2s ease,background .2s ease,color .2s ease,transform .2s ease;
+        }
+        .activity-filter-chip:hover{border-color:rgba(241,196,15,.45);color:#fff;transform:translateY(-1px);}
+        .activity-filter-chip.active{
+          background:linear-gradient(90deg,rgba(241,196,15,.22),rgba(30,215,96,.16));
+          border-color:rgba(241,196,15,.65);color:#f1c40f;
+        }
+        @media(max-width:620px){
+          .activity-filters{gap:6px;overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px;-webkit-overflow-scrolling:touch;}
+          .activity-filter-chip{flex:none;font-size:.7rem;padding:6px 11px;}
+        }
+      </style>
+      <div class="activity-filters" id="activityFilters" role="tablist" aria-label="Filtrar atividades por categoria">
+        <button class="activity-filter-chip active" data-filter="all">⚡ Tudo</button>
+        <button class="activity-filter-chip" data-filter="quiz">🎸 Quiz</button>
+        <button class="activity-filter-chip" data-filter="radio">📻 Rádio</button>
+        <button class="activity-filter-chip" data-filter="letras">✍️ Letras</button>
+        <button class="activity-filter-chip" data-filter="conquistas">🏅 Conquistas</button>
+        <button class="activity-filter-chip" data-filter="chegadas">🏆 Chegadas</button>
+      </div>
       <div id="activityFeed" class="activity-feed">
         <div class="loading">Carregando atividades...</div>
       </div>
@@ -1338,7 +1366,11 @@ function renderActivity(activities) {
   if (!feed) return;
 
   if (!activities.length) {
-    feed.innerHTML = '<div class="empty">Nenhuma atividade ainda. Seja o primeiro a jogar! 🎸</div>';
+    // Mensagem de vazio conforme o filtro ativo
+    const label = FILTER_LABELS[activeFilter] || '';
+    feed.innerHTML = activeFilter === 'all'
+      ? '<div class="empty">Nenhuma atividade ainda. Seja o primeiro a jogar! 🎸</div>'
+      : `<div class="empty">Nenhuma atividade recente em ${label}. 🎸</div>`;
     return;
   }
 
@@ -1361,12 +1393,46 @@ function renderActivity(activities) {
       </div>
     `;
   }).join('');
+}
 
-  if (activities.length) {
-    latestTs = Math.max(...activities.map(a => a.ts || 0));
+// ── CBJR FILTROS: separa o mural por categoria (filtragem no cliente,
+// nenhuma leitura extra do Firestore) ──
+const FILTER_TYPES = {
+  all: null,
+  quiz: ['quiz'],
+  radio: ['radio'],
+  letras: ['letras'],
+  conquistas: ['conquista', 'desafio'],
+  chegadas: ['ranking']
+};
+const FILTER_LABELS = {
+  quiz: 'Quiz', radio: 'Rádio', letras: 'Letras',
+  conquistas: 'Conquistas', chegadas: 'Chegadas'
+};
+let allActivities = [];
+let activeFilter = 'all';
+
+function applyFilter() {
+  const types = FILTER_TYPES[activeFilter];
+  const list = types ? allActivities.filter(a => types.includes(a.type)) : allActivities;
+  renderActivity(list);
+  // latestTs/isFirstLoad calculados sobre a lista COMPLETA — trocar de
+  // filtro não marca itens antigos como "novos"
+  if (allActivities.length) {
+    latestTs = Math.max(...allActivities.map(a => a.ts || 0));
   }
   isFirstLoad = false;
 }
+
+document.getElementById('activityFilters')?.addEventListener('click', e => {
+  const chip = e.target.closest('.activity-filter-chip');
+  if (!chip) return;
+  activeFilter = chip.dataset.filter || 'all';
+  document.querySelectorAll('#activityFilters .activity-filter-chip').forEach(c =>
+    c.classList.toggle('active', c === chip)
+  );
+  applyFilter();
+});
 
 // ── Escutar atividades em tempo real ────────────────────
 const q = query(
@@ -1376,8 +1442,8 @@ const q = query(
 );
 
 onSnapshot(q, snap => {
-  const activities = snap.docs.map(d => ({ id: d.id, ...d.data(), ts: d.data().ts?.toMillis?.() || d.data().ts || 0 }));
-  renderActivity(activities);
+  allActivities = snap.docs.map(d => ({ id: d.id, ...d.data(), ts: d.data().ts?.toMillis?.() || d.data().ts || 0 }));
+  applyFilter();
 }, err => {
   console.warn('ActivityWall:', err);
   const feed = document.getElementById('activityFeed');
