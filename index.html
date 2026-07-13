@@ -6755,5 +6755,95 @@ function shareWhatsApp() {
 // ── FIM SHARE CARD ───────────────────────────────────────────
 </script>
 
+<script id="cbjr-dynamic-badges">
+/* ── CBJR SELOS DINÂMICOS ─────────────────────────────────────────
+   Faz os selos e LEDs da home reagirem ao progresso do jogador:
+   - Modo já jogado / página já visitada → selo some e LED apaga
+     (o convite perde o sentido depois que ele já foi aceito).
+   - Streak ativa → o banner do Desafio Diário troca o kicker por
+     "🔥 Dia N — não quebre a sequência!" ou "🔥 N dias seguidos!".
+   Fontes: progresso local dos modos, cbjr_descobertas_v1 (Explorador)
+   e cbjr_daily_streak_v1 (desafio.js). Tudo aditivo. */
+(function () {
+  'use strict';
+
+  function safeJson(value, fallback) {
+    try { return JSON.parse(value) ?? fallback; } catch (_) { return fallback; }
+  }
+
+  function getPlayedState() {
+    const desc   = safeJson(localStorage.getItem('cbjr_descobertas_v1') || '{}', {}) || {};
+    const letras = safeJson(localStorage.getItem('cbjr_letters_completed') || '[]', []);
+    return {
+      radio:      !!desc.radio_play  || Number(localStorage.getItem('radioCBJRUnlockedAlbumIndex_v2') || 0) > 0
+                                     || Number(localStorage.getItem('radioCBJR_bestOnlineScore') || 0) > 0,
+      letras:     !!desc.letras_play || (Array.isArray(letras) && letras.length > 0)
+                                     || Number(localStorage.getItem('lettersCBJR_bestOnlineScore') || 0) > 0,
+      conquistas: !!desc.conquistas,
+      ranking:    !!desc.ranking,
+      fans:       !!desc.fans
+    };
+  }
+
+  const HREF_TO_KEY = {
+    'radio.html': 'radio',
+    'letras.html': 'letras',
+    'conquistas.html': 'conquistas',
+    'ranking.html': 'ranking',
+    'fans.html': 'fans'
+  };
+
+  function applyBadges() {
+    const played = getPlayedState();
+    document.querySelectorAll('.mode-card, .channel').forEach(el => {
+      const href = (el.getAttribute('href') || '').replace('./', '');
+      const key = HREF_TO_KEY[href];
+      if (!key || !played[key]) return;
+      el.querySelector('.mode-try-badge')?.remove(); // convite já aceito
+      el.classList.remove('channel-destaque');        // LED apaga
+    });
+    updateDailyKicker();
+  }
+
+  function fmtDay(d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+
+  function updateDailyKicker() {
+    const streak = safeJson(localStorage.getItem('cbjr_daily_streak_v1') || '{}', {}) || {};
+    const current = Number(streak.current || 0);
+    if (current < 1) return;
+
+    const today = fmtDay(new Date());
+    const y = new Date(); y.setDate(y.getDate() - 1);
+    const yesterday = fmtDay(y);
+
+    let text = null;
+    if (streak.lastDay === today) {
+      text = '🔥 ' + current + (current > 1 ? ' dias seguidos!' : ' dia — sequência iniciada!');
+    } else if (streak.lastDay === yesterday) {
+      text = '🔥 Dia ' + (current + 1) + ' — não quebre a sequência!';
+    }
+    if (!text) return; // streak quebrada há mais de 1 dia → kicker padrão
+
+    // O banner do desafio.js é injetado de forma assíncrona — espera aparecer
+    let tries = 0;
+    const wait = setInterval(() => {
+      const kicker = document.querySelector('.cbjr-daily-banner .cbjr-daily-kicker');
+      if (kicker) { clearInterval(wait); kicker.textContent = text; }
+      else if (++tries > 40) clearInterval(wait);
+    }, 250);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyBadges);
+  } else {
+    applyBadges();
+  }
+  // Reaplica quando o progresso da nuvem terminar de sincronizar
+  // (jogador em aparelho novo: os selos somem assim que o histórico chega)
+  window.addEventListener('cbjr-progress-loaded', applyBadges);
+})();
+</script>
 </body>
 </html>
