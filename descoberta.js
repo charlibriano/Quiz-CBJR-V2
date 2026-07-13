@@ -174,8 +174,49 @@
     document.body.appendChild(el);
   }
 
+  // ── Estreia no mural: publica "chegou ao Quiz CBJR!" uma única vez ──
+  // ID fixo {uid}_firstlogin via API REST: o Firestore REJEITA a criação de
+  // documento com ID já existente (409), então a anti-duplicação é garantida
+  // pelo servidor — vale entre aparelhos, não só neste navegador.
+  const FIRSTLOGIN_FLAG = 'cbjr_firstlogin_published_v1';
+
+  async function publishFirstLogin() {
+    try {
+      if (localStorage.getItem(FIRSTLOGIN_FLAG)) return; // já registrado
+    } catch (_) {}
+
+    const user = await waitForAuthUser();
+    if (!user || !user.uid || typeof user.getIdToken !== 'function') return;
+
+    try {
+      const token = await user.getIdToken();
+      const url = 'https://firestore.googleapis.com/v1/projects/ranking-cbjr/databases/(default)/documents/cbjr_atividades?documentId=' + encodeURIComponent(user.uid + '_firstlogin');
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({
+          fields: {
+            uid:   { stringValue: user.uid },
+            name:  { stringValue: user.displayName || 'Fã CBJR' },
+            photo: { stringValue: user.photoURL || '' },
+            type:  { stringValue: 'ranking' },
+            text:  { stringValue: 'chegou ao Quiz CBJR! 🎸' },
+            ts:    { timestampValue: new Date().toISOString() }
+          }
+        })
+      });
+      // 200 = publicado agora; 409 = já existia (outro aparelho/visita).
+      // Nos dois casos, marca o flag pra não gastar chamadas de novo.
+      if (res.ok || res.status === 409) {
+        try { localStorage.setItem(FIRSTLOGIN_FLAG, '1'); } catch (_) {}
+      }
+    } catch (_) { /* falhou (offline etc.) — tenta de novo na próxima página */ }
+  }
+
   // ── Init: descoberta por visita ou por primeira conclusão ──
   function init() {
+    publishFirstLogin(); // roda em qualquer página, independente do modo
+
     if (PAGE === 'fans') {
       award('fans');
     } else if (PAGE === 'ranking') {
