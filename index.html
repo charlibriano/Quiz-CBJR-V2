@@ -6845,5 +6845,188 @@ function shareWhatsApp() {
   window.addEventListener('cbjr-progress-loaded', applyBadges);
 })();
 </script>
+<script type="module" id="cbjr-activity-ticker-script">
+/* ── CBJR TICKER DE ATIVIDADES ────────────────────────────────────
+   Prova social na home: mostra as últimas 3 atividades reais do
+   mural (coleção cbjr_atividades, a mesma do fans.html), rodando
+   uma por vez num balcão discreto abaixo dos modos. Clique leva
+   pra Comunidade. Leitura única de 3 docs (cota mínima). Se não
+   houver atividades ou der erro, o ticker simplesmente não aparece. */
+import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getFirestore, collection, query, orderBy, limit, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
+  authDomain: 'ranking-cbjr.firebaseapp.com',
+  projectId: 'ranking-cbjr',
+  storageBucket: 'ranking-cbjr.firebasestorage.app',
+  messagingSenderId: '681180179118',
+  appId: '1:681180179118:web:fe10833848e8bb8194db3f'
+};
+
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+const TYPE_ICON = { radio:'📻', letras:'✍️', quiz:'🎸', conquista:'🏅', desafio:'🔥', ranking:'🏆' };
+
+function stripHtml(s) {
+  const t = document.createElement('div');
+  t.innerHTML = String(s ?? '');
+  return (t.textContent || '').trim();
+}
+function timeAgo(ts) {
+  const diff = Date.now() - ts;
+  if (diff < 60000) return 'agora mesmo';
+  if (diff < 3600000) return `${Math.floor(diff / 60000)}min atrás`;
+  if (diff < 86400000) return `${Math.floor(diff / 3600000)}h atrás`;
+  return `${Math.floor(diff / 86400000)}d atrás`;
+}
+function initials(name) {
+  const p = String(name || 'CB').trim().split(/\s+/).filter(Boolean);
+  return (p.length >= 2 ? p[0][0] + p[1][0] : String(name || 'CB').slice(0, 2)).toUpperCase();
+}
+
+function injectCSS() {
+  const s = document.createElement('style');
+  s.id = 'cbjr-activity-ticker-style';
+  s.textContent = `
+    .cbjr-ticker{
+      display:flex;align-items:center;gap:10px;
+      margin:14px auto 0;padding:9px 12px;
+      width:min(860px,calc(100% - 4px));
+      border:1px solid rgba(255,255,255,.10);border-radius:999px;
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(0,0,0,.35));
+      text-decoration:none;color:#fff;cursor:pointer;
+      box-shadow:0 10px 30px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06);
+      transition:border-color .25s ease, transform .25s ease;
+    }
+    .cbjr-ticker:hover{border-color:rgba(241,196,15,.45);transform:translateY(-1px);}
+    .cbjr-ticker-live{
+      display:inline-flex;align-items:center;gap:6px;flex:none;
+      font-size:.62rem;font-weight:1000;letter-spacing:.12em;text-transform:uppercase;
+      color:#ff5252;
+    }
+    .cbjr-ticker-live::before{
+      content:"";width:7px;height:7px;border-radius:50%;background:#ff5252;
+      box-shadow:0 0 8px #ff5252;animation:cbjrTickerDot 1.4s ease-in-out infinite;
+    }
+    .cbjr-ticker-item{
+      display:flex;align-items:center;gap:9px;min-width:0;flex:1;
+      opacity:1;transition:opacity .35s ease;
+    }
+    .cbjr-ticker-item.fading{opacity:0;}
+    .cbjr-ticker-avatar{
+      width:26px;height:26px;border-radius:50%;flex:none;overflow:hidden;
+      display:grid;place-items:center;background:linear-gradient(135deg,#f1c40f,#1ed760);
+      color:#050505;font-size:.62rem;font-weight:1000;
+    }
+    .cbjr-ticker-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
+    .cbjr-ticker-text{
+      min-width:0;flex:1;font-size:.8rem;font-weight:850;color:rgba(255,255,255,.88);
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.25;
+    }
+    .cbjr-ticker-text strong{color:#f1c40f;font-weight:1000;}
+    .cbjr-ticker-time{flex:none;font-size:.66rem;font-weight:850;color:rgba(255,255,255,.45);}
+    .cbjr-ticker-icon{flex:none;font-size:.95rem;}
+    @keyframes cbjrTickerDot{0%,100%{opacity:.45}50%{opacity:1}}
+    @media(max-width:620px){
+      .cbjr-ticker{border-radius:16px;padding:8px 10px;margin-top:12px;}
+      .cbjr-ticker-time{display:none;}
+    }
+    @media (prefers-reduced-motion: reduce){
+      .cbjr-ticker-live::before{animation:none;}
+      .cbjr-ticker-item{transition:none;}
+    }
+  `;
+  document.head.appendChild(s);
+}
+
+function buildTicker(items) {
+  const anchor = document.querySelector('.channels') || document.getElementById('modeCards');
+  if (!anchor) return;
+  injectCSS();
+
+  const el = document.createElement('a');
+  el.className = 'cbjr-ticker';
+  el.href = 'fans.html';
+  el.setAttribute('aria-label', 'Últimas atividades da comunidade — abrir Comunidade');
+  el.innerHTML = `
+    <span class="cbjr-ticker-live">Ao vivo</span>
+    <span class="cbjr-ticker-item">
+      <span class="cbjr-ticker-avatar"></span>
+      <span class="cbjr-ticker-text"></span>
+      <span class="cbjr-ticker-time"></span>
+      <span class="cbjr-ticker-icon"></span>
+    </span>
+  `;
+  anchor.insertAdjacentElement('afterend', el);
+
+  const itemEl   = el.querySelector('.cbjr-ticker-item');
+  const avatarEl = el.querySelector('.cbjr-ticker-avatar');
+  const textEl   = el.querySelector('.cbjr-ticker-text');
+  const timeEl   = el.querySelector('.cbjr-ticker-time');
+  const iconEl   = el.querySelector('.cbjr-ticker-icon');
+
+  let idx = 0;
+  function show(i) {
+    const a = items[i];
+    if (a.photo) {
+      const img = document.createElement('img');
+      img.src = a.photo;
+      img.alt = a.name;
+      img.onerror = () => { avatarEl.textContent = initials(a.name); };
+      avatarEl.replaceChildren(img);
+    } else {
+      avatarEl.textContent = initials(a.name);
+    }
+    // nome em destaque + texto plano (sem HTML do mural)
+    textEl.replaceChildren();
+    const strong = document.createElement('strong');
+    strong.textContent = a.name;
+    textEl.appendChild(strong);
+    textEl.appendChild(document.createTextNode(' ' + a.text));
+    timeEl.textContent = timeAgo(a.ts);
+    iconEl.textContent = TYPE_ICON[a.type] || '🎸';
+  }
+  show(0);
+
+  if (items.length > 1) {
+    setInterval(() => {
+      itemEl.classList.add('fading');
+      setTimeout(() => {
+        idx = (idx + 1) % items.length;
+        show(idx);
+        itemEl.classList.remove('fading');
+      }, 360);
+    }, 4500);
+  }
+}
+
+async function initTicker() {
+  try {
+    const snap = await getDocs(query(collection(db, 'cbjr_atividades'), orderBy('ts', 'desc'), limit(3)));
+    const items = snap.docs.map(d => {
+      const data = d.data() || {};
+      return {
+        name:  String(data.name || 'Fã CBJR'),
+        photo: String(data.photo || ''),
+        type:  String(data.type || ''),
+        text:  stripHtml(data.text),
+        ts:    data.ts?.toMillis?.() || Number(data.ts) || 0
+      };
+    }).filter(a => a.text);
+    if (!items.length) return;
+    buildTicker(items);
+  } catch (e) {
+    console.warn('[Ticker CBJR] indisponível:', e?.code || e?.message);
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initTicker);
+} else {
+  initTicker();
+}
+</script>
 </body>
 </html>
