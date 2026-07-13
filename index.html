@@ -6399,6 +6399,9 @@
   });
 
   onAuthStateChanged(auth, async (user) => {
+    // CORREÇÃO CBJR: expõe o User real do Firebase como nas outras páginas
+    // (usado pelo descoberta.js para a atividade de estreia no mural).
+    window.CBJR_AUTH_USER = user || null;
     if (!user) {
       try { localStorage.removeItem('cbjr_google_logged'); } catch (e) {}
       if (loginStatus) loginStatus.textContent = 'Faça login para continuar.';
@@ -6755,6 +6758,7 @@ function shareWhatsApp() {
 // ── FIM SHARE CARD ───────────────────────────────────────────
 </script>
 
+<script src="./descoberta.js" defer></script>
 <script id="cbjr-dynamic-badges">
 /* ── CBJR SELOS DINÂMICOS ─────────────────────────────────────────
    Faz os selos e LEDs da home reagirem ao progresso do jogador:
