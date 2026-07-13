@@ -68,15 +68,6 @@
 
   async function publishToFirestore(type, text, user) {
     try {
-      const payload = {
-        uid:   user.uid,
-        name:  user.displayName || 'Fã CBJR',
-        photo: user.photoURL || '',
-        type,
-        text,
-        ts: { '.sv': 'timestamp' } // Firestore REST não suporta serverTimestamp direto
-      };
-
       // Usa a API REST do Firestore para não precisar do SDK
       const url = `https://firestore.googleapis.com/v1/projects/ranking-cbjr/databases/(default)/documents/cbjr_atividades`;
       const body = {
@@ -86,7 +77,13 @@
           photo: { stringValue: user.photoURL || '' },
           type:  { stringValue: type },
           text:  { stringValue: text },
-          ts:    { integerValue: String(Date.now()) }
+          // CORREÇÃO CBJR: precisa ser timestampValue (tipo Timestamp), igual
+          // ao serverTimestamp() usado pelo mural em fans.html. Antes era
+          // integerValue (número) e o Firestore ordena por TIPO antes do
+          // valor no orderBy('ts','desc') — atividades publicadas daqui
+          // ficariam permanentemente abaixo das do mural, invisíveis no
+          // topo do feed e no ticker da home.
+          ts:    { timestampValue: new Date().toISOString() }
         }
       };
 
