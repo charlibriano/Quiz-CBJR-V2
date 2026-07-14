@@ -4236,6 +4236,76 @@ const cbjrFeedback = {
       el.style.color = isError ? '#ff6b64' : 'rgba(255,255,255,.72)';
     }
 
+    // ── CBJR SOMA CHARLIBRIANO (Letras) ────────────────────────────
+    // Pontuação do ranking = melhor álbum normal + melhor Charlibriano
+    // (acertos × 100). Cada componente tem recorde próprio; o total só cresce.
+    function getCharlibrianoLettersScore() {
+      try {
+        const rec = JSON.parse(localStorage.getItem('cbjr_charlibriano_letras_v1') || '{}') || {};
+        return (Number(rec.bestAcertos) || 0) * 100;
+      } catch (_) { return 0; }
+    }
+
+    function getLettersBaseBest() {
+      // Migração única: antes desta atualização, lettersCBJR_bestOnlineScore
+      // guardava só a pontuação normal — vira a semente do componente base.
+      let v = localStorage.getItem('lettersCBJR_bestBaseScore');
+      if (v === null) {
+        v = localStorage.getItem('lettersCBJR_bestOnlineScore') || '0';
+        try { localStorage.setItem('lettersCBJR_bestBaseScore', v); } catch (_) {}
+      }
+      return Number(v) || 0;
+    }
+
+    // Envio silencioso do total (fim de Charlibriano e retomada pós-falha).
+    function pushLettersTotalSilently() {
+      const guestMode = window.CBJR_GUEST?.isGuest() && !window.CBJR_GUEST?.isLoggedIn();
+      if (guestMode) return;
+
+      const base = getLettersBaseBest();
+      const charli = getCharlibrianoLettersScore();
+      const totalScore = base + charli;
+      const lastSent = Number(localStorage.getItem('lettersCBJR_rank_last_total') || 0);
+      if (totalScore <= 0 || totalScore <= lastSent) return;
+
+      let stored = {};
+      try { stored = JSON.parse(localStorage.getItem('lettersCBJR_rank_last_payload') || '{}') || {}; } catch (_) {}
+
+      let attempts = 0;
+      const poll = setInterval(async () => {
+        attempts++;
+        const progress = window.CBJRCloudProgress;
+        const ready = typeof progress?.submitRanking === 'function';
+        if (ready || attempts >= 16) {
+          clearInterval(poll);
+          if (!ready) return;
+          const ok = await progress.submitRanking({
+            name: 'Fã CBJR',
+            gameMode: 'letras',
+            source: 'letras-cbjr-v2',
+            timestamp: Date.now(),
+            ...stored,
+            score: totalScore,
+            baseScore: base,
+            charlibrianoScore: charli
+          });
+          if (ok) {
+            const kept = progress.lastRankingKept;
+            const final = kept != null ? kept : totalScore;
+            try {
+              localStorage.setItem('lettersCBJR_rank_last_total', String(final));
+              localStorage.setItem('lettersCBJR_bestOnlineScore', String(final));
+            } catch (_) {}
+          }
+        }
+      }, 500);
+    }
+
+    // Retomada: envio que falhou (ou recorde de Charlibriano anterior a esta
+    // atualização) sobe sozinho quando a nuvem sincronizar.
+    window.addEventListener('cbjr-progress-loaded', () => { try { pushLettersTotalSilently(); } catch (_) {} });
+    setTimeout(() => { try { pushLettersTotalSilently(); } catch (_) {} }, 8000);
+
     async function submitLettersScoreAuto(completedAlbum) {
       const guestMode = window.CBJR_GUEST?.isGuest() && !window.CBJR_GUEST?.isLoggedIn();
       if (guestMode) {
@@ -4245,13 +4315,21 @@ const cbjrFeedback = {
 
       const payload = buildLettersRankingPayload('Fã CBJR', completedAlbum);
       const localKey = 'lettersCBJR_bestOnlineScore';
-      const prevBest = Number(localStorage.getItem(localKey) || 0);
 
-      if (payload.score <= prevBest) {
-        setLettersRankingStatus(`Seu recorde no ranking online continua ${prevBest} pts.`);
-        lastLettersRankingPayload = { ...payload, score: prevBest };
-        return;
-      }
+      // CORREÇÃO CBJR (SOMA): o componente NORMAL guarda recorde próprio e as
+      // estatísticas da partida ficam salvas para reenvios silenciosos; a
+      // pontuação enviada é o TOTAL (melhor álbum + melhor Charlibriano).
+      const baseBest = Math.max(getLettersBaseBest(), Number(payload.score) || 0);
+      try { localStorage.setItem('lettersCBJR_bestBaseScore', String(baseBest)); } catch (_) {}
+      try {
+        const statsOnly = { ...payload };
+        delete statsOnly.score;
+        localStorage.setItem('lettersCBJR_rank_last_payload', JSON.stringify(statsOnly));
+      } catch (_) {}
+      const charliScore = getCharlibrianoLettersScore();
+      payload.baseScore = baseBest;
+      payload.charlibrianoScore = charliScore;
+      payload.score = baseBest + charliScore;
 
       setLettersRankingStatus('Enviando pontuação para o ranking online...');
 
@@ -4275,9 +4353,21 @@ const cbjrFeedback = {
 
           const ok = await progress.submitRanking(payload);
           if (ok) {
-            localStorage.setItem(localKey, String(payload.score));
-            lastLettersRankingPayload = payload;
-            setLettersRankingStatus(`Pontuação enviada: ${payload.score} pts. Dias de luta, dias de glória!`);
+            const kept = progress.lastRankingKept;
+            if (kept != null) {
+              // O recorde online é maior — mantido no servidor.
+              localStorage.setItem(localKey, String(kept));
+              localStorage.setItem('lettersCBJR_rank_last_total', String(kept));
+              lastLettersRankingPayload = { ...payload, score: kept };
+              setLettersRankingStatus(`Seu recorde no ranking online continua ${kept} pts.`);
+            } else {
+              localStorage.setItem(localKey, String(payload.score));
+              localStorage.setItem('lettersCBJR_rank_last_total', String(payload.score));
+              lastLettersRankingPayload = payload;
+              setLettersRankingStatus(payload.charlibrianoScore > 0
+                ? `Pontuação enviada: ${payload.score} pts (Letras ${payload.baseScore} + Charlibriano ${payload.charlibrianoScore}). Dias de luta, dias de glória!`
+                : `Pontuação enviada: ${payload.score} pts. Dias de luta, dias de glória!`);
+            }
           } else {
             // CORREÇÃO CBJR: mostra o motivo real na tela (sem precisar de console).
             const motivo = progress.lastRankingError || '';
@@ -4462,6 +4552,9 @@ const cbjrFeedback = {
       const xpGanho  = albums * 50;
       const rec      = saveCharlibrianoRecord(albums, acertos, xpGanho);
       const isRecord = albums > 0 && albums >= rec.bestAlbums;
+
+      // CORREÇÃO CBJR (SOMA): recorde de acertos novo → o total sobe pro ranking.
+      try { pushLettersTotalSilently(); } catch(_) {}
 
       // Concede XP
       if (xpGanho > 0) {
@@ -4865,7 +4958,9 @@ document.addEventListener('DOMContentLoaded',()=>{
     'radioCBJR_achievements_v1',
     'cbjr_letters_completed',
     'lettersCBJR_playerName',
-    'cobjr_quiz_achievements'
+    'cobjr_quiz_achievements',
+    'lettersCBJR_bestBaseScore',
+    'cbjr_charlibriano_letras_v1'
   ];
 
   let currentUser = null;
@@ -4914,6 +5009,25 @@ document.addEventListener('DOMContentLoaded',()=>{
     merged.radioCBJR_achievements_v1 = mergeObjectString(localData.radioCBJR_achievements_v1, remoteData.radioCBJR_achievements_v1);
     merged.cobjr_quiz_achievements = mergeObjectString(localData.cobjr_quiz_achievements, remoteData.cobjr_quiz_achievements);
     merged.cbjr_letters_completed = mergeArrayString(localData.cbjr_letters_completed, remoteData.cbjr_letters_completed);
+
+    // CORREÇÃO CBJR (SOMA): recordes numéricos mesclam pelo MAIOR valor —
+    // um aparelho com dados antigos nunca rebaixa o recorde do outro.
+    {
+      const l = Number(localData.lettersCBJR_bestBaseScore ?? 0);
+      const r = Number(remoteData.lettersCBJR_bestBaseScore ?? 0);
+      merged.lettersCBJR_bestBaseScore = String(Math.max(Number.isFinite(l) ? l : 0, Number.isFinite(r) ? r : 0));
+    }
+    try {
+      const l = JSON.parse(localData.cbjr_charlibriano_letras_v1 || '{}') || {};
+      const r = JSON.parse(remoteData.cbjr_charlibriano_letras_v1 || '{}') || {};
+      merged.cbjr_charlibriano_letras_v1 = JSON.stringify({
+        bestAlbums:  Math.max(Number(l.bestAlbums)  || 0, Number(r.bestAlbums)  || 0),
+        bestAcertos: Math.max(Number(l.bestAcertos) || 0, Number(r.bestAcertos) || 0),
+        totalXp:     Math.max(Number(l.totalXp)     || 0, Number(r.totalXp)     || 0),
+        lastRun:     Math.max(Number(l.lastRun)     || 0, Number(r.lastRun)     || 0),
+        hasPlayed:   !!(l.hasPlayed || r.hasPlayed)
+      });
+    } catch (_) {}
 
     if (!merged.lettersCBJR_playerName && user?.displayName) {
       merged.lettersCBJR_playerName = user.displayName.split(' ')[0] || user.displayName;
@@ -4988,6 +5102,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     save: saveCloudProgressNow,
     getLocal: readLocalProgress,
     submitRanking: async (payload) => {
+      window.CBJRCloudProgress.lastRankingKept = null;
       try {
         // CORREÇÃO CBJR: espera o Auth resolver a sessão (máx. 8s) antes de
         // decidir que não há usuário — antes falhava se o Auth ainda não
@@ -5002,7 +5117,24 @@ document.addEventListener('DOMContentLoaded',()=>{
         // Um único registro de ranking por jogador no Modo Letras.
         // ID fixo => reenviar ATUALIZA em vez de duplicar.
         const docId = `${user.uid}_letras`;
-        await setDoc(doc(db, 'ranking', docId), {
+        const rankingDocRef = doc(db, 'ranking', docId);
+
+        // CORREÇÃO CBJR: compara com o recorde REAL no Firestore antes de
+        // gravar — como o setDoc substitui o documento inteiro, isso impede
+        // que um total menor (ex.: outro aparelho) sobrescreva o maior.
+        try {
+          const existing = await getDoc(rankingDocRef);
+          if (existing.exists()) {
+            const onlineScore = Number(existing.data()?.score || 0);
+            if (onlineScore >= Number(payload.score || 0)) {
+              window.CBJRCloudProgress.lastRankingError = '';
+              window.CBJRCloudProgress.lastRankingKept = onlineScore;
+              return true; // recorde online mantido — nada a gravar
+            }
+          }
+        } catch (_) { /* se a leitura falhar, segue para gravar mesmo assim */ }
+
+        await setDoc(rankingDocRef, {
           ...payload,
           uid:      user.uid,
           name:     user.displayName || payload.name || 'Jogador CBJR',
