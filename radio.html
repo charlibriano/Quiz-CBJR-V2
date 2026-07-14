@@ -4557,6 +4557,9 @@ function charlibrianoRadioGameOver() {
   const isRecord = cds > 0 && cds >= best;
   try { localStorage.setItem(CHARLIBRIANO_RADIO_KEY, JSON.stringify({ bestCds: best, bestAcertos: Math.max(rec.bestAcertos||0, acertos), totalXp:(rec.totalXp||0)+xpGanho, hasPlayed:true })); } catch(_) {}
 
+  // CORREÇÃO CBJR (SOMA): recorde de acertos novo → o total sobe pro ranking.
+  try { pushRadioTotalSilently(); } catch(_) {}
+
   // Concede XP
   if (xpGanho > 0) {
     if (window.CBJRProgress?.addXp) window.CBJRProgress.addXp(xpGanho, `Charlibriano Rádio — ${cds} CD(s)`);
@@ -5307,6 +5310,77 @@ function waitForAuthUser(timeoutMs = 4000) {
   });
 }
 
+// ── CBJR SOMA CHARLIBRIANO (Rádio) ─────────────────────────────
+// Pontuação do ranking = melhor CD normal + melhor Charlibriano
+// (acertos × 100). Cada componente tem recorde próprio; o total só cresce.
+function getCharlibrianoRadioScore() {
+  try {
+    const rec = JSON.parse(localStorage.getItem(CHARLIBRIANO_RADIO_KEY) || '{}') || {};
+    return (Number(rec.bestAcertos) || 0) * 100;
+  } catch (_) { return 0; }
+}
+
+function getRadioBaseBest() {
+  // Migração única: antes desta atualização, radioCBJR_bestOnlineScore
+  // guardava só a pontuação normal — vira a semente do componente base.
+  let v = localStorage.getItem('radioCBJR_bestBaseScore');
+  if (v === null) {
+    v = localStorage.getItem('radioCBJR_bestOnlineScore') || '0';
+    try { localStorage.setItem('radioCBJR_bestBaseScore', v); } catch (_) {}
+  }
+  return Number(v) || 0;
+}
+
+// Envio silencioso do total (fim de Charlibriano e retomada pós-falha):
+// usa as estatísticas da última partida normal guardadas localmente.
+async function pushRadioTotalSilently() {
+  const guestMode = window.CBJR_GUEST?.isGuest() && !window.CBJR_GUEST?.isLoggedIn();
+  if (guestMode) return;
+  const user = await waitForAuthUser();
+  if (!user) return;
+
+  const base = getRadioBaseBest();
+  const charli = getCharlibrianoRadioScore();
+  const totalScore = base + charli;
+  const lastSent = Number(localStorage.getItem('radioCBJR_rank_last_total') || 0);
+  if (totalScore <= 0 || totalScore <= lastSent) return;
+
+  let stored = {};
+  try { stored = JSON.parse(localStorage.getItem('radioCBJR_rank_last_payload') || '{}') || {}; } catch (_) {}
+
+  let attempts = 0;
+  const poll = setInterval(async () => {
+    attempts++;
+    const progress = window.CBJRCloudProgress;
+    const ready = typeof progress?.submitRanking === 'function';
+    if (ready || attempts >= 16) {
+      clearInterval(poll);
+      if (!ready) return;
+      const ok = await progress.submitRanking({
+        name: String(user.displayName || 'Ouvinte CBJR').slice(0, 20),
+        gameMode: 'radio',
+        source: 'radio-cbjr-v2',
+        radioMode: currentRadioMode || 'normal',
+        timestamp: Date.now(),
+        ...stored,
+        score: totalScore,
+        baseScore: base,
+        charlibrianoScore: charli,
+        photoURL: user.photoURL || ''
+      });
+      if (ok) {
+        const kept = progress.lastRankingKept;
+        const final = kept != null ? kept : totalScore;
+        try {
+          localStorage.setItem('radioCBJR_rank_last_total', String(final));
+          localStorage.setItem('radioCBJR_bestOnlineScore', String(final));
+        } catch (_) {}
+        try { await refreshOnlineRankingPreview(); } catch (_) {}
+      }
+    }
+  }, 500);
+}
+
 async function submitRadioScoreAuto(hitCount = correct, missCount = wrong, total = currentAlbum?.tracks?.length || 1) {
   const status = document.getElementById('onlineRankingStatus');
   const guestMode = window.CBJR_GUEST?.isGuest() && !window.CBJR_GUEST?.isLoggedIn();
@@ -5321,11 +5395,20 @@ async function submitRadioScoreAuto(hitCount = correct, missCount = wrong, total
   const payload = buildRadioRankingPayload(user.displayName || 'Ouvinte CBJR', hitCount, missCount, total);
   const localKey = 'radioCBJR_bestOnlineScore';
 
-  // CORREÇÃO CBJR: o bloqueio antigo pelo recorde salvo no navegador foi
-  // removido — ele impedia o envio de chegar ao Firestore quando o cache
-  // local tinha um valor antigo/alto (deixando o ranking da Rádio em branco).
-  // Agora o envio sempre acontece e é o submitRanking que compara com o
-  // recorde REAL online, mantendo o maior.
+  // CORREÇÃO CBJR (SOMA): o componente NORMAL guarda recorde próprio e as
+  // estatísticas da partida ficam salvas para reenvios silenciosos; a
+  // pontuação enviada é o TOTAL (melhor CD + melhor Charlibriano).
+  const baseBest = Math.max(getRadioBaseBest(), Number(payload.score) || 0);
+  try { localStorage.setItem('radioCBJR_bestBaseScore', String(baseBest)); } catch (_) {}
+  try {
+    const statsOnly = { ...payload };
+    delete statsOnly.score;
+    localStorage.setItem('radioCBJR_rank_last_payload', JSON.stringify(statsOnly));
+  } catch (_) {}
+  const charliScore = getCharlibrianoRadioScore();
+  payload.baseScore = baseBest;
+  payload.charlibrianoScore = charliScore;
+  payload.score = baseBest + charliScore;
 
   if (status) status.textContent = 'Enviando pontuação para o ranking online...';
 
@@ -5349,12 +5432,16 @@ async function submitRadioScoreAuto(hitCount = correct, missCount = wrong, total
         if (kept != null) {
           // O recorde online é maior — mantido no servidor.
           localStorage.setItem(localKey, String(kept));
+          localStorage.setItem('radioCBJR_rank_last_total', String(kept));
           lastRadioRankingPayload = { ...payload, score: kept };
           if (status) status.textContent = `Seu recorde no ranking online continua ${kept} pts.`;
         } else {
           localStorage.setItem(localKey, String(payload.score));
+          localStorage.setItem('radioCBJR_rank_last_total', String(payload.score));
           lastRadioRankingPayload = payload;
-          if (status) status.textContent = `Pontuação enviada: ${payload.score} pts. Tamo aí na atividade!`;
+          if (status) status.textContent = payload.charlibrianoScore > 0
+            ? `Pontuação enviada: ${payload.score} pts (CD ${payload.baseScore} + Charlibriano ${payload.charlibrianoScore}). Tamo aí na atividade!`
+            : `Pontuação enviada: ${payload.score} pts. Tamo aí na atividade!`;
         }
         await refreshOnlineRankingPreview();
       } else {
@@ -5372,6 +5459,12 @@ async function submitRadioScoreAuto(hitCount = correct, missCount = wrong, total
 
 window.submitRadioScoreAuto = submitRadioScoreAuto;
 window.refreshOnlineRankingPreview = refreshOnlineRankingPreview;
+
+// Retomada: envio que falhou (ou recorde de Charlibriano anterior a esta
+// atualização) sobe sozinho quando a nuvem sincronizar — com fallback por
+// tempo caso não haja login/nuvem nesta visita.
+window.addEventListener('cbjr-progress-loaded', () => { try { pushRadioTotalSilently(); } catch (_) {} });
+setTimeout(() => { try { pushRadioTotalSilently(); } catch (_) {} }, 8000);
 
 function renderPerformanceCard(hitCount = correct, missCount = wrong, total = currentAlbum?.tracks?.length || 1) {
   const rank = getPerformanceRank(hitCount, missCount, total);
@@ -6215,7 +6308,9 @@ renderAlbums();
     'radioCBJR_achievements_v1',
     'cbjr_letters_completed',
     'lettersCBJR_playerName',
-    'cobjr_quiz_achievements'
+    'cobjr_quiz_achievements',
+    'radioCBJR_bestBaseScore',
+    'cbjr_charlibriano_radio_v1'
   ];
 
   let currentUser = null;
@@ -6264,6 +6359,24 @@ renderAlbums();
     merged.radioCBJR_achievements_v1 = mergeObjectString(localData.radioCBJR_achievements_v1, remoteData.radioCBJR_achievements_v1);
     merged.cobjr_quiz_achievements = mergeObjectString(localData.cobjr_quiz_achievements, remoteData.cobjr_quiz_achievements);
     merged.cbjr_letters_completed = mergeArrayString(localData.cbjr_letters_completed, remoteData.cbjr_letters_completed);
+
+    // CORREÇÃO CBJR (SOMA): recordes numéricos mesclam pelo MAIOR valor —
+    // um aparelho com dados antigos nunca rebaixa o recorde do outro.
+    {
+      const l = Number(localData.radioCBJR_bestBaseScore ?? 0);
+      const r = Number(remoteData.radioCBJR_bestBaseScore ?? 0);
+      merged.radioCBJR_bestBaseScore = String(Math.max(Number.isFinite(l) ? l : 0, Number.isFinite(r) ? r : 0));
+    }
+    try {
+      const l = JSON.parse(localData.cbjr_charlibriano_radio_v1 || '{}') || {};
+      const r = JSON.parse(remoteData.cbjr_charlibriano_radio_v1 || '{}') || {};
+      merged.cbjr_charlibriano_radio_v1 = JSON.stringify({
+        bestCds:     Math.max(Number(l.bestCds)     || 0, Number(r.bestCds)     || 0),
+        bestAcertos: Math.max(Number(l.bestAcertos) || 0, Number(r.bestAcertos) || 0),
+        totalXp:     Math.max(Number(l.totalXp)     || 0, Number(r.totalXp)     || 0),
+        hasPlayed:   !!(l.hasPlayed || r.hasPlayed)
+      });
+    } catch (_) {}
 
     if (!merged.lettersCBJR_playerName && user?.displayName) {
       merged.lettersCBJR_playerName = user.displayName.split(' ')[0] || user.displayName;
