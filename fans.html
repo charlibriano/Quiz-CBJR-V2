@@ -400,14 +400,17 @@
 
   <main class="layout">
     <!-- ── MURAL DE ATIVIDADES ── -->
-    <section class="card activity-wall-card" id="activityWall" style="grid-column: 1 / -1;">
+    <section class="card activity-wall-card collapsed" id="activityWall" style="grid-column: 1 / -1;">
       <div class="activity-wall-head">
         <div>
           <h2>⚡ Rolando agora</h2>
           <p class="card-sub">Atividades recentes dos fãs na comunidade CBJR.</p>
         </div>
-        <div class="activity-live-dot">
-          <span class="live-pulse"></span> AO VIVO
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="activity-live-dot">
+            <span class="live-pulse"></span> AO VIVO
+          </div>
+          <button class="activity-toggle-btn" id="activityToggleBtn" aria-expanded="false">Ver todas ▾</button>
         </div>
       </div>
       <!-- CBJR FILTROS DO MURAL: separa as atividades por categoria -->
@@ -429,14 +432,43 @@
           .activity-filters{gap:6px;overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px;-webkit-overflow-scrolling:touch;}
           .activity-filter-chip{flex:none;font-size:.7rem;padding:6px 11px;}
         }
+
+        /* ── MODO COMPACTO: a seção abre recolhida (faixa fina com as
+           últimas atividades) e expande no botão "Ver todas" ── */
+        .activity-toggle-btn{
+          border:1px solid rgba(255,255,255,.16);border-radius:999px;
+          background:rgba(255,255,255,.05);color:rgba(255,255,255,.85);
+          font-family:inherit;font-size:.72rem;font-weight:900;letter-spacing:.03em;
+          padding:7px 14px;cursor:pointer;white-space:nowrap;
+          transition:border-color .2s ease,color .2s ease,transform .2s ease;
+        }
+        .activity-toggle-btn:hover{border-color:rgba(241,196,15,.55);color:#f1c40f;transform:translateY(-1px);}
+        .activity-wall-card.collapsed .activity-filters{display:none;}
+        .activity-wall-card.collapsed .activity-feed{
+          grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;
+        }
+        .activity-wall-card.collapsed .activity-item{padding:8px 10px;border-radius:12px;}
+        .activity-wall-card.collapsed .activity-item:nth-child(n+5){display:none;}
+        .activity-wall-card.collapsed .activity-time,
+        .activity-wall-card.collapsed .activity-icon{display:none;}
+        .activity-wall-card.collapsed .activity-name{
+          font-size:.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+        }
+        .activity-wall-card.collapsed .activity-text{
+          font-size:.72rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+        }
+        @media(max-width:620px){
+          .activity-wall-card.collapsed .activity-feed{grid-template-columns:1fr 1fr;}
+          .activity-wall-card.collapsed .activity-item:nth-child(n+3){display:none;}
+        }
       </style>
       <div class="activity-filters" id="activityFilters" role="tablist" aria-label="Filtrar atividades por categoria">
-        <button class="activity-filter-chip active" data-filter="all">⚡ Tudo</button>
-        <button class="activity-filter-chip" data-filter="quiz">🎸 Quiz</button>
-        <button class="activity-filter-chip" data-filter="radio">📻 Rádio</button>
-        <button class="activity-filter-chip" data-filter="letras">✍️ Letras</button>
+        <button class="activity-filter-chip active" data-filter="chegadas">🏆 Chegadas</button>
         <button class="activity-filter-chip" data-filter="conquistas">🏅 Conquistas</button>
-        <button class="activity-filter-chip" data-filter="chegadas">🏆 Chegadas</button>
+        <button class="activity-filter-chip" data-filter="letras">✍️ Letras</button>
+        <button class="activity-filter-chip" data-filter="radio">📻 Rádio</button>
+        <button class="activity-filter-chip" data-filter="quiz">🎸 Quiz</button>
+        <button class="activity-filter-chip" data-filter="all">⚡ Tudo</button>
       </div>
       <div id="activityFeed" class="activity-feed">
         <div class="loading">Carregando atividades...</div>
@@ -1410,7 +1442,28 @@ const FILTER_LABELS = {
   conquistas: 'Conquistas', chegadas: 'Chegadas'
 };
 let allActivities = [];
-let activeFilter = 'all';
+let activeFilter = 'all'; // faixa recolhida mostra o pulso geral (4 mais recentes)
+
+// ── Expandir / recolher o mural ──
+// Recolhido: faixa fina com as últimas atividades (sem filtros).
+// Expandido: grade completa com filtros, abrindo em "Chegadas".
+const wallCard  = document.getElementById('activityWall');
+const toggleBtn = document.getElementById('activityToggleBtn');
+
+function setFilterChip(name) {
+  activeFilter = name;
+  document.querySelectorAll('#activityFilters .activity-filter-chip').forEach(c =>
+    c.classList.toggle('active', c.dataset.filter === name)
+  );
+}
+
+toggleBtn?.addEventListener('click', () => {
+  const collapsed = wallCard.classList.toggle('collapsed');
+  toggleBtn.setAttribute('aria-expanded', String(!collapsed));
+  toggleBtn.textContent = collapsed ? 'Ver todas ▾' : 'Recolher ▴';
+  setFilterChip(collapsed ? 'all' : 'chegadas');
+  applyFilter();
+});
 
 function applyFilter() {
   const types = FILTER_TYPES[activeFilter];
