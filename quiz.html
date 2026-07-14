@@ -7014,6 +7014,11 @@ body.tela-pergunta .answer-btn {
         }));
       } catch(_) {}
 
+      // CORREÇÃO CBJR: o Charlibriano agora SOMA no ranking do Quiz.
+      // Se o recorde de acertos cresceu, o total (Quiz normal + Charlibriano)
+      // é reenviado — se não cresceu, a função percebe e não envia nada.
+      try { pushQuizTotalToRanking(); } catch(_) {}
+
       if (levels >= 1) {
         try { localStorage.setItem('cbjr_selo_charlibriano_quiz', '1'); } catch(_) {}
         window.dispatchEvent(new CustomEvent('cbjr-charlibriano-quiz-reached', { detail: { levels, acertos, xp: xpGanho } }));
@@ -7832,27 +7837,35 @@ body.tela-pergunta .answer-btn {
     }
 
     // ── Envia pontuação do Quiz para o Ranking ──
-    async function sendQuizScoreToRanking() {
-      const answered   = state.totalAnswered || 0;
-      const hits       = state.globalHits    || 0;
-      const wrongs     = state.wrongs        || 0;
-      const accuracy   = answered ? Math.round((hits / answered) * 100) : 0;
-      const diff       = state.difficulty || 'normal';
-      const diffBonus  = diff === 'dificil' ? 500 : diff === 'facil' ? 0 : 200;
-      const levelsDone = (state.currentLevelIndex || 0) + 1;
-      const finalScore = (state.score || 0) + diffBonus;
+    // CORREÇÃO CBJR: a pontuação do ranking agora é a SOMA do melhor Quiz
+    // normal (por dificuldade) com o melhor Modo Charlibriano (acertos × 100).
+    // Cada componente guarda o próprio recorde; o total enviado só cresce.
+    function getCharlibrianoQuizScore() {
+      const rec = getCharlibrianoQuizRecord();
+      return (rec.bestAcertos || 0) * CONFIG.scoreCorrect;
+    }
 
-      // Só envia se for novo recorde
-      const localKey = `cbjr_quiz_rank_best_${diff}`;
-      const prevBest = Number(localStorage.getItem(localKey) || 0);
-      if (finalScore <= prevBest) {
-        console.log(`[Quiz Ranking] Score ${finalScore} não supera recorde ${prevBest} — sem envio`);
-        return;
-      }
-      localStorage.setItem(localKey, String(finalScore));
+    function getQuizRankingParts() {
+      const bests = {
+        facil:   Number(localStorage.getItem('cbjr_quiz_rank_best_facil')   || 0),
+        normal:  Number(localStorage.getItem('cbjr_quiz_rank_best_normal')  || 0),
+        dificil: Number(localStorage.getItem('cbjr_quiz_rank_best_dificil') || 0)
+      };
+      const bestDiff = Object.keys(bests).reduce((a, b) => (bests[b] > bests[a] ? b : a), 'facil');
+      return { base: bests[bestDiff], bestDiff, charli: getCharlibrianoQuizScore() };
+    }
 
-      // Usa window.CBJRProgress — o mesmo módulo que Rádio e Letras usam.
-      // Aguarda até 8s para o firebase-progress.js terminar de carregar e autenticar.
+    function pushQuizTotalToRanking() {
+      const parts = getQuizRankingParts();
+      const total = parts.base + parts.charli;
+      const lastKey  = 'cbjr_quiz_rank_last_total';
+      const lastSent = Number(localStorage.getItem(lastKey) || 0);
+      if (total <= 0 || total <= lastSent) return; // nada novo a enviar
+
+      // Estatísticas da última partida normal (para o ranking exibir precisão)
+      let stats = {};
+      try { stats = JSON.parse(localStorage.getItem('cbjr_quiz_rank_last_stats') || '{}') || {}; } catch (_) {}
+
       let attempts = 0;
       const poll = setInterval(async () => {
         attempts++;
@@ -7868,28 +7881,68 @@ body.tela-pergunta .answer-btn {
           }
 
           const ok = await progress.submitRanking({
-            score:           finalScore,
-            accuracy:        accuracy,
-            correct:         hits,
-            wrong:           wrongs,
-            total:           answered,
-            levelsCompleted: levelsDone,
-            gameMode:        'quiz',
-            source:          'quiz-cbjr-v2',
-            difficulty:      diff,
-            rankTitle:       diff === 'dificil' ? 'Mestre do Quiz' : diff === 'facil' ? 'Iniciante' : 'Desafiante',
-            timestamp:       Date.now()
+            score:             total,
+            baseScore:         parts.base,
+            charlibrianoScore: parts.charli,
+            accuracy:          stats.accuracy ?? 0,
+            correct:           stats.correct  ?? 0,
+            wrong:             stats.wrong    ?? 0,
+            total:             stats.total    ?? 0,
+            levelsCompleted:   stats.levelsCompleted ?? 0,
+            gameMode:          'quiz',
+            source:            'quiz-cbjr-v2',
+            difficulty:        parts.bestDiff,
+            rankTitle:         parts.bestDiff === 'dificil' ? 'Mestre do Quiz' : parts.bestDiff === 'facil' ? 'Iniciante' : 'Desafiante',
+            timestamp:         Date.now()
           });
 
           if (ok) {
-            console.log(`[Quiz Ranking] ✅ ${finalScore} pts gravados (nível ${levelsDone}, ${diff})`);
-            showToast(`🏆 +${finalScore} pts no ranking!`);
+            localStorage.setItem(lastKey, String(total));
+            console.log(`[Quiz Ranking] ✅ ${total} pts gravados (Quiz ${parts.base} + Charlibriano ${parts.charli})`);
+            showToast(parts.charli > 0
+              ? `🏆 ${total} pts no ranking! (Quiz ${parts.base} + Charlibriano ${parts.charli})`
+              : `🏆 +${total} pts no ranking!`);
           } else {
             console.warn('[Quiz Ranking] submitRanking retornou false — verifique autenticação');
-            localStorage.setItem(localKey, String(prevBest)); // reverte para tentar de novo
+            // lastSent não é atualizado: o reenvio acontece sozinho na
+            // próxima abertura do quiz (ver retomada abaixo).
           }
         }
       }, 500);
+    }
+
+    // Retomada: se um envio anterior falhou (ou o jogador já tinha recorde de
+    // Charlibriano antes desta atualização), o total correto sobe sozinho —
+    // depois que a nuvem sincronizar (evita somar com dados incompletos num
+    // aparelho novo), com um fallback por tempo caso não haja login.
+    window.addEventListener('cbjr-progress-loaded', () => { try { pushQuizTotalToRanking(); } catch (_) {} });
+    setTimeout(() => { try { pushQuizTotalToRanking(); } catch (_) {} }, 8000);
+
+    async function sendQuizScoreToRanking() {
+      const answered   = state.totalAnswered || 0;
+      const hits       = state.globalHits    || 0;
+      const wrongs     = state.wrongs        || 0;
+      const accuracy   = answered ? Math.round((hits / answered) * 100) : 0;
+      const diff       = state.difficulty || 'normal';
+      const diffBonus  = diff === 'dificil' ? 500 : diff === 'facil' ? 0 : 200;
+      const levelsDone = (state.currentLevelIndex || 0) + 1;
+      const finalScore = (state.score || 0) + diffBonus;
+
+      // Recorde do componente NORMAL desta dificuldade (sem Charlibriano)
+      const localKey = `cbjr_quiz_rank_best_${diff}`;
+      const prevBest = Number(localStorage.getItem(localKey) || 0);
+      if (finalScore <= prevBest) {
+        console.log(`[Quiz Ranking] Score ${finalScore} não supera recorde ${prevBest} — sem envio`);
+        return;
+      }
+      localStorage.setItem(localKey, String(finalScore));
+      try {
+        localStorage.setItem('cbjr_quiz_rank_last_stats', JSON.stringify({
+          accuracy, correct: hits, wrong: wrongs, total: answered, levelsCompleted: levelsDone
+        }));
+      } catch (_) {}
+
+      pushQuizTotalToRanking();
     }
 
     function goToNextLevel() {
@@ -8963,7 +9016,8 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     'cobjr_quiz_progress_v1',
     'cbjr_quiz_rank_best_facil',
     'cbjr_quiz_rank_best_normal',
-    'cbjr_quiz_rank_best_dificil'
+    'cbjr_quiz_rank_best_dificil',
+    'cbjr_charlibriano_quiz_v1'
   ];
 
   let currentUser = null;
@@ -9006,6 +9060,26 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     merged.radioCBJR_achievements_v1 = mergeObjectString(localData.radioCBJR_achievements_v1, remoteData.radioCBJR_achievements_v1);
     merged.cobjr_quiz_achievements = mergeObjectString(localData.cobjr_quiz_achievements, remoteData.cobjr_quiz_achievements);
     merged.cbjr_letters_completed = mergeArrayString(localData.cbjr_letters_completed, remoteData.cbjr_letters_completed);
+
+    // CORREÇÃO CBJR: recordes numéricos do Quiz mesclam pelo MAIOR valor —
+    // um aparelho com dados antigos nunca rebaixa o recorde do outro.
+    ['cbjr_quiz_rank_best_facil', 'cbjr_quiz_rank_best_normal', 'cbjr_quiz_rank_best_dificil'].forEach(key => {
+      const l = Number(localData[key] ?? 0);
+      const r = Number(remoteData[key] ?? 0);
+      merged[key] = String(Math.max(Number.isFinite(l) ? l : 0, Number.isFinite(r) ? r : 0));
+    });
+
+    // Recorde do Modo Charlibriano: campo a campo pelo maior valor.
+    try {
+      const l = JSON.parse(localData.cbjr_charlibriano_quiz_v1 || '{}') || {};
+      const r = JSON.parse(remoteData.cbjr_charlibriano_quiz_v1 || '{}') || {};
+      merged.cbjr_charlibriano_quiz_v1 = JSON.stringify({
+        bestLevels:  Math.max(Number(l.bestLevels)  || 0, Number(r.bestLevels)  || 0),
+        bestAcertos: Math.max(Number(l.bestAcertos) || 0, Number(r.bestAcertos) || 0),
+        totalXp:     Math.max(Number(l.totalXp)     || 0, Number(r.totalXp)     || 0),
+        hasPlayed:   !!(l.hasPlayed || r.hasPlayed)
+      });
+    } catch (_) {}
 
     if (!merged.lettersCBJR_playerName && user?.displayName) {
       merged.lettersCBJR_playerName = user.displayName.split(' ')[0] || user.displayName;
