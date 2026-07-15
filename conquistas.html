@@ -410,19 +410,19 @@ const catalog = [
   {id:'bonus_all_albums_completed',cat:'radio',icon:'🏆',name:'Rei Supremo da Rádio',desc:'Complete todos os discos da Rádio com perfeição.',cover:'CD 13.jpeg'},
 
   {id:'first_level_completed',cat:'quiz',icon:'💿',name:'Transpiração Contínua Prolongada',desc:'Complete o nível 1 do Quiz.',cover:'CD 1.jpeg'},
-  {id:'combo_3x',cat:'quiz',icon:'🔥',name:'Preço Curto... Prazo Longo',desc:'Acerte 3 perguntas seguidas.',cover:'CD 2.jpeg'},
+  {id:'combo_3x',cat:'quiz',icon:'🔥',name:'Preço Curto... Prazo Longo',desc:'Acerte 3 perguntas seguidas sem errar.',cover:'CD 2.jpeg'},
   {id:'level_3_completed',cat:'quiz',icon:'🌊',name:'Nadando com os Tubarões',desc:'Complete o nível 3 do Quiz.',cover:'CD 3.jpeg'},
   {id:'all_main_levels_completed',cat:'quiz',icon:'🏭',name:'Abalando a Sua Fábrica',desc:'Complete todos os 7 níveis principais do Quiz.',cover:'CD 4.jpeg'},
   {id:'level_5_completed',cat:'quiz',icon:'🛹',name:'Bocas Ordinárias',desc:'Complete o nível 5 do Quiz.',cover:'CD 5.jpeg'},
   {id:'all_levels_completed',cat:'quiz',icon:'🎸',name:'Acústico MTV',desc:'Complete todos os níveis do Quiz, incluindo o secreto.',cover:'CD 6.jpeg'},
-  {id:'combo_7x',cat:'quiz',icon:'📣',name:'Tamo Aí na Atividade',desc:'Acerte 7 perguntas seguidas.',cover:'CD 7.jpeg'},
-  {id:'combo_5x',cat:'quiz',icon:'🛡️',name:'Imunidade Musical',desc:'Acerte 5 perguntas seguidas.',cover:'CD 8.jpeg'},
-  {id:'used_50_50',cat:'quiz',icon:'➗',name:'Ritmo, Ritual e Responsa',desc:'Use o power-up 50/50 pela primeira vez.',cover:'CD 9.jpeg'},
-  {id:'coca_cola_collaboration',cat:'quiz',icon:'🥤',name:'Estúdio Coca-Cola Zero',desc:'Complete o desafio do álbum Estúdio Coca-Cola Zero.',cover:'CD 10.jpeg'},
-  {id:'combo_10x',cat:'quiz',icon:'⚽',name:'Camisa 10',desc:'Acerte 10 perguntas seguidas.',cover:'CD 11.jpeg'},
-  {id:'new_high_score',cat:'quiz',icon:'📈',name:'Música Popular Caiçara',desc:'Alcance um novo recorde de pontuação.',cover:'CD 12.jpeg'},
-  {id:'secret_level_completed',cat:'quiz',icon:'🔒',name:'La Família 013',desc:'Conclua o nível secreto Hardcore.',cover:'CD 13.jpeg'},
-  {id:'used_skip',cat:'quiz',icon:'🛹',name:'Fera no Skate',desc:'Use o power-up Pular Pergunta pela primeira vez.',cover:'CD 13.jpeg'},
+  {id:'combo_7x',cat:'quiz',icon:'📣',name:'Tamo Aí na Atividade',desc:'Acerte 7 perguntas seguidas sem errar.',cover:'CD 7.jpeg'},
+  {id:'combo_5x',cat:'quiz',icon:'🛡️',name:'Imunidade Musical',desc:'Acerte 5 perguntas seguidas — imune aos erros.',cover:'CD 8.jpeg'},
+  {id:'used_50_50',cat:'quiz',icon:'➗',name:'Ritmo, Ritual e Responsa',desc:'Use o power-up 50/50 e ainda assim acerte a resposta.',cover:'CD 9.jpeg'},
+  {id:'coca_cola_collaboration',cat:'quiz',icon:'🎤',name:'Vanessa da Mata Chorão',desc:'Complete um nível do Quiz sem errar nenhuma pergunta.',cover:'CD 10.jpeg'},
+  {id:'combo_10x',cat:'quiz',icon:'⚽',name:'Camisa 10 Joga Bola',desc:'Acerte 10 perguntas seguidas — você é o camisa 10!',cover:'CD 11.jpeg'},
+  {id:'new_high_score',cat:'quiz',icon:'📈',name:'Música Popular Caiçara',desc:'Alcance um novo recorde de pontuação no Quiz.',cover:'CD 12.jpeg'},
+  {id:'secret_level_completed',cat:'quiz',icon:'🔒',name:'La Família 013',desc:'Conclua o nível secreto no modo Difícil.',cover:'CD 13.jpeg'},
+  {id:'used_skip',cat:'quiz',icon:'⏭️',name:'Pula a Faixa',desc:'Use o power-up Pular Pergunta pela primeira vez.',cover:'CD 7.jpeg'},
 
   {id:'letters_tcp_completed',cat:'letras',icon:'✍️',name:'TCP no Modo Letras',desc:'Complete o Modo Letras de Transpiração Contínua Prolongada.',cover:'CD 1.jpeg'},
   {id:'letters_pcpl_completed',cat:'letras',icon:'✍️',name:'Preço Curto no Modo Letras',desc:'Complete o Modo Letras de Preço Curto... Prazo Longo.',cover:'CD 2.jpeg'},
@@ -731,14 +731,28 @@ function closeModal(){ document.getElementById('detailModal').classList.remove('
 function playAchievement(id){
   const ach = catalog.find(a => a.id === id);
   if(!ach) return;
-  // Determine a rota com base na categoria da conquista.
+
   let targetPage;
+  let params = '';
+
   switch(ach.cat){
     case 'radio':
       targetPage = 'radio.html';
+      // Conquistas que exigem modo Hard na Rádio
+      if(['hard','bonus_hard_album_completed'].includes(id)){
+        params = '?mode=hard';
+      }
       break;
     case 'quiz':
       targetPage = 'quiz.html';
+      // Conquistas que exigem modo Difícil no Quiz
+      if(['secret_level_completed'].includes(id)){
+        params = '?difficulty=dificil';
+      }
+      // Conquista de completar sem power-ups — abre quiz normal
+      if(id === 'coca_cola_collaboration'){
+        params = '?nopowerup=1';
+      }
       break;
     case 'letras':
       targetPage = 'letras.html';
@@ -746,7 +760,7 @@ function playAchievement(id){
     default:
       targetPage = 'index.html?skipIntro=true';
   }
-  window.location.href = BASE_URL + targetPage;
+  window.location.href = BASE_URL + targetPage + params;
 }
 function escapeHtml(str){return String(str).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function resetAchievements(){
