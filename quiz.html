@@ -6527,9 +6527,18 @@ body.tela-pergunta .answer-btn {
         renderSavedProgress();
 
         // Verifica se veio de conquista com dificuldade específica
-        const urlDiff = new URLSearchParams(location.search).get('difficulty');
+        const urlParams = new URLSearchParams(location.search);
+        const urlDiff = urlParams.get('difficulty');
+        const urlNivel = urlParams.get('nivel');
         if(urlDiff && ['facil','normal','dificil'].includes(urlDiff)){
-          setTimeout(() => startQuiz(urlDiff), 400);
+          setTimeout(() => {
+            startQuiz(urlDiff);
+            // Veio da conquista "La Família 013": abre direto o nível secreto (último nível)
+            if (urlNivel === 'secreto') {
+              startLevel(state.levels.length - 1);
+              showToast('Nível secreto no modo Difícil 🔒 Boa sorte!');
+            }
+          }, 400);
         }
       } catch (error) {
         showFatalError(error.message);
@@ -6716,6 +6725,8 @@ body.tela-pergunta .answer-btn {
       state.currentLevelIndex = levelIndex;
       state.currentQuestionIndex = 0;
       state.hits = 0;
+      // Erros do NÍVEL (para a conquista "Vanessa da Mata Chorão"). Não interfere nas vidas globais.
+      state.levelWrongs = 0;
       // Erros são vidas globais do jogo inteiro. Não resetar ao passar de nível.
       state.levelApproved = false;
       state.currentQuestions = shuffleArray(level.perguntas).map(question => ({
@@ -6735,6 +6746,7 @@ body.tela-pergunta .answer-btn {
       }
 
       state.answered = false;
+      state.fiftyUsedOnCurrent = false;
       els.feedbackBox.classList.remove('show');
       els.feedbackBox.innerHTML = '';
       hideChoraoBalloon();
@@ -6827,8 +6839,11 @@ body.tela-pergunta .answer-btn {
         state.score += CONFIG.scoreCorrect;
         button.classList.add('correct');
         showCorrectFeedback(question.curiosidade);
+        // Conquista "Ritmo, Ritual e Responsa": usou o 50/50 nesta pergunta e acertou
+        if (state.fiftyUsedOnCurrent) unlockAchievement('used_50_50');
       } else {
         state.wrongs++;
+        state.levelWrongs = (state.levelWrongs || 0) + 1;
         button.classList.add('wrong');
         showWrongFeedback(settings);
       }
@@ -6968,6 +6983,9 @@ body.tela-pergunta .answer-btn {
 
       // Primeiro nível concluído
       if (lvl >= 1 && state.levelApproved) unlockAchievement('first_level_completed');
+
+      // Nível completo sem errar nenhuma pergunta ("Vanessa da Mata Chorão")
+      if (state.levelApproved && (state.levelWrongs || 0) === 0) unlockAchievement('coca_cola_collaboration');
 
       // Nível 3
       if (lvl >= 3 && state.levelApproved) unlockAchievement('level_3_completed');
@@ -7142,6 +7160,8 @@ body.tela-pergunta .answer-btn {
       });
 
       state.powerups.fifty--;
+      // Marca que o 50/50 foi usado nesta pergunta (para a conquista "Ritmo, Ritual e Responsa")
+      state.fiftyUsedOnCurrent = true;
       updatePowerupButtons();
       showToast('Duas alternativas foram removidas.');
     }
@@ -7152,6 +7172,9 @@ body.tela-pergunta .answer-btn {
       state.powerups.skip--;
       updatePowerupButtons();
       showToast('Pergunta pulada.');
+
+      // Conquista "Pula a Faixa": usou o power-up Pular pela primeira vez
+      unlockAchievement('used_skip');
 
       setTimeout(() => {
         state.currentQuestionIndex++;
@@ -8390,6 +8413,9 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     combo_7x:{icon:'📣',name:'Combo 7x',desc:'Acerte 7 perguntas seguidas.',xp:220},
     combo_10x:{icon:'⚽',name:'Camisa 10',desc:'Acerte 10 perguntas seguidas.',xp:350},
     new_high_score:{icon:'📈',name:'Novo recorde',desc:'Alcance um novo recorde de pontuação.',xp:180},
+    used_skip:{icon:'⏭️',name:'Pula a Faixa',desc:'Use o power-up Pular Pergunta pela primeira vez.',xp:60},
+    used_50_50:{icon:'➗',name:'Ritmo, Ritual e Responsa',desc:'Use o 50/50 em uma pergunta difícil e acerte.',xp:60},
+    coca_cola_collaboration:{icon:'🎤',name:'Vanessa da Mata Chorão',desc:'Complete um nível do Quiz sem errar nenhuma pergunta.',xp:160},
     all_levels_completed:{icon:'🎸',name:'Acústico MTV',desc:'Complete todos os níveis do Quiz.',xp:700},
     secret_level_completed:{icon:'🔒',name:'La Família 013',desc:'Conclua o nível secreto Hardcore.',xp:600}
   };
