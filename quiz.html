@@ -336,137 +336,6 @@
     .level-normal { --accent: #f1c40f; }
     .level-hard { --accent: #ff3b30; }
 
-    /* ── TELA DE SELEÇÃO DE NÍVEL ────────────────────────────── */
-    #levelSelectScreen {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100svh;
-      padding: clamp(16px, 4vw, 40px);
-      gap: 24px;
-      text-align: center;
-    }
-    #levelSelectScreen.active { display: flex; }
-
-    .level-select-title small {
-      font-size: .72rem; font-weight: 950;
-      text-transform: uppercase; letter-spacing: .12em;
-      color: rgba(255,255,255,.5);
-    }
-    .level-select-title h1 {
-      font-family: 'Elektrix', Arial, sans-serif;
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      color: var(--ls-accent, #f1c40f);
-      margin: 4px 0 8px;
-      line-height: .9;
-      text-shadow: 0 0 24px rgba(255,255,255,.2);
-    }
-    .level-select-title p {
-      font-size: .84rem; font-weight: 900;
-      color: rgba(255,255,255,.6); margin: 0;
-    }
-
-    .level-select-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: clamp(10px, 1.8vw, 18px);
-      width: min(900px, 94vw);
-    }
-
-    .level-select-card {
-      position: relative;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(0,0,0,.72));
-      min-height: 120px;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 6px; cursor: pointer;
-      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
-      padding: 14px 10px;
-    }
-    .level-select-card:hover:not(.ls-locked) {
-      transform: translateY(-4px);
-      border-color: var(--ls-accent, #f1c40f);
-      box-shadow: 0 0 28px rgba(255,255,255,.08);
-    }
-    .level-select-card.ls-locked {
-      opacity: .45; cursor: not-allowed;
-    }
-    .level-select-card.ls-done {
-      border-color: rgba(255,255,255,.22);
-      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(0,0,0,.72));
-    }
-    .level-select-card.ls-done:hover {
-      border-color: var(--ls-accent, #f1c40f);
-    }
-    .level-select-card.ls-next {
-      border-color: var(--ls-accent, #f1c40f);
-      background: radial-gradient(circle at 50% 0%, rgba(255,255,255,.14), transparent 60%),
-                  linear-gradient(180deg, rgba(0,0,0,.1), rgba(0,0,0,.72));
-      box-shadow: 0 0 32px rgba(255,255,255,.1), inset 0 1px 0 rgba(255,255,255,.1);
-      animation: lsNextPulse 2s ease-in-out infinite;
-    }
-    @keyframes lsNextPulse {
-      0%, 100% { box-shadow: 0 0 18px rgba(255,255,255,.08); }
-      50%       { box-shadow: 0 0 36px rgba(255,255,255,.2); }
-    }
-
-    .ls-num {
-      font-family: 'Elektrix', Arial, sans-serif;
-      font-size: clamp(1.4rem, 2.5vw, 2rem);
-      color: var(--ls-accent, #f1c40f);
-      line-height: 1;
-      text-shadow: 0 0 14px rgba(255,255,255,.3);
-    }
-    .ls-song {
-      font-size: clamp(.62rem, 1.2vw, .78rem);
-      font-weight: 950;
-      color: rgba(255,255,255,.72);
-      line-height: 1.3;
-      text-align: center;
-      padding: 0 6px;
-    }
-    .level-select-card.ls-done .ls-song { color: rgba(255,255,255,.5); }
-    .level-select-card.ls-next .ls-song { color: #fff; }
-    .level-select-card.ls-locked .ls-song { color: rgba(255,255,255,.3); }
-    .ls-label {
-      font-size: .65rem; font-weight: 950;
-      text-transform: uppercase; letter-spacing: .08em;
-      color: rgba(255,255,255,.5);
-    }
-    .ls-badge {
-      position: absolute; top: 8px; right: 8px;
-      font-size: .75rem; line-height: 1;
-    }
-    .ls-next-tag {
-      position: absolute; bottom: 8px;
-      font-size: .58rem; font-weight: 950;
-      text-transform: uppercase; letter-spacing: .06em;
-      color: var(--ls-accent, #f1c40f);
-      background: rgba(0,0,0,.5);
-      padding: 2px 7px; border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.15);
-    }
-
-    .level-select-back {
-      display: inline-flex; align-items: center; gap: 8px;
-      border: 1px solid rgba(255,255,255,.18); border-radius: 999px;
-      background: rgba(0,0,0,.5); color: rgba(255,255,255,.7);
-      padding: 10px 20px; font-size: .86rem; font-weight: 950;
-      cursor: pointer; font-family: inherit; transition: .18s ease;
-    }
-    .level-select-back:hover {
-      border-color: rgba(255,255,255,.4); color: #fff;
-    }
-
-    @media (max-width: 600px) {
-      .level-select-grid { grid-template-columns: repeat(2, 1fr); }
-      .level-select-card { min-height: 90px; }
-    }
-    /* ── FIM TELA DE SELEÇÃO DE NÍVEL ────────────────────────── */
-
     /* Badge de progresso salvo no card de dificuldade */
     .quiz-progress-badge {
       display: block;
@@ -1340,17 +1209,6 @@
       display: none !important;
       visibility: hidden !important;
       pointer-events: none !important;
-    }
-
-    /* Tela de seleção de nível */
-    body.tela-level-select #difficultyScreen,
-    body.tela-level-select .quiz-screen,
-    body.tela-level-select #quizScreen {
-      display: none !important;
-      visibility: hidden !important;
-    }
-    body.tela-level-select #levelSelectScreen {
-      display: flex !important;
     }
 
     body.tela-pergunta .quiz-screen.active {
@@ -6295,7 +6153,7 @@ body.tela-pergunta .answer-btn {
     }
   </style>
 </head>
-<script src="./guest-mode.js"></script>
+
 <body class="tela-dificuldade">
   <header class="topbar" aria-label="Controles do quiz">
     <div class="topbar-left">
@@ -6309,7 +6167,6 @@ body.tela-pergunta .answer-btn {
     <div class="topbar-actions">
       <button id="btn5050" class="power-btn" type="button"><span>50/50</span> <span id="count5050" class="power-count">0</span></button>
       <button id="btnPular" class="power-btn" type="button"><span>Pular</span> <span id="countPular" class="power-count">0</span></button>
-      <div id="cbjrAuthProfile" class="cbjr-auth-profile" aria-live="polite"></div>
     </div>
   </header>
 
@@ -6368,26 +6225,8 @@ body.tela-pergunta .answer-btn {
             <span class="level-desc">Modo raiz. Um erro e o nível acaba. Só pra quem é CBJR de verdade.</span>
           </button>
         </div>
-
-        <div id="charlibrianoQuizEntryWrap" style="display:none;text-align:center;margin-top:18px;">
-          <button id="charlibrianoQuizEntryBtn" class="charlibriano-start-btn" type="button" style="font-size:.9rem;min-height:46px;padding:0 24px;">
-            🎸 Modo Charlibriano <span id="charlibrianoQuizRecord"></span>
-          </button>
-        </div>
       </div>
     </section>
-
-    <!-- ── TELA DE SELEÇÃO DE NÍVEL ── -->
-    <section id="levelSelectScreen" class="screen" aria-label="Escolha o nível">
-      <div class="level-select-title">
-        <small id="lsSubtitle">Modo Normal</small>
-        <h1>Escolha o Nível</h1>
-        <p>Selecione um nível desbloqueado para jogar</p>
-      </div>
-      <div class="level-select-grid" id="levelSelectGrid"></div>
-      <button class="level-select-back" onclick="backToDifficulty()">← Mudar dificuldade</button>
-    </section>
-    <!-- ── FIM TELA DE SELEÇÃO DE NÍVEL ── -->
 
     <section id="quizScreen" class="screen quiz-screen" aria-label="Perguntas do quiz">
       <div id="choraoBalloon" class="chorao-balloon" aria-live="polite" aria-hidden="true"></div>
@@ -6433,102 +6272,12 @@ body.tela-pergunta .answer-btn {
       <div class="overlay-actions">
         <button id="nextLevelBtn" class="primary-btn" type="button">Próximo nível</button>
         <button id="retryLevelBtn" class="primary-btn" type="button">Tentar de novo</button>
-        <button id="shareResultBtn" class="secondary-btn" type="button">📲 Compartilhar resultado</button>
         <button class="secondary-btn" type="button" onclick="window.location.href='index.html?skipIntro=true'">Menu principal</button>
       </div>
     </div>
   </section>
 
   <div id="toast" class="toast"></div>
-
-  <style id="charlibriano-quiz-style">
-  /* ── PROMO PÓS-QUIZ (Rádio / Letras / Comunidade) ──────────── */
-  .cross-promo-box {
-    margin-top:18px;padding-top:18px;border-top:1px solid rgba(255,255,255,.12);
-    text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;
-  }
-  .cross-promo-title { font-weight:1000; color:#f1c40f; font-size:1rem; margin:0; }
-  .cross-promo-sub { font-weight:850; color:rgba(255,255,255,.72); font-size:.86rem; margin:0; max-width:420px; line-height:1.4; }
-  .cross-promo-actions { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:4px; }
-  .cross-promo-btn {
-    display:inline-flex; align-items:center; gap:6px; min-height:44px; padding:0 18px;
-    border-radius:12px; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.06);
-    color:#fff; font-weight:950; font-size:.86rem; text-decoration:none; cursor:pointer;
-    transition:.18s ease; font-family:inherit;
-  }
-  .cross-promo-btn:hover { border-color:rgba(241,196,15,.6); background:rgba(241,196,15,.1); transform:translateY(-2px); }
-  .cross-promo-btn-alt {
-    margin-top:4px; border-color:rgba(30,215,96,.45); background:rgba(30,215,96,.08); color:#1ed760;
-  }
-  .cross-promo-btn-alt:hover { background:rgba(30,215,96,.18); border-color:rgba(30,215,96,.75); }
-  /* ── FIM PROMO PÓS-QUIZ ────────────────────────────────────── */
-  /* ── MODO CHARLIBRIANO QUIZ ────────────────────────────────── */
-  .charlibriano-entry {
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    min-height:60vh;text-align:center;padding:clamp(20px,4vw,48px);gap:18px;
-    position:relative;overflow:hidden;
-  }
-  .charlibriano-entry::before {
-    content:"";position:absolute;inset:0;
-    background:radial-gradient(circle at 50% 30%,rgba(241,196,15,.18),transparent 60%);
-    pointer-events:none;
-  }
-  .charlibriano-badge {
-    display:inline-flex;align-items:center;gap:8px;
-    border:1px solid rgba(241,196,15,.6);border-radius:999px;
-    background:rgba(241,196,15,.12);color:#f1c40f;
-    padding:8px 18px;font-size:.76rem;font-weight:950;
-    letter-spacing:.12em;text-transform:uppercase;
-    box-shadow:0 0 24px rgba(241,196,15,.2);
-    animation:charliPulseQ 2s ease-in-out infinite;
-  }
-  @keyframes charliPulseQ{0%,100%{box-shadow:0 0 14px rgba(241,196,15,.15)}50%{box-shadow:0 0 32px rgba(241,196,15,.4)}}
-  .charlibriano-title {
-    font-family:'Elektrix',Arial,sans-serif;
-    font-size:clamp(2.8rem,8vw,5rem);color:#f1c40f;line-height:.88;margin:0;
-    text-shadow:0 0 40px rgba(241,196,15,.5),3px 5px 0 rgba(0,0,0,.7);
-  }
-  .charlibriano-sub {
-    font-size:clamp(.9rem,2vw,1.1rem);font-weight:900;
-    color:rgba(255,255,255,.75);max-width:520px;line-height:1.55;margin:0;
-  }
-  .charlibriano-rules {
-    display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-    gap:10px;width:min(560px,100%);margin:4px 0;
-  }
-  .charlibriano-rule {
-    border:1px solid rgba(255,255,255,.12);border-radius:16px;
-    background:rgba(255,255,255,.05);padding:12px 14px;text-align:center;
-  }
-  .charlibriano-rule .rule-icon{font-size:1.6rem;display:block;margin-bottom:5px}
-  .charlibriano-rule strong{display:block;font-size:.82rem;color:#fff;font-weight:950}
-  .charlibriano-rule span{font-size:.72rem;color:rgba(255,255,255,.55);font-weight:850}
-  .charlibriano-start-btn {
-    min-height:54px;padding:0 32px;border-radius:16px;border:0;
-    background:linear-gradient(90deg,#f1c40f,#e6b800);
-    color:#050505;font-weight:1000;font-size:1rem;
-    cursor:pointer;font-family:inherit;
-    box-shadow:0 14px 36px rgba(241,196,15,.3);
-    transition:.18s ease;letter-spacing:.02em;
-  }
-  .charlibriano-start-btn:hover{transform:translateY(-3px);filter:brightness(1.08)}
-  .charlibriano-gameover {
-    display:flex;flex-direction:column;align-items:center;
-    text-align:center;padding:clamp(20px,4vw,48px);gap:16px;
-    position:relative;overflow:hidden;
-  }
-  .charlibriano-gameover::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(255,59,48,.12),transparent 55%);pointer-events:none}
-  .charlibriano-gameover-icon{font-size:3.5rem;animation:goShakeQ .5s ease}
-  @keyframes goShakeQ{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
-  .charlibriano-gameover h2{font-family:'Elektrix',Arial,sans-serif;font-size:clamp(2rem,6vw,3.5rem);color:#f1c40f;margin:0;text-shadow:0 0 24px rgba(241,196,15,.4)}
-  .charlibriano-gameover-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:min(420px,100%)}
-  .charlibriano-stat{border:1px solid rgba(241,196,15,.22);border-radius:14px;background:rgba(255,255,255,.045);padding:12px 8px;text-align:center}
-  .charlibriano-stat .cs-val{font-family:'Elektrix',Arial,sans-serif;font-size:1.8rem;color:#f1c40f;line-height:.9;text-shadow:0 0 12px rgba(241,196,15,.4)}
-  .charlibriano-stat .cs-label{font-size:.65rem;font-weight:950;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em;margin-top:4px}
-  .charlibriano-gameover-record{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(30,215,96,.45);border-radius:999px;background:rgba(30,215,96,.08);color:#1ed760;padding:8px 16px;font-size:.82rem;font-weight:950}
-  .charlibriano-gameover-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
-  /* ── FIM MODO CHARLIBRIANO QUIZ ────────────────────────────── */
-  </style>
 
   <script>
     const CONFIG = {
@@ -6749,366 +6498,6 @@ body.tela-pergunta .answer-btn {
       toast: document.getElementById('toast')
     };
 
-    // ═══════════════════════════════════════════════════════
-    // MODO CHARLIBRIANO — QUIZ (perguntas infinitas, zero erros)
-    // Auto-contido: usa suas próprias funções de render/resposta,
-    // sem alterar o fluxo normal do quiz (startLevel/answerQuestion/
-    // finishLevel continuam intactos e funcionando como sempre).
-    // ═══════════════════════════════════════════════════════
-    const CHARLIBRIANO_QUIZ_KEY = 'cbjr_charlibriano_quiz_v1';
-
-    const charlibrianoQuiz = {
-      active: false,
-      levelsCompleted: 0,
-      totalCorrect: 0,
-      queue: [],
-      currentQuestions: [],
-      currentQuestionIndex: 0,
-      hits: 0
-    };
-
-    // Guarda o HTML original do card de resultado para restaurá-lo depois de
-    // usarmos essa mesma área para a tela de fim do Modo Charlibriano — assim
-    // os elementos cacheados em `els` (resultTitle, nextLevelBtn, etc.) nunca
-    // ficam órfãos quando o quiz normal for jogado novamente.
-    const RESULT_OVERLAY_CARD_PRISTINE_HTML =
-      document.querySelector('#resultOverlay .overlay-card')?.innerHTML || '';
-
-    function restoreResultOverlayCard() {
-      const card = document.querySelector('#resultOverlay .overlay-card');
-      if (!card || !RESULT_OVERLAY_CARD_PRISTINE_HTML) return;
-      card.innerHTML = RESULT_OVERLAY_CARD_PRISTINE_HTML;
-      els.resultTitle   = document.getElementById('resultTitle');
-      els.resultText    = document.getElementById('resultText');
-      els.resultPhrase  = document.getElementById('resultPhrase');
-      els.nextLevelBtn  = document.getElementById('nextLevelBtn');
-      els.retryLevelBtn = document.getElementById('retryLevelBtn');
-      els.nextLevelBtn.addEventListener('click', goToNextLevel);
-      els.retryLevelBtn.addEventListener('click', retryCurrentLevel);
-    }
-
-    function getCharlibrianoQuizRecord() {
-      try { return JSON.parse(localStorage.getItem(CHARLIBRIANO_QUIZ_KEY) || '{}'); } catch(_) { return {}; }
-    }
-
-    function isCharlibrianoQuizUnlocked() {
-      const total = state.levels.length;
-      if (!total) return false;
-      return ['facil', 'normal', 'dificil'].some(diff => getHighestLevel(diff) >= total);
-    }
-
-    function updateCharlibrianoQuizEntry() {
-      const wrap = document.getElementById('charlibrianoQuizEntryWrap');
-      const btn  = document.getElementById('charlibrianoQuizEntryBtn');
-      const rec  = document.getElementById('charlibrianoQuizRecord');
-      if (!wrap || !btn) return;
-
-      const guestMode = window.CBJR_GUEST?.isGuest() && !window.CBJR_GUEST?.isLoggedIn();
-      const unlocked = isCharlibrianoQuizUnlocked() && !guestMode;
-      wrap.style.display = unlocked ? 'block' : 'none';
-      if (unlocked) {
-        const record = getCharlibrianoQuizRecord();
-        if (rec) rec.textContent = record.bestLevels ? `· Recorde: ${record.bestLevels} nível${record.bestLevels > 1 ? 'is' : ''}` : '· Desbloqueado!';
-        btn.onclick = showCharlibrianoQuizEntry;
-      }
-    }
-
-    function showCharlibrianoQuizEntry() {
-      document.getElementById('charlibrianoQuizModal')?.remove();
-      const rec = getCharlibrianoQuizRecord();
-      const modal = document.createElement('div');
-      modal.id = 'charlibrianoQuizModal';
-      modal.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);';
-      modal.innerHTML = `
-        <div class="charlibriano-entry" style="max-width:560px;width:100%;border:1px solid rgba(241,196,15,.4);border-radius:28px;background:radial-gradient(circle at 50% 0%,rgba(241,196,15,.16),transparent 48%),rgba(5,5,5,.97);box-shadow:0 30px 80px rgba(0,0,0,.85);padding:clamp(22px,4vw,36px);">
-          <div class="charlibriano-badge">🎸 Modo Especial Desbloqueado</div>
-          <h2 class="charlibriano-title">Modo<br>Charlibriano</h2>
-          <p class="charlibriano-sub">
-            Você dominou os níveis do Quiz.<br>
-            Agora começa o verdadeiro teste — perguntas infinitas em níveis aleatórios.<br>
-            <strong>Um erro e acabou.</strong>
-          </p>
-          <div class="charlibriano-rules">
-            <div class="charlibriano-rule">
-              <span class="rule-icon">♾️</span>
-              <strong>Infinito</strong>
-              <span>Níveis sem fim em ordem aleatória</span>
-            </div>
-            <div class="charlibriano-rule">
-              <span class="rule-icon">💀</span>
-              <strong>Zero erros</strong>
-              <span>Qualquer erro encerra o modo</span>
-            </div>
-            <div class="charlibriano-rule">
-              <span class="rule-icon">⭐</span>
-              <strong>XP real</strong>
-              <span>+50 XP por nível completado</span>
-            </div>
-          </div>
-          ${rec.bestLevels ? `<div class="charlibriano-gameover-record">🏆 Seu recorde: ${rec.bestLevels} nível${rec.bestLevels > 1 ? 'is' : ''} consecutivos</div>` : ''}
-          <button class="charlibriano-start-btn" id="charlibrianoQuizStartBtn">🎸 Entrar no Modo Charlibriano</button>
-          <button id="charlibrianoQuizSkipBtn" style="margin-top:8px;min-height:44px;padding:0 20px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:rgba(255,255,255,.7);cursor:pointer;font-family:inherit;font-weight:950;width:100%;">Voltar</button>
-        </div>
-      `;
-      document.body.appendChild(modal);
-      modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
-      document.getElementById('charlibrianoQuizStartBtn').addEventListener('click', () => { modal.remove(); startCharlibrianoQuiz(); });
-      document.getElementById('charlibrianoQuizSkipBtn').addEventListener('click', () => modal.remove());
-    }
-
-    function startCharlibrianoQuiz() {
-      if (!state.levels.length) {
-        showToast('As perguntas ainda não foram carregadas.');
-        return;
-      }
-
-      charlibrianoQuiz.active = true;
-      charlibrianoQuiz.levelsCompleted = 0;
-      charlibrianoQuiz.totalCorrect = 0;
-      charlibrianoQuiz.queue = shuffleArray(state.levels.map((_, i) => i));
-
-      const levelSelectScreen = document.getElementById('levelSelectScreen');
-      levelSelectScreen?.classList.remove('active');
-      if (levelSelectScreen) levelSelectScreen.style.display = 'none';
-      els.difficultyScreen.classList.remove('active');
-      els.difficultyScreen.style.display = 'none';
-      document.body.classList.remove('tela-dificuldade', 'tela-level-select');
-      document.body.classList.add('tela-pergunta');
-      els.quizScreen.classList.add('active');
-      els.quizScreen.style.display = 'block';
-      els.resultOverlay.classList.remove('show', 'quiz-finalizado');
-
-      // Modo Charlibriano é hardcore: sem powerups de ajuda.
-      els.btn5050.style.display = 'none';
-      els.btnPular.style.display = 'none';
-
-      nextCharlibrianoQuizLevel();
-    }
-
-    function nextCharlibrianoQuizLevel() {
-      if (!charlibrianoQuiz.queue.length) {
-        charlibrianoQuiz.queue = shuffleArray(state.levels.map((_, i) => i));
-      }
-      const idx = charlibrianoQuiz.queue.shift();
-      const level = state.levels[idx];
-
-      charlibrianoQuiz.currentQuestionIndex = 0;
-      charlibrianoQuiz.hits = 0;
-      charlibrianoQuiz.currentQuestions = shuffleArray(level.perguntas).map(question => ({
-        ...question,
-        opcoes: shuffleArray(question.opcoes)
-      }));
-
-      renderCharlibrianoQuestion();
-    }
-
-    function getCharlibrianoCurrentQuestion() {
-      return charlibrianoQuiz.currentQuestions[charlibrianoQuiz.currentQuestionIndex];
-    }
-
-    function renderCharlibrianoQuestion() {
-      const question = getCharlibrianoCurrentQuestion();
-      if (!question) {
-        charlibrianoLevelCleared();
-        return;
-      }
-
-      els.feedbackBox.classList.remove('show');
-      els.feedbackBox.innerHTML = '';
-      hideChoraoBalloon();
-      els.nextQuestionBtn.classList.remove('show');
-      els.answersGrid.innerHTML = '';
-
-      els.hudPergunta.textContent = `${charlibrianoQuiz.currentQuestionIndex + 1}/${charlibrianoQuiz.currentQuestions.length}`;
-      els.hudPontos.textContent = charlibrianoQuiz.totalCorrect * CONFIG.scoreCorrect;
-      els.hudAcertos.textContent = charlibrianoQuiz.hits;
-      els.hudNivel.textContent = `🎸 ${charlibrianoQuiz.levelsCompleted + 1}º`;
-
-      els.questionKicker.textContent = `Pergunta ${charlibrianoQuiz.currentQuestionIndex + 1} de ${charlibrianoQuiz.currentQuestions.length}`;
-      els.quoteLine.textContent = `“${getCurrentLevelPhrase()}”`;
-      typeQuestion(question.pergunta);
-
-      question.opcoes.forEach((option, index) => {
-        const button = document.createElement('button');
-        button.className = 'answer-btn';
-        button.type = 'button';
-        button.dataset.answer = option;
-        button.innerHTML = `
-          <span class="answer-letter">${String.fromCharCode(65 + index)}</span>
-          <span>${escapeHtml(option)}</span>
-        `;
-        button.addEventListener('click', () => answerCharlibrianoQuestion(option, button));
-        els.answersGrid.appendChild(button);
-        setTimeout(() => button.classList.add('show'), 220 + (index * CONFIG.answerDelay));
-      });
-    }
-
-    function answerCharlibrianoQuestion(selected, button) {
-      if (!charlibrianoQuiz.active) return;
-      const question = getCharlibrianoCurrentQuestion();
-      if (!question) return;
-
-      const isCorrect = sameAnswer(selected, question.resposta);
-      els.answersGrid.querySelectorAll('.answer-btn').forEach(b => { b.disabled = true; });
-
-      if (isCorrect) {
-        charlibrianoQuiz.hits++;
-        charlibrianoQuiz.totalCorrect++;
-        button.classList.add('correct');
-        showCorrectFeedback(question.curiosidade);
-        els.hudPontos.textContent = charlibrianoQuiz.totalCorrect * CONFIG.scoreCorrect;
-
-        setTimeout(() => {
-          charlibrianoQuiz.currentQuestionIndex++;
-          renderCharlibrianoQuestion();
-        }, 1450);
-      } else {
-        button.classList.add('wrong');
-        hideChoraoBalloon();
-        els.feedbackBox.innerHTML = `
-          <strong>Errou no Modo Charlibriano.</strong>
-          Um erro e acabou. Confira seu resultado.
-        `;
-        els.feedbackBox.classList.add('show');
-        setTimeout(() => charlibrianoQuizGameOver(), 1800);
-      }
-    }
-
-    function charlibrianoLevelCleared() {
-      charlibrianoQuiz.levelsCompleted++;
-      if (window.CBJRProgress?.addXp) window.CBJRProgress.addXp(50, `Charlibriano Quiz: nível ${charlibrianoQuiz.levelsCompleted}`);
-
-      els.resultOverlay.classList.remove('quiz-finalizado');
-      els.resultTitle.textContent = 'Nível dominado!';
-      els.resultText.innerHTML = `<span>+50 XP</span><span class="level-score-line">${charlibrianoQuiz.levelsCompleted} nível${charlibrianoQuiz.levelsCompleted > 1 ? 'is' : ''} no Modo Charlibriano</span>`;
-      els.resultPhrase.textContent = 'Próximo nível em instantes...';
-      els.nextLevelBtn.style.display = 'none';
-      els.retryLevelBtn.style.display = 'none';
-      const shareBtn = document.getElementById('shareResultBtn');
-      if (shareBtn) shareBtn.style.display = 'none';
-      els.resultOverlay.classList.add('show');
-
-      setTimeout(() => {
-        els.resultOverlay.classList.remove('show');
-        nextCharlibrianoQuizLevel();
-      }, 2200);
-    }
-
-    function charlibrianoQuizGameOver() {
-      charlibrianoQuiz.active = false;
-
-      const levels  = charlibrianoQuiz.levelsCompleted;
-      const acertos = charlibrianoQuiz.totalCorrect;
-      const xpGanho = levels * 50;
-
-      const rec  = getCharlibrianoQuizRecord();
-      const best = Math.max(rec.bestLevels || 0, levels);
-      const isRecord = levels > 0 && levels >= best;
-
-      try {
-        localStorage.setItem(CHARLIBRIANO_QUIZ_KEY, JSON.stringify({
-          bestLevels: best,
-          bestAcertos: Math.max(rec.bestAcertos || 0, acertos),
-          totalXp: (rec.totalXp || 0) + xpGanho,
-          hasPlayed: true
-        }));
-      } catch(_) {}
-
-      // CORREÇÃO CBJR: o Charlibriano agora SOMA no ranking do Quiz.
-      // Se o recorde de acertos cresceu, o total (Quiz normal + Charlibriano)
-      // é reenviado — se não cresceu, a função percebe e não envia nada.
-      try { pushQuizTotalToRanking(); } catch(_) {}
-
-      if (levels >= 1) {
-        try { localStorage.setItem('cbjr_selo_charlibriano_quiz', '1'); } catch(_) {}
-        window.dispatchEvent(new CustomEvent('cbjr-charlibriano-quiz-reached', { detail: { levels, acertos, xp: xpGanho } }));
-      }
-
-      els.resultOverlay.classList.remove('quiz-finalizado');
-      const card = els.resultOverlay.querySelector('.overlay-card');
-      if (card) {
-        card.innerHTML = `
-          <div class="charlibriano-gameover">
-            <div class="charlibriano-gameover-icon">${levels === 0 ? '💀' : '🎸'}</div>
-            <h2>${levels === 0 ? 'Acabou cedo!' : 'Modo Charlibriano'}</h2>
-            <p style="color:rgba(255,255,255,.7);font-weight:850;max-width:420px;line-height:1.5;">
-              ${levels === 0
-                ? 'Você errou na primeira pergunta. O Modo Charlibriano não perdoa!'
-                : `Você completou <strong style="color:#f1c40f">${levels} nível${levels > 1 ? 'is' : ''}</strong> consecutivos sem errar uma pergunta!`}
-            </p>
-            <div class="charlibriano-gameover-stats">
-              <div class="charlibriano-stat"><div class="cs-val">${levels}</div><div class="cs-label">Níveis</div></div>
-              <div class="charlibriano-stat"><div class="cs-val">${acertos}</div><div class="cs-label">Acertos</div></div>
-              <div class="charlibriano-stat"><div class="cs-val">+${xpGanho}</div><div class="cs-label">XP ganho</div></div>
-            </div>
-            ${isRecord && levels > 0
-              ? `<div class="charlibriano-gameover-record">🏆 Novo recorde pessoal!</div>`
-              : `<div style="font-size:.78rem;color:rgba(255,255,255,.45);font-weight:850;">Recorde: ${best} nível${best > 1 ? 'is' : ''}</div>`}
-            <div class="charlibriano-gameover-actions">
-              <button class="charlibriano-start-btn" id="charlibrianoQuizRetryBtn" type="button">🎸 Tentar de novo</button>
-              <button class="secondary-btn" id="charlibrianoQuizExitBtn" type="button">Voltar ao Quiz</button>
-            </div>
-          </div>
-        `;
-      }
-      els.resultOverlay.classList.add('show');
-
-      document.getElementById('charlibrianoQuizRetryBtn')?.addEventListener('click', () => {
-        els.resultOverlay.classList.remove('show');
-        restoreResultOverlayCard();
-        startCharlibrianoQuiz();
-      });
-      document.getElementById('charlibrianoQuizExitBtn')?.addEventListener('click', () => {
-        els.resultOverlay.classList.remove('show');
-        restoreResultOverlayCard();
-        exitCharlibrianoQuizToMenu();
-      });
-
-      updateCharlibrianoQuizEntry();
-    }
-
-    function exitCharlibrianoQuizToMenu() {
-      els.quizScreen.classList.remove('active');
-      els.quizScreen.style.display = 'none';
-      els.btn5050.style.display = '';
-      els.btnPular.style.display = '';
-      document.body.classList.remove('tela-pergunta');
-      document.body.classList.add('tela-dificuldade');
-      els.difficultyScreen.classList.add('active');
-      els.difficultyScreen.style.display = '';
-      updateCharlibrianoQuizEntry();
-    }
-    // ═══════════════════════════════════════════════════════
-    // FIM MODO CHARLIBRIANO — QUIZ
-    // ═══════════════════════════════════════════════════════
-
-    // ═══════════════════════════════════════════════════════
-    // PROMO PÓS-QUIZ — convite pra conhecer Rádio, Letras e Comunidade
-    // Aparece ao finalizar o quiz inteiro ou ao perder as vidas.
-    // ═══════════════════════════════════════════════════════
-    function showCrossPromoMessage(approved) {
-      const card = els.resultOverlay.querySelector('.overlay-card');
-      if (!card) return;
-
-      const box = document.createElement('div');
-      box.id = 'crossPromoBox';
-      box.className = 'cross-promo-box';
-      box.innerHTML = `
-        <p class="cross-promo-title">${approved ? '🎸 Muito bem, você jogou muito bem!' : '🎸 Quase lá! Bora tentar de novo?'}</p>
-        <p class="cross-promo-sub">Gostaria de conhecer o Modo Rádio ou o Modo Letras?</p>
-        <div class="cross-promo-actions">
-          <a href="radio.html" class="cross-promo-btn">🎧 Modo Rádio</a>
-          <a href="letras.html" class="cross-promo-btn">🎤 Modo Letras</a>
-        </div>
-        <p class="cross-promo-sub" style="margin-top:14px;">Quer entrar na nossa comunidade e deixar uma mensagem? Precisamos saber o que podemos melhorar!</p>
-        <a href="fans.html" class="cross-promo-btn cross-promo-btn-alt">💬 Ir para a Comunidade</a>
-      `;
-      card.appendChild(box);
-    }
-    // ═══════════════════════════════════════════════════════
-    // FIM PROMO PÓS-QUIZ
-    // ═══════════════════════════════════════════════════════
-
     document.addEventListener('DOMContentLoaded', init);
 
     async function init() {
@@ -7136,7 +6525,12 @@ body.tela-pergunta .answer-btn {
 
         // Mostra progresso salvo nos cards de dificuldade
         renderSavedProgress();
-        updateCharlibrianoQuizEntry();
+
+        // Verifica se veio de conquista com dificuldade específica
+        const urlDiff = new URLSearchParams(location.search).get('difficulty');
+        if(urlDiff && ['facil','normal','dificil'].includes(urlDiff)){
+          setTimeout(() => startQuiz(urlDiff), 400);
+        }
       } catch (error) {
         showFatalError(error.message);
       }
@@ -7172,7 +6566,7 @@ body.tela-pergunta .answer-btn {
           button.classList.add('is-pressed');
           setTimeout(() => {
             button.classList.remove('is-pressed');
-            showLevelSelect(difficulty); // ← abre grade de níveis antes de iniciar
+            startQuiz(difficulty);
           }, 220);
         });
       });
@@ -7183,95 +6577,6 @@ body.tela-pergunta .answer-btn {
       els.nextLevelBtn.addEventListener('click', goToNextLevel);
       els.retryLevelBtn.addEventListener('click', retryCurrentLevel);
     }
-
-    // ── TELA DE SELEÇÃO DE NÍVEL ─────────────────────────────
-    const DIFF_COLORS = {
-      facil:  { accent: '#1ed760', label: 'Fácil',  glow: 'rgba(30,215,96,.22)'  },
-      normal: { accent: '#f1c40f', label: 'Normal', glow: 'rgba(241,196,15,.22)' },
-      dificil:{ accent: '#ff3b30', label: 'Difícil', glow: 'rgba(255,59,48,.22)' },
-    };
-
-    const LEVEL_SONGS = [
-      { num: 1, song: 'O Coro Vai Comê!',      icon: '🎵' },
-      { num: 2, song: 'Zóio de Lula',           icon: '🎵' },
-      { num: 3, song: 'Só Por Uma Noite',       icon: '🎵' },
-      { num: 4, song: 'A Banca',                icon: '🎵' },
-      { num: 5, song: 'Dias de Luta',           icon: '🎵' },
-      { num: 6, song: 'Lutar Pelo Que é Meu',  icon: '🎵' },
-      { num: 7, song: 'Só os Loucos Sabem',     icon: '🎵' },
-      { num: 8, song: 'Céu Azul',               icon: '🎵' },
-    ];
-
-    let _levelSelectDifficulty = 'normal';
-
-    function showLevelSelect(difficulty) {
-      _levelSelectDifficulty = difficulty;
-      const meta    = DIFF_COLORS[difficulty] || DIFF_COLORS.normal;
-      const total   = state.levels.length || 8;
-      const highest = getHighestLevel(difficulty);
-
-      const screen = document.getElementById('levelSelectScreen');
-      screen.style.setProperty('--ls-accent', meta.accent);
-      document.getElementById('lsSubtitle').textContent = `Modo ${meta.label}`;
-
-      const grid = document.getElementById('levelSelectGrid');
-      grid.innerHTML = Array.from({ length: total }, (_, i) => {
-        const num      = i + 1;
-        const levelMeta = LEVEL_SONGS[i] || { num, song: `Nível ${num}`, icon: '🎵' };
-        const isDone   = i < highest;
-        const isNext   = i === highest;
-        const isLocked = i > highest;
-
-        let stateClass = '';
-        let badge = '';
-        let tag = '';
-
-        if (isDone)   { stateClass = 'ls-done';   badge = '<span class="ls-badge">✅</span>'; }
-        if (isNext)   { stateClass = 'ls-next';   tag   = '<span class="ls-next-tag">Continue aqui</span>'; }
-        if (isLocked) { stateClass = 'ls-locked'; badge = '<span class="ls-badge">🔒</span>'; }
-
-        return `
-          <button
-            class="level-select-card ${stateClass}"
-            type="button"
-            onclick="pickLevel(${i})"
-            ${isLocked ? 'disabled aria-disabled="true"' : ''}
-            aria-label="Nível ${num} — ${levelMeta.song}"
-          >
-            ${badge}
-            <span class="ls-num">${num}</span>
-            <span class="ls-song">${levelMeta.song}</span>
-            ${tag}
-          </button>
-        `;
-      }).join('');
-
-      els.difficultyScreen.classList.remove('active');
-      els.difficultyScreen.style.display = 'none';
-      screen.classList.add('active');
-      document.body.classList.remove('tela-dificuldade');
-      document.body.classList.add('tela-level-select');
-    }
-
-    function pickLevel(levelIndex) {
-      const screen = document.getElementById('levelSelectScreen');
-      screen.classList.remove('active');
-      screen.style.display = 'none';
-      document.body.classList.remove('tela-level-select');
-      startQuizAtLevel(_levelSelectDifficulty, levelIndex);
-    }
-
-    function backToDifficulty() {
-      const screen = document.getElementById('levelSelectScreen');
-      screen.classList.remove('active');
-      screen.style.display = 'none';
-      document.body.classList.remove('tela-level-select');
-      els.difficultyScreen.style.display = '';
-      els.difficultyScreen.classList.add('active');
-      document.body.classList.add('tela-dificuldade');
-      updateCharlibrianoQuizEntry();
-    }
-    // ── FIM TELA DE SELEÇÃO DE NÍVEL ─────────────────────────
 
     function normalizeLevels(data) {
       if (!Array.isArray(data)) return [];
@@ -7367,11 +6672,6 @@ body.tela-pergunta .answer-btn {
     }
 
     function startQuiz(difficulty) {
-      // Mantido como fallback — redireciona para seleção de nível
-      showLevelSelect(difficulty);
-    }
-
-    function startQuizAtLevel(difficulty, levelIndex) {
       if (!state.levels.length) {
         showToast('As perguntas ainda não foram carregadas.');
         return;
@@ -7386,25 +6686,28 @@ body.tela-pergunta .answer-btn {
       state.powerups.fifty = settings.fifty;
       state.powerups.skip = settings.skip;
 
-      const safeIndex = Math.min(Math.max(0, levelIndex), state.levels.length - 1);
-      state.currentLevelIndex = safeIndex;
+      // Retoma do nível salvo se for a mesma dificuldade
+      const progress = loadProgress();
+      const savedLevel = progress.lastDifficulty === difficulty
+        ? Math.min(Number(progress.lastLevelIndex || 0), state.levels.length - 1)
+        : 0;
+      state.currentLevelIndex = savedLevel;
 
-      document.body.classList.remove('tela-dificuldade', 'tela-level-select');
+      document.body.classList.remove('tela-dificuldade');
       document.body.classList.add('tela-pergunta');
       els.difficultyScreen.classList.remove('active');
       els.quizScreen.classList.add('active');
       els.difficultyScreen.style.display = 'none';
-      document.getElementById('levelSelectScreen').style.display = 'none';
       els.quizScreen.style.display = 'block';
       els.resultOverlay.classList.remove('show');
 
-      startLevel(safeIndex);
+      startLevel(savedLevel);
 
-      if (safeIndex > 0) {
-        showToast(`Iniciando nível ${safeIndex + 1} 🎸`);
+      // Avisa o jogador se retomou de onde parou
+      if (savedLevel > 0) {
+        showToast(`Continuando do nível ${savedLevel + 1} 🎸`);
       }
     }
-    window.startQuizAtLevel = startQuizAtLevel; // expõe para desafio.js
 
     function startLevel(levelIndex) {
       const level = state.levels[levelIndex];
@@ -7551,19 +6854,14 @@ body.tela-pergunta .answer-btn {
     }
 
     function showCorrectFeedback(curiosity) {
-      const msg = curiosity || '';
-      // Desktop: balão do Chorão. Mobile: caixa de feedback. Nunca os dois.
-      if (window.innerWidth <= 760) {
-        if (els.feedbackBox) {
-          els.feedbackBox.innerHTML =
-            '<strong>✅ Você acertou!</strong>' +
-            (msg ? '<span class="cbjr-curiosity-body">' + escapeHtml(msg) + '</span>' : '');
-          els.feedbackBox.classList.add('show');
-        }
-      } else {
-        if (msg) showChoraoBalloon(msg);
+      const msg = curiosity || 'Mandou bem nessa.';
+      showChoraoBalloon(msg);
+      if (window.innerWidth <= 760 && els.feedbackBox) {
+        els.feedbackBox.innerHTML =
+          '<strong>Você acertou!</strong>' +
+          '<span class="cbjr-curiosity-body">' + escapeHtml(msg) + '</span>';
+        els.feedbackBox.classList.add('show');
       }
-      showToast(`+${CONFIG.scoreCorrect} pts`);
     }
 
     function showWrongFeedback(settings) {
@@ -7622,20 +6920,6 @@ body.tela-pergunta .answer-btn {
     }
 
     function nextQuestion() {
-      // ── MODO VISITANTE: limite de 5 perguntas ──────────
-      if (window.CBJR_GUEST?.isGuest() && !window.CBJR_GUEST?.isLoggedIn()) {
-        const key = 'cbjr_guest_quiz_count';
-        window.CBJR_GUEST.incCount(key);
-        const count = window.CBJR_GUEST.getCount(key);
-        if (count >= 5) {
-          window.CBJR_GUEST.showModal(
-            'Gostou do Quiz? 🎸',
-            'Você já respondeu 5 perguntas no modo visitante! Faça login com sua conta Google para continuar jogando sem limites, salvar seu progresso e subir no ranking.'
-          );
-          return;
-        }
-      }
-      // ── FIM MODO VISITANTE ─────────────────────────────
       state.currentQuestionIndex++;
       if (state.currentQuestionIndex >= state.currentQuestions.length) {
         finishLevel();
@@ -7722,8 +7006,6 @@ body.tela-pergunta .answer-btn {
       if (state.levelApproved) {
         const prev = getHighestLevel(diff);
         if (lvl > prev) saveProgress({ [`highestLevel_${diff}`]: lvl });
-        // ── Mural de atividades ──
-        window.dispatchEvent(new CustomEvent('cbjr-quiz-level-complete', { detail: { level: state.currentLevelIndex, difficulty: state.difficulty } }));
       }
 
       // Salva pontuação máxima
@@ -7732,12 +7014,11 @@ body.tela-pergunta .answer-btn {
         saveProgress({ [`highScore_${diff}`]: state.score });
       }
 
-      // Salva o nível em que parou (para retomar)
-      // Se aprovado, salva o PRÓXIMO nível para retomar do correto
+      // Salva o nível em que parou — se aprovado, salva o PRÓXIMO para retomar corretamente
       saveProgress({
         lastDifficulty: diff,
         lastLevelIndex: state.levelApproved
-          ? state.currentLevelIndex + 1  // próximo nível
+          ? state.currentLevelIndex + 1
           : Math.max(0, state.currentLevelIndex - 1),
         lastScore: state.score
       });
@@ -7776,147 +7057,19 @@ body.tela-pergunta .answer-btn {
 
       if (quizFinalizado) {
         els.resultTitle.textContent = 'Quiz finalizado';
+        // Frase principal: mantém a identidade CBJR/Chorão no destaque maior.
         els.resultPhrase.textContent = state.wrongs === 0
           ? 'Dias de luta, dias de glória. Obrigado por manter o som vivo.'
           : pickRandom(fallbackPhrases);
+        // Área menor: resumo + frase personalizada pelo desempenho.
         els.resultText.innerHTML = getFinalQuizSummaryHtml();
       }
 
-      // Envia para o ranking a cada nível aprovado
-      if (approved) sendQuizScoreToRanking();
-
       els.resultOverlay.classList.add('show');
 
-      // ── Promo pós-quiz (Rádio / Letras / Comunidade) ──
-      document.getElementById('crossPromoBox')?.remove();
-      if (quizFinalizado || !approved) {
-        showCrossPromoMessage(approved);
-      }
-
-      // ── Atualiza/mostra o botão do Modo Charlibriano ──
-      updateCharlibrianoQuizEntry();
-      if (quizFinalizado) {
-        setTimeout(() => {
-          const actions = els.resultOverlay.querySelector('.overlay-actions');
-          if (actions && isCharlibrianoQuizUnlocked() && !actions.querySelector('#charlibrianoQuizCtaBtn')) {
-            const btn = document.createElement('button');
-            btn.id = 'charlibrianoQuizCtaBtn';
-            btn.className = 'charlibriano-start-btn';
-            btn.type = 'button';
-            btn.style.cssText = 'margin-top:8px;width:100%;';
-            btn.textContent = '🎸 Entrar no Modo Charlibriano';
-            btn.addEventListener('click', () => {
-              els.resultOverlay.classList.remove('show');
-              showCharlibrianoQuizEntry();
-            });
-            actions.appendChild(btn);
-          }
-        }, 100);
-      }
-
-      // ── Botão compartilhar resultado ──
-      const shareBtn = document.getElementById('shareResultBtn');
-      if (shareBtn) {
-        shareBtn.style.display = approved ? 'inline-flex' : 'none';
-        shareBtn.onclick = () => {
-          if (!window.CBJRShareResult) return;
-          const LEVEL_SONGS = [
-            'O Coro Vai Comê!','Zóio de Lula','Só Por Uma Noite','A Banca',
-            'Dias de Luta','Lutar Pelo Que é Meu','Só os Loucos Sabem','Céu Azul'
-          ];
-          CBJRShareResult.quiz({
-            levelName:   LEVEL_SONGS[state.currentLevelIndex] || `Nível ${levelNumber}`,
-            levelNumber: levelNumber,
-            difficulty:  state.difficulty,
-            score:       state.score,
-            hits:        state.globalHits,
-            total:       state.totalAnswered
-          });
-        };
-      }
+      // Envia para o ranking a cada nível aprovado
+      if (approved) sendQuizScoreToRanking();
     }
-
-    // ── Envia pontuação do Quiz para o Ranking ──
-    // CORREÇÃO CBJR: a pontuação do ranking agora é a SOMA do melhor Quiz
-    // normal (por dificuldade) com o melhor Modo Charlibriano (acertos × 100).
-    // Cada componente guarda o próprio recorde; o total enviado só cresce.
-    function getCharlibrianoQuizScore() {
-      const rec = getCharlibrianoQuizRecord();
-      return (rec.bestAcertos || 0) * CONFIG.scoreCorrect;
-    }
-
-    function getQuizRankingParts() {
-      const bests = {
-        facil:   Number(localStorage.getItem('cbjr_quiz_rank_best_facil')   || 0),
-        normal:  Number(localStorage.getItem('cbjr_quiz_rank_best_normal')  || 0),
-        dificil: Number(localStorage.getItem('cbjr_quiz_rank_best_dificil') || 0)
-      };
-      const bestDiff = Object.keys(bests).reduce((a, b) => (bests[b] > bests[a] ? b : a), 'facil');
-      return { base: bests[bestDiff], bestDiff, charli: getCharlibrianoQuizScore() };
-    }
-
-    function pushQuizTotalToRanking() {
-      const parts = getQuizRankingParts();
-      const total = parts.base + parts.charli;
-      const lastKey  = 'cbjr_quiz_rank_last_total';
-      const lastSent = Number(localStorage.getItem(lastKey) || 0);
-      if (total <= 0 || total <= lastSent) return; // nada novo a enviar
-
-      // Estatísticas da última partida normal (para o ranking exibir precisão)
-      let stats = {};
-      try { stats = JSON.parse(localStorage.getItem('cbjr_quiz_rank_last_stats') || '{}') || {}; } catch (_) {}
-
-      let attempts = 0;
-      const poll = setInterval(async () => {
-        attempts++;
-        const progress = window.CBJRProgress;
-        const ready = progress?.ready && typeof progress?.submitRanking === 'function';
-
-        if (ready || attempts >= 16) {
-          clearInterval(poll);
-
-          if (!ready) {
-            console.warn('[Quiz Ranking] CBJRProgress não ficou pronto — pontuação não enviada');
-            return;
-          }
-
-          const ok = await progress.submitRanking({
-            score:             total,
-            baseScore:         parts.base,
-            charlibrianoScore: parts.charli,
-            accuracy:          stats.accuracy ?? 0,
-            correct:           stats.correct  ?? 0,
-            wrong:             stats.wrong    ?? 0,
-            total:             stats.total    ?? 0,
-            levelsCompleted:   stats.levelsCompleted ?? 0,
-            gameMode:          'quiz',
-            source:            'quiz-cbjr-v2',
-            difficulty:        parts.bestDiff,
-            rankTitle:         parts.bestDiff === 'dificil' ? 'Mestre do Quiz' : parts.bestDiff === 'facil' ? 'Iniciante' : 'Desafiante',
-            timestamp:         Date.now()
-          });
-
-          if (ok) {
-            localStorage.setItem(lastKey, String(total));
-            console.log(`[Quiz Ranking] ✅ ${total} pts gravados (Quiz ${parts.base} + Charlibriano ${parts.charli})`);
-            showToast(parts.charli > 0
-              ? `🏆 ${total} pts no ranking! (Quiz ${parts.base} + Charlibriano ${parts.charli})`
-              : `🏆 +${total} pts no ranking!`);
-          } else {
-            console.warn('[Quiz Ranking] submitRanking retornou false — verifique autenticação');
-            // lastSent não é atualizado: o reenvio acontece sozinho na
-            // próxima abertura do quiz (ver retomada abaixo).
-          }
-        }
-      }, 500);
-    }
-
-    // Retomada: se um envio anterior falhou (ou o jogador já tinha recorde de
-    // Charlibriano antes desta atualização), o total correto sobe sozinho —
-    // depois que a nuvem sincronizar (evita somar com dados incompletos num
-    // aparelho novo), com um fallback por tempo caso não haja login.
-    window.addEventListener('cbjr-progress-loaded', () => { try { pushQuizTotalToRanking(); } catch (_) {} });
-    setTimeout(() => { try { pushQuizTotalToRanking(); } catch (_) {} }, 8000);
 
     async function sendQuizScoreToRanking() {
       const answered   = state.totalAnswered || 0;
@@ -7928,21 +7081,26 @@ body.tela-pergunta .answer-btn {
       const levelsDone = (state.currentLevelIndex || 0) + 1;
       const finalScore = (state.score || 0) + diffBonus;
 
-      // Recorde do componente NORMAL desta dificuldade (sem Charlibriano)
-      const localKey = `cbjr_quiz_rank_best_${diff}`;
-      const prevBest = Number(localStorage.getItem(localKey) || 0);
-      if (finalScore <= prevBest) {
-        console.log(`[Quiz Ranking] Score ${finalScore} não supera recorde ${prevBest} — sem envio`);
-        return;
-      }
-      localStorage.setItem(localKey, String(finalScore));
-      try {
-        localStorage.setItem('cbjr_quiz_rank_last_stats', JSON.stringify({
-          accuracy, correct: hits, wrong: wrongs, total: answered, levelsCompleted: levelsDone
-        }));
-      } catch (_) {}
+      const ok = await window.CBJRCloudProgress?.submitRanking?.({
+        score:           finalScore,
+        accuracy:        accuracy,
+        correct:         hits,
+        wrong:           wrongs,
+        total:           answered,
+        levelsCompleted: levelsDone,
+        gameMode:        'quiz',
+        source:          'quiz-cbjr-v2',
+        difficulty:      diff,
+        rankTitle:       diff === 'dificil' ? 'Mestre do Quiz' : diff === 'facil' ? 'Iniciante' : 'Desafiante',
+        timestamp:       Date.now(),
+        createdAtText:   new Date().toISOString()
+      });
 
-      pushQuizTotalToRanking();
+      if (ok) {
+        console.log(`[Quiz Ranking] ✅ ${finalScore} pts (nível ${levelsDone})`);
+      } else {
+        console.warn('[Quiz Ranking] ⚠️ submitRanking não disponível');
+      }
     }
 
     function goToNextLevel() {
@@ -8845,8 +8003,7 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
 <!-- CBJR PERFIL GOOGLE ÚNICO — sem tela de login nas páginas internas -->
 <style id="cbjr-auth-profile-style">
   .cbjr-auth-profile {
-    position: static;
-    z-index: auto;
+    position: fixed; top: 18px; right: 18px; z-index: 5000;
     display: none; font-family: Inter, Arial, Helvetica, sans-serif;
   }
   .cbjr-auth-profile.show { display: block; }
@@ -8887,7 +8044,7 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
   .cbjr-auth-menu a:hover, .cbjr-auth-menu button:hover { background: rgba(241,196,15,.14); border-color: rgba(241,196,15,.42); }
   .cbjr-auth-logout { color:#ffb3b3!important; }
   @media (max-width: 700px) {
-    /* cbjr-auth-profile: posicionado pelo topbar-actions */
+    .cbjr-auth-profile { top: 10px; right: 10px; }
     .cbjr-auth-trigger { padding: 5px; gap: 7px; }
     .cbjr-auth-trigger img, .cbjr-auth-fallback { width: 32px; height: 32px; }
     .cbjr-auth-name { max-width: 126px; font-size: .82rem; }
@@ -8895,26 +8052,21 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     .cbjr-auth-caret { font-size:.8rem; }
   }
 </style>
-<!-- CBJR Firebase Progress Core — mesmo módulo usado pela Rádio e Letras -->
-<script type="module" src="./firebase-progress.js"></script>
-
+<div id="cbjrAuthProfile" class="cbjr-auth-profile" aria-live="polite"></div>
 <script type="module" id="cbjr-auth-profile-script">
   import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
   import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
   import { getFirestore, doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
   const firebaseConfig = {
-    // CORREÇÃO CBJR: config unificada com o restante do site (a antiga usava
-    // outra apiKey/appId e podia quebrar a sessão Google conforme a ordem
-    // de carregamento dos scripts).
-    apiKey: 'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
+    apiKey: 'AIzaSyDtb8jvVd0lMRy96QfqfjAg1dBReRIoRg4',
     authDomain: 'ranking-cbjr.firebaseapp.com',
     databaseURL: 'https://ranking-cbjr-default-rtdb.firebaseio.com',
     projectId: 'ranking-cbjr',
     storageBucket: 'ranking-cbjr.firebasestorage.app',
     messagingSenderId: '681180179118',
-    appId: '1:681180179118:web:fe10833848e8bb8194db3f',
-    measurementId: 'G-QK5QE2Y1CC'
+    appId: '1:681180179118:web:3ac202c9f7ed69cf94db3f',
+    measurementId: 'G-ZXMNGH3TVG'
   };
   const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -9012,12 +8164,7 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     'radioCBJR_achievements_v1',
     'cbjr_letters_completed',
     'lettersCBJR_playerName',
-    'cobjr_quiz_achievements',
-    'cobjr_quiz_progress_v1',
-    'cbjr_quiz_rank_best_facil',
-    'cbjr_quiz_rank_best_normal',
-    'cbjr_quiz_rank_best_dificil',
-    'cbjr_charlibriano_quiz_v1'
+    'cobjr_quiz_achievements'
   ];
 
   let currentUser = null;
@@ -9060,26 +8207,6 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     merged.radioCBJR_achievements_v1 = mergeObjectString(localData.radioCBJR_achievements_v1, remoteData.radioCBJR_achievements_v1);
     merged.cobjr_quiz_achievements = mergeObjectString(localData.cobjr_quiz_achievements, remoteData.cobjr_quiz_achievements);
     merged.cbjr_letters_completed = mergeArrayString(localData.cbjr_letters_completed, remoteData.cbjr_letters_completed);
-
-    // CORREÇÃO CBJR: recordes numéricos do Quiz mesclam pelo MAIOR valor —
-    // um aparelho com dados antigos nunca rebaixa o recorde do outro.
-    ['cbjr_quiz_rank_best_facil', 'cbjr_quiz_rank_best_normal', 'cbjr_quiz_rank_best_dificil'].forEach(key => {
-      const l = Number(localData[key] ?? 0);
-      const r = Number(remoteData[key] ?? 0);
-      merged[key] = String(Math.max(Number.isFinite(l) ? l : 0, Number.isFinite(r) ? r : 0));
-    });
-
-    // Recorde do Modo Charlibriano: campo a campo pelo maior valor.
-    try {
-      const l = JSON.parse(localData.cbjr_charlibriano_quiz_v1 || '{}') || {};
-      const r = JSON.parse(remoteData.cbjr_charlibriano_quiz_v1 || '{}') || {};
-      merged.cbjr_charlibriano_quiz_v1 = JSON.stringify({
-        bestLevels:  Math.max(Number(l.bestLevels)  || 0, Number(r.bestLevels)  || 0),
-        bestAcertos: Math.max(Number(l.bestAcertos) || 0, Number(r.bestAcertos) || 0),
-        totalXp:     Math.max(Number(l.totalXp)     || 0, Number(r.totalXp)     || 0),
-        hasPlayed:   !!(l.hasPlayed || r.hasPlayed)
-      });
-    } catch (_) {}
 
     if (!merged.lettersCBJR_playerName && user?.displayName) {
       merged.lettersCBJR_playerName = user.displayName.split(' ')[0] || user.displayName;
@@ -9156,10 +8283,8 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     submitRanking: async (payload) => {
       if (!currentUser) { console.warn('[Quiz Ranking] sem usuário logado'); return false; }
       try {
-        // ID fixo por jogador+modo: reenviar uma pontuação nova ATUALIZA o
-        // registro existente em vez de criar um documento duplicado.
-        const docId = `${currentUser.uid}_${payload.gameMode || payload.source || 'quiz'}`;
-        await setDoc(doc(db, 'ranking', docId), {
+        const { addDoc, collection, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+        await addDoc(collection(db, 'ranking'), {
           ...payload,
           uid:      currentUser.uid,
           name:     currentUser.displayName || payload.name || 'Jogador CBJR',
@@ -10024,7 +9149,6 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
 }
 </style>
 <script type="module" src="./notificacoes.js"></script>
-<script src="./descoberta.js" defer></script>
 </body>
 </html>
 <!-- =============================================================
@@ -11279,7 +10403,3 @@ body.tela-pergunta .answer-btn.wrong {
 }
 
 </style>
-
-<script src="./desafio.js" defer></script>
-<script src="./activity-publisher.js" defer></script>
-<script src="./share-result.js" defer></script>
