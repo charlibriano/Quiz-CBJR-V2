@@ -747,7 +747,8 @@ function playAchievement(id){
       targetPage = 'quiz.html';
       // Conquistas que exigem modo Difícil no Quiz
       if(['secret_level_completed'].includes(id)){
-        params = '?difficulty=dificil';
+        // La Família 013: abre direto o nível secreto no modo Difícil
+        params = '?difficulty=dificil&nivel=secreto';
       }
       // Conquista de completar sem power-ups — abre quiz normal
       if(id === 'coca_cola_collaboration'){
