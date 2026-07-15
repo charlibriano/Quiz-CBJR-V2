@@ -6532,11 +6532,12 @@ body.tela-pergunta .answer-btn {
         const urlNivel = urlParams.get('nivel');
         if(urlDiff && ['facil','normal','dificil'].includes(urlDiff)){
           setTimeout(() => {
-            startQuiz(urlDiff);
             // Veio da conquista "La Família 013": abre direto o nível secreto (último nível)
             if (urlNivel === 'secreto') {
-              startLevel(state.levels.length - 1);
+              startQuiz(urlDiff, state.levels.length - 1);
               showToast('Nível secreto no modo Difícil 🔒 Boa sorte!');
+            } else {
+              startQuiz(urlDiff);
             }
           }, 400);
         }
@@ -6680,7 +6681,7 @@ body.tela-pergunta .answer-btn {
       return normalizeAnswerText(a) === normalizeAnswerText(b);
     }
 
-    function startQuiz(difficulty) {
+    function startQuiz(difficulty, forcedLevelIndex = null) {
       if (!state.levels.length) {
         showToast('As perguntas ainda não foram carregadas.');
         return;
@@ -6695,11 +6696,13 @@ body.tela-pergunta .answer-btn {
       state.powerups.fifty = settings.fifty;
       state.powerups.skip = settings.skip;
 
-      // Retoma do nível salvo se for a mesma dificuldade
+      // Retoma do nível salvo se for a mesma dificuldade (ou usa o nível forçado pela conquista)
       const progress = loadProgress();
-      const savedLevel = progress.lastDifficulty === difficulty
-        ? Math.min(Number(progress.lastLevelIndex || 0), state.levels.length - 1)
-        : 0;
+      const savedLevel = forcedLevelIndex !== null
+        ? Math.min(Number(forcedLevelIndex), state.levels.length - 1)
+        : (progress.lastDifficulty === difficulty
+          ? Math.min(Number(progress.lastLevelIndex || 0), state.levels.length - 1)
+          : 0);
       state.currentLevelIndex = savedLevel;
 
       document.body.classList.remove('tela-dificuldade');
