@@ -6498,6 +6498,19 @@ body.tela-pergunta .answer-btn {
       toast: document.getElementById('toast')
     };
 
+    // Gancho usado pelo Desafio do Dia (desafio.js): abre direto um nível numa
+    // dificuldade, aguardando as perguntas terminarem de carregar se preciso.
+    window.startQuizAtLevel = function(difficulty, levelIndex) {
+      const attempt = (tries) => {
+        if (state.levels && state.levels.length) {
+          startQuiz(difficulty, Number(levelIndex) || 0);
+        } else if (tries < 40) {
+          setTimeout(() => attempt(tries + 1), 250);
+        }
+      };
+      attempt(0);
+    };
+
     document.addEventListener('DOMContentLoaded', init);
 
     async function init() {
@@ -7090,6 +7103,15 @@ body.tela-pergunta .answer-btn {
 
       // Envia para o ranking a cada nível aprovado
       if (approved) sendQuizScoreToRanking();
+
+      // Avisa integrações externas (ex.: Desafio do Dia) que este nível foi aprovado
+      if (approved) {
+        try {
+          window.dispatchEvent(new CustomEvent('cbjr-quiz-level-complete', {
+            detail: { level: state.currentLevelIndex, difficulty: state.difficulty }
+          }));
+        } catch (_) {}
+      }
     }
 
     async function sendQuizScoreToRanking() {
