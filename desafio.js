@@ -83,8 +83,15 @@
   function getLetrasUnlockedCount() {
     try {
       const completed = JSON.parse(localStorage.getItem(LETRAS_COMPLETED_KEY) || '[]');
-      const n = Array.isArray(completed) ? completed.length : 0;
-      return Math.min(LETRAS_ALBUMS.length, Math.max(1, n + 1));
+      const list = Array.isArray(completed) ? completed : [];
+      // Mesma regra do letras.html: libera em sequência — os concluídos em
+      // ordem a partir do primeiro, mais o próximo da fila.
+      let n = 1;
+      for (const album of LETRAS_ALBUMS) {
+        if (list.includes(album.id)) n++;
+        else break;
+      }
+      return Math.min(LETRAS_ALBUMS.length, n);
     } catch(_) { return 1; }
   }
 
@@ -494,7 +501,27 @@
         target.appendChild(badge);
       }
 
-      if (isDesafio) setTimeout(() => { target.click(); }, 700);
+      if (isDesafio) {
+        // O clique automático pode cair nas travas do letras.html (login do
+        // Firebase ainda resolvendo, ou álbum bloqueado) e morrer em silêncio.
+        // Tenta algumas vezes e, se não abrir, avisa na tela.
+        let tries = 0;
+        const tryOpen = () => {
+          target.click();
+          setTimeout(() => {
+            const grid = document.getElementById('album-grid');
+            const selectionVisible = grid && grid.offsetParent !== null;
+            if (!selectionVisible) return; // o álbum abriu, nada mais a fazer
+            if (++tries < 6) { tryOpen(); return; }
+            const msg = document.createElement('div');
+            msg.textContent = 'Não foi possível abrir o desafio automaticamente. Toque no álbum destacado para jogar — se ele estiver bloqueado, conclua os álbuns anteriores primeiro.';
+            msg.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:99999;background:rgba(5,5,5,.96);color:#f1c40f;border:1px solid rgba(241,196,15,.55);border-radius:14px;padding:12px 18px;font-weight:800;font-size:.85rem;max-width:min(92vw,440px);text-align:center;box-shadow:0 14px 36px rgba(0,0,0,.5);font-family:Inter,Arial,sans-serif;';
+            document.body.appendChild(msg);
+            setTimeout(() => msg.remove(), 8000);
+          }, 900);
+        };
+        setTimeout(tryOpen, 700);
+      }
     }, 250);
 
     // Marca como feito somente quando ESSE álbum específico for concluído
