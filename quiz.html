@@ -6498,6 +6498,15 @@ body.tela-pergunta .answer-btn {
       toast: document.getElementById('toast')
     };
 
+    // Modo degustação (visitante novo vindo do convite do index):
+    // responde 3 perguntas e volta ao início para o convite de login.
+    const TRIAL_MODE = new URLSearchParams(location.search).get('trial') === '1';
+    function trialFinished() {
+      if (!TRIAL_MODE || state.currentQuestionIndex < 3) return false;
+      window.location.href = 'index.html?trial_done=1&skipIntro=true';
+      return true;
+    }
+
     // Gancho usado pelo Desafio do Dia (desafio.js): abre direto um nível numa
     // dificuldade, aguardando as perguntas terminarem de carregar se preciso.
     window.startQuizAtLevel = function(difficulty, levelIndex) {
@@ -6952,6 +6961,7 @@ body.tela-pergunta .answer-btn {
 
     function nextQuestion() {
       state.currentQuestionIndex++;
+      if (trialFinished()) return;
       if (state.currentQuestionIndex >= state.currentQuestions.length) {
         finishLevel();
       } else {
@@ -7203,6 +7213,7 @@ body.tela-pergunta .answer-btn {
 
       setTimeout(() => {
         state.currentQuestionIndex++;
+        if (trialFinished()) return;
         if (state.currentQuestionIndex >= state.currentQuestions.length) {
           finishLevel();
         } else {
