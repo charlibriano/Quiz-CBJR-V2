@@ -7032,6 +7032,13 @@ if (document.readyState === 'loading') {
   initTicker();
 }
 </script>
+<style id="cbjr-limpeza-desktop">
+  /* Limpeza visual do desktop: o painel de boas-vindas some em telas grandes.
+     Para reverter, basta remover este bloco. Mobile segue intacto. */
+  @media (min-width: 821px) {
+    #playerDashboard { display: none !important; }
+  }
+</style>
 <script id="cbjr-primeiro-play-script">
 (function(){
   'use strict';
