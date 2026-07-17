@@ -7113,9 +7113,20 @@ if (document.readyState === 'loading') {
       '<p style="margin:0 0 22px;color:rgba(255,255,255,.78);font-size:.95rem;line-height:1.5">Faça seu login para continuar e desbloquear o conteúdo completo — você vai se surpreender.</p>' +
       '<button type="button" id="cbjrFunilLogin" style="display:block;width:100%;background:var(--yellow,#f1c40f);color:#0a0a0a;font-weight:900;border:none;border-radius:999px;padding:15px 26px;cursor:pointer;font-size:1.05rem">Entrar com Google</button>';
     document.getElementById('cbjrFunilLogin').addEventListener('click', function(){
-      removeOverlay();
+      // Porteiro insistente: o card NÃO sai da frente aqui — só quando o login completar.
       const btn = document.getElementById('googleLoginBtn');
       if (btn) btn.click();
+      const me = document.getElementById('cbjrFunilLogin');
+      if (me) {
+        me.disabled = true;
+        me.textContent = 'Abrindo o login do Google…';
+        setTimeout(function(){
+          const ainda = document.getElementById('cbjrFunilLogin');
+          if (!ainda) return; // login completou e o card já saiu
+          ainda.disabled = false;
+          ainda.textContent = 'Entrar com Google';
+        }, 4000);
+      }
     });
   }
 
@@ -7135,6 +7146,20 @@ if (document.readyState === 'loading') {
     }
     if (DEBUG) showDebug();
   }
+
+  // Vigia do porteiro: assim que o login completar, o convite sai da frente sozinho
+  function estaLogado(){
+    try {
+      return !!(window.CBJR_GUEST && typeof window.CBJR_GUEST.isLoggedIn === 'function' && window.CBJR_GUEST.isLoggedIn());
+    } catch(_) { return false; }
+  }
+  setInterval(function(){
+    if (laudo.overlay === 'convite-login' && estaLogado()) {
+      removeOverlay();
+      laudo.overlay = 'nenhum (logou)';
+      if (DEBUG) showDebug();
+    }
+  }, 1000);
 
   // Se a nuvem revelar progresso (veterano logando em aparelho novo), remove as boas-vindas
   window.addEventListener('cbjr-progress-loaded', function(){
