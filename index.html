@@ -7036,19 +7036,28 @@ if (document.readyState === 'loading') {
 (function(){
   'use strict';
   const CARD_ID = 'cbjr-primeiro-play';
+  const DEBUG = new URLSearchParams(location.search).get('debugplay') === '1';
+  const laudo = { xp: '?', letras: '?', radio: '?', conquistas: '?', anchor: '?', cartao: 'não inserido' };
+
+  // Lê cada chave isolada: uma chave corrompida não derruba a decisão inteira
+  function readNum(key){
+    try { return Number(localStorage.getItem(key) || 0) || 0; } catch(_) { return 0; }
+  }
+  function readArrLen(key){
+    try { const v = JSON.parse(localStorage.getItem(key) || '[]'); return Array.isArray(v) ? v.length : 0; } catch(_) { return 0; }
+  }
+  function readObjKeys(key){
+    try { const v = JSON.parse(localStorage.getItem(key) || '{}'); return v && typeof v === 'object' ? Object.keys(v).length : 0; } catch(_) { return 0; }
+  }
 
   // Jogador novo = nenhum progresso em nada (XP, Letras, Rádio, conquistas do Quiz)
   function isNewPlayer(){
-    try {
-      const xp = Number(localStorage.getItem('cbjr_xp_total') || 0) || 0;
-      const letras = JSON.parse(localStorage.getItem('cbjr_letters_completed') || '[]');
-      const radio = Number(localStorage.getItem('radioCBJRUnlockedAlbumIndex_v2') || 0) || 0;
-      const quizAch = JSON.parse(localStorage.getItem('cobjr_quiz_achievements') || '{}');
-      return xp === 0
-        && (!Array.isArray(letras) || letras.length === 0)
-        && radio === 0
-        && Object.keys(quizAch || {}).length === 0;
-    } catch (_) { return false; }
+    const xp = readNum('cbjr_xp_total');
+    const letras = readArrLen('cbjr_letters_completed');
+    const radio = readNum('radioCBJRUnlockedAlbumIndex_v2');
+    const conquistas = readObjKeys('cobjr_quiz_achievements');
+    laudo.xp = String(xp); laudo.letras = String(letras); laudo.radio = String(radio); laudo.conquistas = String(conquistas);
+    return xp === 0 && letras === 0 && radio === 0 && conquistas === 0;
   }
 
   function removeCard(){
@@ -7057,14 +7066,17 @@ if (document.readyState === 'loading') {
   }
 
   function renderCard(){
-    if (document.getElementById(CARD_ID)) return;
+    if (document.getElementById(CARD_ID)) { laudo.cartao = 'já estava'; return; }
     // Fica acima do banner do Desafio do Dia (se existir) ou da mesa de controle
-    const anchor = document.querySelector('.cbjr-daily-banner') || document.getElementById('mesa');
+    const banner = document.querySelector('.cbjr-daily-banner');
+    const mesa = document.getElementById('mesa');
+    const anchor = banner || mesa;
+    laudo.anchor = banner ? 'banner do desafio' : (mesa ? '#mesa' : 'NENHUMA');
     if (!anchor) return;
     const card = document.createElement('section');
     card.id = CARD_ID;
     card.setAttribute('aria-label', 'Convite para a primeira jogada');
-    card.style.cssText = 'margin:18px auto 14px;max-width:1060px;background:linear-gradient(135deg,rgba(241,196,15,.14),rgba(0,0,0,.88));border:1px solid rgba(241,196,15,.5);border-radius:22px;padding:20px 24px;box-shadow:0 16px 40px rgba(0,0,0,.45)';
+    card.style.cssText = 'display:block;width:100%;grid-column:1 / -1;margin:18px auto 14px;max-width:1060px;background:linear-gradient(135deg,rgba(241,196,15,.14),rgba(0,0,0,.88));border:1px solid rgba(241,196,15,.5);border-radius:22px;padding:20px 24px;box-shadow:0 16px 40px rgba(0,0,0,.45)';
     card.innerHTML =
       '<div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:space-between">' +
         '<div style="min-width:220px;flex:1">' +
@@ -7075,15 +7087,39 @@ if (document.readyState === 'loading') {
         '<a href="./quiz.html?difficulty=facil" style="display:inline-block;background:var(--yellow,#f1c40f);color:#0a0a0a;font-weight:900;border-radius:999px;padding:13px 26px;text-decoration:none;font-size:1rem;white-space:nowrap">Tocar agora →</a>' +
       '</div>';
     anchor.insertAdjacentElement('beforebegin', card);
+    laudo.cartao = 'inserido';
   }
 
   function evaluate(){
-    if (isNewPlayer()) renderCard();
-    else removeCard();
+    const novato = isNewPlayer();
+    if (novato) renderCard();
+    else { laudo.cartao = 'não inserido (tem progresso)'; removeCard(); }
+    if (DEBUG) showDebug(novato);
+  }
+
+  // Etiqueta de diagnóstico na tela (só com ?debugplay=1) — sem precisar de console
+  function showDebug(novato){
+    let tag = document.getElementById('cbjr-primeiro-play-debug');
+    if (!tag) {
+      tag = document.createElement('div');
+      tag.id = 'cbjr-primeiro-play-debug';
+      tag.style.cssText = 'position:fixed;left:10px;bottom:10px;z-index:999999;background:rgba(0,0,0,.92);color:#7CFC00;border:1px solid #7CFC00;border-radius:10px;padding:10px 14px;font:12px/1.6 monospace;max-width:92vw;white-space:pre-wrap';
+      document.body.appendChild(tag);
+    }
+    tag.textContent =
+      'DIAGNÓSTICO primeira jogada\n' +
+      'novato? ' + (novato ? 'SIM' : 'NÃO') +
+      '  |  xp=' + laudo.xp + '  letras=' + laudo.letras + '  radio=' + laudo.radio + '  conquistas=' + laudo.conquistas + '\n' +
+      'âncora: ' + laudo.anchor + '  |  cartão: ' + laudo.cartao;
   }
 
   // Espera a sincronização com a conta Google para não convidar veterano em aparelho novo
-  document.addEventListener('DOMContentLoaded', function(){ setTimeout(evaluate, 1200); });
+  function agendar(){ setTimeout(evaluate, 1200); }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', agendar);
+  } else {
+    agendar();
+  }
   window.addEventListener('cbjr-progress-loaded', function(){ setTimeout(evaluate, 300); });
 })();
 </script>
