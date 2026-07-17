@@ -7045,7 +7045,6 @@ if (document.readyState === 'loading') {
   const DEBUG = new URLSearchParams(location.search).get('debugplay') === '1';
   const qs = new URLSearchParams(location.search);
   const VOLTOU_DA_DEGUSTACAO = qs.get('trial_done') === '1';
-  const FLAG_FECHOU = 'cbjr_boasvindas_fechada';
   const FLAG_DEGUSTOU = 'cbjr_degustacao_concluida';
   const laudo = { xp: '?', letras: '?', radio: '?', conquistas: '?', overlay: 'nenhum' };
 
@@ -7101,12 +7100,7 @@ if (document.readyState === 'loading') {
       '<div style="font-size:2.4rem;line-height:1">🎸</div>' +
       '<h2 style="margin:12px 0 8px;font-size:1.6rem;line-height:1.15;color:#fff">Seja bem-vindo ao universo <span style="color:var(--yellow,#f1c40f)">CBJR</span>!</h2>' +
       '<p style="margin:0 0 22px;color:rgba(255,255,255,.78);font-size:.95rem;line-height:1.5">Teste o quanto você conhece o Charlie Brown Jr. — é só clicar e jogar.</p>' +
-      '<a href="./quiz.html?difficulty=facil&trial=1" style="display:block;background:var(--yellow,#f1c40f);color:#0a0a0a;font-weight:900;border-radius:999px;padding:15px 26px;text-decoration:none;font-size:1.05rem">Clique aqui para começar →</a>' +
-      '<button type="button" id="cbjrFunilExplorar" style="margin-top:14px;background:none;border:none;color:rgba(255,255,255,.55);font-size:.85rem;cursor:pointer;text-decoration:underline">Explorar o site primeiro</button>';
-    document.getElementById('cbjrFunilExplorar').addEventListener('click', function(){
-      setFlag(FLAG_FECHOU);
-      removeOverlay();
-    });
+      '<a href="./quiz.html?difficulty=facil&trial=1" style="display:block;background:var(--yellow,#f1c40f);color:#0a0a0a;font-weight:900;border-radius:999px;padding:15px 26px;text-decoration:none;font-size:1.05rem">Clique aqui para começar →</a>';
   }
 
   // Passo 2 do funil: voltou das 3 perguntas — convite de login
@@ -7117,21 +7111,26 @@ if (document.readyState === 'loading') {
       '<div style="font-size:2.4rem;line-height:1">🤘</div>' +
       '<h2 style="margin:12px 0 8px;font-size:1.6rem;line-height:1.15;color:#fff">Gostaria de continuar?</h2>' +
       '<p style="margin:0 0 22px;color:rgba(255,255,255,.78);font-size:.95rem;line-height:1.5">Faça seu login para continuar e desbloquear o conteúdo completo — você vai se surpreender.</p>' +
-      '<button type="button" id="cbjrFunilLogin" style="display:block;width:100%;background:var(--yellow,#f1c40f);color:#0a0a0a;font-weight:900;border:none;border-radius:999px;padding:15px 26px;cursor:pointer;font-size:1.05rem">Entrar com Google</button>' +
-      '<button type="button" id="cbjrFunilDepois" style="margin-top:14px;background:none;border:none;color:rgba(255,255,255,.55);font-size:.85rem;cursor:pointer;text-decoration:underline">Depois</button>';
+      '<button type="button" id="cbjrFunilLogin" style="display:block;width:100%;background:var(--yellow,#f1c40f);color:#0a0a0a;font-weight:900;border:none;border-radius:999px;padding:15px 26px;cursor:pointer;font-size:1.05rem">Entrar com Google</button>';
     document.getElementById('cbjrFunilLogin').addEventListener('click', function(){
       removeOverlay();
       const btn = document.getElementById('googleLoginBtn');
       if (btn) btn.click();
     });
-    document.getElementById('cbjrFunilDepois').addEventListener('click', removeOverlay);
   }
 
   function boot(){
-    if (VOLTOU_DA_DEGUSTACAO) {
+    let voltou = VOLTOU_DA_DEGUSTACAO;
+    try {
+      if (localStorage.getItem('cbjr_degustacao_pendente') === '1') {
+        voltou = true;
+        localStorage.removeItem('cbjr_degustacao_pendente');
+      }
+    } catch(_) {}
+    if (voltou) {
       setFlag(FLAG_DEGUSTOU); // não mostra boas-vindas de novo em visitas futuras
       showConviteLogin();
-    } else if (isNewPlayer() && !readFlag(FLAG_FECHOU) && !readFlag(FLAG_DEGUSTOU)) {
+    } else if (isNewPlayer() && !readFlag(FLAG_DEGUSTOU)) {
       showBoasVindas();
     }
     if (DEBUG) showDebug();
@@ -7157,7 +7156,7 @@ if (document.readyState === 'loading') {
     tag.textContent =
       'DIAGNÓSTICO funil de boas-vindas\n' +
       'xp=' + laudo.xp + '  letras=' + laudo.letras + '  radio=' + laudo.radio + '  conquistas=' + laudo.conquistas + '\n' +
-      'fechou-antes=' + (readFlag(FLAG_FECHOU) ? 'sim' : 'não') + '  degustou=' + (readFlag(FLAG_DEGUSTOU) ? 'sim' : 'não') + '  |  overlay: ' + laudo.overlay;
+      'degustou=' + (readFlag(FLAG_DEGUSTOU) ? 'sim' : 'não') + '  |  overlay: ' + laudo.overlay;
   }
 
   function agendar(){ setTimeout(boot, 150); }
