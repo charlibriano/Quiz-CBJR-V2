@@ -6503,6 +6503,8 @@ body.tela-pergunta .answer-btn {
     const TRIAL_MODE = new URLSearchParams(location.search).get('trial') === '1';
     function trialFinished() {
       if (!TRIAL_MODE || state.currentQuestionIndex < 3) return false;
+      // Marca também no armazenamento: se o parâmetro da URL se perder, o index ainda sabe
+      try { localStorage.setItem('cbjr_degustacao_pendente', '1'); } catch(_) {}
       window.location.href = 'index.html?trial_done=1&skipIntro=true';
       return true;
     }
