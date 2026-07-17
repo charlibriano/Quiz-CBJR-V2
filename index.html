@@ -7042,9 +7042,12 @@ if (document.readyState === 'loading') {
 <script id="cbjr-primeiro-play-script">
 (function(){
   'use strict';
-  const CARD_ID = 'cbjr-primeiro-play';
   const DEBUG = new URLSearchParams(location.search).get('debugplay') === '1';
-  const laudo = { xp: '?', letras: '?', radio: '?', conquistas: '?', anchor: '?', cartao: 'não inserido' };
+  const qs = new URLSearchParams(location.search);
+  const VOLTOU_DA_DEGUSTACAO = qs.get('trial_done') === '1';
+  const FLAG_FECHOU = 'cbjr_boasvindas_fechada';
+  const FLAG_DEGUSTOU = 'cbjr_degustacao_concluida';
+  const laudo = { xp: '?', letras: '?', radio: '?', conquistas: '?', overlay: 'nenhum' };
 
   // Lê cada chave isolada: uma chave corrompida não derruba a decisão inteira
   function readNum(key){
@@ -7055,6 +7058,12 @@ if (document.readyState === 'loading') {
   }
   function readObjKeys(key){
     try { const v = JSON.parse(localStorage.getItem(key) || '{}'); return v && typeof v === 'object' ? Object.keys(v).length : 0; } catch(_) { return 0; }
+  }
+  function readFlag(key){
+    try { return localStorage.getItem(key) === '1'; } catch(_) { return false; }
+  }
+  function setFlag(key){
+    try { localStorage.setItem(key, '1'); } catch(_) {}
   }
 
   // Jogador novo = nenhum progresso em nada (XP, Letras, Rádio, conquistas do Quiz)
@@ -7067,45 +7076,77 @@ if (document.readyState === 'loading') {
     return xp === 0 && letras === 0 && radio === 0 && conquistas === 0;
   }
 
-  function removeCard(){
-    const el = document.getElementById(CARD_ID);
+  function removeOverlay(){
+    const el = document.getElementById('cbjr-funil-overlay');
     if (el) el.remove();
   }
 
-  function renderCard(){
-    if (document.getElementById(CARD_ID)) { laudo.cartao = 'já estava'; return; }
-    // Fica acima do banner do Desafio do Dia (se existir) ou da mesa de controle
-    const banner = document.querySelector('.cbjr-daily-banner');
-    const mesa = document.getElementById('mesa');
-    const anchor = banner || mesa;
-    laudo.anchor = banner ? 'banner do desafio' : (mesa ? '#mesa' : 'NENHUMA');
-    if (!anchor) return;
-    const card = document.createElement('section');
-    card.id = CARD_ID;
-    card.setAttribute('aria-label', 'Convite para a primeira jogada');
-    card.style.cssText = 'display:block;width:100%;grid-column:1 / -1;margin:18px auto 14px;max-width:1060px;background:linear-gradient(135deg,rgba(241,196,15,.14),rgba(0,0,0,.88));border:1px solid rgba(241,196,15,.5);border-radius:22px;padding:20px 24px;box-shadow:0 16px 40px rgba(0,0,0,.45)';
-    card.innerHTML =
-      '<div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:space-between">' +
-        '<div style="min-width:220px;flex:1">' +
-          '<div style="display:inline-block;background:rgba(241,196,15,.16);border:1px solid rgba(241,196,15,.45);border-radius:999px;padding:4px 12px;font-size:.72rem;font-weight:900;letter-spacing:.08em;color:var(--yellow,#f1c40f)">🎸 PRIMEIRA VEZ POR AQUI?</div>' +
-          '<h2 style="margin:10px 0 4px;font-size:1.5rem;line-height:1.1;color:#fff">Jogue sua primeira pergunta</h2>' +
-          '<p style="margin:0;color:rgba(255,255,255,.75);font-size:.92rem">Modo Fácil, Nível 1 — sem pressão, e você já sai ganhando XP.</p>' +
-        '</div>' +
-        '<a href="./quiz.html?difficulty=facil" style="display:inline-block;background:var(--yellow,#f1c40f);color:#0a0a0a;font-weight:900;border-radius:999px;padding:13px 26px;text-decoration:none;font-size:1rem;white-space:nowrap">Tocar agora →</a>' +
-      '</div>';
-    anchor.insertAdjacentElement('beforebegin', card);
-    laudo.cartao = 'inserido';
+  function baseOverlay(){
+    removeOverlay();
+    const ov = document.createElement('div');
+    ov.id = 'cbjr-funil-overlay';
+    ov.style.cssText = 'position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.86);backdrop-filter:blur(5px);padding:20px';
+    const card = document.createElement('div');
+    card.style.cssText = 'max-width:480px;width:100%;background:linear-gradient(150deg,rgba(241,196,15,.16),rgba(8,8,8,.97));border:1px solid rgba(241,196,15,.55);border-radius:24px;padding:32px 28px;text-align:center;box-shadow:0 24px 70px rgba(0,0,0,.65)';
+    ov.appendChild(card);
+    document.body.appendChild(ov);
+    return card;
   }
 
-  function evaluate(){
-    const novato = isNewPlayer();
-    if (novato) renderCard();
-    else { laudo.cartao = 'não inserido (tem progresso)'; removeCard(); }
-    if (DEBUG) showDebug(novato);
+  // Passo 1 do funil: boas-vindas antes de qualquer coisa
+  function showBoasVindas(){
+    const card = baseOverlay();
+    laudo.overlay = 'boas-vindas';
+    card.innerHTML =
+      '<div style="font-size:2.4rem;line-height:1">🎸</div>' +
+      '<h2 style="margin:12px 0 8px;font-size:1.6rem;line-height:1.15;color:#fff">Seja bem-vindo ao universo <span style="color:var(--yellow,#f1c40f)">CBJR</span>!</h2>' +
+      '<p style="margin:0 0 22px;color:rgba(255,255,255,.78);font-size:.95rem;line-height:1.5">Responda 3 perguntas rápidas sobre o Charlie Brown Jr. e sinta o som — sem cadastro, sem pressão.</p>' +
+      '<a href="./quiz.html?difficulty=facil&trial=1" style="display:block;background:var(--yellow,#f1c40f);color:#0a0a0a;font-weight:900;border-radius:999px;padding:15px 26px;text-decoration:none;font-size:1.05rem">Clique aqui para começar →</a>' +
+      '<button type="button" id="cbjrFunilExplorar" style="margin-top:14px;background:none;border:none;color:rgba(255,255,255,.55);font-size:.85rem;cursor:pointer;text-decoration:underline">Explorar o site primeiro</button>';
+    document.getElementById('cbjrFunilExplorar').addEventListener('click', function(){
+      setFlag(FLAG_FECHOU);
+      removeOverlay();
+    });
   }
+
+  // Passo 2 do funil: voltou das 3 perguntas — convite de login
+  function showConviteLogin(){
+    const card = baseOverlay();
+    laudo.overlay = 'convite-login';
+    card.innerHTML =
+      '<div style="font-size:2.4rem;line-height:1">🤘</div>' +
+      '<h2 style="margin:12px 0 8px;font-size:1.6rem;line-height:1.15;color:#fff">Mandou bem nas 3 primeiras!</h2>' +
+      '<p style="margin:0 0 22px;color:rgba(255,255,255,.78);font-size:.95rem;line-height:1.5">Para continuar a jornada — guardar seu XP, desbloquear conquistas e entrar no ranking dos fãs — entre com sua conta Google.</p>' +
+      '<button type="button" id="cbjrFunilLogin" style="display:block;width:100%;background:var(--yellow,#f1c40f);color:#0a0a0a;font-weight:900;border:none;border-radius:999px;padding:15px 26px;cursor:pointer;font-size:1.05rem">Entrar com Google</button>' +
+      '<button type="button" id="cbjrFunilDepois" style="margin-top:14px;background:none;border:none;color:rgba(255,255,255,.55);font-size:.85rem;cursor:pointer;text-decoration:underline">Depois</button>';
+    document.getElementById('cbjrFunilLogin').addEventListener('click', function(){
+      removeOverlay();
+      const btn = document.getElementById('googleLoginBtn');
+      if (btn) btn.click();
+    });
+    document.getElementById('cbjrFunilDepois').addEventListener('click', removeOverlay);
+  }
+
+  function boot(){
+    if (VOLTOU_DA_DEGUSTACAO) {
+      setFlag(FLAG_DEGUSTOU); // não mostra boas-vindas de novo em visitas futuras
+      showConviteLogin();
+    } else if (isNewPlayer() && !readFlag(FLAG_FECHOU) && !readFlag(FLAG_DEGUSTOU)) {
+      showBoasVindas();
+    }
+    if (DEBUG) showDebug();
+  }
+
+  // Se a nuvem revelar progresso (veterano logando em aparelho novo), remove as boas-vindas
+  window.addEventListener('cbjr-progress-loaded', function(){
+    setTimeout(function(){
+      if (laudo.overlay === 'boas-vindas' && !isNewPlayer()) removeOverlay();
+      if (DEBUG) showDebug();
+    }, 300);
+  });
 
   // Etiqueta de diagnóstico na tela (só com ?debugplay=1) — sem precisar de console
-  function showDebug(novato){
+  function showDebug(){
     let tag = document.getElementById('cbjr-primeiro-play-debug');
     if (!tag) {
       tag = document.createElement('div');
@@ -7114,20 +7155,17 @@ if (document.readyState === 'loading') {
       document.body.appendChild(tag);
     }
     tag.textContent =
-      'DIAGNÓSTICO primeira jogada\n' +
-      'novato? ' + (novato ? 'SIM' : 'NÃO') +
-      '  |  xp=' + laudo.xp + '  letras=' + laudo.letras + '  radio=' + laudo.radio + '  conquistas=' + laudo.conquistas + '\n' +
-      'âncora: ' + laudo.anchor + '  |  cartão: ' + laudo.cartao;
+      'DIAGNÓSTICO funil de boas-vindas\n' +
+      'xp=' + laudo.xp + '  letras=' + laudo.letras + '  radio=' + laudo.radio + '  conquistas=' + laudo.conquistas + '\n' +
+      'fechou-antes=' + (readFlag(FLAG_FECHOU) ? 'sim' : 'não') + '  degustou=' + (readFlag(FLAG_DEGUSTOU) ? 'sim' : 'não') + '  |  overlay: ' + laudo.overlay;
   }
 
-  // Espera a sincronização com a conta Google para não convidar veterano em aparelho novo
-  function agendar(){ setTimeout(evaluate, 1200); }
+  function agendar(){ setTimeout(boot, 150); }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', agendar);
   } else {
     agendar();
   }
-  window.addEventListener('cbjr-progress-loaded', function(){ setTimeout(evaluate, 300); });
 })();
 </script>
 </body>
