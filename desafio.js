@@ -36,6 +36,7 @@
   const PAGE             = location.pathname.split('/').pop().replace('.html','');
   const XP_DAILY         = 150;
   const XP_STREAK_7      = 500;
+  const QUIZ_MAX_LEVELS  = 8; // o Quiz tem 8 níveis; o desafio nunca pode sortear além disso
 
   // ── Álbuns do Modo Letras (mesma ordem/base de capas do letras.html) ──
   const LETRAS_ALBUMS = [
@@ -70,13 +71,15 @@
   }
 
   function getRadioUnlockedCount() {
-    return Math.max(1, getUnlockedIndex() + 1);
+    // Teto no total de álbuns: sem ele, quem concluiu tudo sorteava um CD inexistente
+    return Math.min(ALBUMS.length, Math.max(1, getUnlockedIndex() + 1));
   }
 
   function getQuizUnlockedCount() {
     try {
       const p = JSON.parse(localStorage.getItem(QUIZ_PROGRESS_KEY) || '{}');
-      return Math.max(1, Number(p.highestLevel_facil || 0) + 1);
+      // Teto nos 8 níveis reais: sem ele, quem zerou o quiz sorteava "Nível 9"
+      return Math.min(QUIZ_MAX_LEVELS, Math.max(1, Number(p.highestLevel_facil || 0) + 1));
     } catch(_) { return 1; }
   }
 
@@ -552,8 +555,10 @@
 
       let levelIndex, difficulty;
       if (isDesafio) {
-        // Veio de um link de desafio explícito
-        levelIndex = Number(params.get('level') || 0);
+        // Veio de um link de desafio explícito — valida como Rádio/Letras já fazem:
+        // nível fora de 0..7 (links antigos do bug do "Nível 9") volta pro último válido
+        const lv = Number(params.get('level') || 0);
+        levelIndex = Number.isFinite(lv) ? Math.min(Math.max(0, lv), QUIZ_MAX_LEVELS - 1) : 0;
         difficulty = params.get('diff') || 'facil';
       } else {
         // Visita orgânica: só conta se hoje o desafio for de Quiz
