@@ -4587,11 +4587,8 @@
         <span class="google-icon">G</span>
         <span>Continuar com Google</span>
       </button>
-      <button class="guest-login-btn" id="guestLoginBtn" type="button">
-        👀 Explorar como Visitante
-      </button>
       <div class="login-status" id="loginStatus">Verificando login...</div>
-      <div class="login-note">Visitante: experimente o Quiz (5 perguntas), Rádio e Letras (1 CD cada). Para acesso completo ao ranking, conquistas e comunidade, faça login com Google.</div>
+      <div class="login-note">Faça login com Google para salvar seu progresso e acessar ranking, conquistas e comunidade.</div>
     </div>
   </section>
 
@@ -5852,25 +5849,7 @@
     }
   });
 
-  // ── MODO VISITANTE ─────────────────────────────────────────
-  const guestBtn = document.getElementById('guestLoginBtn');
-  guestBtn?.addEventListener('click', () => {
-    try { sessionStorage.setItem('cbjr_guest_mode', '1'); } catch (e) {}
-    setAuthView('auth-logged-in');
-    document.getElementById('loginScreen')?.style && (document.getElementById('loginScreen').style.display = 'none');
-    // Mostra banner de visitante na topbar
-    const pill = document.getElementById('userPill');
-    if (pill) {
-      pill.style.display = 'inline-flex';
-      const nameEl = document.getElementById('userName');
-      const emailEl = document.getElementById('userEmail');
-      if (nameEl) nameEl.textContent = 'Visitante';
-      if (emailEl) emailEl.textContent = 'Modo degustação';
-      const photo = document.getElementById('userPhoto');
-      if (photo) { photo.src = ''; photo.alt = '👤'; photo.style.display = 'none'; }
-    }
-  });
-  // ── FIM MODO VISITANTE ─────────────────────────────────────
+  // ── MODO VISITANTE removido: a única degustação é o funil de 3 perguntas ──
 
   userPillTrigger?.addEventListener('click', (ev) => { ev.stopPropagation(); userPill?.classList.toggle('open'); });
   document.addEventListener('click', (ev) => { if (userPill && !userPill.contains(ev.target)) userPill.classList.remove('open'); });
@@ -7131,6 +7110,10 @@ if (document.readyState === 'loading') {
   }
 
   function boot(){
+    // Logado (marca síncrona que o próprio site grava): funil não aparece
+    try {
+      if (localStorage.getItem('cbjr_google_logged') === '1') { if (DEBUG) showDebug(); return; }
+    } catch(_) {}
     let voltou = VOLTOU_DA_DEGUSTACAO;
     try {
       if (localStorage.getItem('cbjr_degustacao_pendente') === '1') {
@@ -7138,10 +7121,12 @@ if (document.readyState === 'loading') {
         localStorage.removeItem('cbjr_degustacao_pendente');
       }
     } catch(_) {}
-    if (voltou) {
-      setFlag(FLAG_DEGUSTOU); // não mostra boas-vindas de novo em visitas futuras
+    // Visitante não logado SEMPRE vê um overlay do funil — nunca a tela crua de login:
+    // ainda não degustou → boas-vindas; já degustou (ou tem progresso) → convite de login.
+    if (voltou) setFlag(FLAG_DEGUSTOU);
+    if (voltou || readFlag(FLAG_DEGUSTOU) || !isNewPlayer()) {
       showConviteLogin();
-    } else if (isNewPlayer() && !readFlag(FLAG_DEGUSTOU)) {
+    } else {
       showBoasVindas();
     }
     if (DEBUG) showDebug();
