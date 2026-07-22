@@ -6499,14 +6499,40 @@ body.tela-pergunta .answer-btn {
     };
 
     // Modo degustação (visitante novo vindo do convite do index):
-    // responde 3 perguntas e volta ao início para o convite de login.
+    // responde 3 perguntas e fecha com uma tela de encerramento — sem corte seco.
     const TRIAL_MODE = new URLSearchParams(location.search).get('trial') === '1';
     function trialFinished() {
       if (!TRIAL_MODE || state.currentQuestionIndex < 3) return false;
       // Marca também no armazenamento: se o parâmetro da URL se perder, o index ainda sabe
       try { localStorage.setItem('cbjr_degustacao_pendente', '1'); } catch(_) {}
-      window.location.href = 'index.html?trial_done=1&skipIntro=true';
+      showTrialEnd();
       return true;
+    }
+
+    // Tela de encerramento da degustação: placar + provocação de fã + CTA.
+    // Surge sozinha no ritmo do jogo (continuidade automática, sem botão de avançar).
+    function showTrialEnd() {
+      if (document.getElementById('cbjrTrialEnd')) return;
+      const hits = Math.max(0, Math.min(3, Number(state.hits) || 0));
+      const frases = {
+        3: ['Gabaritou! 🤘', '3 de 3 — cê é raiz mesmo.'],
+        2: ['Mandou bem demais!', '2 de 3 — tá quase no nível Chorão.'],
+        1: ['Já mostrou serviço.', '1 de 3 — o universo CBJR tem muito mais.'],
+        0: ['Segura essa: tem mais.', '0 de 3 — hora de provar que é fã de verdade.']
+      };
+      const [titulo, sub] = frases[hits];
+      const overlay = document.createElement('div');
+      overlay.id = 'cbjrTrialEnd';
+      overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.86);backdrop-filter:blur(10px);';
+      overlay.innerHTML =
+        '<div style="position:relative;overflow:hidden;width:min(430px,100%);background:rgba(8,8,8,.97);border:1px solid rgba(241,196,15,.5);border-radius:24px;padding:34px 26px;text-align:center;font-family:Inter,Arial,sans-serif;box-shadow:0 24px 70px rgba(0,0,0,.6),0 0 44px rgba(241,196,15,.12)">' +
+          '<div aria-hidden="true" style="position:absolute;right:-14px;bottom:-34px;font-family:\'Elektrix\',Arial,sans-serif;font-size:7rem;line-height:1;color:rgba(241,196,15,.07);pointer-events:none;user-select:none">013</div>' +
+          '<div style="font-size:2.6rem;line-height:1">' + (hits >= 2 ? '🏆' : '🎸') + '</div>' +
+          '<h2 style="margin:12px 0 6px;font-family:\'Elektrix\',Arial,sans-serif;font-size:1.9rem;line-height:1.1;color:#f1c40f">' + titulo + '</h2>' +
+          '<p style="margin:0 0 24px;color:rgba(255,255,255,.78);font-size:.95rem;line-height:1.5;position:relative">' + sub + ' Isso foi só a degustação — Quiz completo, Letras, Rádio, conquistas e ranking te esperam.</p>' +
+          '<a href="index.html?trial_done=1&skipIntro=true" style="display:block;background:#f1c40f;color:#0a0a0a;font-weight:900;border-radius:999px;padding:15px 26px;text-decoration:none;font-size:1.05rem;position:relative">Ver meu nível de fã →</a>' +
+        '</div>';
+      document.body.appendChild(overlay);
     }
 
     // Gancho usado pelo Desafio do Dia (desafio.js): abre direto um nível numa
@@ -6526,11 +6552,14 @@ body.tela-pergunta .answer-btn {
 
     async function init() {
       attachEvents();
+      // Se a URL já define a dificuldade (degustação, desafio, conquista),
+      // a tela de seleção nem chega a piscar — o quiz abre direto.
+      const autoStart = ['facil','normal','dificil'].includes(new URLSearchParams(location.search).get('difficulty'));
       document.body.classList.add('tela-dificuldade');
       document.body.classList.remove('tela-pergunta');
       els.difficultyScreen.classList.add('active');
       els.quizScreen.classList.remove('active');
-      els.difficultyScreen.style.display = 'block';
+      els.difficultyScreen.style.display = autoStart ? 'none' : 'block';
       els.quizScreen.style.display = 'none';
       updatePowerupButtons();
 
@@ -7225,7 +7254,9 @@ body.tela-pergunta .answer-btn {
     }
 
     function updateHud() {
-      const total = state.currentQuestions.length || 0;
+      const fullTotal = state.currentQuestions.length || 0;
+      // Na degustação o placar fala a verdade: são 3 perguntas, não o nível inteiro
+      const total = TRIAL_MODE ? Math.min(3, fullTotal) : fullTotal;
       els.hudPergunta.textContent = `${Math.min(state.currentQuestionIndex + 1, total)}/${total}`;
       els.hudPontos.textContent = state.score;
       els.hudAcertos.textContent = state.hits;
