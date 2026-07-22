@@ -7143,6 +7143,19 @@ if (document.readyState === 'loading') {
     if (!(voltou || readFlag(FLAG_DEGUSTOU) || !isNewPlayer())) {
       showBoasVindas();
     }
+    // Eco do placar da degustação na tela de login: continuidade entre as telas
+    try {
+      const placar = localStorage.getItem('cbjr_degustacao_placar');
+      const cardLogin = document.querySelector('#loginScreen .login-card');
+      if (placar !== null && cardLogin && !document.getElementById('cbjrPlacarEco')) {
+        const chip = document.createElement('div');
+        chip.id = 'cbjrPlacarEco';
+        chip.style.cssText = 'display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(241,196,15,.5);border-radius:999px;background:rgba(241,196,15,.10);color:#f1c40f;font-weight:900;font-size:.85rem;padding:8px 16px;margin:0 0 14px;';
+        chip.textContent = '🏆 Seu placar da degustação: ' + placar + '/3 — entra pra valer ele no ranking';
+        const botao = document.getElementById('googleLoginBtn');
+        if (botao) cardLogin.insertBefore(chip, botao);
+      }
+    } catch(_) {}
     if (DEBUG) showDebug();
   }
 
