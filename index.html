@@ -5835,6 +5835,8 @@
       if (loginStatus) {
         if (code.includes('unauthorized-domain')) {
           loginStatus.textContent = 'Domínio não autorizado no Firebase. Confira se charlibriano.github.io foi adicionado.';
+        } else if (code.includes('popup-blocked')) {
+          loginStatus.textContent = 'Seu navegador bloqueou a janela de login. Permita pop-ups para este site e clique de novo.';
         } else if (code.includes('popup-closed-by-user')) {
           loginStatus.textContent = 'Login cancelado. Clique novamente para entrar.';
         } else if (location.protocol === 'file:') {
