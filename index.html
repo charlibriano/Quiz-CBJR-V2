@@ -7136,12 +7136,11 @@ if (document.readyState === 'loading') {
         localStorage.removeItem('cbjr_degustacao_pendente');
       }
     } catch(_) {}
-    // Visitante não logado SEMPRE vê um overlay do funil — nunca a tela crua de login:
-    // ainda não degustou → boas-vindas; já degustou (ou tem progresso) → convite de login.
+    // Visitante não logado: quem nunca degustou vê as boas-vindas; quem já
+    // degustou cai DIRETO na tela de login do site — a tela de encerramento
+    // do quiz já fez o papel de convite (nada de cartão sobre cartão).
     if (voltou) setFlag(FLAG_DEGUSTOU);
-    if (voltou || readFlag(FLAG_DEGUSTOU) || !isNewPlayer()) {
-      showConviteLogin();
-    } else {
+    if (!(voltou || readFlag(FLAG_DEGUSTOU) || !isNewPlayer())) {
       showBoasVindas();
     }
     if (DEBUG) showDebug();
