@@ -6514,6 +6514,8 @@ body.tela-pergunta .answer-btn {
     function showTrialEnd() {
       if (document.getElementById('cbjrTrialEnd')) return;
       const hits = Math.max(0, Math.min(3, Number(state.hits) || 0));
+      // Guarda o placar: a tela de login do index ecoa esse número
+      try { localStorage.setItem('cbjr_degustacao_placar', String(hits)); } catch(_) {}
       const frases = {
         3: ['Gabaritou! 🤘', '3 de 3 — cê é raiz mesmo.'],
         2: ['Mandou bem demais!', '2 de 3 — tá quase no nível Chorão.'],
