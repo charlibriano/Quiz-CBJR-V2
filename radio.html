@@ -4621,6 +4621,15 @@ let correct = 0;
 let wrong = 0;
 let answered = false;
 let radioStarted = false;
+let trackGuessStart = 0; // início da faixa atual (Orelha Absoluta <5s)
+let albumStartTime = 0;  // início do CD atual
+let lastCdTimeLabel = ''; // tempo congelado no fim do CD, pronto pra exibir
+function formatCdElapsed(fromMs){
+  if (!fromMs) return '';
+  const s = Math.max(1, Math.round((Date.now() - fromMs) / 1000));
+  const m = Math.floor(s / 60), r = s % 60;
+  return m > 0 ? `${m}min ${String(r).padStart(2,'0')}s` : `${r}s`;
+}
 let autoNextTimer = null;
 let finishRevealTimer = null;
 let currentRadioMode = localStorage.getItem("radioCBJRMode") || "normal";
@@ -5097,6 +5106,7 @@ function getRankingPosition(percent, missCount, modeLabel) {
 
 
 const ACHIEVEMENTS_KEY = 'radioCBJR_achievements_v1';
+let lastUnlockState = null; // resultado da concessão do CD atual (concede sempre, renderize ou não)
 const ACHIEVEMENT_CATALOG = {
   first_cd: { icon:'💿', name:'Primeiro CD', desc:'Finalizou seu primeiro álbum.' },
   unlocked_next: { icon:'🔓', name:'Novo no ar', desc:'Desbloqueou o próximo CD.' },
@@ -5105,7 +5115,11 @@ const ACHIEVEMENT_CATALOG = {
   perfect: { icon:'👑', name:'Lenda CBJR', desc:'100% de acerto no CD.' },
   hard: { icon:'☠️', name:'Modo Hard', desc:'Finalizou um CD no Hard.' },
   three_cds: { icon:'📻', name:'Sintonia firme', desc:'Liberou 3 CDs da Rádio.' },
-  half_radio: { icon:'⚡', name:'Meia rádio', desc:'Liberou metade da jornada.' }
+  half_radio: { icon:'⚡', name:'Meia rádio', desc:'Liberou metade da jornada.' },
+  bonus_fast_guess: { icon:'⏱️', name:'Orelha Absoluta', desc:'Acertou uma música em menos de 5 segundos.' },
+  bonus_album_perfectionist: { icon:'💚', name:'Perfeição no Disco', desc:'Fechou um CD com 100%, sem errar faixa.' },
+  bonus_hard_album_completed: { icon:'⚡', name:'Modo Hard Dominado', desc:'Concluiu um CD no Hard com 90% ou mais.' },
+  bonus_music_master: { icon:'📡', name:'Rei da Rádio', desc:'Liberou todos os 13 CDs da Rádio.' }
 };
 
 function readAchievements(){
@@ -5127,9 +5141,12 @@ function unlockAchievements(hitCount, missCount, total){
   if (missCount === 0) candidates.push('no_miss');
   if (percent >= 90) candidates.push('ninety');
   if (percent >= 100) candidates.push('perfect');
+  if (percent >= 100 && missCount === 0) candidates.push('bonus_album_perfectionist');
   if (currentRadioMode === 'hard') candidates.push('hard');
+  if (currentRadioMode === 'hard' && percent >= 90) candidates.push('bonus_hard_album_completed');
   if (unlockedCount >= 3) candidates.push('three_cds');
   if (unlockedCount >= Math.ceil(RADIO_ALBUMS.length / 2)) candidates.push('half_radio');
+  if (unlockedCount >= RADIO_ALBUMS.length) candidates.push('bonus_music_master');
 
   const newly = [];
   candidates.forEach(id => {
@@ -5141,8 +5158,16 @@ function unlockAchievements(hitCount, missCount, total){
   writeAchievements(current);
   return { all: current, newly };
 }
+function grantRadioAchievement(id){
+  if (!ACHIEVEMENT_CATALOG[id]) return;
+  const cur = readAchievements();
+  if (cur[id]) return;
+  cur[id] = { unlockedAt: Date.now(), album: currentAlbum ? albumDisplayName(currentAlbum) : '', mode: currentRadioMode };
+  writeAchievements(cur); // o vigia de conquistas mostra o popup sozinho
+}
 function renderAchievementsCard(hitCount = correct, missCount = wrong, total = currentAlbum?.tracks?.length || 1){
-  const state = unlockAchievements(hitCount, missCount, total);
+  // A concessão acontece no finishAlbum (todo aparelho); aqui só exibimos.
+  const state = lastUnlockState || (lastUnlockState = unlockAchievements(hitCount, missCount, total));
   const ids = Object.keys(state.all).filter(id => ACHIEVEMENT_CATALOG[id]);
   const highlight = new Set(state.newly);
   const selected = [...state.newly, ...ids.filter(id => !highlight.has(id))].slice(0, 5);
@@ -5481,6 +5506,7 @@ function renderPerformanceCard(hitCount = correct, missCount = wrong, total = cu
           <span>${rank.percent}% de acerto</span>
           <span>${hitCount}/${safeTotal} faixas</span>
           <span>${missCount} erro${missCount === 1 ? '' : 's'}</span>
+          ${lastCdTimeLabel ? `<span>⏱️ ${lastCdTimeLabel}</span>` : ''}
           <span>Modo ${rank.modeLabel}</span>
         </div>
       </div>
@@ -5526,6 +5552,7 @@ function renderUnlockSuccess(nextAlbum, hitGoal) {
           <div><span>${wrong}</span><small>Erros</small></div>
         </div>
         <div class="cbjr-result-meter"><div style="width:${percent}%"></div></div>
+        ${lastCdTimeLabel ? `<div style="text-align:center;color:rgba(255,255,255,.62);font-size:.8rem;font-weight:850;margin-top:6px">⏱️ CD fechado em ${lastCdTimeLabel}</div>` : ''}
         <div class="cbjr-result-actions">
           <button id="finishNextAlbum" class="primary" type="button">▶ Tocar ${albumName}</button>
           <button id="finishChooseAlbum" class="secondary" type="button">Escolher outro CD</button>
@@ -5592,6 +5619,7 @@ function renderFinishSimple(title, text, showNext, nextAlbum) {
           <div><span>${total}</span><small>Faixas</small></div>
         </div>
         <div class="cbjr-result-meter"><div style="width:${pct}%"></div></div>
+        ${lastCdTimeLabel ? `<div style="text-align:center;color:rgba(255,255,255,.62);font-size:.8rem;font-weight:850;margin-top:6px">⏱️ CD fechado em ${lastCdTimeLabel}</div>` : ''}
         <div class="cbjr-result-actions">
           ${showNext && nextAlbum ? `<button id="finishNextAlbum" class="primary" type="button">▶ Tocar ${albumDisplayName(nextAlbum)}</button>` : ''}
           <button id="finishChooseAlbum" class="secondary" type="button">Escolher outro CD</button>
@@ -5706,6 +5734,7 @@ function startAlbum(index) {
   currentAlbum = RADIO_ALBUMS[index];
   pool = makeTrulyRandomOrder(index, smartShuffleTracks(currentAlbum.tracks.map((t, idx)=>({...t, originalIndex:idx, title:cleanSongName(t.title)}))));
   correct = 0; wrong = 0; answered = false; currentTrack = null; radioStarted = false;
+  albumStartTime = Date.now(); // cronômetro do CD: aparece na tela de resultado
   if (autoNextTimer) { clearTimeout(autoNextTimer); autoNextTimer = null; }
   if (finishRevealTimer) { clearTimeout(finishRevealTimer); finishRevealTimer = null; }
   $('finishOverlay').classList.remove('show');
@@ -5802,6 +5831,7 @@ async function playCurrent(isAuto = false) {
     if (currentRadioMode === 'hard') applyHardStartWhenReady(currentTrack._hardSegment || hardSegmentLabel());
     await audio.play();
     radioStarted = true;
+    trackGuessStart = Date.now(); // cronômetro da Orelha Absoluta: conta a partir do som no ar
     $('playBtn').classList.add('hidden');
     $('message').textContent = isAuto ? modeStatusText('Próxima faixa no ar… escolha a música certa.') : modeStatusText('O som está rolando… escolha a faixa certa.');
   }
@@ -5932,6 +5962,9 @@ function chooseAnswer(btn) {
 
   if(selected === expected) {
     correct++;
+    // Orelha Absoluta: acertou com o som há menos de 5s no ar
+    if (trackGuessStart && (Date.now() - trackGuessStart) < 5000) grantRadioAchievement('bonus_fast_guess');
+    trackGuessStart = 0;
     btn.classList.add('correct');
     btn.classList.add('revealed');
     feedbackText = 'Acertou! Essa você viveu no som.';
@@ -5976,6 +6009,7 @@ function nextTrack() { pickTrack(radioStarted); }
 function finishAlbum() {
   audio.pause();
   stopEqualizerLoop(true);
+  lastCdTimeLabel = formatCdElapsed(albumStartTime); // congela o tempo real do CD
 
   if (finishRevealTimer) {
     clearTimeout(finishRevealTimer);
@@ -5998,6 +6032,7 @@ function finishAlbum() {
 
   finishRevealTimer = setTimeout(() => {
     finishRevealTimer = null;
+    lastUnlockState = null; // concessão nova para ESTE CD
 
     const hitGoal = requiredHits(currentAlbum);
     const nextIndex = currentAlbumIndex + 1;
@@ -6057,6 +6092,10 @@ function finishAlbum() {
     }
 
     renderAlbums();
+    // ── Conquistas: concessão SEMPRE roda ao fechar um CD — em qualquer
+    // aparelho e em qualquer tela de resultado (era efeito colateral de um
+    // card só de desktop; no celular nada destravava) ──
+    if (!lastUnlockState) lastUnlockState = unlockAchievements(correct, wrong, currentAlbum.tracks.length);
     $('finishOverlay').classList.add('show');
     // ── Mural de atividades ──
     window.dispatchEvent(new CustomEvent('cbjr-radio-cd-complete', { detail: { albumName: albumDisplayName(currentAlbum), albumIndex: currentAlbumIndex } }));
