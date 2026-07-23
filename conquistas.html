@@ -404,10 +404,10 @@ const catalog = [
   {id:'three_cds',cat:'radio',icon:'📻',name:'Sintonia firme',desc:'Liberou 3 CDs da Rádio.',cover:'CD 7.jpeg'},
   {id:'half_radio',cat:'radio',icon:'⚡',name:'Meia rádio',desc:'Liberou 7 ou mais CDs da Rádio.',cover:'CD 8.jpeg'},
   {id:'bonus_music_master',cat:'radio',icon:'📡',name:'Rei da Rádio',desc:'Liberou todos os 13 CDs da Rádio.',cover:'CD 9.jpeg'},
-  {id:'bonus_album_perfectionist',cat:'radio',icon:'💚',name:'Perfeição no Disco',desc:'Fechou um CD com 100% de acerto sem usar nenhuma tentativa extra.',cover:'CD 10.jpeg'},
-  {id:'bonus_hard_album_completed',cat:'radio',icon:'⚡',name:'Modo Hard Dominado',desc:'Completou todos os CDs disponíveis no modo Hard.',cover:'CD 11.jpeg'},
+  {id:'bonus_album_perfectionist',cat:'radio',icon:'💚',name:'Perfeição no Disco',desc:'Fechou um CD com 100% de acerto, sem errar nenhuma faixa.',cover:'CD 10.jpeg'},
+  {id:'bonus_hard_album_completed',cat:'radio',icon:'⚡',name:'Modo Hard Dominado',desc:'Concluiu um CD no modo Hard com 90% ou mais de acerto.',cover:'CD 11.jpeg'},
   {id:'bonus_fast_guess',cat:'radio',icon:'⏱️',name:'Orelha Absoluta',desc:'Acerte uma música em menos de 5 segundos.',cover:'CD 12.jpeg'},
-  {id:'bonus_all_albums_completed',cat:'radio',icon:'🏆',name:'Rei Supremo da Rádio',desc:'Complete todos os discos da Rádio com perfeição.',cover:'CD 13.jpeg'},
+  {id:'bonus_all_albums_completed',cat:'radio',icon:'🏆',name:'Rei Supremo da Rádio',desc:'Liberou todos os 13 CDs e fechou ao menos um com 100%.',cover:'CD 13.jpeg'},
 
   {id:'first_level_completed',cat:'quiz',icon:'💿',name:'Transpiração Contínua Prolongada',desc:'Complete o nível 1 do Quiz.',cover:'CD 1.jpeg'},
   {id:'combo_3x',cat:'quiz',icon:'🔥',name:'Preço Curto... Prazo Longo',desc:'Acerte 3 perguntas seguidas sem errar.',cover:'CD 2.jpeg'},
@@ -501,8 +501,10 @@ function normalizeState(){
   if (radioLiberados >= 2) { mark('first_cd','radio-progress'); mark('unlocked_next','radio-progress'); }
   if (radioLiberados >= 3) mark('three_cds','radio-progress');
   if (radioLiberados >= 7) mark('half_radio','radio-progress');
-  if (radioLiberados >= 13) mark('bonus_all_albums_completed','radio-progress');
-  if (radioMode === 'hard') mark('hard','radio-progress');
+  if (radioLiberados >= 13) mark('bonus_music_master','radio-progress');
+  if (radioLiberados >= 13 && radio.perfect) mark('bonus_all_albums_completed','radio-progress');
+  // (o modo Hard NÃO marca mais conquista só por estar selecionado — a Rádio
+  // concede 'hard' apenas ao CONCLUIR um CD no Hard)
 
   // Deriva conquistas do Modo Letras pelos álbuns concluídos
   const letterMap = {
