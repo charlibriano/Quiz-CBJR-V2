@@ -6554,14 +6554,16 @@ body.tela-pergunta .answer-btn {
 
     async function init() {
       attachEvents();
-      // Se a URL já define a dificuldade (degustação, desafio, conquista),
-      // a tela de seleção nem chega a piscar — o quiz abre direto.
-      const autoStart = ['facil','normal','dificil'].includes(new URLSearchParams(location.search).get('difficulty'));
+      // TRILHA ÚNICA: a tela de seleção de dificuldade foi aposentada.
+      // Todo mundo entra direto na trilha (internamente 'facil': 3 vidas,
+      // 3x 50/50, 3x pular). Links especiais por URL (degustação, desafio
+      // do dia, nível secreto) continuam entrando na dificuldade que pedem.
+      const autoStart = true;
       document.body.classList.add('tela-dificuldade');
       document.body.classList.remove('tela-pergunta');
       els.difficultyScreen.classList.add('active');
       els.quizScreen.classList.remove('active');
-      els.difficultyScreen.style.display = autoStart ? 'none' : 'block';
+      els.difficultyScreen.style.display = 'none';
       els.quizScreen.style.display = 'none';
       updatePowerupButtons();
 
@@ -6595,6 +6597,9 @@ body.tela-pergunta .answer-btn {
               startQuiz(urlDiff);
             }
           }, 400);
+        } else {
+          // Sem URL especial: entrada direta na trilha única
+          setTimeout(() => startQuiz('facil'), 400);
         }
       } catch (error) {
         showFatalError(error.message);
