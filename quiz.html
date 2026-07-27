@@ -6271,6 +6271,7 @@ body.tela-pergunta .answer-btn {
       <div id="resultPhrase" class="chorao-phrase"></div>
       <div class="overlay-actions">
         <button id="nextLevelBtn" class="primary-btn" type="button">Próximo nível</button>
+        <button id="shareLevelBtn" class="secondary-btn" type="button" style="display:none">📲 Compartilhar resultado</button>
         <button id="retryLevelBtn" class="primary-btn" type="button">Tentar de novo</button>
         <button class="secondary-btn" type="button" onclick="window.location.href='index.html?skipIntro=true'">Menu principal</button>
       </div>
@@ -6490,6 +6491,7 @@ body.tela-pergunta .answer-btn {
       count5050: document.getElementById('count5050'),
       countPular: document.getElementById('countPular'),
       resultOverlay: document.getElementById('resultOverlay'),
+      shareLevelBtn: document.getElementById('shareLevelBtn'),
       resultTitle: document.getElementById('resultTitle'),
       resultText: document.getElementById('resultText'),
       resultPhrase: document.getElementById('resultPhrase'),
@@ -6646,6 +6648,9 @@ body.tela-pergunta .answer-btn {
       els.nextQuestionBtn.addEventListener('click', nextQuestion);
       els.nextLevelBtn.addEventListener('click', goToNextLevel);
       els.retryLevelBtn.addEventListener('click', retryCurrentLevel);
+      els.shareLevelBtn?.addEventListener('click', () => {
+        if (window.CBJRShareResult && state.lastShare) CBJRShareResult.quiz(state.lastShare);
+      });
     }
 
     function normalizeLevels(data) {
@@ -7133,6 +7138,16 @@ body.tela-pergunta .answer-btn {
       els.nextLevelBtn.style.display = approved && state.currentLevelIndex < state.levels.length - 1 ? 'inline-flex' : 'none';
       els.nextLevelBtn.disabled = !(approved && state.currentLevelIndex < state.levels.length - 1);
       els.retryLevelBtn.style.display = approved ? 'none' : 'inline-flex';
+
+      // ── Compartilhar: nível passado vira card (padrão Rádio/Letras) ──
+      state.lastShare = {
+        levelName: state.levels[state.currentLevelIndex]?.nome || state.levels[state.currentLevelIndex]?.name || `Nível ${levelNumber}`,
+        levelNumber,
+        score: state.score,
+        hits: Math.max(0, total - state.wrongs),
+        total
+      };
+      if (els.shareLevelBtn) els.shareLevelBtn.style.display = approved ? 'inline-flex' : 'none';
 
       const quizFinalizado = approved && state.currentLevelIndex >= state.levels.length - 1;
       els.resultOverlay.classList.toggle('quiz-finalizado', quizFinalizado);
@@ -9252,6 +9267,7 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
 </style>
 <script type="module" src="./notificacoes.js"></script>
 <script src="./desafio.js" defer></script>
+<script src="./share-result.js" defer></script>
 </body>
 </html>
 <!-- =============================================================
