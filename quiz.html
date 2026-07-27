@@ -1201,16 +1201,6 @@
       background-color: #000 !important;
     }
 
-    body.tela-pergunta #difficultyScreen,
-    body.tela-pergunta .difficulty-screen,
-    body.tela-pergunta .difficulty-shell,
-    body.tela-pergunta .difficulty-title,
-    body.tela-pergunta .difficulty-actions {
-      display: none !important;
-      visibility: hidden !important;
-      pointer-events: none !important;
-    }
-
     body.tela-pergunta .quiz-screen.active {
       position: fixed !important;
       inset: 0 !important;
@@ -1408,10 +1398,8 @@
 
 
     /* =============================================================
-       PATCH FINAL — NÃO MOSTRAR TELAS SOBREPOSTAS
-       Regra: dificuldade e pergunta nunca aparecem juntas.
+       Garante que a tela de pergunta some quando inativa.
        ============================================================= */
-    #difficultyScreen:not(.active),
     #quizScreen:not(.active) {
       display: none !important;
       visibility: hidden !important;
@@ -1428,19 +1416,6 @@
       display: none !important;
       visibility: hidden !important;
       pointer-events: none !important;
-    }
-
-    body.tela-pergunta #difficultyScreen,
-    body.tela-pergunta .difficulty-screen,
-    body.tela-pergunta .difficulty-shell,
-    body.tela-pergunta .difficulty-title,
-    body.tela-pergunta .difficulty-actions {
-      display: none !important;
-      visibility: hidden !important;
-      pointer-events: none !important;
-      height: 0 !important;
-      min-height: 0 !important;
-      overflow: hidden !important;
     }
 
     body.tela-pergunta {
@@ -1623,21 +1598,6 @@
       background-repeat: no-repeat !important;
       background-position: center center !important;
       background-size: cover !important;
-    }
-
-    body.tela-pergunta #difficultyScreen,
-    body.tela-pergunta .difficulty-screen,
-    body.tela-pergunta .difficulty-stage,
-    body.tela-pergunta .level-screen,
-    body.tela-pergunta .level-stage,
-    body.tela-pergunta .difficulty-title,
-    body.tela-pergunta .difficulty-subtitle,
-    body.tela-pergunta .difficulty-grid,
-    body.tela-pergunta .level-cards,
-    body.tela-pergunta .level-buttons {
-      display: none !important;
-      visibility: hidden !important;
-      pointer-events: none !important;
     }
 
     body.tela-pergunta #quizScreen.active {
@@ -1943,20 +1903,6 @@
       display: none !important;
       visibility: hidden !important;
       pointer-events: none !important;
-    }
-
-    body.tela-dificuldade #difficultyScreen.active,
-    body.tela-dificuldade .difficulty-screen.active {
-      position: fixed !important;
-      inset: 0 !important;
-      display: block !important;
-      width: 100vw !important;
-      height: 100svh !important;
-      min-height: 100svh !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      overflow: hidden !important;
-      background: transparent !important;
     }
 
     body.tela-dificuldade .difficulty-shell {
@@ -2517,14 +2463,6 @@
       background-position: center center !important;
       background-color: #000 !important;
       overflow: hidden !important;
-    }
-
-    body.tela-dificuldade #difficultyScreen.active,
-    body.tela-dificuldade .difficulty-screen.active,
-    body.tela-dificuldade .difficulty-shell {
-      background: transparent !important;
-      border: 0 !important;
-      box-shadow: none !important;
     }
 
     /* Botões por cima dos botões desenhados na imagem do amp */
@@ -6203,30 +6141,6 @@ body.tela-pergunta .answer-btn {
 
 
   <main id="app">
-    <section id="difficultyScreen" class="screen active difficulty-screen" aria-label="Escolha de dificuldade">
-      <div class="difficulty-shell">
-        <div class="difficulty-title">
-          <small>Quiz por níveis</small>
-          <h1>Escolha a Dificuldade</h1>
-          <p>O quiz tem 8 níveis. Você precisa acertar pelo menos 90% das perguntas do nível para avançar.</p>
-        </div>
-
-        <div class="difficulty-actions">
-          <button class="level-card level-easy" type="button" data-difficulty="facil" aria-label="Selecionar nível fácil">
-            <strong>Fácil</strong>
-            <span class="level-desc">Para fãs de primeira viagem. Vibe boa, sem pressão.</span>
-          </button>
-          <button class="level-card level-normal" type="button" data-difficulty="normal" aria-label="Selecionar nível normal">
-            <strong>Normal</strong>
-            <span class="level-desc">Histórias, músicas e frases da banda e detalhes importantes.</span>
-          </button>
-          <button class="level-card level-hard" type="button" data-difficulty="dificil" aria-label="Selecionar nível difícil">
-            <strong>Difícil</strong>
-            <span class="level-desc">Modo raiz. Um erro e o nível acaba. Só pra quem é CBJR de verdade.</span>
-          </button>
-        </div>
-      </div>
-    </section>
 
     <section id="quizScreen" class="screen quiz-screen" aria-label="Perguntas do quiz">
       <div id="choraoBalloon" class="chorao-balloon" aria-live="polite" aria-hidden="true"></div>
@@ -6473,7 +6387,6 @@ body.tela-pergunta .answer-btn {
     }
 
     const els = {
-      difficultyScreen: document.getElementById('difficultyScreen'),
       quizScreen: document.getElementById('quizScreen'),
       questionText: document.getElementById('questionText'),
       questionKicker: document.getElementById('questionKicker'),
@@ -6560,12 +6473,8 @@ body.tela-pergunta .answer-btn {
       // Todo mundo entra direto na trilha (internamente 'facil': 3 vidas,
       // 3x 50/50, 3x pular). Links especiais por URL (degustação, desafio
       // do dia, nível secreto) continuam entrando na dificuldade que pedem.
-      const autoStart = true;
-      document.body.classList.add('tela-dificuldade');
-      document.body.classList.remove('tela-pergunta');
-      els.difficultyScreen.classList.add('active');
+      document.body.classList.remove('tela-dificuldade', 'tela-pergunta');
       els.quizScreen.classList.remove('active');
-      els.difficultyScreen.style.display = 'none';
       els.quizScreen.style.display = 'none';
       updatePowerupButtons();
 
@@ -6581,9 +6490,6 @@ body.tela-pergunta .answer-btn {
         if (!state.levels.length) {
           throw new Error('O perguntas.json não possui níveis válidos.');
         }
-
-        // Mostra progresso salvo nos cards de dificuldade
-        renderSavedProgress();
 
         // Verifica se veio de conquista com dificuldade específica
         const urlParams = new URLSearchParams(location.search);
@@ -6608,41 +6514,7 @@ body.tela-pergunta .answer-btn {
       }
     }
 
-    function renderSavedProgress() {
-      const progress = loadProgress();
-      const diffMap = { facil: 'facil', normal: 'normal', dificil: 'dificil' };
-      document.querySelectorAll('.level-card').forEach(card => {
-        const diff = card.dataset.difficulty;
-        if (!diff) return;
-        const highScore = Number(progress[`highScore_${diff}`] || 0);
-        const highLevel = Number(progress[`highestLevel_${diff}`] || 0);
-        const total     = state.levels.length;
-        if (!highLevel && !highScore) return;
-
-        // Remove badge anterior se existir
-        card.querySelector('.quiz-progress-badge')?.remove();
-
-        const badge = document.createElement('span');
-        badge.className = 'quiz-progress-badge';
-        badge.innerHTML = highLevel >= total
-          ? `✓ Concluído · ${highScore} pts`
-          : `Nível ${highLevel}/${total} · ${highScore} pts`;
-        card.appendChild(badge);
-      });
-    }
-
     function attachEvents() {
-      document.querySelectorAll('.level-card').forEach(button => {
-        button.addEventListener('click', () => {
-          const difficulty = button.dataset.difficulty || 'normal';
-          button.classList.add('is-pressed');
-          setTimeout(() => {
-            button.classList.remove('is-pressed');
-            startQuiz(difficulty);
-          }, 220);
-        });
-      });
-
       els.btn5050.addEventListener('click', useFiftyFifty);
       els.btnPular.addEventListener('click', skipQuestion);
       els.nextQuestionBtn.addEventListener('click', nextQuestion);
@@ -6772,9 +6644,7 @@ body.tela-pergunta .answer-btn {
 
       document.body.classList.remove('tela-dificuldade');
       document.body.classList.add('tela-pergunta');
-      els.difficultyScreen.classList.remove('active');
       els.quizScreen.classList.add('active');
-      els.difficultyScreen.style.display = 'none';
       els.quizScreen.style.display = 'block';
       els.resultOverlay.classList.remove('show');
 
@@ -8631,25 +8501,6 @@ body.tela-pergunta .quiz-music-player .q-audio-btn.q-play {
     border: 1px solid rgba(241,196,15,.35) !important;
     color: #f1c40f !important;
     border-radius: 999px !important;
-  }
-
-  /* ── CENTRO DA TELA: padding-top = topbar, flex centrado ── */
-  html body.tela-dificuldade .difficulty-screen,
-  html body.tela-dificuldade #difficultyScreen.active,
-  html body.tela-dificuldade .difficulty-screen.active {
-    position: static !important;
-    inset: auto !important;
-    width: 100% !important;
-    min-height: 100svh !important;
-    height: auto !important;
-    overflow: visible !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    box-sizing: border-box !important;
   }
 
   html body.tela-dificuldade .difficulty-shell {
