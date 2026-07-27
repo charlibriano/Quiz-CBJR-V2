@@ -231,9 +231,10 @@ window.CBJRShareResult = (function() {
   function quiz({ levelName, levelNumber, difficulty, score, hits, total }) {
     const pct = total ? Math.round((hits / total) * 100) : 0;
     const diffLabel = { facil: 'Fácil', normal: 'Normal', dificil: 'Difícil' }[difficulty] || difficulty || '';
+    const diffPart = diffLabel ? ` (${diffLabel})` : '';
     return share({
       title: 'Quiz CBJR',
-      text: `🎸 Acabei de jogar o Quiz do Charlie Brown Jr.! Nível "${levelName}" (${diffLabel}) com ${pct}% de acerto e ${score} pts. Será que você conhece mais da banda do que eu? Bora testar:`,
+      text: `🎸 Acabei de jogar o Quiz do Charlie Brown Jr.! Nível "${levelName}"${diffPart} com ${pct}% de acerto e ${score} pts. Será que você conhece mais da banda do que eu? Bora testar:`,
       url: `${SITE_BASE}quiz.html`,
       cardData: {
         kicker: 'Quiz CBJR',
