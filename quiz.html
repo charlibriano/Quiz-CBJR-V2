@@ -6089,6 +6089,66 @@ body.tela-pergunta .answer-btn {
       display: inline-block;
       margin-bottom: 4px;
     }
+    /* =============================================================
+       MODO CHARLIBRIANO — identidade visual própria (vermelho/perigo)
+       para nunca deixar dúvida sobre qual modo está em jogo.
+       ============================================================= */
+    body.charlibriano-mode {
+      background:
+        radial-gradient(circle at 50% -10%, rgba(220,38,38,.20), transparent 55%),
+        repeating-linear-gradient(135deg, rgba(220,38,38,.035) 0px, rgba(220,38,38,.035) 2px, transparent 2px, transparent 14px),
+        #050505;
+    }
+    body.charlibriano-mode .quiz-screen {
+      animation: charlibrianoPulseBorder 2.4s ease-in-out infinite;
+    }
+    @keyframes charlibrianoPulseBorder {
+      0%, 100% { box-shadow: inset 0 0 120px rgba(220,38,38,.10); }
+      50%      { box-shadow: inset 0 0 170px rgba(220,38,38,.20); }
+    }
+    body.charlibriano-mode .answer-btn {
+      border-color: rgba(220,38,38,.45);
+      background: rgba(20,4,4,.92);
+    }
+    body.charlibriano-mode .answer-btn:hover:not(:disabled) {
+      border-color: #dc2626;
+      box-shadow: 0 0 18px rgba(220,38,38,.35), inset 0 1px 0 rgba(255,255,255,.1);
+    }
+    body.charlibriano-mode .answer-btn .answer-letter {
+      color: #dc2626 !important;
+    }
+    body.charlibriano-mode .mode-pill {
+      background: linear-gradient(135deg, #dc2626, #7f1d1d) !important;
+      color: #fff !important;
+      animation: charlibrianoPillGlow 1.6s ease-in-out infinite;
+    }
+    @keyframes charlibrianoPillGlow {
+      0%, 100% { box-shadow: 0 0 8px rgba(220,38,38,.4); }
+      50%      { box-shadow: 0 0 20px rgba(220,38,38,.85); }
+    }
+    /* Faixa fixa no topo — impossível de não notar */
+    #charlibrianoQuizHUD {
+      background: linear-gradient(90deg, #7f1d1d, #dc2626, #7f1d1d);
+      background-size: 200% 100%;
+      animation: charlibrianoBannerShift 3s linear infinite;
+      box-shadow: 0 4px 20px rgba(220,38,38,.5);
+      text-shadow: 0 1px 2px rgba(0,0,0,.4);
+    }
+    @keyframes charlibrianoBannerShift {
+      0%   { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+    /* A topbar normal desce pra abrir espaço pra faixa vermelha */
+    body.charlibriano-mode .topbar {
+      top: 52px !important;
+    }
+    body.charlibriano-mode .quiz-hud {
+      top: 116px !important;
+    }
+    body.charlibriano-mode .quiz-screen {
+      padding-top: 126px !important;
+    }
+
   </style>
 </head>
 
@@ -6100,10 +6160,10 @@ body.tela-pergunta .answer-btn {
 
     <div class="topbar-center">
       <div class="mode-pill">Modo Quiz</div>
-      <button id="charlibrianoQuizBadge" type="button" style="display:none;margin-left:8px;border:1px solid rgba(241,196,15,.55);border-radius:999px;background:rgba(241,196,15,.10);color:#f1c40f;font-weight:900;font-size:.78rem;padding:6px 14px;cursor:pointer;font-family:inherit;white-space:nowrap;">🎸 Charlibriano <span id="charlibrianoQuizBadgeRecord"></span></button>
     </div>
 
     <div class="topbar-actions">
+      <button id="charlibrianoQuizBadge" type="button" style="display:none;border:1px solid rgba(241,196,15,.55);border-radius:999px;background:rgba(241,196,15,.10);color:#f1c40f;font-weight:900;font-size:.78rem;padding:6px 12px;cursor:pointer;font-family:inherit;white-space:nowrap;">🎸 <span id="charlibrianoQuizBadgeRecord"></span></button>
       <button id="btn5050" class="power-btn" type="button"><span>50/50</span> <span id="count5050" class="power-count">0</span></button>
       <button id="btnPular" class="power-btn" type="button"><span>Pular</span> <span id="countPular" class="power-count">0</span></button>
     </div>
@@ -7301,8 +7361,8 @@ body.tela-pergunta .answer-btn {
       document.getElementById('charlibrianoQuizHUD')?.remove();
       const hud = document.createElement('div');
       hud.id = 'charlibrianoQuizHUD';
-      hud.style.cssText = 'position:fixed;top:calc(var(--top-h,52px) + 10px);left:50%;transform:translateX(-50%);z-index:60;display:flex;align-items:center;gap:10px;background:rgba(8,8,8,.9);border:1px solid rgba(241,196,15,.45);border-radius:999px;padding:8px 16px;font-family:Inter,Arial,sans-serif;font-weight:900;font-size:.82rem;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.4);';
-      hud.innerHTML = '<span style="color:#f1c40f">🎸 Charlibriano</span><span id="charlibrianoQuizStreak">0 seguidos</span>';
+      hud.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:70;display:flex;align-items:center;justify-content:center;gap:12px;padding:9px 16px;font-family:Inter,Arial,sans-serif;font-weight:900;font-size:.82rem;color:#fff;letter-spacing:.02em;';
+      hud.innerHTML = '<span>🎸 MODO CHARLIBRIANO — UM ERRO E ACABOU</span><span style="opacity:.55">•</span><span id="charlibrianoQuizStreak">0 seguidos</span>';
       document.body.appendChild(hud);
     }
 
@@ -7310,6 +7370,7 @@ body.tela-pergunta .answer-btn {
       state.charlibriano.active = true;
       state.charlibriano.streak = 0;
       state.wrongs = 0; // Charlibriano não herda vidas gastas na campanha — decide só pelo isCorrect da rodada
+      document.body.classList.add('charlibriano-mode'); // troca a cara inteira da tela pra vermelho/perigo
       charlibrianoQueue = buildCharlibrianoPool();
       updateCharlibrianoBadge();
       injectCharlibrianoHUD();
@@ -7337,6 +7398,7 @@ body.tela-pergunta .answer-btn {
 
     function charlibrianoGameOver() {
       state.charlibriano.active = false;
+      document.body.classList.remove('charlibriano-mode'); // volta pra identidade amarela normal
       document.getElementById('charlibrianoQuizHUD')?.remove();
       const modePill = document.querySelector('.mode-pill');
       if (modePill) modePill.textContent = 'Modo Quiz';
