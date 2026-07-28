@@ -6100,6 +6100,7 @@ body.tela-pergunta .answer-btn {
 
     <div class="topbar-center">
       <div class="mode-pill">Modo Quiz</div>
+      <button id="charlibrianoQuizBadge" type="button" style="display:none;margin-left:8px;border:1px solid rgba(241,196,15,.55);border-radius:999px;background:rgba(241,196,15,.10);color:#f1c40f;font-weight:900;font-size:.78rem;padding:6px 14px;cursor:pointer;font-family:inherit;white-space:nowrap;">🎸 Charlibriano <span id="charlibrianoQuizBadgeRecord"></span></button>
     </div>
 
     <div class="topbar-actions">
@@ -6221,7 +6222,8 @@ body.tela-pergunta .answer-btn {
       powerups: {
         fifty: 2,
         skip: 2
-      }
+      },
+      charlibriano: { active: false, streak: 0 }
     };
 
     const difficultySettings = {
@@ -6405,6 +6407,7 @@ body.tela-pergunta .answer-btn {
       countPular: document.getElementById('countPular'),
       resultOverlay: document.getElementById('resultOverlay'),
       shareLevelBtn: document.getElementById('shareLevelBtn'),
+      charlibrianoBadge: document.getElementById('charlibrianoQuizBadge'),
       resultTitle: document.getElementById('resultTitle'),
       resultText: document.getElementById('resultText'),
       resultPhrase: document.getElementById('resultPhrase'),
@@ -6495,6 +6498,7 @@ body.tela-pergunta .answer-btn {
         const urlParams = new URLSearchParams(location.search);
         const urlDiff = urlParams.get('difficulty');
         const urlNivel = urlParams.get('nivel');
+        updateCharlibrianoBadge(); // já desbloqueou antes? o badge aparece sem precisar rejogar
         if(urlDiff && ['facil','normal','dificil'].includes(urlDiff)){
           setTimeout(() => {
             // Veio da conquista "La Família 013": abre direto o nível secreto (último nível)
@@ -6523,6 +6527,7 @@ body.tela-pergunta .answer-btn {
       els.shareLevelBtn?.addEventListener('click', () => {
         if (window.CBJRShareResult && state.lastShare) CBJRShareResult.quiz(state.lastShare);
       });
+      els.charlibrianoBadge?.addEventListener('click', showCharlibrianoEntry);
     }
 
     function normalizeLevels(data) {
@@ -6694,7 +6699,9 @@ body.tela-pergunta .answer-btn {
       updateHud();
       updatePowerupButtons();
 
-      els.questionKicker.textContent = `Pergunta ${state.currentQuestionIndex + 1} de ${state.currentQuestions.length}`;
+      els.questionKicker.textContent = state.charlibriano.active
+        ? '🎸 Modo Charlibriano — sem rede de segurança'
+        : `Pergunta ${state.currentQuestionIndex + 1} de ${state.currentQuestions.length}`;
       els.quoteLine.textContent = `“${getCurrentLevelPhrase()}”`;
       typeQuestion(question.pergunta);
 
@@ -6791,6 +6798,18 @@ body.tela-pergunta .answer-btn {
 
       window.clearTimeout(answerQuestion._autoTimer);
 
+      // ── Charlibriano: zero rede de segurança — um erro e acabou ──
+      if (state.charlibriano.active) {
+        if (!isCorrect) {
+          disableAnswerButtons();
+          answerQuestion._autoTimer = window.setTimeout(() => charlibrianoGameOver(), 1500);
+          return;
+        }
+        state.charlibriano.streak++;
+        answerQuestion._autoTimer = window.setTimeout(() => nextCharlibrianoQuestion(), 2200);
+        return;
+      }
+
       if (!isCorrect && state.wrongs >= settings.maxWrong) {
         disableAnswerButtons();
         const delay = state.difficulty === 'dificil' ? 900 : 1300;
@@ -6819,6 +6838,16 @@ body.tela-pergunta .answer-btn {
 
     function showWrongFeedback(settings) {
       hideChoraoBalloon();
+
+      // No Charlibriano é sempre um erro só — a contagem de vidas da campanha não se aplica
+      if (state.charlibriano.active) {
+        els.feedbackBox.innerHTML = `
+          <strong>Vacilou.</strong>
+          O Modo Charlibriano não perdoa. Já já você tenta de novo.
+        `;
+        els.feedbackBox.classList.add('show');
+        return;
+      }
 
       const maxWrong = Number(settings && settings.maxWrong) || 0;
       const isEliminated = state.wrongs >= maxWrong;
@@ -6982,6 +7011,7 @@ body.tela-pergunta .answer-btn {
     }
 
     function finishLevel(forceFail = false) {
+      state.charlibrianoRetry = false; // toda vez que a campanha termina normal, o botão volta a reiniciar o NÍVEL, não o infinito
       const total = state.currentQuestions.length;
       const settings = difficultySettings[state.difficulty] || difficultySettings.normal;
       const allowedWrong = settings.maxWrong;
@@ -7030,7 +7060,24 @@ body.tela-pergunta .answer-btn {
           : pickRandom(fallbackPhrases);
         // Área menor: resumo + frase personalizada pelo desempenho.
         els.resultText.innerHTML = getFinalQuizSummaryHtml();
+
+        // ── Anúncio do Modo Charlibriano: primeira vez que a campanha fecha ──
+        setTimeout(() => {
+          const actions = els.resultOverlay?.querySelector('.overlay-actions');
+          if (actions && !document.getElementById('charlibrianoAnnounceBtn')) {
+            const btn = document.createElement('button');
+            btn.id = 'charlibrianoAnnounceBtn';
+            btn.className = 'secondary-btn';
+            btn.type = 'button';
+            btn.style.cssText = 'border-color:rgba(241,196,15,.5);color:#f1c40f;';
+            btn.textContent = '🎸 Encarar o Modo Charlibriano';
+            btn.addEventListener('click', () => { els.resultOverlay.classList.remove('show'); showCharlibrianoEntry(); });
+            actions.appendChild(btn);
+          }
+        }, 100);
       }
+
+      updateCharlibrianoBadge();
 
       els.resultOverlay.classList.add('show');
 
@@ -7089,6 +7136,12 @@ body.tela-pergunta .answer-btn {
 
     function retryCurrentLevel() {
       els.resultOverlay.classList.remove('show');
+      els.retryLevelBtn.textContent = 'Tentar de novo'; // restaura o rótulo padrão pro próximo uso normal
+      if (state.charlibrianoRetry) {
+        state.charlibrianoRetry = false;
+        startCharlibriano();
+        return;
+      }
       state.score = 0;
       state.globalHits = 0;
       state.totalAnswered = 0;
@@ -7146,6 +7199,13 @@ body.tela-pergunta .answer-btn {
     }
 
     function updateHud() {
+      if (state.charlibriano.active) {
+        els.hudPergunta.textContent = `${state.charlibriano.streak} 🔥`;
+        els.hudPontos.textContent = state.score;
+        els.hudAcertos.textContent = state.charlibriano.streak;
+        els.hudNivel.textContent = '∞';
+        return;
+      }
       const fullTotal = state.currentQuestions.length || 0;
       // Na degustação o placar fala a verdade: são 3 perguntas, não o nível inteiro
       const total = TRIAL_MODE ? Math.min(3, fullTotal) : fullTotal;
@@ -7164,6 +7224,150 @@ body.tela-pergunta .answer-btn {
 
     function getCurrentQuestion() {
       return state.currentQuestions[state.currentQuestionIndex];
+    }
+
+    // ═══════════════════════════════════════════════════════
+    // MODO CHARLIBRIANO — infinito, sem ajuda, um erro e acabou.
+    // Desbloqueia ao zerar a campanha (8 níveis). Perguntas: TODAS
+    // as dos 8 níveis, embaralhadas — é o acervo completo do quiz.
+    // ═══════════════════════════════════════════════════════
+    const CHARLIBRIANO_QUIZ_KEY = 'cbjr_charlibriano_quiz_v1';
+    let charlibrianoQueue = [];
+
+    function getCharlibrianoRecord() {
+      try { return JSON.parse(localStorage.getItem(CHARLIBRIANO_QUIZ_KEY) || '{}'); } catch(_) { return {}; }
+    }
+
+    function saveCharlibrianoRecord(streak) {
+      const rec = getCharlibrianoRecord();
+      const best = Math.max(rec.bestStreak || 0, streak);
+      try { localStorage.setItem(CHARLIBRIANO_QUIZ_KEY, JSON.stringify({ bestStreak: best, hasPlayed: true })); } catch(_) {}
+      try { window.CBJRCloudProgress?.save?.({ [CHARLIBRIANO_QUIZ_KEY]: JSON.stringify({ bestStreak: best, hasPlayed: true }) }); } catch(_) {}
+      return best;
+    }
+
+    function isCampaignComplete() {
+      return getHighestLevel('facil') >= state.levels.length;
+    }
+
+    function shuffleArray(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function buildCharlibrianoPool() {
+      const all = state.levels.flatMap(level => level.perguntas || []);
+      return shuffleArray(all);
+    }
+
+    // Atualiza o badge fixo da topbar: só aparece pra quem já zerou a campanha
+    function updateCharlibrianoBadge() {
+      const badge = document.getElementById('charlibrianoQuizBadge');
+      if (!badge) return;
+      if (!isCampaignComplete()) { badge.style.display = 'none'; return; }
+      const rec = getCharlibrianoRecord();
+      const recordEl = document.getElementById('charlibrianoQuizBadgeRecord');
+      if (recordEl) recordEl.textContent = rec.bestStreak ? `· ${rec.bestStreak}` : '';
+      badge.style.display = state.charlibriano.active ? 'none' : 'inline-flex';
+    }
+
+    function showCharlibrianoEntry() {
+      document.getElementById('charlibrianoQuizModal')?.remove();
+      const rec = getCharlibrianoRecord();
+      const modal = document.createElement('div');
+      modal.id = 'charlibrianoQuizModal';
+      modal.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.88);backdrop-filter:blur(14px);';
+      modal.innerHTML =
+        '<div style="position:relative;overflow:hidden;width:min(460px,100%);background:rgba(8,8,8,.97);border:1px solid rgba(241,196,15,.5);border-radius:24px;padding:34px 26px;text-align:center;font-family:Inter,Arial,sans-serif;box-shadow:0 24px 70px rgba(0,0,0,.6),0 0 44px rgba(241,196,15,.12)">' +
+          '<div aria-hidden="true" style="position:absolute;right:-14px;bottom:-34px;font-family:\'Elektrix\',Arial,sans-serif;font-size:7rem;line-height:1;color:rgba(241,196,15,.07);pointer-events:none;user-select:none">013</div>' +
+          '<div style="font-size:2.6rem;line-height:1">🎸</div>' +
+          '<h2 style="margin:12px 0 6px;font-family:\'Elektrix\',Arial,sans-serif;font-size:1.9rem;line-height:1.1;color:#f1c40f">Modo Charlibriano</h2>' +
+          '<p style="margin:0 0 18px;color:rgba(255,255,255,.78);font-size:.95rem;line-height:1.55;position:relative">Você já zerou a campanha. Agora vem o verdadeiro teste: perguntas infinitas dos 8 níveis, embaralhadas. <strong style="color:#f1c40f">Sem 50/50, sem pular. Um erro e acabou.</strong></p>' +
+          (rec.bestStreak ? '<div style="display:inline-block;margin:0 0 20px;border:1px solid rgba(241,196,15,.4);border-radius:999px;padding:8px 16px;color:#f1c40f;font-weight:900;font-size:.85rem;position:relative">🏆 Seu recorde: ' + rec.bestStreak + ' acerto' + (rec.bestStreak > 1 ? 's' : '') + ' seguidos</div>' : '') +
+          '<button type="button" id="charlibrianoStartBtn" style="display:block;width:100%;background:#f1c40f;color:#0a0a0a;font-weight:900;border:none;border-radius:999px;padding:15px 26px;cursor:pointer;font-size:1.05rem;position:relative">🎸 Entrar no Charlibriano</button>' +
+          '<button type="button" id="charlibrianoSkipBtn" style="display:block;width:100%;margin-top:10px;background:transparent;color:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:13px 26px;cursor:pointer;font-size:.9rem;font-family:inherit;position:relative">Voltar pro Quiz</button>' +
+        '</div>';
+      document.body.appendChild(modal);
+      modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+      document.getElementById('charlibrianoStartBtn').addEventListener('click', () => { modal.remove(); startCharlibriano(); });
+      document.getElementById('charlibrianoSkipBtn').addEventListener('click', () => modal.remove());
+    }
+
+    function injectCharlibrianoHUD() {
+      document.getElementById('charlibrianoQuizHUD')?.remove();
+      const hud = document.createElement('div');
+      hud.id = 'charlibrianoQuizHUD';
+      hud.style.cssText = 'position:fixed;top:calc(var(--top-h,52px) + 10px);left:50%;transform:translateX(-50%);z-index:60;display:flex;align-items:center;gap:10px;background:rgba(8,8,8,.9);border:1px solid rgba(241,196,15,.45);border-radius:999px;padding:8px 16px;font-family:Inter,Arial,sans-serif;font-weight:900;font-size:.82rem;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.4);';
+      hud.innerHTML = '<span style="color:#f1c40f">🎸 Charlibriano</span><span id="charlibrianoQuizStreak">0 seguidos</span>';
+      document.body.appendChild(hud);
+    }
+
+    function startCharlibriano() {
+      state.charlibriano.active = true;
+      state.charlibriano.streak = 0;
+      state.wrongs = 0; // Charlibriano não herda vidas gastas na campanha — decide só pelo isCorrect da rodada
+      charlibrianoQueue = buildCharlibrianoPool();
+      updateCharlibrianoBadge();
+      injectCharlibrianoHUD();
+      els.resultOverlay.classList.remove('show');
+      document.body.classList.remove('tela-dificuldade');
+      document.body.classList.add('tela-pergunta');
+      els.quizScreen.classList.add('active');
+      els.quizScreen.style.display = 'block';
+      const modePill = document.querySelector('.mode-pill');
+      if (modePill) modePill.textContent = 'Charlibriano';
+      const topbarActions = document.querySelector('.topbar-actions');
+      if (topbarActions) topbarActions.style.display = 'none'; // zero ajuda: 50/50 e pular somem
+      nextCharlibrianoQuestion();
+    }
+
+    function nextCharlibrianoQuestion() {
+      if (!charlibrianoQueue.length) charlibrianoQueue = buildCharlibrianoPool();
+      state.currentQuestions = [charlibrianoQueue.shift()];
+      state.currentQuestionIndex = 0;
+      state.answered = false;
+      renderQuestion();
+      const streakEl = document.getElementById('charlibrianoQuizStreak');
+      if (streakEl) streakEl.textContent = `${state.charlibriano.streak} seguido${state.charlibriano.streak === 1 ? '' : 's'}`;
+    }
+
+    function charlibrianoGameOver() {
+      state.charlibriano.active = false;
+      document.getElementById('charlibrianoQuizHUD')?.remove();
+      const modePill = document.querySelector('.mode-pill');
+      if (modePill) modePill.textContent = 'Modo Quiz';
+      const topbarActions = document.querySelector('.topbar-actions');
+      if (topbarActions) topbarActions.style.display = '';
+
+      const streak = state.charlibriano.streak;
+      const best = saveCharlibrianoRecord(streak);
+      const isRecord = streak > 0 && streak >= best;
+      const xpGanho = streak * 20;
+      if (xpGanho > 0) {
+        if (window.CBJRProgress?.addXp) window.CBJRProgress.addXp(xpGanho, `Charlibriano Quiz — ${streak} acertos`);
+      }
+      if (streak >= 1) {
+        try { window.dispatchEvent(new CustomEvent('cbjr-charlibriano-reached', { detail: { streak, xp: xpGanho, mode: 'quiz' } })); } catch(_) {}
+      }
+
+      els.resultOverlay.classList.remove('quiz-finalizado');
+      els.resultTitle.textContent = streak === 0 ? 'Acabou cedo!' : 'Modo Charlibriano';
+      els.resultPhrase.textContent = streak === 0
+        ? 'Errou na primeira. O Charlibriano não perdoa!'
+        : `Você acertou ${streak} pergunta${streak > 1 ? 's' : ''} seguida${streak > 1 ? 's' : ''} sem ajuda nenhuma!`;
+      els.resultText.innerHTML = (isRecord && streak > 0 ? '<span style="color:#f1c40f">🏆 Novo recorde pessoal!</span>' : `<span>Recorde: ${best} seguido${best === 1 ? '' : 's'}</span>`) +
+        (xpGanho > 0 ? `<span class="level-score-line">+${xpGanho} XP ganho</span>` : '');
+      els.nextLevelBtn.style.display = 'none';
+      els.shareLevelBtn.style.display = 'none';
+      state.charlibrianoRetry = true;
+      els.retryLevelBtn.textContent = '🎸 Tentar de novo';
+      els.retryLevelBtn.style.display = 'inline-flex';
+      els.resultOverlay.classList.add('show');
+      updateCharlibrianoBadge();
     }
 
     function getCurrentLevelPhrase() {
