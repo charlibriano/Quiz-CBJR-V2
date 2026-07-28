@@ -6148,6 +6148,13 @@ body.tela-pergunta .answer-btn {
     body.charlibriano-mode .quiz-screen {
       padding-top: 126px !important;
     }
+    /* Zero ajuda de verdade: vence a regra "correcao-funcional-powerups-felipe"
+       (mais abaixo no arquivo, também !important) por ter classe extra no body —
+       maior especificidade sempre ganha, não importa a ordem no arquivo. */
+    body.charlibriano-mode.tela-pergunta .topbar-actions,
+    body.charlibriano-mode .topbar-actions {
+      display: none !important;
+    }
 
   </style>
 </head>
@@ -7214,6 +7221,7 @@ body.tela-pergunta .answer-btn {
     }
 
     function useFiftyFifty() {
+      if (state.charlibriano.active) return; // zero ajuda no Charlibriano, sem exceção
       if (state.answered || state.powerups.fifty <= 0) return;
 
       const question = getCurrentQuestion();
@@ -7238,6 +7246,7 @@ body.tela-pergunta .answer-btn {
     }
 
     function skipQuestion() {
+      if (state.charlibriano.active) return; // zero ajuda no Charlibriano, sem exceção
       if (state.answered || state.powerups.skip <= 0) return;
 
       state.powerups.skip--;
@@ -7278,8 +7287,9 @@ body.tela-pergunta .answer-btn {
     function updatePowerupButtons() {
       els.count5050.textContent = state.powerups.fifty;
       els.countPular.textContent = state.powerups.skip;
-      els.btn5050.disabled = state.powerups.fifty <= 0 || state.answered || !els.quizScreen.classList.contains('active');
-      els.btnPular.disabled = state.powerups.skip <= 0 || state.answered || !els.quizScreen.classList.contains('active');
+      const blocked = state.charlibriano.active; // zero ajuda no Charlibriano
+      els.btn5050.disabled = blocked || state.powerups.fifty <= 0 || state.answered || !els.quizScreen.classList.contains('active');
+      els.btnPular.disabled = blocked || state.powerups.skip <= 0 || state.answered || !els.quizScreen.classList.contains('active');
     }
 
     function getCurrentQuestion() {
