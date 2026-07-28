@@ -6578,7 +6578,12 @@ body.tela-pergunta .answer-btn {
           }, 400);
         } else {
           // Sem URL especial: entrada direta na trilha única
-          setTimeout(() => startQuiz('facil'), 400);
+          setTimeout(() => {
+            startQuiz('facil');
+            // Já dominou a campanha antes? A escolha aparece na hora — sem
+            // precisar caçar o badge. "Voltar pro Quiz" deixa na campanha normal.
+            if (isCampaignComplete()) showCharlibrianoEntry();
+          }, 400);
         }
       } catch (error) {
         showFatalError(error.message);
