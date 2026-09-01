@@ -4026,13 +4026,15 @@ body.booting .top-actions {
         min-height: 52vw !important;
         padding: 44px 20px 28px !important;
         grid-template-columns: unset !important;
+        /* Sem imagem própria aqui: a foto vem do fundo fixo da página
+           (body::before). Antes eram duas cópias da mesma foto brigando
+           entre si e com o título. */
         background:
           linear-gradient(180deg,
-            rgba(0,0,0,.45) 0%,
+            rgba(0,0,0,.35) 0%,
             rgba(0,0,0,.62) 60%,
             rgba(8,8,8,1) 100%
-          ),
-          url('./fundo-cbjr.jpg') !important;
+          ) !important;
         background-size: cover !important;
         background-position: center 30% !important;
         border-radius: 0 0 28px 28px !important;
