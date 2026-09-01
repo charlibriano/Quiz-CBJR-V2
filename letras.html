@@ -3555,8 +3555,13 @@ button:hover{
   </div>
 
   <script>
-    const REPO_BASE = 'https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/';
-    const PAGE_BASE = 'https://charlibriano.github.io/Quiz-CBJR-V2/';
+    /* Antes: os JSONs das letras vinham do raw.githubusercontent.com e as capas
+       do GitHub Pages do próprio projeto. São arquivos que já estão publicados
+       ao lado deste HTML, e o raw do GitHub tem limite de requisição — quando
+       limita, o álbum simplesmente não abre, sem erro na tela.
+       Agora os dois apontam para o próprio site. */
+    const REPO_BASE = './';
+    const PAGE_BASE = './';
 
     const lettersMode = {
       albumMap: {
