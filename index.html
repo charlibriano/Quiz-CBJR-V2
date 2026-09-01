@@ -5408,7 +5408,17 @@ body.booting .top-actions {
   import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
   import { getDatabase, ref, push, set, onDisconnect, onValue, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
-  const firebaseConfig={
+  /* FONTE ÚNICA da config do Firebase.
+     Os três módulos da página (presença online, login Google e mural de
+     atividade) usavam cópias separadas desta config — e uma delas estava
+     incompleta, sem databaseURL. Como só o primeiro a rodar inicializa o
+     app, a cópia incompleta era inofensiva por acaso; bastava mudar a ordem
+     dos scripts para o app subir sem Realtime Database e o contador de
+     jogadores online parar de funcionar. É o mesmo tipo de falha silenciosa
+     que já quebrou o ranking do Modo Letras.
+     Este módulo é o primeiro na ordem do documento, então define aqui.
+     Os outros dois leem window.CBJR_FIREBASE_CONFIG. */
+  const firebaseConfig = window.CBJR_FIREBASE_CONFIG = {
     apiKey:'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
     authDomain:'ranking-cbjr.firebaseapp.com',
     databaseURL:'https://ranking-cbjr-default-rtdb.firebaseio.com',
@@ -5441,21 +5451,9 @@ body.booting .top-actions {
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
   import { getFirestore, doc, getDoc, setDoc, serverTimestamp, collection, getDocs, increment, runTransaction, query, where } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-  // CORREÇÃO CBJR: config unificada com o restante do site. A config antiga
-  // usava outra apiKey/appId; hoje ela é ignorada porque o script de presença
-  // online inicializa o app primeiro (com a config canônica), mas qualquer
-  // mudança na ordem dos scripts faria o login gravar a sessão sob outra
-  // apiKey — o mesmo bug que quebrava o ranking do Modo Letras.
-  const firebaseConfig = {
-    apiKey: 'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
-    authDomain: 'ranking-cbjr.firebaseapp.com',
-    databaseURL: 'https://ranking-cbjr-default-rtdb.firebaseio.com',
-    projectId: 'ranking-cbjr',
-    storageBucket: 'ranking-cbjr.firebasestorage.app',
-    messagingSenderId: '681180179118',
-    appId: '1:681180179118:web:fe10833848e8bb8194db3f',
-    measurementId: 'G-QK5QE2Y1CC'
-  };
+  // Lê a config única definida pelo módulo de presença online
+  // (cbjr-online-presence-script), que roda antes deste.
+  const firebaseConfig = window.CBJR_FIREBASE_CONFIG;
 
   const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -6561,14 +6559,11 @@ function shareWhatsApp() {
 import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import { getFirestore, collection, query, orderBy, limit, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
-  authDomain: 'ranking-cbjr.firebaseapp.com',
-  projectId: 'ranking-cbjr',
-  storageBucket: 'ranking-cbjr.firebasestorage.app',
-  messagingSenderId: '681180179118',
-  appId: '1:681180179118:web:fe10833848e8bb8194db3f'
-};
+// Lê a config única definida pelo módulo de presença online.
+// A cópia que existia aqui estava incompleta (sem databaseURL e
+// measurementId) — se este módulo rodasse primeiro, o app subiria sem
+// Realtime Database.
+const firebaseConfig = window.CBJR_FIREBASE_CONFIG;
 
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 const db  = getFirestore(app);
