@@ -592,8 +592,13 @@
       text-align: center; font-size: .74rem; color: rgba(255,255,255,.45);
       font-weight: 850; margin-top: 10px; line-height: 1.5;
     }
+    /* Botão "Curiosidades exclusivas" do desktop (top 10).
+       Este seletor havia se perdido numa edição anterior e as declarações
+       abaixo ficaram órfãs — o navegador descartava tudo e o botão aparecia
+       sem destaque. O equivalente no mobile é .mobile-curiosidades-btn. */
+    .dash-btn.curiosidades-btn {
       background: linear-gradient(90deg, rgba(241,196,15,.18), rgba(30,215,96,.12));
-      border-color: rgba(241,196,15,.5);
+      border: 1px solid rgba(241,196,15,.5);
       color: var(--yellow);
       animation: curiosidadesGlow 2.5s ease-in-out infinite;
     }
