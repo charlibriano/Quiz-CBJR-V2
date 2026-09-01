@@ -8,13 +8,27 @@
   <meta property="og:title" content="Modo Quiz — Charlie Brown Jr." />
   <meta property="og:description" content="Quanto você sabe sobre o Charlie Brown Jr.? Responda perguntas sobre a história, músicas e curiosidades da banda. Ganhe XP e conquiste medalhas!" />
   <meta property="og:image" content="./icon-512.png" />
-  <meta property="og:url" content="https://quiz-cbjr.vercel.app/quiz.html" />
+  <meta property="og:url" id="ogUrl" content="https://quiz-cbjr.vercel.app/quiz.html" />
   <meta property="og:locale" content="pt_BR" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Modo Quiz — Charlie Brown Jr." />
   <meta name="twitter:description" content="Quanto você sabe sobre o Charlie Brown Jr.? Responda perguntas sobre a história, músicas e curiosidades da banda. Ganhe XP e conquiste medalhas!" />
   <meta name="twitter:image" content="./icon-512.png" />
-  <link rel="canonical" href="https://quiz-cbjr.vercel.app/quiz.html" />
+  <link rel="canonical" id="canonicalUrl" href="https://quiz-cbjr.vercel.app/quiz.html" />
+  <script>
+    /* O site responde por dois domínios (quiz-cbjr = Instagram, cbjr013 = TikTok).
+       Sem isto, os dois declaravam o quiz-cbjr como endereço oficial: o cbjr013
+       entregava toda a autoridade de busca para o outro e os compartilhamentos
+       saíam com a URL errada. Aqui cada domínio aponta para si mesmo.
+       Mesma correção já aplicada no index.html. */
+    (function () {
+      var url = location.origin + location.pathname;
+      var og = document.getElementById('ogUrl');
+      var can = document.getElementById('canonicalUrl');
+      if (og) og.setAttribute('content', url);
+      if (can) can.setAttribute('href', url);
+    })();
+  </script>
   <link rel="icon" type="image/png" href="./icon-512.png" />
   <link rel="apple-touch-icon" href="./icon-512.png" />
 
