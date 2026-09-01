@@ -29,6 +29,7 @@
       if (can) can.setAttribute('href', url);
     })();
   </script>
+  <link rel="preload" href="./Elektrix-Bold.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="icon" type="image/png" href="./icon-512.png" />
   <link rel="apple-touch-icon" href="./icon-512.png" />
 
@@ -45,8 +46,8 @@
   <style>
     @font-face {
       font-family: 'Elektrix';
-      src: url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/Elektrix-Bold.woff2') format('woff2'),
-           url('https://raw.githubusercontent.com/charlibriano/Quiz-CBJR-V2/main/Elektrix-Bold.woff') format('woff'),
+      src: url('./Elektrix-Bold.woff2') format('woff2'),
+           url('./Elektrix-Bold.woff') format('woff'),
            url('https://cdn.jsdelivr.net/gh/charlibriano/Quiz-CBJR-V2/Elektrix%20Bold.ttf') format('truetype');
       font-weight: bold;
       font-display: swap;
@@ -963,13 +964,13 @@
     body.tela-dificuldade {
       background-image:
         linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.25)),
-        url('https://charlibriano.github.io/Quiz-CBJR-V2/quiz-bg.jpg') !important;
+        url('./quiz-bg.jpg') !important;
       background-size: cover !important;
       background-position: center center !important;
     }
 
     body.tela-pergunta {
-      background-image: url('https://charlibriano.github.io/Quiz-CBJR-V2/quiz-pergunta.jpg') !important;
+      background-image: url('./quiz-pergunta.jpg') !important;
       background-size: cover !important;
       background-position: center center !important;
       background-repeat: no-repeat !important;
@@ -1208,7 +1209,7 @@
       min-height: 100svh !important;
       height: 100svh !important;
       overflow: hidden !important;
-      background-image: url('https://charlibriano.github.io/Quiz-CBJR-V2/quiz-pergunta.jpg') !important;
+      background-image: url('./quiz-pergunta.jpg') !important;
       background-size: 100% 100% !important;
       background-position: center center !important;
       background-repeat: no-repeat !important;
@@ -1437,7 +1438,7 @@
       height: 100svh !important;
       min-height: 100svh !important;
       overflow: hidden !important;
-      background-image: url('https://charlibriano.github.io/Quiz-CBJR-V2/quiz-pergunta.jpg') !important;
+      background-image: url('./quiz-pergunta.jpg') !important;
       background-repeat: no-repeat !important;
       background-position: center center !important;
       background-size: 100vw 100svh !important;
@@ -2049,7 +2050,7 @@
       }
 
       body.tela-pergunta {
-        background-image: url('https://charlibriano.github.io/Quiz-CBJR-V2/quiz-pergunta.jpg') !important;
+        background-image: url('./quiz-pergunta.jpg') !important;
         background-repeat: no-repeat !important;
         background-size: auto 100svh !important;
         background-position: 19% center !important;
@@ -2471,7 +2472,7 @@
 
     /* Seleção de nível: a imagem do amplificador aparece inteira */
     body.tela-dificuldade {
-      background-image: url('https://charlibriano.github.io/Quiz-CBJR-V2/quiz-bg.jpg') !important;
+      background-image: url('./quiz-bg.jpg') !important;
       background-repeat: no-repeat !important;
       background-size: contain !important;
       background-position: center center !important;
@@ -2516,7 +2517,7 @@
 
     /* Tela de pergunta: imagem do Chorão + moldura aparece completa */
     body.tela-pergunta {
-      background-image: url('https://charlibriano.github.io/Quiz-CBJR-V2/quiz-pergunta.jpg') !important;
+      background-image: url('./quiz-pergunta.jpg') !important;
       background-repeat: no-repeat !important;
       background-size: contain !important;
       background-position: center center !important;
@@ -3201,7 +3202,7 @@
         radial-gradient(circle at 72% 45%, rgba(241,196,15,.20), transparent 24%),
         linear-gradient(90deg, rgba(0,0,0,.26) 0%, rgba(0,0,0,.14) 42%, rgba(0,0,0,.70) 100%),
         linear-gradient(180deg, rgba(0,0,0,.20), rgba(0,0,0,.72)),
-        url('https://charlibriano.github.io/Quiz-CBJR-V2/tela-avanco-cbjr.png') center center / cover no-repeat !important;
+        url('./tela-avanco-cbjr.png') center center / cover no-repeat !important;
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
     }
@@ -3446,7 +3447,7 @@
       background:
         linear-gradient(90deg, rgba(0,0,0,.34) 0%, rgba(0,0,0,.16) 42%, rgba(0,0,0,.26) 100%),
         linear-gradient(180deg, rgba(0,0,0,.18) 0%, rgba(0,0,0,.18) 48%, rgba(0,0,0,.70) 100%),
-        url('https://charlibriano.github.io/Quiz-CBJR-V2/tela-avanco-cbjr.png') center center / cover no-repeat !important;
+        url('./tela-avanco-cbjr.png') center center / cover no-repeat !important;
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
     }
@@ -6195,7 +6196,7 @@ body.tela-pergunta .answer-btn {
   <div id="quizMusicPlayer" class="quiz-music-player" aria-label="Player de música do quiz">
     <audio crossorigin="anonymous" id="q-audio"></audio>
     <div class="player-content">
-      <div class="q-cover-wrap"><img id="q-album-cover" alt="Capa do disco atual" src="https://charlibriano.github.io/Quiz-CBJR-V2/CD%201.jpeg" /></div>
+      <div class="q-cover-wrap"><img id="q-album-cover" alt="Capa do disco atual" src="./CD%201.jpeg" /></div>
       <p id="q-current-song"><span>Carregando playlist...</span></p>
       <div class="q-progress-area">
         <div class="q-progress-container" id="q-progress-container" title="Progresso da música">
@@ -7608,7 +7609,7 @@ body.tela-pergunta .answer-btn {
       const fallbackTrack = {
         title: 'Tributo ao Frango da Malásia',
         url: 'https://charlibriano.github.io/Quiz-CBJR-V2/Transpiracao_Continua_Prolongada/Charlie%20Brown%20Jr%20-%20Tributo%20ao%20Frango%20da%20Mal%C3%A1sia.mp3',
-        cover: 'https://charlibriano.github.io/Quiz-CBJR-V2/CD%201.jpeg'
+        cover: './CD%201.jpeg'
       };
 
       function formatTime(seconds) {
@@ -7632,7 +7633,7 @@ body.tela-pergunta .answer-btn {
       }
 
       function absolutizeAssetUrl(value) {
-        const fallback = 'https://charlibriano.github.io/Quiz-CBJR-V2/CD%201.jpeg';
+        const fallback = './CD%201.jpeg';
         if (!value) return fallback;
         const raw = String(value).trim();
         if (!raw) return fallback;
@@ -7654,7 +7655,7 @@ body.tela-pergunta .answer-btn {
 
       function setCover(src) {
         if (!qPlayer.cover) return;
-        const fallbackCover = 'https://charlibriano.github.io/Quiz-CBJR-V2/CD%201.jpeg';
+        const fallbackCover = './CD%201.jpeg';
         qPlayer.cover.onerror = () => { qPlayer.cover.onerror = null; qPlayer.cover.src = fallbackCover; };
         qPlayer.cover.src = src || fallbackCover;
       }
@@ -10044,7 +10045,7 @@ body.tela-pergunta {
   height: 100svh !important;
   min-height: 100svh !important;
   overflow: hidden !important;
-  background-image: url('https://charlibriano.github.io/Quiz-CBJR-V2/quiz-pergunta.jpg') !important;
+  background-image: url('./quiz-pergunta.jpg') !important;
   background-repeat: no-repeat !important;
   background-position: center center !important;
   background-size: cover !important;
