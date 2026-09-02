@@ -428,11 +428,9 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      border: 1px solid rgba(255, 140, 0, .45);
-      border-radius: 16px;
-      background:
-        radial-gradient(circle at 0% 50%, rgba(255,140,0,.14), transparent 55%),
-        rgba(255,255,255,.04);
+      border: 1px solid rgba(0,0,0,.5);
+      border-radius: 4px;
+      background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(0,0,0,.30));
       padding: 12px 14px;
       margin-bottom: 12px;
       box-shadow: 0 0 22px rgba(255,140,0,.08), inset 0 1px 0 rgba(255,255,255,.06);
@@ -850,20 +848,6 @@
       overflow: hidden;
     }
 
-    /* disco espiando por trás do cartão */
-    .mode-card::before {
-      content: "";
-      position: absolute;
-      right: -30px; top: 50%;
-      width: 92px; height: 92px;
-      transform: translateY(-50%);
-      border-radius: 50%;
-      opacity: .3;
-      pointer-events: none;
-      background:
-        radial-gradient(circle, #2b2a27 0 15%, #9a978f 15% 17%, transparent 17%),
-        repeating-conic-gradient(#b3b0a8 0deg 6deg, #6d6b65 6deg 12deg);
-    }
 
     .mode-card:hover, .mode-card:active {
       transform: translateY(-2px);
@@ -943,11 +927,14 @@
       grid-template-rows: 22px 36px 18px auto 1fr 32px;
       gap: 8px;
       padding: 12px 8px;
-      border-radius: 20px;
-      border: 1px solid var(--line);
+      border-radius: 3px;
+      border: 1px solid rgba(0,0,0,.55);
+      border-top: 3px solid var(--accent, var(--yellow));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
       background:
-        radial-gradient(circle at var(--card-x,50%) 0%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 55%),
-        rgba(10,10,10,.78);
+        radial-gradient(circle at var(--card-x,50%) 0%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 55%),
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,.42)),
+        rgba(10,10,10,.72);
       text-decoration: none;
       color: #fff;
       cursor: pointer;
@@ -1614,7 +1601,7 @@
         height: 196px !important;
         padding: 6px 5px !important;
         gap: 4px !important;
-        border-radius: 13px !important;
+        border-radius: 3px !important;
         grid-template-rows: 15px 20px 35px 58px 18px !important;
       }
       .ch-top { font-size: .41rem !important; letter-spacing: .045em !important; }
@@ -2956,11 +2943,12 @@ body.auth-logged-out .app {
       display: none;
       width: min(1220px, calc(100% - 28px));
       margin: 0 auto;
-      border: 1px solid rgba(241,196,15,.25);
-      border-radius: 20px;
+      border: 1px solid rgba(0,0,0,.55);
+      border-top: 3px solid rgba(241,196,15,.75);
+      border-radius: 4px;
       background:
-        radial-gradient(circle at 14% 0%, rgba(241,196,15,.12), transparent 34%),
-        linear-gradient(180deg, rgba(0,0,0,.64), rgba(0,0,0,.86));
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.30)),
+        linear-gradient(180deg, rgba(0,0,0,.62), rgba(0,0,0,.88));
       box-shadow: 0 14px 44px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.08);
       padding: 12px;
       gap: 10px;
@@ -3010,9 +2998,9 @@ body.auth-logged-out .app {
     }
 
     .dash-card {
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 16px;
-      background: rgba(255,255,255,.055);
+      border: 1px solid rgba(0,0,0,.45);
+      border-radius: 3px;
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(0,0,0,.22));
       padding: 9px 10px;
       min-height: 68px;
       display: grid;
