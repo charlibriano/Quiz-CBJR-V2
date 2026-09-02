@@ -5994,7 +5994,7 @@ if (document.readyState === 'loading') {
   html body .dash-streak-card {
     border: 1px solid rgba(0,0,0,.55) !important;
     border-radius: 3px !important;
-    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.34)) !important;
+    background: linear-gradient(180deg, #3a3833 0%, #2b2924 62%, #232119 100%) !important;
     box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 3px 9px rgba(0,0,0,.4) !important;
   }
   html body .msc-milestone,
@@ -6003,19 +6003,26 @@ if (document.readyState === 'loading') {
   }
 
   /* ── AÇÕES: etiquetas de papel rasgadas ── */
+  /* Botões de ação: MESMA superfície dos modos.
+     Antes eram papel bege enquanto os modos eram vidro escuro —
+     duas famílias visuais na mesma tela, que é o que mais brigava.
+     Agora o papel existe num lugar só: o desafio do dia. */
   html body .dash-btn {
-    border-radius: 0 !important;
-    border: 0 !important;
-    background: var(--muro-papel-alto) !important;
-    color: #353025 !important;
+    border-radius: 2px !important;
+    border: 1px solid rgba(0,0,0,.26) !important;
+    border-left: 4px solid rgba(70,60,42,.5) !important;
+    background-color: #ddd2b6 !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='k'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23k)' opacity='0.34'/%3E%3C/svg%3E") !important;
+    background-blend-mode: multiply !important;
+    color: #2a251c !important;
     font-weight: 700 !important;
-    letter-spacing: .01em !important;
-    box-shadow: 0 3px 7px rgba(0,0,0,.38) !important;
-    clip-path: polygon(0 0, 100% 2.5%, 99.4% 100%, .6% 97.5%);
+    text-shadow: none !important;
+    animation: none !important;
+    box-shadow: 0 5px 12px rgba(0,0,0,.45) !important;
+    clip-path: none;
   }
   html body .dash-btn:nth-of-type(2) { transform: rotate(.5deg); }
   html body .dash-btn:nth-of-type(3) { transform: rotate(-.45deg); }
-  html body .dash-btn:hover { filter: brightness(1.04); }
 
   /* No celular os três botões de ação NÃO são .dash-btn: são
      .mobile-curiosidades-btn (curiosidades e convite) e
@@ -6024,19 +6031,37 @@ if (document.readyState === 'loading') {
   html body .mobile-curiosidades-btn,
   html body .dash-btn.share-btn,
   html body .dash-btn.curiosidades-btn {
-    border-radius: 0 !important;
-    border: 0 !important;
-    background: var(--muro-papel-alto) !important;
-    background-image: none !important;
-    color: #353025 !important;
+    border-radius: 2px !important;
+    border: 1px solid rgba(0,0,0,.26) !important;
+    border-left: 4px solid rgba(70,60,42,.5) !important;
+    background-color: #ddd2b6 !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='k'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23k)' opacity='0.34'/%3E%3C/svg%3E") !important;
+    background-blend-mode: multiply !important;
+    color: #2a251c !important;
     font-weight: 700 !important;
     text-shadow: none !important;
     animation: none !important;
-    box-shadow: 0 3px 7px rgba(0,0,0,.38) !important;
-    clip-path: polygon(0 0, 100% 2.5%, 99.4% 100%, .6% 97.5%);
+    box-shadow: 0 5px 12px rgba(0,0,0,.45) !important;
+    clip-path: none;
+  }
+  html body .mobile-curiosidades-btn:hover,
+  html body .dash-btn.share-btn:hover,
+  html body .dash-btn.curiosidades-btn:hover,
+  html body .dash-btn:hover {
+    border-left-color: var(--yellow) !important;
   }
   html body .dash-btn.share-btn { transform: rotate(.5deg); }
   html body .mobile-curiosidades-btn#mobileInviteBtn { transform: rotate(-.45deg); }
+
+  /* etiquetas retas: a rotação somava ruído a uma página que já
+     tem foto, papel e chapa. Fica só o recorte irregular. */
+  html body .dash-btn.share-btn,
+  html body .mobile-curiosidades-btn { transform: none !important; }
+
+  /* mesa de som e painel: tarja neutra, não colorida */
+  html body .channel { border-top-color: rgba(255,255,255,.28) !important; }
+  html body .channel:hover { border-top-color: var(--yellow) !important; }
+  html body .player-dashboard { border-top-color: rgba(255,255,255,.24) !important; }
 
   /* ── DESAFIO DO DIA: papel colado com fita ── */
   html body .cbjr-daily-banner {
@@ -6097,33 +6122,53 @@ if (document.readyState === 'loading') {
      as partes claras da fotografia. */
   html body .mode-card {
     border-radius: 2px !important;
-    border: 1px solid rgba(255,255,255,.10) !important;
-    border-left: 4px solid var(--mc-color, var(--yellow)) !important;
-    background: linear-gradient(100deg,
-      rgba(255,255,255,.09),
-      rgba(20,18,14,.14)) !important;
-    -webkit-backdrop-filter: blur(3px) saturate(.8);
-    backdrop-filter: blur(3px) saturate(.8);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.12) !important;
+    border: 1px solid rgba(0,0,0,.28) !important;
+    /* tarja igual em todos; só o que está sob o dedo acende */
+    border-left: 4px solid rgba(70,60,42,.55) !important;
+    /* PAPELÃO — o material é o mesmo em toda a página: botões de
+       ação, modos e desafio. É isso que dá uniformidade. A foto
+       aparece entre as peças, nunca através delas. */
+    background-color: #c9bb9c !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='k'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23k)' opacity='0.34'/%3E%3C/svg%3E") !important;
+    background-blend-mode: multiply !important;
+    box-shadow: 0 6px 14px rgba(0,0,0,.5) !important;
   }
   html body .mode-card:hover,
   html body .mode-card:active {
-    background: linear-gradient(100deg,
-      rgba(255,255,255,.16),
-      rgba(20,18,14,.10)) !important;
+    border-left-color: var(--yellow) !important;
+    background-color: #d6c9ab !important;
   }
-  html body .mode-card .mode-card-name {
-    text-shadow: 0 1px 4px rgba(0,0,0,.85), 0 0 12px rgba(0,0,0,.55) !important;
-  }
-  html body .mode-card .mode-card-tag {
-    color: rgba(255,255,255,.78) !important;
-    text-shadow: 0 1px 4px rgba(0,0,0,.8) !important;
-  }
+  html body .mode-card .mode-card-name { color: #2a251c !important; }
+  html body .mode-card .mode-card-tag  { color: #5d5442 !important; }
+  /* Ícones: fundo neutro e emoji dessaturado. Os emojis coloridos
+     eram a maior fonte de ruído — cada um com sua paleta própria,
+     nenhuma conversando com a foto. Em cinza viram pictograma. */
   html body .mode-card .mode-card-icon {
     border-radius: 2px !important;
-    background: color-mix(in srgb, var(--mc-color, var(--yellow)) 26%, transparent) !important;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,.12);
+    background: rgba(70,60,42,.14) !important;
+    box-shadow: inset 0 0 0 1px rgba(70,60,42,.22);
+    filter: grayscale(1) contrast(1.1) brightness(.85);
   }
+  /* emojis dos botões de ação: mesmo tratamento dos ícones dos modos */
+  html body .dash-btn,
+  html body .mobile-curiosidades-btn {
+    filter: grayscale(1) contrast(1.1) brightness(.9);
+  }
+  html body .dash-btn:hover,
+  html body .mobile-curiosidades-btn:hover { filter: none; }
+
+  html body .mode-card:hover .mode-card-icon,
+  html body .mode-card:active .mode-card-icon {
+    filter: none;
+    background: color-mix(in srgb, var(--yellow) 22%, transparent) !important;
+  }
+  /* mesmo tratamento nas medalhas da sequência */
+  html body .msc-milestone,
+  html body .dash-streak-milestone { filter: grayscale(1) brightness(1.1); }
+  html body .msc-milestone.hit,
+  html body .msc-milestone.active,
+  html body .dash-streak-milestone.hit,
+  html body .dash-streak-milestone.active { filter: none; }
   /* a aura pulsante virava halo colorido sobre a foto: fora */
   html body .mode-card::after { display: none !important; }
 
