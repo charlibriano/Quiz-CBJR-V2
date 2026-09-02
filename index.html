@@ -5930,5 +5930,199 @@ if (document.readyState === 'loading') {
   }
 })();
 </script>
+
+  <style id="cbjr-visual-muro">
+  /* ══════════════════════════════════════════════════════════════
+     VISUAL "MURO" — reescrita da aparência da home.
+
+     Por que este bloco existe e por que ele é o ÚLTIMO:
+     a home tinha a aparencia espalhada por sete blocos de estilo
+     que se sobrescreviam com !important, e editar o bloco base não
+     surtia efeito — as camadas seguintes venciam. Este bloco fecha
+     o assunto: tudo o que define a aparência da home está aqui.
+     As regras equivalentes nos blocos anteriores ficaram sem efeito
+     e podem ser removidas numa limpeza posterior.
+
+     Não toca em HTML nem em JavaScript. Usa as mesmas classes que
+     o código já usa (.mode-card, .hero-panel, .mobile-streak-card,
+     .dash-btn, .cbjr-daily-banner, .mobile-nav).
+
+     Princípio: nada de canto arredondado de widget. Tudo é chapa
+     parafusada, papel colado ou etiqueta rasgada. A cor de cada
+     seção aparece como tarja, nunca como borda inteira.
+     ══════════════════════════════════════════════════════════════ */
+
+  :root {
+    --muro-papel:      #d9cdb2;
+    --muro-papel-alto: #e7ddc6;
+    --muro-tinta:      #221f1a;
+  }
+
+  /* ── FUNDO: retrato do Chorão, escurecido por gradiente ── */
+  html body::before {
+    background:
+      linear-gradient(178deg,
+        rgba(10,10,8,.28) 0%,
+        rgba(12,11,9,.70) 46%,
+        rgba(8,8,6,.94) 100%),
+      url('./fundo-cbjr.jpg') center 12% / cover no-repeat !important;
+    filter: saturate(.42) !important;
+    transform: none !important;
+  }
+
+  /* grão fino por cima, unifica foto e superfícies */
+  html body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: .35;
+    mix-blend-mode: overlay;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23g)' opacity='0.4'/%3E%3C/svg%3E");
+  }
+
+  /* ── CABEÇALHO: sem painel, o título respira sobre a foto ── */
+  html body .hero-panel {
+    background: none !important;
+    border-bottom: 0 !important;
+  }
+
+  /* ── SEQUÊNCIA: chapa de metal parafusada ── */
+  html body .mobile-streak-card,
+  html body .dash-streak-card {
+    border: 1px solid rgba(0,0,0,.55) !important;
+    border-radius: 3px !important;
+    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.34)) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 3px 9px rgba(0,0,0,.4) !important;
+  }
+  html body .msc-milestone,
+  html body .dash-streak-milestone {
+    border-radius: 2px !important;
+  }
+
+  /* ── AÇÕES: etiquetas de papel rasgadas ── */
+  html body .dash-btn {
+    border-radius: 0 !important;
+    border: 0 !important;
+    background: var(--muro-papel-alto) !important;
+    color: #353025 !important;
+    font-weight: 700 !important;
+    letter-spacing: .01em !important;
+    box-shadow: 0 3px 7px rgba(0,0,0,.38) !important;
+    clip-path: polygon(0 0, 100% 2.5%, 99.4% 100%, .6% 97.5%);
+  }
+  html body .dash-btn:nth-of-type(2) { transform: rotate(.5deg); }
+  html body .dash-btn:nth-of-type(3) { transform: rotate(-.45deg); }
+  html body .dash-btn:hover { filter: brightness(1.04); }
+
+  /* ── DESAFIO DO DIA: papel colado com fita ── */
+  html body .cbjr-daily-banner {
+    position: relative !important;
+    border-radius: 0 !important;
+    border: 0 !important;
+    color: var(--muro-tinta) !important;
+    transform: rotate(-.5deg);
+    background-color: var(--muro-papel) !important;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23p)' opacity='0.38'/%3E%3C/svg%3E") !important;
+    background-blend-mode: multiply !important;
+    box-shadow: 0 12px 24px rgba(0,0,0,.45) !important;
+    clip-path: polygon(0 1.2%, 100% 0, 99.6% 98.8%, .4% 100%);
+  }
+  html body .cbjr-daily-banner::before {
+    content: "";
+    position: absolute;
+    top: -9px; left: 42%;
+    width: 84px; height: 21px;
+    transform: translateX(-50%) rotate(-3deg);
+    background: rgba(214,203,176,.74);
+    border-left: 1px dashed rgba(0,0,0,.12);
+    border-right: 1px dashed rgba(0,0,0,.12);
+    box-shadow: 0 1px 3px rgba(0,0,0,.3);
+  }
+  html body .cbjr-daily-kicker {
+    background: none !important;
+    border: 0 !important;
+    color: #6d6552 !important;
+    padding: 0 !important;
+    letter-spacing: .13em !important;
+  }
+  html body .cbjr-daily-title { color: var(--muro-tinta) !important; }
+  html body .cbjr-daily-sub   { color: #5c5544 !important; }
+  html body .cbjr-daily-timer-label { color: #6d6552 !important; }
+  html body .cbjr-daily-timer {
+    color: #86e086 !important;
+    background: #17170f !important;
+    border: 1px solid #000 !important;
+    border-radius: 0 !important;
+    padding: 4px 8px !important;
+    box-shadow: inset 0 0 9px rgba(0,255,0,.14) !important;
+  }
+  html body .cbjr-daily-btn {
+    border-radius: 2px !important;
+    box-shadow: 0 4px 0 #a8830c !important;
+  }
+  html body .cbjr-daily-btn:active {
+    transform: translateY(3px);
+    box-shadow: none !important;
+  }
+
+  /* ── MODOS: chapa com tarja lateral na cor do modo ── */
+  html body .mode-card {
+    border-radius: 2px !important;
+    border: 1px solid rgba(0,0,0,.55) !important;
+    border-left: 4px solid var(--mc-color, var(--yellow)) !important;
+    background: linear-gradient(100deg, rgba(255,255,255,.08), rgba(0,0,0,.32)) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.10) !important;
+  }
+  html body .mode-card:hover,
+  html body .mode-card:active {
+    background: linear-gradient(100deg, rgba(255,255,255,.13), rgba(0,0,0,.28)) !important;
+  }
+  html body .mode-card-icon {
+    border-radius: 2px !important;
+    background: color-mix(in srgb, var(--mc-color, var(--yellow)) 20%, transparent) !important;
+  }
+  /* a aura pulsante virava halo colorido sobre a foto: fora */
+  html body .mode-card::after { display: none !important; }
+
+  /* ── MESA DE SOM (desktop): mesma linguagem ── */
+  html body .console { background: rgba(0,0,0,.30) !important; }
+  html body .channel {
+    border-radius: 2px !important;
+    border: 1px solid rgba(0,0,0,.6) !important;
+    border-top: 3px solid var(--accent, var(--yellow)) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.09) !important;
+  }
+  html body .channel::after { display: none !important; }
+
+  /* ── PAINEL DO JOGADOR (desktop) ── */
+  html body .player-dashboard {
+    border-radius: 3px !important;
+    border: 1px solid rgba(0,0,0,.55) !important;
+    border-top: 3px solid rgba(241,196,15,.75) !important;
+  }
+  html body .dash-card {
+    border-radius: 2px !important;
+    border: 1px solid rgba(0,0,0,.45) !important;
+    background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(0,0,0,.24)) !important;
+  }
+
+  /* ── NAVEGAÇÃO INFERIOR ── */
+  html body .mobile-nav {
+    background: linear-gradient(180deg, #35342f, #1e1d1a) !important;
+    border-top: 1px solid rgba(0,0,0,.65) !important;
+  }
+  html body .mobile-nav a.active,
+  html body .mobile-nav a.is-active { color: var(--yellow) !important; }
+
+  /* ── conteúdo acima do grão ── */
+  html body .app,
+  html body .login-screen,
+  html body .mobile-nav { position: relative; z-index: 1; }
+  </style>
+
 </body>
 </html>
