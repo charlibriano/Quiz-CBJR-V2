@@ -4114,7 +4114,10 @@ body.auth-logged-out .app {
     const fallbackTrack = {
       titulo: 'Tributo ao Frango da Malásia',
       title: 'Tributo ao Frango da Malásia',
-      url: bootAudioUrl
+      /* Antes usava bootAudioUrl, constante da tela de boot que foi removida
+         por ser inalcançável. A variável deixou de existir e a linha passou a
+         lançar ReferenceError, derrubando o bloco inteiro do player. */
+      url: './Transpiracao_Continua_Prolongada/Charlie%20Brown%20Jr%20-%20Transpira%C3%A7%C3%A3o%20Continua%20Prolongada%20-%2001-Tributo%20ao%20Frango%20da%20Mal%C3%A1sia%20%5B1997%5D.mp3'
     };
 
     function formatTime(seconds) {
