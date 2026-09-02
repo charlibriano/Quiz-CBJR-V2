@@ -1477,25 +1477,6 @@
     line-height:1.34 !important;
   }
 
-  .unlock-progress-mini{
-    margin:16px 0 14px;
-    border:1px solid rgba(241,196,15,.24);
-    background:rgba(0,0,0,.46);
-    border-radius:999px;
-    padding:7px;
-    max-width:520px;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
-  }
-
-  .unlock-progress-mini span{
-    display:block;
-    height:10px;
-    border-radius:999px;
-    background:linear-gradient(90deg,#1ed760,#f1c40f,#fff3a6);
-    box-shadow:0 0 20px rgba(241,196,15,.30);
-    animation:unlockFill .8s ease both;
-  }
-
   @keyframes unlockFill{from{width:0}to{width:var(--unlock-percent)}}
 
   .unlock-stats.epic-stats{
@@ -1552,46 +1533,10 @@
   @media(max-width:760px){
     .unlock-hero.epic-unlock{grid-template-columns:1fr;text-align:center;padding:22px !important}
     .unlock-info.epic-info{text-align:center}
-    .unlock-progress-mini{margin-left:auto;margin-right:auto}
     .unlock-stats.epic-stats{justify-content:center}
     .unlock-cover.epic-cover{width:min(230px,68vw)}
     .unlock-info.epic-info h2{font-size:clamp(2.4rem,14vw,4.6rem) !important}
     .overlay.unlock-success .actions.epic-actions{padding:0 18px 22px !important}
-  }
-
-
-  /* =========================================================
-     MODO HARD REAL — escolha de trecho aleatório
-     Normal toca do começo; Hard toca começo/meio/final aleatório.
-     ========================================================= */
-  .mode-select-wrap {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    gap: 10px !important;
-    flex-wrap: wrap !important;
-    margin: 0 0 14px !important;
-  }
-
-  .mode-choice {
-    border: 1px solid rgba(241,196,15,.32) !important;
-    background: linear-gradient(180deg, rgba(18,18,18,.92), rgba(0,0,0,.98)) !important;
-    color: rgba(255,255,255,.78) !important;
-    border-radius: 999px !important;
-    min-height: 38px !important;
-    padding: 0 18px !important;
-    font-family: Inter, Arial, sans-serif !important;
-    font-weight: 1000 !important;
-    letter-spacing: .04em !important;
-    cursor: pointer !important;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.06) !important;
-    transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, color .18s ease, background .18s ease !important;
-  }
-
-  .mode-choice:hover {
-    transform: translateY(-1px) !important;
-    border-color: rgba(241,196,15,.75) !important;
-    color: #fff !important;
   }
 
   .mode-choice.active {
@@ -1599,15 +1544,6 @@
     color: #000 !important;
     border-color: rgba(255,235,120,.95) !important;
     box-shadow: 0 0 24px rgba(241,196,15,.24), inset 0 1px 0 rgba(255,255,255,.4) !important;
-  }
-
-  .mode-help {
-    width: 100% !important;
-    text-align: center !important;
-    margin: -4px 0 0 !important;
-    color: rgba(255,255,255,.58) !important;
-    font-size: clamp(.68rem, .85vw, .82rem) !important;
-    font-weight: 850 !important;
   }
 
   .hard-mode-pill {
@@ -1636,18 +1572,6 @@
 
   body.radio-hard .live-radio-eq {
     border-color: rgba(255,59,48,.34) !important;
-  }
-
-  @media (max-width: 620px) {
-    .mode-choice {
-      min-height: 34px !important;
-      padding: 0 13px !important;
-      font-size: .72rem !important;
-    }
-    .mode-select-wrap {
-      gap: 8px !important;
-      margin-bottom: 10px !important;
-    }
   }
 
 
@@ -1976,16 +1900,6 @@
     line-height:1.25 !important;
   }
 
-  .unlock-progress-mini{
-    margin:8px 0 8px !important;
-    padding:5px !important;
-    max-width:500px !important;
-  }
-
-  .unlock-progress-mini span{
-    height:8px !important;
-  }
-
   .unlock-stats.epic-stats{
     gap:7px !important;
     margin-top:8px !important;
@@ -2068,7 +1982,6 @@
     .unlock-cover.epic-cover{width:min(170px,52vw) !important;}
     .unlock-info.epic-info{text-align:center !important;}
     .unlock-info.epic-info h2{font-size:clamp(1.75rem,10vw,3.2rem) !important;}
-    .unlock-progress-mini{margin-left:auto !important;margin-right:auto !important;}
     .unlock-stats.epic-stats{justify-content:center !important;}
     .overlay.unlock-success .performance-card{margin:0 12px 10px !important;}
     .performance-rank{font-size:clamp(1.35rem,9vw,2.45rem) !important;}
@@ -2709,9 +2622,7 @@
       min-width: 0 !important;
     }
 
-    .ranking-card,
-    .cbjr-ranking-card,
-    .radio-ranking-card {
+    .ranking-card {
       width: 100% !important;
       min-width: 0 !important;
       padding: 12px !important;
@@ -2990,15 +2901,6 @@
     max-width:850px !important;
   }
 
-  .unlock-progress-mini{
-    height:22px !important;
-    max-width:560px !important;
-    margin:6px 0 7px !important;
-    padding:4px !important;
-  }
-
-  .unlock-progress-mini span{height:7px !important;}
-
   .unlock-stats.epic-stats{
     gap:6px !important;
     margin-top:5px !important;
@@ -3196,12 +3098,6 @@
     margin-bottom:6px !important;
   }
 
-  .unlock-progress-mini{
-    margin:6px 0 6px !important;
-    max-width:540px !important;
-    padding:4px !important;
-  }
-
   .unlock-chip.epic-chip{
     padding:5px 9px !important;
     font-size:0.72rem !important;
@@ -3343,37 +3239,6 @@
     position:relative;
     z-index:3;
   }
-  .online-ranking-row{
-    display:grid;
-    grid-template-columns:minmax(0,1fr) auto;
-    gap:6px;
-    align-items:center;
-  }
-  .online-ranking-row input{
-    min-width:0;
-    height:34px;
-    border:1px solid rgba(241,196,15,.28);
-    border-radius:999px;
-    background:rgba(0,0,0,.58);
-    color:#fff;
-    padding:0 12px;
-    font-weight:900;
-    outline:none;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
-  }
-  .online-ranking-row input::placeholder{color:rgba(255,255,255,.46)}
-  .online-ranking-row button{
-    height:34px;
-    border:0;
-    border-radius:999px;
-    padding:0 12px;
-    background:linear-gradient(90deg,var(--yellow),#1ed760);
-    color:#000;
-    font-weight:1000;
-    cursor:pointer;
-    white-space:nowrap;
-    box-shadow:0 0 18px rgba(241,196,15,.18);
-  }
   .online-ranking-status{
     min-height:14px;
     font-size:0.72rem;
@@ -3403,8 +3268,6 @@
   .online-mini-list b{color:var(--yellow)}
   .ranking-card.online-ready{border-color:rgba(30,215,96,.45) !important;box-shadow:0 0 26px rgba(30,215,96,.10), inset 0 1px 0 rgba(255,255,255,.06) !important;}
   @media(max-width:760px){
-    .online-ranking-row{grid-template-columns:1fr;}
-    .online-ranking-row button{width:100%;}
     .online-mini-list{max-height:72px;}
   }
 
@@ -4068,80 +3931,6 @@
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-  }
-
-  /* ── Score mode (sem unlock) ── */
-  .cbjr-result-score {
-    padding: 18px 16px 0 !important;
-    text-align: center !important;
-  }
-
-  .cbjr-result-pct {
-    display: block !important;
-    font-family: "Elektrix", Arial, sans-serif !important;
-    font-size: clamp(3.5rem, 20vw, 5.5rem) !important;
-    font-weight: 900 !important;
-    color: #f1c40f !important;
-    line-height: 1 !important;
-    text-shadow: 0 0 32px rgba(241,196,15,.5) !important;
-  }
-
-  .cbjr-result-label {
-    display: block !important;
-    font-family: "Elektrix", Arial, sans-serif !important;
-    font-size: clamp(1.2rem, 6vw, 1.8rem) !important;
-    color: #fff !important;
-    margin: 4px 0 6px !important;
-  }
-
-  /* Unlock legado (mantido para fallback) */
-  .cbjr-unlock-header {
-    display: flex !important;
-    gap: 14px !important;
-    align-items: center !important;
-    background: rgba(241,196,15,.06) !important;
-    border: 1px solid rgba(241,196,15,.18) !important;
-    border-radius: 18px !important;
-    padding: 12px !important;
-    margin: 0 16px !important;
-  }
-
-  .cbjr-unlock-cover {
-    width: 80px !important;
-    height: 80px !important;
-    min-width: 80px !important;
-    border-radius: 14px !important;
-    object-fit: cover !important;
-    display: block !important;
-    box-shadow: 0 8px 24px rgba(0,0,0,.6) !important;
-  }
-
-  .cbjr-unlock-info {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 4px !important;
-    min-width: 0 !important;
-  }
-
-  .cbjr-unlock-badge {
-    font-size: .62rem !important;
-    font-weight: 900 !important;
-    letter-spacing: .14em !important;
-    text-transform: uppercase !important;
-    color: #1ed760 !important;
-  }
-
-  .cbjr-unlock-name {
-    font-family: "Elektrix", Arial, sans-serif !important;
-    font-size: clamp(.95rem, 4.5vw, 1.3rem) !important;
-    color: #f1c40f !important;
-    line-height: 1.1 !important;
-    display: block !important;
-  }
-
-  .cbjr-unlock-year {
-    font-size: .72rem !important;
-    color: rgba(255,255,255,.5) !important;
   }
 
   /* ── Feedback animado (elemento criado no body via JS) ── */  /* ── Feedback animado (elemento criado no body via JS) ── */
