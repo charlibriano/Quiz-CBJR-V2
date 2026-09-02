@@ -16,6 +16,11 @@ import { getDatabase, ref, push, set, onValue, serverTimestamp }
   from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
 // ── Config (mesmo projeto já usado em todos os arquivos) ──
+// Esta config é repetida em index.html (window.CBJR_FIREBASE_CONFIG) e em
+// firebase-progress.js. As três precisam permanecer IDÊNTICAS: como todas
+// usam getApps().length ? getApp() : initializeApp(), só a primeira a rodar
+// vale, e uma cópia divergente já quebrou o ranking silenciosamente antes.
+// Se um dia trocar de projeto no Firebase, alterar nos três lugares.
 const FIREBASE_CONFIG = {
   apiKey:            'AIzaSyCT1btbLIMehCj3xldw5LOB-snjyF4SKhw',
   authDomain:        'ranking-cbjr.firebaseapp.com',
@@ -23,7 +28,8 @@ const FIREBASE_CONFIG = {
   projectId:         'ranking-cbjr',
   storageBucket:     'ranking-cbjr.firebasestorage.app',
   messagingSenderId: '681180179118',
-  appId:             '1:681180179118:web:fe10833848e8bb8194db3f'
+  appId:             '1:681180179118:web:fe10833848e8bb8194db3f',
+  measurementId:     'G-QK5QE2Y1CC'
 };
 
 const NOTIF_PATH    = 'notifications/feed';
