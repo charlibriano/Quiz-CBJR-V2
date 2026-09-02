@@ -87,10 +87,10 @@
       position: fixed;
       inset: 0;
       background:
-        radial-gradient(ellipse 80% 40% at 50% 0%, rgba(241,196,15,.09), transparent 60%),
-        radial-gradient(ellipse 60% 30% at 0% 100%, rgba(30,215,96,.06), transparent 60%),
-        url('./fundo-cbjr.jpg') center/cover no-repeat;
-      filter: brightness(.35) saturate(.5);
+        linear-gradient(178deg, rgba(10,10,8,.30) 0%, rgba(12,11,9,.72) 48%, rgba(8,8,6,.94) 100%),
+        radial-gradient(ellipse 80% 40% at 50% 0%, rgba(241,196,15,.07), transparent 60%),
+        url('./fundo-cbjr.jpg') center 12%/cover no-repeat;
+      filter: saturate(.45);
       transform: scale(1.04);
       z-index: 0;
       pointer-events: none;
@@ -835,14 +835,34 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      padding: 16px;
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.04);
+      padding: 16px 16px 16px 18px;
+      border-radius: 3px;
+      border: 1px solid rgba(0,0,0,.5);
+      border-left: 4px solid var(--mc-color, var(--yellow));
+      background:
+        linear-gradient(100deg, rgba(255,255,255,.07), rgba(0,0,0,.30));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.09);
       text-decoration: none;
       color: #fff;
       transition: .2s ease;
       min-height: 120px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* disco espiando por trás do cartão */
+    .mode-card::before {
+      content: "";
+      position: absolute;
+      right: -30px; top: 50%;
+      width: 92px; height: 92px;
+      transform: translateY(-50%);
+      border-radius: 50%;
+      opacity: .3;
+      pointer-events: none;
+      background:
+        radial-gradient(circle, #2b2a27 0 15%, #9a978f 15% 17%, transparent 17%),
+        repeating-conic-gradient(#b3b0a8 0deg 6deg, #6d6b65 6deg 12deg);
     }
 
     .mode-card:hover, .mode-card:active {
@@ -854,7 +874,8 @@
     .mode-card-icon {
       width: 40px;
       height: 40px;
-      border-radius: 12px;
+      border-radius: 3px;
+      position: relative;
       display: grid;
       place-items: center;
       background: color-mix(in srgb, var(--mc-color, var(--yellow)) 15%, transparent);
@@ -3314,12 +3335,10 @@ body.auth-logged-out .app {
         gap: 10px;
         margin: 0 14px 4px !important;
         padding: 10px 14px;
-        border: 1px solid rgba(255, 140, 0, .45);
-        border-radius: 14px;
-        background:
-          radial-gradient(circle at 0% 50%, rgba(255,140,0,.14), transparent 55%),
-          rgba(0,0,0,.55);
-        box-shadow: 0 0 18px rgba(255,140,0,.08);
+        border: 1px solid rgba(0,0,0,.5);
+        border-radius: 4px;
+        background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(0,0,0,.34));
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.13);
       }
 
       .msc-left {
