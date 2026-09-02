@@ -6017,6 +6017,27 @@ if (document.readyState === 'loading') {
   html body .dash-btn:nth-of-type(3) { transform: rotate(-.45deg); }
   html body .dash-btn:hover { filter: brightness(1.04); }
 
+  /* No celular os três botões de ação NÃO são .dash-btn: são
+     .mobile-curiosidades-btn (curiosidades e convite) e
+     .dash-btn.share-btn (compartilhar), esta última com gradiente
+     verde de especificidade maior. Por isso precisam vir nomeadas. */
+  html body .mobile-curiosidades-btn,
+  html body .dash-btn.share-btn,
+  html body .dash-btn.curiosidades-btn {
+    border-radius: 0 !important;
+    border: 0 !important;
+    background: var(--muro-papel-alto) !important;
+    background-image: none !important;
+    color: #353025 !important;
+    font-weight: 700 !important;
+    text-shadow: none !important;
+    animation: none !important;
+    box-shadow: 0 3px 7px rgba(0,0,0,.38) !important;
+    clip-path: polygon(0 0, 100% 2.5%, 99.4% 100%, .6% 97.5%);
+  }
+  html body .dash-btn.share-btn { transform: rotate(.5deg); }
+  html body .mobile-curiosidades-btn#mobileInviteBtn { transform: rotate(-.45deg); }
+
   /* ── DESAFIO DO DIA: papel colado com fita ── */
   html body .cbjr-daily-banner {
     position: relative !important;
@@ -6087,6 +6108,76 @@ if (document.readyState === 'loading') {
   }
   /* a aura pulsante virava halo colorido sobre a foto: fora */
   html body .mode-card::after { display: none !important; }
+
+  /* ── LAYOUT DOS MODOS ──────────────────────────────────────
+     Antes: seis cartões idênticos em grade 2x3 — o formato que
+     não distingue jogar de consultar. Agora há hierarquia:
+     Quiz, Rádio e Letras (os modos de jogo) ocupam a largura
+     inteira em faixa horizontal; Conquistas, Ranking e
+     Comunidade viram três botões compactos embaixo.
+     Só CSS: a ordem no HTML já é essa. ────────────────────── */
+  html body .mode-cards {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 9px !important;
+  }
+
+  /* os três primeiros: faixa larga.
+     Grid de duas colunas — ícone à esquerda ocupando as duas
+     linhas, nome em cima e descrição embaixo. Sem margem
+     negativa: o ícone define a coluna e o texto se acomoda. */
+  html body .mode-cards .mode-card:nth-child(-n+3) {
+    grid-column: 1 / -1 !important;
+    display: grid !important;
+    grid-template-columns: 40px minmax(0, 1fr) !important;
+    grid-template-rows: auto auto !important;
+    column-gap: 14px !important;
+    row-gap: 2px !important;
+    align-items: center !important;
+    min-height: 0 !important;
+    padding: 13px 16px 13px 15px !important;
+  }
+  html body .mode-cards .mode-card:nth-child(-n+3) .mode-card-icon {
+    grid-column: 1 !important;
+    grid-row: 1 / 3 !important;
+    margin: 0 !important;
+  }
+  html body .mode-cards .mode-card:nth-child(-n+3) .mode-card-name {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    align-self: end !important;
+  }
+  html body .mode-cards .mode-card:nth-child(-n+3) .mode-card-tag {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+    align-self: start !important;
+  }
+
+  /* os três últimos: botão compacto */
+  html body .mode-cards .mode-card:nth-child(n+4) {
+    grid-column: auto !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    gap: 5px !important;
+    min-height: 0 !important;
+    padding: 11px 6px 10px !important;
+    border-left-width: 2px !important;
+  }
+  html body .mode-cards .mode-card:nth-child(n+4) .mode-card-icon {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 1rem !important;
+  }
+  html body .mode-cards .mode-card:nth-child(n+4) .mode-card-name {
+    font-size: .8rem !important;
+    line-height: 1.15 !important;
+  }
+  html body .mode-cards .mode-card:nth-child(n+4) .mode-card-tag {
+    display: none !important;
+  }
+  html body .mode-cards .mode-try-badge { top: 8px !important; right: 8px !important; }
 
   /* ── MESA DE SOM (desktop): mesma linguagem ── */
   html body .console { background: rgba(0,0,0,.30) !important; }
