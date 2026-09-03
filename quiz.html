@@ -9968,7 +9968,7 @@ body.tela-pergunta .answer-btn.wrong {
     font-family: Arial, Helvetica, sans-serif !important;
     color: #fff !important;
     font-weight: 800 !important;
-    font-size: 1.5rem !important;
+    font-size: clamp(1rem, 4.4vw, 1.25rem) !important;
     line-height: 1.32 !important;
     letter-spacing: .005em !important;
     background: linear-gradient(180deg, rgba(20,16,4,.85), rgba(8,7,2,.92)) !important;
@@ -9983,10 +9983,13 @@ body.tela-pergunta .answer-btn.wrong {
       lista vertical de 4 linhas. Cada opção é um cartão próprio que cresce
       de altura conforme o texto (nunca corta nem embola) */
 @media (max-width: 760px) {
-  html body.tela-pergunta .answers-grid {
+  html body.tela-pergunta .answers-grid,
+  html body.tela-pergunta #answersGrid#answersGrid {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 10px !important;
+    width: 100% !important;
+    max-width: none !important;
     border: none !important;
     border-radius: 0 !important;
     background: transparent !important;
@@ -10069,7 +10072,7 @@ body.tela-pergunta .answer-btn.wrong {
     font-family: Arial, Helvetica, sans-serif !important;
     color: #fff !important;
     font-weight: 800 !important;
-    font-size: 1.5rem !important;
+    font-size: clamp(1rem, 4.4vw, 1.25rem) !important;
     line-height: 1.32 !important;
     letter-spacing: .005em !important;
     text-align: center !important;
@@ -10092,7 +10095,7 @@ body.tela-pergunta .answer-btn.wrong {
     font-family: Arial, Helvetica, sans-serif !important;
     color: #fff !important;
     font-weight: 800 !important;
-    font-size: 1.5rem !important;
+    font-size: clamp(1rem, 4.4vw, 1.25rem) !important;
     line-height: 1.32 !important;
     letter-spacing: .005em !important;
     text-align: center !important;
