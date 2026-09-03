@@ -10169,8 +10169,8 @@ body.tela-pergunta .answer-btn.wrong {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    gap: 10px !important;
-    padding: 18px 16px 14px !important;
+    gap: 7px !important;
+    padding: 14px 16px 12px !important;
     height: auto !important;
     max-height: none !important;
     overflow: visible !important;
@@ -10180,11 +10180,11 @@ body.tela-pergunta .answer-btn.wrong {
 
   html body.tela-pergunta .quiz-music-player .q-cover-wrap {
     grid-area: unset !important;
-    width: 108px !important;
-    height: 108px !important;
+    width: 76px !important;
+    height: 76px !important;
     border-radius: 50% !important;
     border: 2px solid var(--yellow) !important;
-    box-shadow: 0 0 22px rgba(241,196,15,.28) !important;
+    box-shadow: 0 0 18px rgba(241,196,15,.28) !important;
     margin-bottom: 2px !important;
   }
 
@@ -10269,7 +10269,7 @@ body.tela-pergunta .answer-btn.wrong {
     align-items: flex-end !important;
     justify-content: center !important;
     gap: 3px !important;
-    height: 34px !important;
+    height: 24px !important;
     width: 100% !important;
   }
 
@@ -10337,6 +10337,15 @@ body.tela-pergunta .answer-btn.wrong {
   }
 }
 
+/* 8) RESERVA DE ESPAÇO — o player cresceu (antes 76px, agora ~230px),
+      então a área de perguntas precisa de mais respiro embaixo pra
+      "Você acertou" e as curiosidades não ficarem escondidas atrás dele */
+@media (max-width: 760px) {
+  html body.tela-pergunta #quizScreen.active {
+    padding-bottom: calc(240px + max(4px, env(safe-area-inset-bottom, 0px))) !important;
+  }
+}
+
 </style>
 
 <script id="cbjr-eq-bars-script">
@@ -10346,7 +10355,7 @@ body.tela-pergunta .answer-btn.wrong {
   var BARS = 28;
   for (var i = 0; i < BARS; i++) {
     var s = document.createElement('span');
-    s.style.height = (10 + Math.random() * 24) + 'px';
+    s.style.height = (6 + Math.random() * 16) + 'px';
     s.style.animationDelay = (Math.random() * 1.1).toFixed(2) + 's';
     wrap.appendChild(s);
   }
