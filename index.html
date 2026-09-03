@@ -6047,32 +6047,24 @@ if (document.readyState === 'loading') {
      competiam com os modos, que são o conteúdo principal.
      Viram uma fila compacta: ícone grande, rótulo pequeno. */
   @media (max-width: 820px) {
-    /* O contêiner dos três empilha em coluna. Em vez de supor a
-       estrutura, pego o pai pelo filho com :has() e o transformo
-       em linha. Onde :has() não existir, cai na regra abaixo e os
-       botões continuam empilhados, porém discretos. */
-    html body *:has(> #mobileCuriosidadesBtn) {
-      display: flex !important;
-      flex-direction: row !important;
-      flex-wrap: nowrap !important;
-      gap: 7px !important;
-      padding: 0 14px !important;
-      margin-bottom: 10px !important;
-    }
+    /* NÃO usar :has() aqui: o pai destes botões é o contêiner
+       principal da home, e transformá-lo em linha jogou o site
+       inteiro lado a lado. Eles continuam empilhados; o que muda
+       é o tamanho — faixas baixas e discretas, sem competir com
+       os modos, que são o conteúdo principal. */
     html body .mobile-curiosidades-btn,
     html body .dash-btn.share-btn {
-      flex: 1 1 0 !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
       width: auto !important;
-      margin: 0 !important;
-      padding: 9px 3px !important;
-      font-size: .54rem !important;
-      font-weight: 700 !important;
+      margin: 0 14px 6px !important;
+      padding: 8px 12px !important;
+      font-size: .68rem !important;
+      font-weight: 600 !important;
       line-height: 1.2 !important;
       text-align: center !important;
-      min-height: 52px !important;
+      min-height: 0 !important;
       overflow: hidden !important;
       background: #101010 !important;
       border: 1px solid rgba(255,255,255,.06) !important;
