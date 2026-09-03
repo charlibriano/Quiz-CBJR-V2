@@ -10303,6 +10303,21 @@ body.tela-pergunta .answer-btn.wrong {
     50% { transform: scaleY(1); }
   }
 
+  /* capa gira feito disco enquanto toca, para quando pausa */
+  html body.tela-pergunta .quiz-music-player .q-cover-wrap img {
+    animation: cbjrSpinCover 9s linear infinite;
+    animation-play-state: paused;
+  }
+
+  html body.tela-pergunta .quiz-music-player.is-playing .q-cover-wrap img {
+    animation-play-state: running;
+  }
+
+  @keyframes cbjrSpinCover {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
   html body.tela-pergunta .quiz-music-player:not(.is-compact) .q-controls,
   html body.tela-pergunta .quiz-music-player.is-compact:hover .q-controls,
   html body.tela-pergunta .quiz-music-player.is-compact:focus-within .q-controls {
