@@ -10054,4 +10054,25 @@ body.tela-pergunta .answer-btn.wrong {
   }
 }
 
+/* 6) CORREÇÃO — #questionText tem regras antigas por ID espalhadas pelo
+      arquivo que vencem qualquer regra por classe (.question-text),
+      não importa a ordem. Repetindo aqui por ID pra garantir que pegue. */
+@media (max-width: 760px) {
+  html body.tela-pergunta #questionText {
+    display: block !important;
+    font-family: 'Elektrix', Arial, sans-serif !important;
+    color: #fff !important;
+    font-weight: 700 !important;
+    font-size: 1.3rem !important;
+    line-height: 1.3 !important;
+    letter-spacing: .01em !important;
+    background: linear-gradient(180deg, rgba(20,16,4,.85), rgba(8,7,2,.92)) !important;
+    border: 1px solid rgba(241,196,15,.4) !important;
+    clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px) !important;
+    padding: 22px 18px !important;
+    margin-bottom: 16px !important;
+    box-shadow: 0 0 50px rgba(241,196,15,.22), 0 18px 40px rgba(0,0,0,.5) !important;
+  }
+}
+
 </style>
