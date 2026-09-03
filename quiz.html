@@ -10153,12 +10153,27 @@ body.tela-pergunta .answer-btn.wrong {
       atrapalhar. Volume fica escondido da vista (some), mas continua
       funcionando por baixo — nada de JS foi removido. */
 @media (max-width: 760px) {
-  html body.tela-pergunta .quiz-music-player .player-content {
+  html body.tela-pergunta .quiz-music-player,
+  html body.tela-pergunta .quiz-music-player.is-compact,
+  html body.tela-pergunta .quiz-music-player.is-expanded,
+  html body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    border-radius: 20px 20px 0 0 !important;
+  }
+
+  html body.tela-pergunta .quiz-music-player .player-content,
+  html body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) .player-content {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     gap: 10px !important;
     padding: 18px 16px 14px !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
     grid-template-columns: none !important;
     grid-template-areas: none !important;
   }
