@@ -9895,3 +9895,163 @@ body.tela-pergunta .answer-btn.wrong {
 }
 
 </style>
+
+<!-- =============================================================
+     LAPIDAÇÃO VISUAL DA TELA DE PERGUNTA (03/09) — aprovada por Felipe
+     via protótipo isolado. Escopo: fundo, HUD, pergunta e opções.
+     Não mexe em JS, Firebase, powerups, telas de resultado ou feedback
+     de acerto/erro (.answer-btn.correct / .wrong seguem intocados).
+     ============================================================= -->
+<style id="cbjr-lapidacao-quiz-03-09">
+
+/* 1) FUNDO — reativa a imagem no mobile (estava desligada de propósito
+      por um remendo antigo) e troca para radio-bg.png, que já existe
+      no repositório e dá identidade visual com a Rádio CBJR */
+@media (max-width: 760px) {
+  html body.tela-pergunta {
+    background-image:
+      linear-gradient(180deg, rgba(0,0,0,.72), rgba(0,0,0,.55) 40%, rgba(0,0,0,.86) 100%),
+      url('./radio-bg.png') !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-color: #000 !important;
+  }
+}
+
+/* 2) HUD — cantos cortados em vez de arredondados, borda dourada sólida,
+      e o rótulo (Pergunta/Pontos/Acertos/Nível) volta a aparecer —
+      hoje some por causa de um display:none no mobile-final */
+@media (max-width: 760px) {
+  html body.tela-pergunta .hud-card {
+    border-radius: 0 !important;
+    clip-path: polygon(9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%, 0 9px) !important;
+    border: 2px solid var(--yellow) !important;
+    background: #0b0a08 !important;
+    box-shadow: none !important;
+  }
+  html body.tela-pergunta .hud-card small {
+    display: block !important;
+    color: rgba(255,255,255,.55) !important;
+    font-weight: 800 !important;
+    letter-spacing: .05em !important;
+    font-size: .52rem !important;
+    text-transform: uppercase !important;
+    margin-bottom: 2px !important;
+  }
+  html body.tela-pergunta .hud-card strong {
+    font-family: 'Elektrix', Arial, sans-serif !important;
+    color: var(--yellow) !important;
+    font-size: .9rem !important;
+    text-shadow: 0 0 10px rgba(241,196,15,.3) !important;
+  }
+}
+
+/* 3) PERGUNTA — vira o centro do palco: kicker vira selo compacto,
+      texto ganha fonte Elektrix, tamanho maior e holofote dourado */
+@media (max-width: 760px) {
+  html body.tela-pergunta .question-kicker {
+    display: inline-block !important;
+    margin: 0 auto 12px !important;
+    padding: 5px 14px !important;
+    border: 1px solid rgba(241,196,15,.5) !important;
+    clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px) !important;
+    background: rgba(0,0,0,.55) !important;
+    font-size: .68rem !important;
+    letter-spacing: .14em !important;
+    text-transform: uppercase !important;
+  }
+
+  html body.tela-pergunta .question-text {
+    display: block !important;
+    font-family: 'Elektrix', Arial, sans-serif !important;
+    color: #fff !important;
+    font-weight: 700 !important;
+    font-size: 1.3rem !important;
+    line-height: 1.3 !important;
+    letter-spacing: .01em !important;
+    background: linear-gradient(180deg, rgba(20,16,4,.85), rgba(8,7,2,.92)) !important;
+    border: 1px solid rgba(241,196,15,.4) !important;
+    clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px) !important;
+    padding: 22px 18px !important;
+    box-shadow: 0 0 50px rgba(241,196,15,.22), 0 18px 40px rgba(0,0,0,.5) !important;
+  }
+}
+
+/* 4) OPÇÕES — de 4 caixas soltas pra um único cartão tipo encarte,
+      cantos cortados, fundo translúcido (a arte de fundo passa por
+      trás) e divisórias tracejadas entre as linhas */
+@media (max-width: 760px) {
+  html body.tela-pergunta .answers-grid {
+    display: block !important;
+    gap: 0 !important;
+    clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px) !important;
+    border-radius: 0 !important;
+    border: 2px solid var(--yellow) !important;
+    background: rgba(8,7,5,.3) !important;
+    backdrop-filter: blur(1.5px) !important;
+    -webkit-backdrop-filter: blur(1.5px) !important;
+    box-shadow: 0 10px 26px rgba(0,0,0,.45) !important;
+    padding: 4px 0 !important;
+  }
+
+  html body.tela-pergunta .answer-btn {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    width: 100% !important;
+    min-height: auto !important;
+    margin: 0 !important;
+    padding: 14px 16px !important;
+    border: none !important;
+    border-bottom: 1px dashed rgba(241,196,15,.25) !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  html body.tela-pergunta .answer-btn:last-child {
+    border-bottom: none !important;
+  }
+
+  /* acerto/erro continuam com a cor própria (verde/vermelho) —
+     só garantimos que o corte de canto acompanhe */
+  html body.tela-pergunta .answer-btn.correct,
+  html body.tela-pergunta .answer-btn.wrong {
+    border-radius: 0 !important;
+  }
+
+  html body.tela-pergunta .answer-letter {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    border-radius: 0 !important;
+    clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px) !important;
+    border: none !important;
+    background: var(--yellow) !important;
+    color: #000 !important;
+    font-family: 'Elektrix', Arial, sans-serif !important;
+    font-weight: 700 !important;
+    font-size: .9rem !important;
+  }
+
+  html body.tela-pergunta .answer-btn span:last-child {
+    color: #fff !important;
+    font-weight: 800 !important;
+    font-size: 1rem !important;
+    letter-spacing: .01em !important;
+    text-transform: uppercase !important;
+    text-shadow: 0 2px 6px rgba(0,0,0,.9) !important;
+  }
+}
+
+/* 5) TOPBAR — mesmos cantos cortados, pra fechar a família visual */
+@media (max-width: 760px) {
+  html body.tela-pergunta .menu-btn,
+  html body.tela-pergunta .power-btn {
+    border-radius: 0 !important;
+    clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px) !important;
+  }
+}
+
+</style>
