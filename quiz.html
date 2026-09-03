@@ -9979,70 +9979,72 @@ body.tela-pergunta .answer-btn.wrong {
   }
 }
 
-/* 4) OPÇÕES — de 4 caixas soltas pra um único cartão tipo encarte,
-      cantos cortados, fundo translúcido (a arte de fundo passa por
-      trás) e divisórias tracejadas entre as linhas */
+/* 4) OPÇÕES — grade 2x2 (igual Rádio e Modo Letras já usam), não mais
+      lista vertical de 4 linhas. Cada opção é um cartão próprio que cresce
+      de altura conforme o texto (nunca corta nem embola) */
 @media (max-width: 760px) {
   html body.tela-pergunta .answers-grid {
-    display: block !important;
-    gap: 0 !important;
-    clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px) !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+    border: none !important;
     border-radius: 0 !important;
-    border: 2px solid var(--yellow) !important;
-    background: rgba(8,7,5,.3) !important;
-    backdrop-filter: blur(1.5px) !important;
-    -webkit-backdrop-filter: blur(1.5px) !important;
-    box-shadow: 0 10px 26px rgba(0,0,0,.45) !important;
-    padding: 4px 0 !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
   }
 
   html body.tela-pergunta .answer-btn {
     display: flex !important;
-    align-items: center !important;
-    gap: 12px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
     width: 100% !important;
-    min-height: auto !important;
+    min-height: 78px !important;
+    height: auto !important;
     margin: 0 !important;
-    padding: 14px 16px !important;
-    border: none !important;
-    border-bottom: 1px dashed rgba(241,196,15,.25) !important;
+    padding: 12px 12px !important;
+    border: 2px solid var(--yellow) !important;
     border-radius: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px) !important;
+    background: rgba(8,7,5,.4) !important;
+    backdrop-filter: blur(1.5px) !important;
+    -webkit-backdrop-filter: blur(1.5px) !important;
+    box-shadow: 0 6px 16px rgba(0,0,0,.4) !important;
   }
 
-  html body.tela-pergunta .answer-btn:last-child {
-    border-bottom: none !important;
-  }
-
-  /* acerto/erro continuam com a cor própria (verde/vermelho) —
-     só garantimos que o corte de canto acompanhe */
   html body.tela-pergunta .answer-btn.correct,
   html body.tela-pergunta .answer-btn.wrong {
     border-radius: 0 !important;
   }
 
   html body.tela-pergunta .answer-letter {
-    width: 32px !important;
-    height: 32px !important;
-    min-width: 32px !important;
+    width: 26px !important;
+    height: 26px !important;
+    min-width: 26px !important;
     border-radius: 0 !important;
-    clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px) !important;
+    clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px) !important;
     border: none !important;
     background: var(--yellow) !important;
     color: #000 !important;
     font-family: 'Elektrix', Arial, sans-serif !important;
     font-weight: 700 !important;
-    font-size: .9rem !important;
+    font-size: .78rem !important;
   }
 
   html body.tela-pergunta .answer-btn span:last-child {
+    display: block !important;
     color: #fff !important;
     font-weight: 800 !important;
-    font-size: 1rem !important;
-    letter-spacing: .01em !important;
+    font-size: .88rem !important;
+    line-height: 1.22 !important;
+    letter-spacing: 0 !important;
     text-transform: uppercase !important;
     text-shadow: 0 2px 6px rgba(0,0,0,.9) !important;
+    word-break: break-word !important;
   }
 }
 
