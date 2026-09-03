@@ -3455,7 +3455,7 @@ body.auth-logged-out .app {
     .mode-cards .mode-card:nth-child(1)::after, .channels .channel:nth-child(1)::after { animation-delay: 0s; }
     .mode-cards .mode-card:nth-child(2)::after, .channels .channel:nth-child(2)::after { animation-delay: .5s; }
     .mode-cards .mode-card:nth-child(3)::after, .channels .channel:nth-child(3)::after { animation-delay: 1s; }
-    .mode-cards .mode-card:nth-child(4)::after, .channels .channel:nth-child(4)::after { animation-delay: 1.5s; }
+    .mode-cards .mode-card:nth-child(4)::after, .channels .channel:nth-child(4)::after { animation-delay: 1.15s !important; }
     .mode-cards .mode-card:nth-child(5)::after, .channels .channel:nth-child(5)::after { animation-delay: 2s; }
     .mode-cards .mode-card:nth-child(6)::after, .channels .channel:nth-child(6)::after { animation-delay: 2.5s; }
 
@@ -5978,13 +5978,17 @@ if (document.readyState === 'loading') {
      flex centralizado e o PNG ficava pequeno e deslocado). Voltamos
      à fotografia original, aplicada ao próprio painel: ela ocupa a
      direita e some para a esquerda, deixando o nome da banda limpo. */
+  /* O rosto ficava atrás do nome porque a foto cobria o painel
+     inteiro. Agora ela é dimensionada pela altura e ancorada na
+     borda direita, e o véu cobre 78% da largura à esquerda —
+     o nome da banda fica sobre preto limpo. */
   html body .hero-panel {
     background:
-      linear-gradient(95deg,
-        #0d0d0d 0%, rgba(13,13,13,.96) 34%,
-        rgba(13,13,13,.62) 58%, rgba(13,13,13,.30) 100%),
-      radial-gradient(ellipse 60% 90% at 88% 50%, rgba(242,183,5,.12), transparent 62%),
-      url('./fundo-cbjr.jpg') right center / cover no-repeat,
+      linear-gradient(90deg,
+        #0d0d0d 0%, #0d0d0d 52%,
+        rgba(13,13,13,.92) 68%, rgba(13,13,13,.55) 86%, rgba(13,13,13,.35) 100%),
+      radial-gradient(ellipse 50% 80% at 92% 50%, rgba(242,183,5,.10), transparent 64%),
+      url('./fundo-cbjr.jpg') 100% center / auto 118% no-repeat,
       #0d0d0d !important;
   }
   html body .hero-panel > * { position: relative; z-index: 1; }
@@ -6038,6 +6042,33 @@ if (document.readyState === 'loading') {
     border-color: rgba(242,183,5,.45) !important;
   }
 
+  /* As três ações ocupavam três faixas de largura inteira e
+     competiam com os modos, que são o conteúdo principal.
+     Viram uma fila compacta: ícone grande, rótulo pequeno. */
+  @media (max-width: 820px) {
+    html body .mobile-curiosidades-btn,
+    html body .dash-btn.share-btn {
+      display: inline-flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 3px !important;
+      vertical-align: top !important;
+      width: calc(33.333% - 14px) !important;
+      margin: 0 4px 8px 4px !important;
+      padding: 10px 4px !important;
+      font-size: .56rem !important;
+      line-height: 1.2 !important;
+      text-align: center !important;
+      letter-spacing: .02em !important;
+      min-height: 62px !important;
+      overflow: hidden !important;
+    }
+    /* o primeiro da fila recebe a margem da borda esquerda */
+    html body #mobileCuriosidadesBtn { margin-left: 12px !important; }
+    html body #mobileInviteBtn       { margin-right: 12px !important; }
+  }
+
   /* ── MODOS: ilustração ao fundo + véu escuro ── */
   html body .mode-card {
     position: relative;
@@ -6081,17 +6112,17 @@ if (document.readyState === 'loading') {
      Ciclo longo e defasado entre os cartões, para a página não pulsar
      junto. É o suficiente para o olho perceber que existe cor ali. */
   @keyframes cbjrRespira {
-    0%, 82%, 100% { filter: grayscale(1)  contrast(1.1) brightness(.55); }
-    91%           { filter: grayscale(.35) contrast(1.1) brightness(.68); }
+    0%, 70%, 100% { filter: grayscale(1) contrast(1.1) brightness(.55); }
+    80%,  90%     { filter: grayscale(0) contrast(1.05) brightness(.9); }
   }
   html body .mode-card::before {
-    animation: cbjrRespira 9s ease-in-out infinite;
+    animation: cbjrRespira 7s ease-in-out infinite !important;
   }
-  html body .mode-card[href*="radio.html"]::before      { animation-delay: 1.5s; }
-  html body .mode-card[href*="letras.html"]::before     { animation-delay: 3s; }
-  html body .mode-card[href*="conquistas.html"]::before { animation-delay: 4.5s; }
-  html body .mode-card[href*="ranking.html"]::before    { animation-delay: 6s; }
-  html body .mode-card[href*="fans.html"]::before       { animation-delay: 7.5s; }
+  html body .mode-card[href*="radio.html"]::before      { animation-delay: 1.15s !important; }
+  html body .mode-card[href*="letras.html"]::before     { animation-delay: 2.3s !important; }
+  html body .mode-card[href*="conquistas.html"]::before { animation-delay: 3.45s !important; }
+  html body .mode-card[href*="ranking.html"]::before    { animation-delay: 4.6s !important; }
+  html body .mode-card[href*="fans.html"]::before       { animation-delay: 5.75s !important; }
 
   @media (prefers-reduced-motion: reduce) {
     html body .mode-card::before { animation: none; }
