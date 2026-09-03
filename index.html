@@ -3706,15 +3706,21 @@ body.auth-logged-out .app {
         <span class="msc-best" id="mobileStreakBest">Melhor: 0d</span>
       </div>
       <!-- BOTÃO CURIOSIDADES MOBILE -->
-      <a class="mobile-curiosidades-btn" id="mobileCuriosidadesBtn" href="curiosidades.html" style="display:none;">
-        🎸 Curiosidades exclusivas — Top 10
-      </a>
-      <button class="mobile-curiosidades-btn" id="mobileShareBtn" onclick="openShareModal()" type="button" style="display:none; border:1px solid rgba(37,211,102,.5); background:rgba(37,211,102,.12); color:#25D366; cursor:pointer; font-family:inherit; font-weight:950;">
-        📲 Compartilhar meu progresso
-      </button>
-      <button class="mobile-curiosidades-btn" id="mobileInviteBtn" type="button" style="display:none; border:1px solid rgba(241,196,15,.5); background:rgba(241,196,15,.12); color:#f1c40f; cursor:pointer; font-family:inherit; font-weight:950;">
-        🎁 Convide um amigo (+100 XP)
-      </button>
+      <!-- Os três botões passaram a ficar dentro deste contêiner.
+           Antes eram filhos soltos do bloco principal, o que impedia
+           dispor os três em linha sem afetar a página inteira.
+           IDs, classes e onclick permanecem idênticos. -->
+      <div class="cbjr-acoes-fila" id="cbjrAcoesFila">
+        <a class="mobile-curiosidades-btn" id="mobileCuriosidadesBtn" href="curiosidades.html" style="display:none;">
+          🎸 Curiosidades exclusivas — Top 10
+        </a>
+        <button class="mobile-curiosidades-btn" id="mobileShareBtn" onclick="openShareModal()" type="button" style="display:none; border:1px solid rgba(37,211,102,.5); background:rgba(37,211,102,.12); color:#25D366; cursor:pointer; font-family:inherit; font-weight:950;">
+          📲 Compartilhar meu progresso
+        </button>
+        <button class="mobile-curiosidades-btn" id="mobileInviteBtn" type="button" style="display:none; border:1px solid rgba(241,196,15,.5); background:rgba(241,196,15,.12); color:#f1c40f; cursor:pointer; font-family:inherit; font-weight:950;">
+          🎁 Convide um amigo (+100 XP)
+        </button>
+      </div>
 
       <div class="mode-cards" id="modeCards">
         <a class="mode-card" href="quiz.html" style="--mc-color: var(--yellow)" id="canal-quiz" data-tone="164.81" data-page="quiz.html">
@@ -6046,38 +6052,55 @@ if (document.readyState === 'loading') {
   /* As três ações ocupavam três faixas de largura inteira e
      competiam com os modos, que são o conteúdo principal.
      Viram uma fila compacta: ícone grande, rótulo pequeno. */
-  @media (max-width: 820px) {
-    /* NÃO usar :has() aqui: o pai destes botões é o contêiner
-       principal da home, e transformá-lo em linha jogou o site
-       inteiro lado a lado. Eles continuam empilhados; o que muda
-       é o tamanho — faixas baixas e discretas, sem competir com
-       os modos, que são o conteúdo principal. */
-    html body .mobile-curiosidades-btn,
-    html body .dash-btn.share-btn {
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      width: auto !important;
-      margin: 0 14px 6px !important;
-      padding: 8px 12px !important;
-      font-size: .68rem !important;
-      font-weight: 600 !important;
-      line-height: 1.2 !important;
-      text-align: center !important;
-      min-height: 0 !important;
-      overflow: hidden !important;
-      background: #101010 !important;
-      border: 1px solid rgba(255,255,255,.06) !important;
-      color: #a8a49c !important;
-    }
-    /* o convite deixa de ser bloco amarelo: fica igual aos outros,
-       com apenas o texto em ouro */
-    html body #mobileInviteBtn {
-      background: #101010 !important;
-      border-color: rgba(242,183,5,.35) !important;
-      color: var(--ouro-cbjr) !important;
-    }
+  /* ── AÇÕES: três ícones em fila ──────────────────────────────
+     As três faixas de largura inteira competiam com os modos, que
+     são o conteúdo principal. Viram botões quadrados pequenos.
+     O texto é suprimido com font-size:0 e o ícone volta pelo
+     ::before — assim o rótulo continua no HTML para leitores de
+     tela e o botão mantém o mesmo comportamento de clique. */
+  html body .cbjr-acoes-fila {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px 14px 12px;
   }
+  /* o botão de curiosidades só existe para quem está no top 10;
+     o JavaScript o esconde com display:none, e o gap do flex
+     não deixa buraco porque item oculto não ocupa espaço */
+  html body .cbjr-acoes-fila .mobile-curiosidades-btn,
+  html body .cbjr-acoes-fila .dash-btn {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 52px !important;
+    height: 52px !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    border-radius: 0 !important;
+    background: #101010 !important;
+    border: 1px solid rgba(255,255,255,.08) !important;
+    box-shadow: none !important;
+    animation: none !important;
+    overflow: hidden !important;
+    transform: none !important;
+  }
+  html body #mobileCuriosidadesBtn::before { content: "🎸"; }
+  html body #mobileShareBtn::before        { content: "📲"; }
+  html body #mobileInviteBtn::before       { content: "🎁"; }
+  html body .cbjr-acoes-fila > *::before {
+    font-size: 21px;
+    line-height: 1;
+    filter: grayscale(1) opacity(.75);
+  }
+  html body #mobileInviteBtn {
+    border-color: rgba(242,183,5,.4) !important;
+  }
+  html body #mobileInviteBtn::before { filter: none; }
+  html body .cbjr-acoes-fila > *:hover { border-color: rgba(242,183,5,.5) !important; }
+  html body .cbjr-acoes-fila > *:hover::before { filter: none; }
 
   /* ── MODOS: ilustração ao fundo + véu escuro ── */
   html body .mode-card {
