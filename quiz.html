@@ -5565,6 +5565,7 @@ body.tela-pergunta .answer-btn {
           <span id="q-total-duration">0:00</span>
         </div>
       </div>
+      <div class="q-eq-bars" id="qEqBars" aria-hidden="true"></div>
       <div class="q-controls">
         <button class="q-audio-btn" id="q-repeat-btn" title="Repetir playlist" type="button">↻</button>
         <button aria-label="Música anterior" class="q-audio-btn" id="q-prev-btn" type="button">⏮</button>
@@ -10145,4 +10146,194 @@ body.tela-pergunta .answer-btn.wrong {
   }
 }
 
+/* 7) PLAYER — capa circular, barra de progresso fina, equalizador e
+      controles maiores. Só afeta o modo "normal" do player — o modo
+      compacto (.is-compact sem hover/foco) continua encolhendo pra
+      barrinha pequena de antes, então ainda dá pra minimizar se ele
+      atrapalhar. Volume fica escondido da vista (some), mas continua
+      funcionando por baixo — nada de JS foi removido. */
+@media (max-width: 760px) {
+  html body.tela-pergunta .quiz-music-player .player-content {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 18px 16px 14px !important;
+    grid-template-columns: none !important;
+    grid-template-areas: none !important;
+  }
+
+  html body.tela-pergunta .quiz-music-player .q-cover-wrap {
+    grid-area: unset !important;
+    width: 108px !important;
+    height: 108px !important;
+    border-radius: 50% !important;
+    border: 2px solid var(--yellow) !important;
+    box-shadow: 0 0 22px rgba(241,196,15,.28) !important;
+    margin-bottom: 2px !important;
+  }
+
+  html body.tela-pergunta .quiz-music-player #q-current-song {
+    grid-area: unset !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    text-align: center !important;
+    color: #fff !important;
+    font-weight: 800 !important;
+    font-size: .92rem !important;
+    text-shadow: none !important;
+    margin: 0 !important;
+  }
+
+  html body.tela-pergunta .quiz-music-player #q-current-song span {
+    padding-right: 0 !important;
+  }
+
+  html body.tela-pergunta .quiz-music-player #q-current-song::after {
+    content: "Charlie Brown Jr.";
+    display: block;
+    color: rgba(255,255,255,.5);
+    font-weight: 400;
+    font-size: .72rem;
+    letter-spacing: .03em;
+    margin-top: 2px;
+  }
+
+  html body.tela-pergunta .quiz-music-player .q-progress-area {
+    grid-area: unset !important;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  html body.tela-pergunta .quiz-music-player .q-time-display {
+    display: contents !important;
+  }
+
+  html body.tela-pergunta .quiz-music-player #q-current-time,
+  html body.tela-pergunta .quiz-music-player #q-total-duration {
+    color: rgba(255,255,255,.55) !important;
+    font-size: .68rem !important;
+    order: 0 !important;
+  }
+
+  html body.tela-pergunta .quiz-music-player #q-total-duration {
+    order: 2 !important;
+  }
+
+  html body.tela-pergunta .quiz-music-player .q-progress-container {
+    order: 1 !important;
+    flex: 1 !important;
+    height: 3px !important;
+    border-radius: 2px !important;
+    background: rgba(255,255,255,.15) !important;
+  }
+
+  html body.tela-pergunta .quiz-music-player .q-progress-bar {
+    background: var(--yellow) !important;
+    border-radius: 2px !important;
+    position: relative !important;
+  }
+
+  html body.tela-pergunta .quiz-music-player .q-progress-bar::after {
+    content: "";
+    position: absolute;
+    right: -5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--yellow);
+    box-shadow: 0 0 8px rgba(241,196,15,.7);
+  }
+
+  html body.tela-pergunta .quiz-music-player .q-eq-bars {
+    display: flex !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+    gap: 3px !important;
+    height: 34px !important;
+    width: 100% !important;
+  }
+
+  html body.tela-pergunta .quiz-music-player .q-eq-bars span {
+    width: 3px !important;
+    border-radius: 2px !important;
+    background: rgba(241,196,15,.5) !important;
+    transform: scaleY(.3);
+    transform-origin: bottom;
+    transition: transform .2s ease;
+  }
+
+  html body.tela-pergunta .quiz-music-player.is-playing .q-eq-bars span {
+    animation: cbjrEqMove 1.1s ease-in-out infinite;
+  }
+
+  @keyframes cbjrEqMove {
+    0%, 100% { transform: scaleY(.3); }
+    50% { transform: scaleY(1); }
+  }
+
+  html body.tela-pergunta .quiz-music-player .q-controls {
+    grid-area: unset !important;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 16px !important;
+  }
+
+  html body.tela-pergunta .quiz-music-player #q-repeat-btn,
+  html body.tela-pergunta .quiz-music-player #q-shuffle-btn {
+    font-size: .95rem !important;
+    opacity: .68 !important;
+    background: none !important;
+    border: none !important;
+    width: auto !important;
+    height: auto !important;
+  }
+
+  html body.tela-pergunta .quiz-music-player #q-prev-btn,
+  html body.tela-pergunta .quiz-music-player #q-next-btn {
+    font-size: 1.3rem !important;
+    background: none !important;
+    border: none !important;
+    color: #fff !important;
+    width: auto !important;
+    height: auto !important;
+  }
+
+  html body.tela-pergunta .quiz-music-player #q-play-pause-btn {
+    width: 52px !important;
+    height: 52px !important;
+    min-width: 52px !important;
+    min-height: 52px !important;
+    border-radius: 50% !important;
+    background: var(--yellow) !important;
+    color: #000 !important;
+    font-size: 1.15rem !important;
+    box-shadow: 0 0 16px rgba(241,196,15,.4) !important;
+  }
+
+  html body.tela-pergunta .quiz-music-player .q-volume {
+    display: none !important;
+  }
+}
+
 </style>
+
+<script id="cbjr-eq-bars-script">
+(function () {
+  var wrap = document.getElementById('qEqBars');
+  if (!wrap) return;
+  var BARS = 28;
+  for (var i = 0; i < BARS; i++) {
+    var s = document.createElement('span');
+    s.style.height = (10 + Math.random() * 24) + 'px';
+    s.style.animationDelay = (Math.random() * 1.1).toFixed(2) + 's';
+    wrap.appendChild(s);
+  }
+})();
+</script>
