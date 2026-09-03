@@ -10146,17 +10146,17 @@ body.tela-pergunta .answer-btn.wrong {
   }
 }
 
-/* 7) PLAYER — capa circular, barra de progresso fina, equalizador e
-      controles maiores. Só afeta o modo "normal" do player — o modo
-      compacto (.is-compact sem hover/foco) continua encolhendo pra
-      barrinha pequena de antes, então ainda dá pra minimizar se ele
-      atrapalhar. Volume fica escondido da vista (some), mas continua
-      funcionando por baixo — nada de JS foi removido. */
+/* 7) PLAYER — dois estados de verdade agora: o botão de recolher que já
+      existe no código (criado via JS, ↓/↗ no canto do player) volta a
+      ter efeito. Expandido = player novo (capa circular, equalizador,
+      controles grandes). Recolhido = barrinha pequena, só capa + nome +
+      play, pra sair do caminho quando não estiver em uso. */
 @media (max-width: 760px) {
-  html body.tela-pergunta .quiz-music-player,
-  html body.tela-pergunta .quiz-music-player.is-compact,
-  html body.tela-pergunta .quiz-music-player.is-expanded,
-  html body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) {
+
+  /* ===== ESTADO EXPANDIDO (padrão, ou quando tocado/em foco) ===== */
+  html body.tela-pergunta .quiz-music-player:not(.is-compact),
+  html body.tela-pergunta .quiz-music-player.is-compact:hover,
+  html body.tela-pergunta .quiz-music-player.is-compact:focus-within {
     height: auto !important;
     min-height: 0 !important;
     max-height: none !important;
@@ -10164,8 +10164,9 @@ body.tela-pergunta .answer-btn.wrong {
     border-radius: 20px 20px 0 0 !important;
   }
 
-  html body.tela-pergunta .quiz-music-player .player-content,
-  html body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) .player-content {
+  html body.tela-pergunta .quiz-music-player:not(.is-compact) .player-content,
+  html body.tela-pergunta .quiz-music-player.is-compact:hover .player-content,
+  html body.tela-pergunta .quiz-music-player.is-compact:focus-within .player-content {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
@@ -10178,7 +10179,9 @@ body.tela-pergunta .answer-btn.wrong {
     grid-template-areas: none !important;
   }
 
-  html body.tela-pergunta .quiz-music-player .q-cover-wrap {
+  html body.tela-pergunta .quiz-music-player:not(.is-compact) .q-cover-wrap,
+  html body.tela-pergunta .quiz-music-player.is-compact:hover .q-cover-wrap,
+  html body.tela-pergunta .quiz-music-player.is-compact:focus-within .q-cover-wrap {
     grid-area: unset !important;
     width: 76px !important;
     height: 76px !important;
@@ -10188,7 +10191,9 @@ body.tela-pergunta .answer-btn.wrong {
     margin-bottom: 2px !important;
   }
 
-  html body.tela-pergunta .quiz-music-player #q-current-song {
+  html body.tela-pergunta .quiz-music-player:not(.is-compact) #q-current-song,
+  html body.tela-pergunta .quiz-music-player.is-compact:hover #q-current-song,
+  html body.tela-pergunta .quiz-music-player.is-compact:focus-within #q-current-song {
     grid-area: unset !important;
     width: 100% !important;
     max-width: 100% !important;
@@ -10198,13 +10203,18 @@ body.tela-pergunta .answer-btn.wrong {
     font-size: .92rem !important;
     text-shadow: none !important;
     margin: 0 !important;
+    white-space: normal !important;
   }
 
-  html body.tela-pergunta .quiz-music-player #q-current-song span {
+  html body.tela-pergunta .quiz-music-player:not(.is-compact) #q-current-song span,
+  html body.tela-pergunta .quiz-music-player.is-compact:hover #q-current-song span,
+  html body.tela-pergunta .quiz-music-player.is-compact:focus-within #q-current-song span {
     padding-right: 0 !important;
   }
 
-  html body.tela-pergunta .quiz-music-player #q-current-song::after {
+  html body.tela-pergunta .quiz-music-player:not(.is-compact) #q-current-song::after,
+  html body.tela-pergunta .quiz-music-player.is-compact:hover #q-current-song::after,
+  html body.tela-pergunta .quiz-music-player.is-compact:focus-within #q-current-song::after {
     content: "Charlie Brown Jr.";
     display: block;
     color: rgba(255,255,255,.5);
@@ -10214,7 +10224,9 @@ body.tela-pergunta .answer-btn.wrong {
     margin-top: 2px;
   }
 
-  html body.tela-pergunta .quiz-music-player .q-progress-area {
+  html body.tela-pergunta .quiz-music-player:not(.is-compact) .q-progress-area,
+  html body.tela-pergunta .quiz-music-player.is-compact:hover .q-progress-area,
+  html body.tela-pergunta .quiz-music-player.is-compact:focus-within .q-progress-area {
     grid-area: unset !important;
     width: 100% !important;
     display: flex !important;
@@ -10222,22 +10234,31 @@ body.tela-pergunta .answer-btn.wrong {
     gap: 8px !important;
   }
 
-  html body.tela-pergunta .quiz-music-player .q-time-display {
+  html body.tela-pergunta .quiz-music-player:not(.is-compact) .q-time-display,
+  html body.tela-pergunta .quiz-music-player.is-compact:hover .q-time-display,
+  html body.tela-pergunta .quiz-music-player.is-compact:focus-within .q-time-display {
     display: contents !important;
   }
 
-  html body.tela-pergunta .quiz-music-player #q-current-time,
-  html body.tela-pergunta .quiz-music-player #q-total-duration {
+  html body.tela-pergunta .quiz-music-player:not(.is-compact) #q-current-time,
+  html body.tela-pergunta .quiz-music-player:not(.is-compact) #q-total-duration,
+  html body.tela-pergunta .quiz-music-player.is-compact:hover #q-current-time,
+  html body.tela-pergunta .quiz-music-player.is-compact:hover #q-total-duration,
+  html body.tela-pergunta .quiz-music-player.is-compact:focus-within #q-current-time,
+  html body.tela-pergunta .quiz-music-player.is-compact:focus-within #q-total-duration {
     color: rgba(255,255,255,.55) !important;
     font-size: .68rem !important;
-    order: 0 !important;
   }
 
-  html body.tela-pergunta .quiz-music-player #q-total-duration {
+  html body.tela-pergunta .quiz-music-player:not(.is-compact) #q-total-duration,
+  html body.tela-pergunta .quiz-music-player.is-compact:hover #q-total-duration,
+  html body.tela-pergunta .quiz-music-player.is-compact:focus-within #q-total-duration {
     order: 2 !important;
   }
 
-  html body.tela-pergunta .quiz-music-player .q-progress-container {
+  html body.tela-pergunta .quiz-music-player:not(.is-compact) .q-progress-container,
+  html body.tela-pergunta .quiz-music-player.is-compact:hover .q-progress-container,
+  html body.tela-pergunta .quiz-music-player.is-compact:focus-within .q-progress-container {
     order: 1 !important;
     flex: 1 !important;
     height: 3px !important;
@@ -10245,26 +10266,17 @@ body.tela-pergunta .answer-btn.wrong {
     background: rgba(255,255,255,.15) !important;
   }
 
-  html body.tela-pergunta .quiz-music-player .q-progress-bar {
+  html body.tela-pergunta .quiz-music-player:not(.is-compact) .q-progress-bar,
+  html body.tela-pergunta .quiz-music-player.is-compact:hover .q-progress-bar,
+  html body.tela-pergunta .quiz-music-player.is-compact:focus-within .q-progress-bar {
     background: var(--yellow) !important;
     border-radius: 2px !important;
     position: relative !important;
   }
 
-  html body.tela-pergunta .quiz-music-player .q-progress-bar::after {
-    content: "";
-    position: absolute;
-    right: -5px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--yellow);
-    box-shadow: 0 0 8px rgba(241,196,15,.7);
-  }
-
-  html body.tela-pergunta .quiz-music-player .q-eq-bars {
+  html body.tela-pergunta .quiz-music-player:not(.is-compact) .q-eq-bars,
+  html body.tela-pergunta .quiz-music-player.is-compact:hover .q-eq-bars,
+  html body.tela-pergunta .quiz-music-player.is-compact:focus-within .q-eq-bars {
     display: flex !important;
     align-items: flex-end !important;
     justify-content: center !important;
@@ -10291,7 +10303,9 @@ body.tela-pergunta .answer-btn.wrong {
     50% { transform: scaleY(1); }
   }
 
-  html body.tela-pergunta .quiz-music-player .q-controls {
+  html body.tela-pergunta .quiz-music-player:not(.is-compact) .q-controls,
+  html body.tela-pergunta .quiz-music-player.is-compact:hover .q-controls,
+  html body.tela-pergunta .quiz-music-player.is-compact:focus-within .q-controls {
     grid-area: unset !important;
     width: 100% !important;
     display: flex !important;
@@ -10300,8 +10314,12 @@ body.tela-pergunta .answer-btn.wrong {
     gap: 16px !important;
   }
 
-  html body.tela-pergunta .quiz-music-player #q-repeat-btn,
-  html body.tela-pergunta .quiz-music-player #q-shuffle-btn {
+  html body.tela-pergunta .quiz-music-player:not(.is-compact) #q-repeat-btn,
+  html body.tela-pergunta .quiz-music-player:not(.is-compact) #q-shuffle-btn,
+  html body.tela-pergunta .quiz-music-player.is-compact:hover #q-repeat-btn,
+  html body.tela-pergunta .quiz-music-player.is-compact:hover #q-shuffle-btn,
+  html body.tela-pergunta .quiz-music-player.is-compact:focus-within #q-repeat-btn,
+  html body.tela-pergunta .quiz-music-player.is-compact:focus-within #q-shuffle-btn {
     font-size: .95rem !important;
     opacity: .68 !important;
     background: none !important;
@@ -10310,8 +10328,12 @@ body.tela-pergunta .answer-btn.wrong {
     height: auto !important;
   }
 
-  html body.tela-pergunta .quiz-music-player #q-prev-btn,
-  html body.tela-pergunta .quiz-music-player #q-next-btn {
+  html body.tela-pergunta .quiz-music-player:not(.is-compact) #q-prev-btn,
+  html body.tela-pergunta .quiz-music-player:not(.is-compact) #q-next-btn,
+  html body.tela-pergunta .quiz-music-player.is-compact:hover #q-prev-btn,
+  html body.tela-pergunta .quiz-music-player.is-compact:hover #q-next-btn,
+  html body.tela-pergunta .quiz-music-player.is-compact:focus-within #q-prev-btn,
+  html body.tela-pergunta .quiz-music-player.is-compact:focus-within #q-next-btn {
     font-size: 1.3rem !important;
     background: none !important;
     border: none !important;
@@ -10320,7 +10342,9 @@ body.tela-pergunta .answer-btn.wrong {
     height: auto !important;
   }
 
-  html body.tela-pergunta .quiz-music-player #q-play-pause-btn {
+  html body.tela-pergunta .quiz-music-player:not(.is-compact) #q-play-pause-btn,
+  html body.tela-pergunta .quiz-music-player.is-compact:hover #q-play-pause-btn,
+  html body.tela-pergunta .quiz-music-player.is-compact:focus-within #q-play-pause-btn {
     width: 52px !important;
     height: 52px !important;
     min-width: 52px !important;
@@ -10335,14 +10359,84 @@ body.tela-pergunta .answer-btn.wrong {
   html body.tela-pergunta .quiz-music-player .q-volume {
     display: none !important;
   }
+
+  /* ===== ESTADO RECOLHIDO (botão ↗ clicado, sem hover/foco) ===== */
+  html body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) {
+    height: 64px !important;
+    min-height: 64px !important;
+    max-height: 64px !important;
+    overflow: hidden !important;
+    border-radius: 16px 16px 0 0 !important;
+  }
+
+  html body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) .player-content {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 8px 12px !important;
+    height: 100% !important;
+  }
+
+  html body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) .q-cover-wrap {
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    border-radius: 50% !important;
+    border: 2px solid var(--yellow) !important;
+    margin-bottom: 0 !important;
+  }
+
+  html body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) #q-current-song {
+    flex: 1 !important;
+    min-width: 0 !important;
+    text-align: left !important;
+    font-size: .78rem !important;
+    font-weight: 700 !important;
+    color: #fff !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  html body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) #q-current-song::after {
+    content: none !important;
+  }
+
+  html body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) .q-progress-area,
+  html body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) .q-eq-bars,
+  html body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) #q-repeat-btn,
+  html body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) #q-shuffle-btn,
+  html body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) #q-prev-btn,
+  html body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) #q-next-btn {
+    display: none !important;
+  }
+
+  html body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) .q-controls {
+    width: auto !important;
+    display: flex !important;
+  }
+
+  html body.tela-pergunta .quiz-music-player.is-compact:not(:hover):not(:focus-within) #q-play-pause-btn {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    border-radius: 50% !important;
+    background: var(--yellow) !important;
+    color: #000 !important;
+    font-size: .95rem !important;
+  }
 }
 
-/* 8) RESERVA DE ESPAÇO — o player cresceu (antes 76px, agora ~230px),
-      então a área de perguntas precisa de mais respiro embaixo pra
-      "Você acertou" e as curiosidades não ficarem escondidas atrás dele */
+/* 8) RESERVA DE ESPAÇO — o player expandido cresceu (antes 76px, agora
+      ~270px), então a área de perguntas precisa de mais respiro embaixo
+      pra "Você acertou" e as curiosidades não ficarem escondidas atrás
+      dele. Reservo pelo tamanho expandido (o recolhido usa menos, mas
+      sobrar espaço é melhor que cortar texto) */
 @media (max-width: 760px) {
   html body.tela-pergunta #quizScreen.active {
-    padding-bottom: calc(240px + max(4px, env(safe-area-inset-bottom, 0px))) !important;
+    padding-bottom: calc(280px + max(4px, env(safe-area-inset-bottom, 0px))) !important;
   }
 }
 
