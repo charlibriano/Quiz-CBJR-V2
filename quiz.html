@@ -9951,7 +9951,7 @@ body.tela-pergunta .answer-btn.wrong {
       texto ganha fonte Elektrix, tamanho maior e holofote dourado */
 @media (max-width: 760px) {
   html body.tela-pergunta .question-kicker {
-    display: inline-block !important;
+    display: table !important;
     margin: 0 auto 12px !important;
     padding: 5px 14px !important;
     border: 1px solid rgba(241,196,15,.5) !important;
@@ -9960,6 +9960,7 @@ body.tela-pergunta .answer-btn.wrong {
     font-size: .68rem !important;
     letter-spacing: .14em !important;
     text-transform: uppercase !important;
+    text-align: center !important;
   }
 
   html body.tela-pergunta .question-text {
@@ -10054,11 +10055,14 @@ body.tela-pergunta .answer-btn.wrong {
   }
 }
 
-/* 6) CORREÇÃO — #questionText tem regras antigas por ID espalhadas pelo
-      arquivo que vencem qualquer regra por classe (.question-text),
-      não importa a ordem. Repetindo aqui por ID pra garantir que pegue. */
+/* 6) CORREÇÃO — o arquivo tem DUAS rotinas de JS (fitQuestion / fitPixelPerfect)
+      que encolhem a fonte da pergunta em tempo real pra nunca encostar nas
+      opções, escrevendo em variáveis CSS lidas por dezenas de regras antigas
+      com !important. Pra garantir prioridade MÁXIMA sobre tudo isso, repito
+      o próprio seletor (truque de especificidade: #id#id sempre vence
+      qualquer regra com um #id só, não importa quantas classes ela tenha). */
 @media (max-width: 760px) {
-  html body.tela-pergunta #questionText {
+  html body.tela-pergunta #questionText#questionText {
     display: block !important;
     font-family: Arial, Helvetica, sans-serif !important;
     color: #fff !important;
@@ -10066,11 +10070,41 @@ body.tela-pergunta .answer-btn.wrong {
     font-size: 1.5rem !important;
     line-height: 1.32 !important;
     letter-spacing: .005em !important;
+    text-align: center !important;
     background: linear-gradient(180deg, rgba(20,16,4,.85), rgba(8,7,2,.92)) !important;
     border: 1px solid rgba(241,196,15,.4) !important;
     clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px) !important;
     padding: 22px 18px !important;
-    margin-bottom: 26px !important;
+    margin: 0 auto 26px !important;
+    max-height: none !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+    width: auto !important;
+    max-width: 100% !important;
+    box-shadow: 0 0 50px rgba(241,196,15,.22), 0 18px 40px rgba(0,0,0,.5) !important;
+  }
+
+  html body.tela-pergunta .question-text.question-text {
+    display: block !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+    color: #fff !important;
+    font-weight: 800 !important;
+    font-size: 1.5rem !important;
+    line-height: 1.32 !important;
+    letter-spacing: .005em !important;
+    text-align: center !important;
+    background: linear-gradient(180deg, rgba(20,16,4,.85), rgba(8,7,2,.92)) !important;
+    border: 1px solid rgba(241,196,15,.4) !important;
+    clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px) !important;
+    padding: 22px 18px !important;
+    margin: 0 auto 26px !important;
+    max-height: none !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+    width: auto !important;
+    max-width: 100% !important;
     box-shadow: 0 0 50px rgba(241,196,15,.22), 0 18px 40px rgba(0,0,0,.5) !important;
   }
 
