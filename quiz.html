@@ -10024,6 +10024,31 @@ body.tela-pergunta .answer-btn.wrong {
     border-radius: 0 !important;
   }
 
+  /* acerto/erro: em vez de preencher o cartão inteiro, só uma barra
+     colorida na lateral — e o selo da letra (normalmente amarelo)
+     acompanha a cor certa/errada */
+  html body.tela-pergunta .answer-btn.correct {
+    background: rgba(8,7,5,.4) !important;
+    border-color: var(--green) !important;
+    box-shadow: inset 6px 0 0 var(--green), 0 6px 16px rgba(0,0,0,.4) !important;
+  }
+
+  html body.tela-pergunta .answer-btn.wrong {
+    background: rgba(8,7,5,.4) !important;
+    border-color: var(--red) !important;
+    box-shadow: inset 6px 0 0 var(--red), 0 6px 16px rgba(0,0,0,.4) !important;
+  }
+
+  html body.tela-pergunta .answer-btn.correct .answer-letter {
+    background: var(--green) !important;
+    color: #000 !important;
+  }
+
+  html body.tela-pergunta .answer-btn.wrong .answer-letter {
+    background: var(--red) !important;
+    color: #fff !important;
+  }
+
   html body.tela-pergunta .answer-letter {
     width: 26px !important;
     height: 26px !important;
