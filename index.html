@@ -5974,17 +5974,18 @@ if (document.readyState === 'loading') {
     border: 1px solid rgba(242,183,5,.22) !important;
     border-radius: 0 !important;
   }
-  html body .hero-panel::after {
-    content: "";
-    position: absolute;
-    right: -14px; bottom: 0;
-    width: 58%; max-width: 260px; height: 92%;
-    background: url('./hero-chorao.png') right bottom / contain no-repeat;
-    filter: grayscale(1) contrast(1.15) brightness(.92);
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 34%);
-    mask-image: linear-gradient(90deg, transparent, #000 34%);
-    pointer-events: none;
-    z-index: 0;
+  /* A figura recortada não se acomodou no cabeçalho (o painel é
+     flex centralizado e o PNG ficava pequeno e deslocado). Voltamos
+     à fotografia original, aplicada ao próprio painel: ela ocupa a
+     direita e some para a esquerda, deixando o nome da banda limpo. */
+  html body .hero-panel {
+    background:
+      linear-gradient(95deg,
+        #0d0d0d 0%, rgba(13,13,13,.96) 34%,
+        rgba(13,13,13,.62) 58%, rgba(13,13,13,.30) 100%),
+      radial-gradient(ellipse 60% 90% at 88% 50%, rgba(242,183,5,.12), transparent 62%),
+      url('./fundo-cbjr.jpg') right center / cover no-repeat,
+      #0d0d0d !important;
   }
   html body .hero-panel > * { position: relative; z-index: 1; }
   html body .hero-panel .title,
@@ -6073,6 +6074,27 @@ if (document.readyState === 'loading') {
   html body .mode-card:hover::before,
   html body .mode-card:active::before {
     filter: grayscale(.15) contrast(1.1) brightness(.72);
+    animation: none;
+  }
+
+  /* Respiração: a arte sai do preto e branco por um instante e volta.
+     Ciclo longo e defasado entre os cartões, para a página não pulsar
+     junto. É o suficiente para o olho perceber que existe cor ali. */
+  @keyframes cbjrRespira {
+    0%, 82%, 100% { filter: grayscale(1)  contrast(1.1) brightness(.55); }
+    91%           { filter: grayscale(.35) contrast(1.1) brightness(.68); }
+  }
+  html body .mode-card::before {
+    animation: cbjrRespira 9s ease-in-out infinite;
+  }
+  html body .mode-card[href*="radio.html"]::before      { animation-delay: 1.5s; }
+  html body .mode-card[href*="letras.html"]::before     { animation-delay: 3s; }
+  html body .mode-card[href*="conquistas.html"]::before { animation-delay: 4.5s; }
+  html body .mode-card[href*="ranking.html"]::before    { animation-delay: 6s; }
+  html body .mode-card[href*="fans.html"]::before       { animation-delay: 7.5s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html body .mode-card::before { animation: none; }
   }
 
   /* cada modo com a sua ilustração — mirado pelo destino do link,
@@ -6094,6 +6116,9 @@ if (document.readyState === 'loading') {
   html body .mode-card-tag {
     font-size: .68rem !important;
     color: var(--fraco) !important;
+    /* a regra antiga tinha margin-top:auto, o que empurrava a
+       descrição para o rodapé e deixava o nome sobre a ilustração */
+    margin-top: 0 !important;
   }
 
   /* ── DESAFIO DO DIA ── */
