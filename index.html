@@ -3499,6 +3499,13 @@ body.auth-logged-out .app {
       .mode-card::after, .channel::after { opacity: .45; }
     }
   </style>
+  <style id="cbjr-flash-fix-minimo">
+  /* Fix mínimo do flash de conteúdo sem estilo: só a cor de fundo,
+     aplicada cedo. O bloco grande (cbjr-visual-muro) continua no lugar
+     original — mexer nele mais cedo mexeu com o funil de boas-vindas
+     e travou o clique do Quiz, então revertido. */
+  html body { background: #0a0a0a !important; }
+  </style>
 </head>
 
 <body class="auth-loading">
