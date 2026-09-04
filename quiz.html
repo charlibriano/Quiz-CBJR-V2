@@ -3499,339 +3499,13 @@ body.auth-logged-out .app {
       .mode-card::after, .channel::after { opacity: .45; }
     }
   </style>
-<!-- movido do fim do arquivo pro <head> em 04/09 pra eliminar o flash de conteúdo sem estilo ao carregar a página -->
-  <style id="cbjr-visual-muro">
-  /* ══════════════════════════════════════════════════════════════
-     VISUAL PRETO E OURO — transplante do protótipo v4 aprovado.
-
-     Este é o ÚLTIMO bloco de estilo do arquivo e usa "html body"
-     nos seletores, de modo a vencer as camadas anteriores. Toda a
-     aparência da home está aqui; as regras equivalentes nos blocos
-     antigos ficaram sem efeito e podem ser removidas depois.
-
-     Não toca em HTML nem em JavaScript.
-
-     Princípio: fundo preto sólido, ouro como única cor de destaque,
-     e cada modo com sua própria ilustração ao fundo. É a ilustração
-     que dá identidade — sem ela o cartão vira retângulo chapado.
-     ══════════════════════════════════════════════════════════════ */
-
-  :root {
-    --ouro-cbjr: #f2b705;
-    --carvao:    #141414;
-    --fraco:     #8f8b83;
-  }
-
-  /* ── FUNDO: preto sólido. A fotografia deixa de ser papel de
-        parede e passa a existir dentro das peças. ── */
+  <style id="cbjr-flash-fix-minimo">
+  /* Fix mínimo do flash de conteúdo sem estilo: só a cor de fundo,
+     aplicada cedo. O bloco grande (cbjr-visual-muro) continua no lugar
+     original — mexer nele mais cedo mexeu com o funil de boas-vindas
+     e travou o clique do Quiz, então revertido. */
   html body { background: #0a0a0a !important; }
-  html body::before {
-    background: radial-gradient(ellipse 90% 40% at 50% 0%,
-      rgba(242,183,5,.05), transparent 60%) !important;
-    filter: none !important;
-    transform: none !important;
-  }
-  html body::after { display: none !important; }
-
-  /* ── HERO: o Chorão recortado entra como figura, à direita ── */
-  html body .hero-panel {
-    position: relative;
-    overflow: hidden;
-    background:
-      radial-gradient(ellipse 70% 100% at 88% 50%, rgba(242,183,5,.10), transparent 60%),
-      linear-gradient(100deg, #101010 30%, #1a1a1a 100%) !important;
-    border: 1px solid rgba(242,183,5,.22) !important;
-    border-radius: 0 !important;
-  }
-  /* A figura recortada não se acomodou no cabeçalho (o painel é
-     flex centralizado e o PNG ficava pequeno e deslocado). Voltamos
-     à fotografia original, aplicada ao próprio painel: ela ocupa a
-     direita e some para a esquerda, deixando o nome da banda limpo. */
-  /* O rosto ficava atrás do nome porque a foto cobria o painel
-     inteiro. Agora ela é dimensionada pela altura e ancorada na
-     borda direita, e o véu cobre 78% da largura à esquerda —
-     o nome da banda fica sobre preto limpo. */
-  /* Sem fotografia aqui. O nome da banda é centralizado por uma
-     regra antiga, então qualquer imagem cai atrás dele: nem se lê
-     o rosto, nem o título fica limpo. Fundo preto com brasa dourada
-     em volta — a foto volta se um dia o título sair do centro. */
-  html body .hero-panel {
-    background:
-      radial-gradient(ellipse 80% 70% at 50% 42%, rgba(242,183,5,.11), transparent 66%),
-      linear-gradient(180deg, #131313 0%, #0b0b0b 100%) !important;
-  }
-  html body .hero-panel > * { position: relative; z-index: 1; }
-  html body .hero-panel .title,
-  html body .hero-panel .subtitle { max-width: 62%; }
-
-  /* ── SEQUÊNCIA ── */
-  html body .mobile-streak-card,
-  html body .dash-streak-card {
-    border-radius: 0 !important;
-    border: 1px solid rgba(255,255,255,.07) !important;
-    background: var(--carvao) !important;
-    box-shadow: none !important;
-  }
-  html body .msc-milestone,
-  html body .dash-streak-milestone {
-    border-radius: 50% !important;
-    filter: grayscale(1) opacity(.55);
-  }
-  html body .msc-milestone.hit,
-  html body .msc-milestone.active,
-  html body .dash-streak-milestone.hit,
-  html body .dash-streak-milestone.active { filter: none; }
-
-  /* ── AÇÕES: carvão, e só o convite em ouro ── */
-  html body .dash-btn,
-  html body .mobile-curiosidades-btn,
-  html body .dash-btn.share-btn,
-  html body .dash-btn.curiosidades-btn {
-    border-radius: 0 !important;
-    border: 1px solid rgba(255,255,255,.07) !important;
-    background: var(--carvao) !important;
-    background-image: none !important;
-    color: #f3f1ec !important;
-    font-weight: 700 !important;
-    text-shadow: none !important;
-    animation: none !important;
-    box-shadow: none !important;
-    clip-path: none;
-    transform: none !important;
-    filter: none !important;
-  }
-  /* no desktop o convite continua em ouro cheio; no celular ele
-     entra na fila discreta, regra mais abaixo */
-  html body .dash-btn.invite-btn {
-    background: var(--ouro-cbjr) !important;
-    border-color: var(--ouro-cbjr) !important;
-    color: #120e02 !important;
-  }
-  html body .dash-btn:hover,
-  html body .mobile-curiosidades-btn:hover {
-    border-color: rgba(242,183,5,.45) !important;
-  }
-
-  /* As três ações ocupavam três faixas de largura inteira e
-     competiam com os modos, que são o conteúdo principal.
-     Viram uma fila compacta: ícone grande, rótulo pequeno. */
-  /* ── AÇÕES: três ícones em fila ──────────────────────────────
-     As três faixas de largura inteira competiam com os modos, que
-     são o conteúdo principal. Viram botões quadrados pequenos.
-     O texto é suprimido com font-size:0 e o ícone volta pelo
-     ::before — assim o rótulo continua no HTML para leitores de
-     tela e o botão mantém o mesmo comportamento de clique. */
-  html body .cbjr-acoes-fila {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin: 10px 14px 12px;
-  }
-  /* o botão de curiosidades só existe para quem está no top 10;
-     o JavaScript o esconde com display:none, e o gap do flex
-     não deixa buraco porque item oculto não ocupa espaço */
-  html body .cbjr-acoes-fila .mobile-curiosidades-btn,
-  html body .cbjr-acoes-fila .dash-btn {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 52px !important;
-    height: 52px !important;
-    min-height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    font-size: 0 !important;
-    line-height: 0 !important;
-    border-radius: 0 !important;
-    background: #101010 !important;
-    border: 1px solid rgba(255,255,255,.08) !important;
-    box-shadow: none !important;
-    animation: none !important;
-    overflow: hidden !important;
-    transform: none !important;
-  }
-  html body #mobileCuriosidadesBtn::before { content: "🎸"; }
-  html body #mobileShareBtn::before        { content: "📲"; }
-  html body #mobileInviteBtn::before       { content: "🎁"; }
-  html body .cbjr-acoes-fila > *::before {
-    font-size: 21px;
-    line-height: 1;
-    filter: grayscale(1) opacity(.75);
-  }
-  html body #mobileInviteBtn {
-    border-color: rgba(242,183,5,.4) !important;
-  }
-  html body #mobileInviteBtn::before { filter: none; }
-  html body .cbjr-acoes-fila > *:hover { border-color: rgba(242,183,5,.5) !important; }
-  html body .cbjr-acoes-fila > *:hover::before { filter: none; }
-
-  /* ── MODOS: ilustração ao fundo + véu escuro ── */
-  html body .mode-card {
-    position: relative;
-    overflow: hidden;
-    border-radius: 0 !important;
-    border: 1px solid rgba(255,255,255,.08) !important;
-    border-left-width: 1px !important;
-    background: #0d0d0d !important;
-    box-shadow: none !important;
-    min-height: 132px !important;
-    justify-content: flex-end !important;
-  }
-  html body .mode-card::before {   /* a arte */
-    content: "";
-    position: absolute; inset: 0;
-    background-size: cover;
-    background-position: center;
-    filter: grayscale(1) contrast(1.1) brightness(.55);
-    display: block !important;
-    z-index: 0;
-  }
-  html body .mode-card::after {    /* o véu que garante leitura */
-    content: "";
-    position: absolute; inset: 0;
-    display: block !important;
-    border: 0 !important;
-    box-shadow: none !important;
-    animation: none !important;
-    background: linear-gradient(180deg,
-      rgba(8,8,8,.15) 0%, rgba(8,8,8,.82) 62%, #080808 100%) !important;
-    z-index: 0;
-  }
-  html body .mode-card > * { position: relative; z-index: 1; }
-  html body .mode-card:hover::before,
-  html body .mode-card:active::before {
-    filter: grayscale(.15) contrast(1.1) brightness(.72);
-    animation: none;
-  }
-
-  /* Respiração: a arte sai do preto e branco por um instante e volta.
-     Ciclo longo e defasado entre os cartões, para a página não pulsar
-     junto. É o suficiente para o olho perceber que existe cor ali. */
-  @keyframes cbjrRespira {
-    0%, 70%, 100% { filter: grayscale(1) contrast(1.1) brightness(.55); }
-    80%,  90%     { filter: grayscale(0) contrast(1.05) brightness(.9); }
-  }
-  html body .mode-card::before {
-    animation: cbjrRespira 7s ease-in-out infinite !important;
-  }
-  html body .mode-card[href*="radio.html"]::before      { animation-delay: 1.15s !important; }
-  html body .mode-card[href*="letras.html"]::before     { animation-delay: 2.3s !important; }
-  html body .mode-card[href*="conquistas.html"]::before { animation-delay: 3.45s !important; }
-  html body .mode-card[href*="ranking.html"]::before    { animation-delay: 4.6s !important; }
-  html body .mode-card[href*="fans.html"]::before       { animation-delay: 5.75s !important; }
-
-  @media (prefers-reduced-motion: reduce) {
-    html body .mode-card::before { animation: none; }
-  }
-
-  /* cada modo com a sua ilustração — mirado pelo destino do link,
-     sem precisar de classe nova no HTML */
-  html body .mode-card[href*="quiz.html"]::before        { background-image: url('./card-quiz.jpg'); }
-  html body .mode-card[href*="radio.html"]::before       { background-image: url('./card-radio.jpg'); }
-  html body .mode-card[href*="letras.html"]::before      { background-image: url('./card-letras.jpg'); }
-  html body .mode-card[href*="conquistas.html"]::before  { background-image: url('./card-conquistas.jpg'); }
-  html body .mode-card[href*="ranking.html"]::before     { background-image: url('./card-ranking.jpg'); }
-  html body .mode-card[href*="fans.html"]::before        { background-image: url('./card-comunidade.jpg'); }
-
-  html body .mode-card-icon { display: none !important; }
-  html body .mode-card-name {
-    font-family: 'Elektrix', sans-serif !important;
-    font-size: 1.02rem !important;
-    letter-spacing: .02em !important;
-    color: #f3f1ec !important;
-  }
-  html body .mode-card-tag {
-    font-size: .68rem !important;
-    color: var(--fraco) !important;
-    /* a regra antiga tinha margin-top:auto, o que empurrava a
-       descrição para o rodapé e deixava o nome sobre a ilustração */
-    margin-top: 0 !important;
-  }
-
-  /* ── DESAFIO DO DIA ── */
-  html body .cbjr-daily-banner {
-    border-radius: 0 !important;
-    border: 1px solid rgba(242,183,5,.22) !important;
-    color: #f3f1ec !important;
-    transform: none !important;
-    clip-path: none !important;
-    background:
-      radial-gradient(ellipse 60% 90% at 92% 60%, rgba(242,183,5,.16), transparent 62%),
-      var(--carvao) !important;
-    background-blend-mode: normal !important;
-    box-shadow: none !important;
-  }
-  html body .cbjr-daily-banner::before { display: none !important; }
-  html body .cbjr-daily-kicker {
-    background: var(--ouro-cbjr) !important;
-    color: #120e02 !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    padding: 4px 10px !important;
-    font-weight: 800 !important;
-    letter-spacing: .12em !important;
-  }
-  html body .cbjr-daily-title {
-    font-family: 'Elektrix', sans-serif !important;
-    color: #f3f1ec !important;
-  }
-  html body .cbjr-daily-sub { color: var(--fraco) !important; }
-  html body .cbjr-daily-timer-label {
-    color: var(--fraco) !important;
-    letter-spacing: .12em !important;
-  }
-  html body .cbjr-daily-timer {
-    color: #f3f1ec !important;
-    background: none !important;
-    border: 0 !important;
-    box-shadow: none !important;
-    font-family: ui-monospace, Menlo, monospace !important;
-  }
-  html body .cbjr-daily-btn {
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    background: var(--ouro-cbjr) !important;
-    color: #120e02 !important;
-    font-weight: 800 !important;
-    letter-spacing: .06em !important;
-    text-transform: uppercase !important;
-    clip-path: polygon(2% 8%, 98% 0, 100% 86%, 4% 100%, 0 50%);
-  }
-
-  /* ── MESA DE SOM (desktop) ── */
-  html body .console { background: #0d0d0d !important; }
-  html body .channel {
-    border-radius: 0 !important;
-    border: 1px solid rgba(255,255,255,.08) !important;
-    border-top: 2px solid rgba(242,183,5,.35) !important;
-    background: var(--carvao) !important;
-    box-shadow: none !important;
-  }
-  html body .channel:hover { border-top-color: var(--ouro-cbjr) !important; }
-  html body .channel::after { display: none !important; }
-
-  /* ── PAINEL DO JOGADOR (desktop) ── */
-  html body .player-dashboard {
-    border-radius: 0 !important;
-    border: 1px solid rgba(242,183,5,.22) !important;
-    background: var(--carvao) !important;
-  }
-  html body .dash-card {
-    border-radius: 0 !important;
-    border: 1px solid rgba(255,255,255,.07) !important;
-    background: #0f0f0f !important;
-  }
-
-  /* ── NAVEGAÇÃO ── */
-  html body .mobile-nav {
-    background: #0c0c0c !important;
-    border-top: 1px solid rgba(255,255,255,.07) !important;
-  }
-  html body .mobile-nav a { color: var(--fraco) !important; }
-  html body .mobile-nav a.active,
-  html body .mobile-nav a.is-active { color: var(--ouro-cbjr) !important; }
   </style>
-
 </head>
 
 <body class="auth-loading">
@@ -6270,6 +5944,337 @@ if (document.readyState === 'loading') {
 })();
 </script>
 
+  <style id="cbjr-visual-muro">
+  /* ══════════════════════════════════════════════════════════════
+     VISUAL PRETO E OURO — transplante do protótipo v4 aprovado.
+
+     Este é o ÚLTIMO bloco de estilo do arquivo e usa "html body"
+     nos seletores, de modo a vencer as camadas anteriores. Toda a
+     aparência da home está aqui; as regras equivalentes nos blocos
+     antigos ficaram sem efeito e podem ser removidas depois.
+
+     Não toca em HTML nem em JavaScript.
+
+     Princípio: fundo preto sólido, ouro como única cor de destaque,
+     e cada modo com sua própria ilustração ao fundo. É a ilustração
+     que dá identidade — sem ela o cartão vira retângulo chapado.
+     ══════════════════════════════════════════════════════════════ */
+
+  :root {
+    --ouro-cbjr: #f2b705;
+    --carvao:    #141414;
+    --fraco:     #8f8b83;
+  }
+
+  /* ── FUNDO: preto sólido. A fotografia deixa de ser papel de
+        parede e passa a existir dentro das peças. ── */
+  html body { background: #0a0a0a !important; }
+  html body::before {
+    background: radial-gradient(ellipse 90% 40% at 50% 0%,
+      rgba(242,183,5,.05), transparent 60%) !important;
+    filter: none !important;
+    transform: none !important;
+  }
+  html body::after { display: none !important; }
+
+  /* ── HERO: o Chorão recortado entra como figura, à direita ── */
+  html body .hero-panel {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 70% 100% at 88% 50%, rgba(242,183,5,.10), transparent 60%),
+      linear-gradient(100deg, #101010 30%, #1a1a1a 100%) !important;
+    border: 1px solid rgba(242,183,5,.22) !important;
+    border-radius: 0 !important;
+  }
+  /* A figura recortada não se acomodou no cabeçalho (o painel é
+     flex centralizado e o PNG ficava pequeno e deslocado). Voltamos
+     à fotografia original, aplicada ao próprio painel: ela ocupa a
+     direita e some para a esquerda, deixando o nome da banda limpo. */
+  /* O rosto ficava atrás do nome porque a foto cobria o painel
+     inteiro. Agora ela é dimensionada pela altura e ancorada na
+     borda direita, e o véu cobre 78% da largura à esquerda —
+     o nome da banda fica sobre preto limpo. */
+  /* Sem fotografia aqui. O nome da banda é centralizado por uma
+     regra antiga, então qualquer imagem cai atrás dele: nem se lê
+     o rosto, nem o título fica limpo. Fundo preto com brasa dourada
+     em volta — a foto volta se um dia o título sair do centro. */
+  html body .hero-panel {
+    background:
+      radial-gradient(ellipse 80% 70% at 50% 42%, rgba(242,183,5,.11), transparent 66%),
+      linear-gradient(180deg, #131313 0%, #0b0b0b 100%) !important;
+  }
+  html body .hero-panel > * { position: relative; z-index: 1; }
+  html body .hero-panel .title,
+  html body .hero-panel .subtitle { max-width: 62%; }
+
+  /* ── SEQUÊNCIA ── */
+  html body .mobile-streak-card,
+  html body .dash-streak-card {
+    border-radius: 0 !important;
+    border: 1px solid rgba(255,255,255,.07) !important;
+    background: var(--carvao) !important;
+    box-shadow: none !important;
+  }
+  html body .msc-milestone,
+  html body .dash-streak-milestone {
+    border-radius: 50% !important;
+    filter: grayscale(1) opacity(.55);
+  }
+  html body .msc-milestone.hit,
+  html body .msc-milestone.active,
+  html body .dash-streak-milestone.hit,
+  html body .dash-streak-milestone.active { filter: none; }
+
+  /* ── AÇÕES: carvão, e só o convite em ouro ── */
+  html body .dash-btn,
+  html body .mobile-curiosidades-btn,
+  html body .dash-btn.share-btn,
+  html body .dash-btn.curiosidades-btn {
+    border-radius: 0 !important;
+    border: 1px solid rgba(255,255,255,.07) !important;
+    background: var(--carvao) !important;
+    background-image: none !important;
+    color: #f3f1ec !important;
+    font-weight: 700 !important;
+    text-shadow: none !important;
+    animation: none !important;
+    box-shadow: none !important;
+    clip-path: none;
+    transform: none !important;
+    filter: none !important;
+  }
+  /* no desktop o convite continua em ouro cheio; no celular ele
+     entra na fila discreta, regra mais abaixo */
+  html body .dash-btn.invite-btn {
+    background: var(--ouro-cbjr) !important;
+    border-color: var(--ouro-cbjr) !important;
+    color: #120e02 !important;
+  }
+  html body .dash-btn:hover,
+  html body .mobile-curiosidades-btn:hover {
+    border-color: rgba(242,183,5,.45) !important;
+  }
+
+  /* As três ações ocupavam três faixas de largura inteira e
+     competiam com os modos, que são o conteúdo principal.
+     Viram uma fila compacta: ícone grande, rótulo pequeno. */
+  /* ── AÇÕES: três ícones em fila ──────────────────────────────
+     As três faixas de largura inteira competiam com os modos, que
+     são o conteúdo principal. Viram botões quadrados pequenos.
+     O texto é suprimido com font-size:0 e o ícone volta pelo
+     ::before — assim o rótulo continua no HTML para leitores de
+     tela e o botão mantém o mesmo comportamento de clique. */
+  html body .cbjr-acoes-fila {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px 14px 12px;
+  }
+  /* o botão de curiosidades só existe para quem está no top 10;
+     o JavaScript o esconde com display:none, e o gap do flex
+     não deixa buraco porque item oculto não ocupa espaço */
+  html body .cbjr-acoes-fila .mobile-curiosidades-btn,
+  html body .cbjr-acoes-fila .dash-btn {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 52px !important;
+    height: 52px !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    border-radius: 0 !important;
+    background: #101010 !important;
+    border: 1px solid rgba(255,255,255,.08) !important;
+    box-shadow: none !important;
+    animation: none !important;
+    overflow: hidden !important;
+    transform: none !important;
+  }
+  html body #mobileCuriosidadesBtn::before { content: "🎸"; }
+  html body #mobileShareBtn::before        { content: "📲"; }
+  html body #mobileInviteBtn::before       { content: "🎁"; }
+  html body .cbjr-acoes-fila > *::before {
+    font-size: 21px;
+    line-height: 1;
+    filter: grayscale(1) opacity(.75);
+  }
+  html body #mobileInviteBtn {
+    border-color: rgba(242,183,5,.4) !important;
+  }
+  html body #mobileInviteBtn::before { filter: none; }
+  html body .cbjr-acoes-fila > *:hover { border-color: rgba(242,183,5,.5) !important; }
+  html body .cbjr-acoes-fila > *:hover::before { filter: none; }
+
+  /* ── MODOS: ilustração ao fundo + véu escuro ── */
+  html body .mode-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0 !important;
+    border: 1px solid rgba(255,255,255,.08) !important;
+    border-left-width: 1px !important;
+    background: #0d0d0d !important;
+    box-shadow: none !important;
+    min-height: 132px !important;
+    justify-content: flex-end !important;
+  }
+  html body .mode-card::before {   /* a arte */
+    content: "";
+    position: absolute; inset: 0;
+    background-size: cover;
+    background-position: center;
+    filter: grayscale(1) contrast(1.1) brightness(.55);
+    display: block !important;
+    z-index: 0;
+  }
+  html body .mode-card::after {    /* o véu que garante leitura */
+    content: "";
+    position: absolute; inset: 0;
+    display: block !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    animation: none !important;
+    background: linear-gradient(180deg,
+      rgba(8,8,8,.15) 0%, rgba(8,8,8,.82) 62%, #080808 100%) !important;
+    z-index: 0;
+  }
+  html body .mode-card > * { position: relative; z-index: 1; }
+  html body .mode-card:hover::before,
+  html body .mode-card:active::before {
+    filter: grayscale(.15) contrast(1.1) brightness(.72);
+    animation: none;
+  }
+
+  /* Respiração: a arte sai do preto e branco por um instante e volta.
+     Ciclo longo e defasado entre os cartões, para a página não pulsar
+     junto. É o suficiente para o olho perceber que existe cor ali. */
+  @keyframes cbjrRespira {
+    0%, 70%, 100% { filter: grayscale(1) contrast(1.1) brightness(.55); }
+    80%,  90%     { filter: grayscale(0) contrast(1.05) brightness(.9); }
+  }
+  html body .mode-card::before {
+    animation: cbjrRespira 7s ease-in-out infinite !important;
+  }
+  html body .mode-card[href*="radio.html"]::before      { animation-delay: 1.15s !important; }
+  html body .mode-card[href*="letras.html"]::before     { animation-delay: 2.3s !important; }
+  html body .mode-card[href*="conquistas.html"]::before { animation-delay: 3.45s !important; }
+  html body .mode-card[href*="ranking.html"]::before    { animation-delay: 4.6s !important; }
+  html body .mode-card[href*="fans.html"]::before       { animation-delay: 5.75s !important; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html body .mode-card::before { animation: none; }
+  }
+
+  /* cada modo com a sua ilustração — mirado pelo destino do link,
+     sem precisar de classe nova no HTML */
+  html body .mode-card[href*="quiz.html"]::before        { background-image: url('./card-quiz.jpg'); }
+  html body .mode-card[href*="radio.html"]::before       { background-image: url('./card-radio.jpg'); }
+  html body .mode-card[href*="letras.html"]::before      { background-image: url('./card-letras.jpg'); }
+  html body .mode-card[href*="conquistas.html"]::before  { background-image: url('./card-conquistas.jpg'); }
+  html body .mode-card[href*="ranking.html"]::before     { background-image: url('./card-ranking.jpg'); }
+  html body .mode-card[href*="fans.html"]::before        { background-image: url('./card-comunidade.jpg'); }
+
+  html body .mode-card-icon { display: none !important; }
+  html body .mode-card-name {
+    font-family: 'Elektrix', sans-serif !important;
+    font-size: 1.02rem !important;
+    letter-spacing: .02em !important;
+    color: #f3f1ec !important;
+  }
+  html body .mode-card-tag {
+    font-size: .68rem !important;
+    color: var(--fraco) !important;
+    /* a regra antiga tinha margin-top:auto, o que empurrava a
+       descrição para o rodapé e deixava o nome sobre a ilustração */
+    margin-top: 0 !important;
+  }
+
+  /* ── DESAFIO DO DIA ── */
+  html body .cbjr-daily-banner {
+    border-radius: 0 !important;
+    border: 1px solid rgba(242,183,5,.22) !important;
+    color: #f3f1ec !important;
+    transform: none !important;
+    clip-path: none !important;
+    background:
+      radial-gradient(ellipse 60% 90% at 92% 60%, rgba(242,183,5,.16), transparent 62%),
+      var(--carvao) !important;
+    background-blend-mode: normal !important;
+    box-shadow: none !important;
+  }
+  html body .cbjr-daily-banner::before { display: none !important; }
+  html body .cbjr-daily-kicker {
+    background: var(--ouro-cbjr) !important;
+    color: #120e02 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    padding: 4px 10px !important;
+    font-weight: 800 !important;
+    letter-spacing: .12em !important;
+  }
+  html body .cbjr-daily-title {
+    font-family: 'Elektrix', sans-serif !important;
+    color: #f3f1ec !important;
+  }
+  html body .cbjr-daily-sub { color: var(--fraco) !important; }
+  html body .cbjr-daily-timer-label {
+    color: var(--fraco) !important;
+    letter-spacing: .12em !important;
+  }
+  html body .cbjr-daily-timer {
+    color: #f3f1ec !important;
+    background: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    font-family: ui-monospace, Menlo, monospace !important;
+  }
+  html body .cbjr-daily-btn {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: var(--ouro-cbjr) !important;
+    color: #120e02 !important;
+    font-weight: 800 !important;
+    letter-spacing: .06em !important;
+    text-transform: uppercase !important;
+    clip-path: polygon(2% 8%, 98% 0, 100% 86%, 4% 100%, 0 50%);
+  }
+
+  /* ── MESA DE SOM (desktop) ── */
+  html body .console { background: #0d0d0d !important; }
+  html body .channel {
+    border-radius: 0 !important;
+    border: 1px solid rgba(255,255,255,.08) !important;
+    border-top: 2px solid rgba(242,183,5,.35) !important;
+    background: var(--carvao) !important;
+    box-shadow: none !important;
+  }
+  html body .channel:hover { border-top-color: var(--ouro-cbjr) !important; }
+  html body .channel::after { display: none !important; }
+
+  /* ── PAINEL DO JOGADOR (desktop) ── */
+  html body .player-dashboard {
+    border-radius: 0 !important;
+    border: 1px solid rgba(242,183,5,.22) !important;
+    background: var(--carvao) !important;
+  }
+  html body .dash-card {
+    border-radius: 0 !important;
+    border: 1px solid rgba(255,255,255,.07) !important;
+    background: #0f0f0f !important;
+  }
+
+  /* ── NAVEGAÇÃO ── */
+  html body .mobile-nav {
+    background: #0c0c0c !important;
+    border-top: 1px solid rgba(255,255,255,.07) !important;
+  }
+  html body .mobile-nav a { color: var(--fraco) !important; }
+  html body .mobile-nav a.active,
+  html body .mobile-nav a.is-active { color: var(--ouro-cbjr) !important; }
+  </style>
 
 </body>
 </html>
