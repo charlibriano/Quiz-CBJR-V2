@@ -1,6 +1,21 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <style id="cbjr-preload-gate">
+    /* Esconde a página até o visual novo (cbjr-visual-muro, lá embaixo)
+       já ter sido aplicado, em vez de deixar aparecer o design antigo
+       por 1 segundo e trocar na frente do usuário. Tem um limite de
+       segurança (2.5s) — se por algum motivo o script de revelar não
+       rodar, a página aparece sozinha assim mesmo, nunca fica travada
+       em branco pra sempre. */
+    html.cbjr-preload body { visibility: hidden !important; }
+  </style>
+  <script>
+    document.documentElement.classList.add('cbjr-preload');
+    setTimeout(function () {
+      document.documentElement.classList.remove('cbjr-preload');
+    }, 2500);
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Quiz CBJR V2 | Mesa de Controle</title>
@@ -6275,6 +6290,12 @@ if (document.readyState === 'loading') {
   html body .mobile-nav a.active,
   html body .mobile-nav a.is-active { color: var(--ouro-cbjr) !important; }
   </style>
+
+  <script>
+    /* revela a página assim que o CSS acima já foi aplicado —
+       elimina o flash sem precisar mover o bloco de lugar */
+    document.documentElement.classList.remove('cbjr-preload');
+  </script>
 
 </body>
 </html>
