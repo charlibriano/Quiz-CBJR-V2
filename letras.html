@@ -5169,6 +5169,58 @@ document.addEventListener('DOMContentLoaded',()=>{
 </script>
 <!-- /CBJR POP-UP DE CONQUISTA DESBLOQUEADA -->
   
+<style id="cbjr-visual-letras-vida-16-09">
+/* ══════════════════════════════════════════════════════════════
+   MODO LETRAS — MOVIMENTO (só CSS, só celular, só a tela de jogo)
+
+   Reage às MESMAS classes que o JS já usa (.correct / .incorrect /
+   :disabled) e ao fato de o trecho/opções serem inseridos de novo
+   a cada pergunta (innerHTML novo = animação de entrada roda de novo
+   sozinha, sem precisar de JS). Nenhuma classe nova, nenhum listener
+   novo, nenhuma revelação de resposta certa.
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 820px) {
+
+  @keyframes lmFadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes lmPulseOk {
+    0%   { box-shadow: inset 6px 0 0 #1ed760, 0 0 0 rgba(30,215,96,.5); }
+    40%  { box-shadow: inset 6px 0 0 #1ed760, 0 0 22px rgba(30,215,96,.55); }
+    100% { box-shadow: inset 6px 0 0 #1ed760, 0 0 0 rgba(30,215,96,0); }
+  }
+  @keyframes lmShakeNo {
+    0%, 100% { transform: translateX(0); }
+    20%      { transform: translateX(-5px); }
+    40%      { transform: translateX(4px); }
+    60%      { transform: translateX(-3px); }
+    80%      { transform: translateX(2px); }
+  }
+
+  /* trecho: surge de baixo pra cima a cada pergunta nova */
+  html body .lm-game .lm-phrase-wrap {
+    animation: lmFadeUp .45s ease both;
+  }
+
+  /* opções: entram uma depois da outra, A, B, C, D */
+  html body .lm-game .lm-options .track-choice {
+    animation: lmFadeUp .4s ease both;
+  }
+  html body .lm-game .lm-options .track-choice:nth-child(1) { animation-delay: .05s; }
+  html body .lm-game .lm-options .track-choice:nth-child(2) { animation-delay: .12s; }
+  html body .lm-game .lm-options .track-choice:nth-child(3) { animation-delay: .19s; }
+  html body .lm-game .lm-options .track-choice:nth-child(4) { animation-delay: .26s; }
+
+  /* resposta certa/errada: um pulso curto só na opção tocada */
+  html body .lm-game .lm-options .track-choice.correct {
+    animation: lmPulseOk .6s ease-out both;
+  }
+  html body .lm-game .lm-options .track-choice.incorrect {
+    animation: lmShakeNo .4s ease-in-out both;
+  }
+}
+</style>
 <style id="cbjr-visual-letras-16-09">
 /* ══════════════════════════════════════════════════════════════
    MODO LETRAS — VISUAL PRETO E OURO (mesma família do menu e do quiz)
