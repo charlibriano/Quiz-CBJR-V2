@@ -5169,6 +5169,217 @@ document.addEventListener('DOMContentLoaded',()=>{
 </script>
 <!-- /CBJR POP-UP DE CONQUISTA DESBLOQUEADA -->
   
+<style id="cbjr-visual-letras-16-09">
+/* ══════════════════════════════════════════════════════════════
+   MODO LETRAS — VISUAL PRETO E OURO (mesma família do menu e do quiz)
+
+   Só CSS, só celular (até 820px, o mesmo corte que o JavaScript usa
+   para montar a tela de jogo mobile). Não toca em HTML nem em JS.
+
+   Tudo depende de "body:has(.lm-game)": só vale enquanto a tela de
+   jogo está aberta. A escolha de álbuns fica como está.
+
+   A lógica de resposta continua a mesma: o JS marca SÓ o botão tocado
+   (.correct ou .incorrect) e trava todos. Este bloco não estiliza
+   nenhuma classe que revele a resposta certa.
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 820px) {
+
+  /* 1) FUNDO — mesa de som, por baixo de uma camada escura */
+  html body:has(.lm-game) {
+    background:
+      linear-gradient(180deg, rgba(0,0,0,.74), rgba(0,0,0,.6) 40%, rgba(0,0,0,.88) 100%),
+      url('./bg-cbjr-console.jpg') center top / cover no-repeat scroll !important;
+    background-color: #000 !important;
+  }
+  html body:has(.lm-game)::before,
+  html body:has(.lm-game)::after { background: none !important; }
+
+  html body:has(.lm-game) main,
+  html body:has(.lm-game) .pro-stage,
+  html body:has(.lm-game) .content-card.pro-content,
+  html body:has(.lm-game) #game-screen,
+  html body:has(.lm-game) .lm-game {
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+  }
+
+  /* 2) CABEÇALHO "MODO LETRAS" e botões do topo — cantos cortados */
+  html body:has(.lm-game) .intro-card.pro-sidebar {
+    background: rgba(8,7,5,.62) !important;
+    border: 1px solid rgba(242,183,5,.35) !important;
+    border-radius: 0 !important;
+    clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px) !important;
+    box-shadow: none !important;
+  }
+  html body:has(.lm-game) .floating-back,
+  html body:has(.lm-game) .cbjr-auth-trigger {
+    border: 1.5px solid var(--yellow) !important;
+    border-radius: 0 !important;
+    clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px) !important;
+    background: rgba(8,7,5,.72) !important;
+    box-shadow: none !important;
+  }
+
+  /* 3) ÁLBUM ATUAL + TIMER */
+  html body .lm-game .lm-header {
+    border-radius: 0 !important;
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px) !important;
+    border: 1.5px solid rgba(242,183,5,.4) !important;
+    background: rgba(12,11,8,.82) !important;
+  }
+  html body .lm-game .lm-cover {
+    border-radius: 0 !important;
+    border: 1px solid rgba(242,183,5,.4) !important;
+  }
+
+  /* 4) PLACAR — três quadros; os separadores (os blocos cinza) saem */
+  html body .lm-game .lm-stats {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+  }
+  html body .lm-game .lm-stats > div.lm-stat-sep { display: none !important; }
+  html body .lm-game .lm-stats > div:not(.lm-stat-sep) {
+    display: flex !important;
+    flex-direction: column-reverse !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 3px !important;
+    min-width: 0 !important;
+    padding: 7px 4px !important;
+    border: 2px solid var(--yellow) !important;
+    border-radius: 0 !important;
+    clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px) !important;
+    background: rgba(8,7,5,.72) !important;
+  }
+  html body .lm-game .lm-stats > div span {
+    display: block !important;
+    font-family: 'Elektrix', Arial, sans-serif !important;
+    font-size: 1.3rem !important;
+    line-height: 1 !important;
+    color: var(--yellow) !important;
+    white-space: nowrap !important;
+  }
+  html body .lm-game .lm-stats > div small {
+    display: block !important;
+    font-size: .58rem !important;
+    line-height: 1 !important;
+    font-weight: 800 !important;
+    letter-spacing: .08em !important;
+    color: rgba(255,255,255,.62) !important;
+  }
+
+  /* 5) TRECHO — centro do palco */
+  html body .lm-game .lm-phrase-wrap {
+    border-radius: 0 !important;
+    clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px) !important;
+    border: 1px solid rgba(242,183,5,.45) !important;
+    background: rgba(20,16,4,.88) !important;
+    padding: 20px 28px !important;
+  }
+  html body .lm-game .lm-quote {
+    font-family: 'Elektrix', Arial, sans-serif !important;
+    color: var(--yellow) !important;
+    font-size: 2rem !important;
+  }
+  html body .lm-game .lm-qr { bottom: 0 !important; }
+  html body .lm-game .lm-phrase {
+    color: #fff !important;
+    font-weight: 800 !important;
+    font-size: clamp(.9rem, 4.2vw, 1.05rem) !important;
+  }
+  html body .lm-game .lm-choice-label {
+    color: rgba(255,255,255,.62) !important;
+    margin-top: 4px !important;
+  }
+
+  /* 6) OPÇÕES — cartões com selo A/B/C/D.
+        A letra vem de um contador do CSS, pela ordem em que as opções
+        aparecem na tela (a ordem continua sendo sorteada pelo JS). */
+  html body .lm-game .lm-options {
+    counter-reset: lmopc !important;
+    gap: 8px !important;
+  }
+  html body .lm-game .lm-options .track-choice {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    gap: 7px !important;
+    min-height: 74px !important;
+    height: auto !important;
+    padding: 10px !important;
+    border: 2px solid var(--yellow) !important;
+    border-radius: 0 !important;
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px) !important;
+    background: rgba(8,7,5,.55) !important;
+    box-shadow: none !important;
+  }
+  html body .lm-game .lm-options .choice-dot {
+    counter-increment: lmopc !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 24px !important;
+    height: 24px !important;
+    border: none !important;
+    border-radius: 0 !important;
+    clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px) !important;
+    background: var(--yellow) !important;
+    box-shadow: none !important;
+  }
+  html body .lm-game .lm-options .choice-dot::before {
+    content: counter(lmopc, upper-alpha) !important;
+    font-family: 'Elektrix', Arial, sans-serif !important;
+    font-size: .78rem !important;
+    line-height: 1 !important;
+    color: #000 !important;
+  }
+  html body .lm-game .lm-options .track-choice strong {
+    flex: 0 0 auto !important;
+    font-size: .82rem !important;
+    line-height: 1.2 !important;
+    text-transform: uppercase !important;
+    word-break: break-word !important;
+    text-shadow: 0 2px 6px rgba(0,0,0,.9) !important;
+  }
+
+  /* depois de responder: todas travadas e apagadas por igual... */
+  html body .lm-game .lm-options .track-choice:disabled { opacity: .5 !important; }
+
+  /* ...menos a que o jogador tocou, que fica acesa com a cor do resultado */
+  html body .lm-game .lm-options .track-choice.correct,
+  html body .lm-game .lm-options .track-choice.incorrect {
+    opacity: 1 !important;
+    background: rgba(8,7,5,.55) !important;
+  }
+  html body .lm-game .lm-options .track-choice.correct {
+    border-color: #1ed760 !important;
+    box-shadow: inset 6px 0 0 #1ed760 !important;
+  }
+  html body .lm-game .lm-options .track-choice.incorrect {
+    border-color: #ff3b30 !important;
+    box-shadow: inset 6px 0 0 #ff3b30 !important;
+  }
+  html body .lm-game .lm-options .track-choice.correct .choice-dot { background: #1ed760 !important; }
+  html body .lm-game .lm-options .track-choice.incorrect .choice-dot { background: #ff3b30 !important; }
+  html body .lm-game .lm-options .track-choice.incorrect .choice-dot::before { color: #fff !important; }
+
+  /* 7) VOLTAR AOS ÁLBUNS */
+  html body .lm-game .lm-exit {
+    border-radius: 0 !important;
+    clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px) !important;
+    border: 1.5px solid rgba(242,183,5,.35) !important;
+    background: rgba(8,7,5,.72) !important;
+    color: rgba(255,255,255,.72) !important;
+  }
+}
+</style>
 <script src="./desafio.js" defer></script>
 <script src="./descoberta.js" defer></script>
 <script src="./activity-publisher.js" defer></script>
